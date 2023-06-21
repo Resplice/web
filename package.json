@@ -2,6 +2,8 @@
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",
+		"build:apps": "turbo run build --filter apps",
+		"build:packages": "turbo run build --filter packages",
 		"build:reauth": "turbo run build --filter reauth",
 		"build:resplice": "turbo run build --filter resplice",
 		"build:proto": "turbo run build --filter proto",
@@ -9,6 +11,9 @@
 		"dev": "turbo run dev",
 		"dev:reauth": "turbo run dev --filter reauth",
 		"dev:resplice": "turbo run dev --filter resplice",
+		"preview": "turbo run preview",
+		"preview:reauth": "turbo run preview --filter reauth",
+		"preview:resplice": "turbo run preview --filter resplice",
 		"test": "turbo run test",
 		"test:utils": "turbo run test --filter utils",
 		"lint": "turbo run lint",
