@@ -1,8 +1,10 @@
 {
 	"name": "@resplice/resplice",
-	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"author": "marcus@resplice.com",
+	"license": "UNLICENSED",
+	"private": true,
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",

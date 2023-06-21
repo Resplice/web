@@ -1,21 +1,29 @@
 {
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write ."
-  },
-  "devDependencies": {
-    "eslint": "^8.0.0",
-    "eslint-config-custom": "*",
-    "prettier": "^2.7.1",
-    "prettier-plugin-svelte": "^2.7.0",
-    "turbo": "latest"
-  },
-  "packageManager": "npm@9.2.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+	"private": true,
+	"scripts": {
+		"build": "turbo run build",
+		"build:reauth": "turbo run build --filter reauth",
+		"build:resplice": "turbo run build --filter resplice",
+		"build:proto": "turbo run build --filter proto",
+		"build:utils": "turbo run build --filter utils",
+		"dev": "turbo run dev",
+		"dev:reauth": "turbo run dev --filter reauth",
+		"dev:resplice": "turbo run dev --filter resplice",
+		"test": "turbo run test",
+		"test:utils": "turbo run test --filter utils",
+		"lint": "turbo run lint",
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"eslint": "^8.0.0",
+		"eslint-config-custom": "*",
+		"prettier": "^2.7.1",
+		"prettier-plugin-svelte": "^2.7.0",
+		"turbo": "latest"
+	},
+	"packageManager": "npm@9.2.0",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	]
 }

@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"lib": ["dom", "esnext"],
+		"target": "es2020",
+		"declaration": true,
+		"verbatimModuleSyntax": true,
+		"resolveJsonModule": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl": "./",
+		"outDir": "dist",
+		"paths": {
+			"$utils/*": ["src/*"]
+		},
+		"types": ["vitest/importMeta"]
+	},
+	"include": ["src/**/*.d.ts", "src/**/*.ts"],
+	"exclude": ["node_modules/*", "**/*.test.ts", "dist/*"]
+}
