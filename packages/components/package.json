@@ -11,8 +11,13 @@
 		"lint": "prettier --check --ignore-path=../../.prettierignore . && eslint \".\"",
 		"format": "prettier --write --ignore-path=../../.prettierignore ."
 	},
+	"peerDependencies": {
+		"clsx": "^1.2.1",
+		"libphonenumber-js": "^1.10.36",
+		"svelte": "^4.0.0"
+	},
 	"devDependencies": {
 		"eslint-config-custom": "*",
-		"svelte": "^3.9.2"
+		"svelte": "^4.0.0"
 	}
 }

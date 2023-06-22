@@ -1,0 +1,15 @@
+{
+	"common": {
+		"continue": "Continue"
+	},
+	"login": "Login",
+	"welcome": "Welcome to the world's most up-to-date address book.",
+	"enterPhone": "Enter Phone",
+	"enterEmail": "Enter Email",
+	"rememberMe": "Remember Me",
+	"verify": "Verify",
+	"verify.header": "Verify your phone and email by entering the codes that were sent to you.",
+	"register": "Register",
+	"register.header": "Welcome to Resplice! We see you are new here so we just need your full name to get you started. Optionally add a picture of yourself to make it easier for others to recongize you.",
+	"haveAccount": "I already have an account"
+}
