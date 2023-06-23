@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { countries } from '@resplice/utils'
-	import { FlagIcon, ChevronDownIcon } from '@resplice/components'
+	import FlagIcon from '$lib/icons/FlagIcon.svelte'
+	import ChevronDownIcon from '$lib/icons/ChevronDownIcon.svelte'
 
 	export let name: string
 	export let value: string

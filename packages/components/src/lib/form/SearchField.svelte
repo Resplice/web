@@ -1,6 +1,6 @@
 <script lang="ts">
 	import cx from 'clsx'
-	import { SearchIcon } from '@resplice/components'
+	import SearchIcon from '$lib/icons/SearchIcon.svelte'
 
 	export let name: string
 	export let label: string

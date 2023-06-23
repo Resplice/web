@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '@resplice/components/src/icons/freakflags.css'
+	import './freakflags.css'
 
 	export let countryCode: string
 	export let width = 42

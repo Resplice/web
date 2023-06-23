@@ -1,7 +1,7 @@
 <script lang="ts">
 	import cx from 'clsx'
 	import { AsYouType, type CountryCode } from 'libphonenumber-js'
-	import { CountrySelectMini } from '@resplice/components'
+	import CountrySelectMini from '$lib/form/CountrySelectMini.svelte'
 
 	export let name: string
 	export let label: string

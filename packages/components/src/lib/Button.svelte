@@ -1,6 +1,6 @@
 <script lang="ts">
 	import cx from 'clsx'
-	import { Spinner } from '@resplice/components'
+	import Spinner from '$lib/skeleton/Spinner.svelte'
 
 	export let type: 'button' | 'reset' | 'submit' = 'button'
 	export let variant: 'primary' | 'secondary' | 'tertiary' = 'primary'

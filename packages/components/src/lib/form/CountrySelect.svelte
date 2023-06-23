@@ -1,7 +1,7 @@
 <script lang="ts">
 	import cx from 'clsx'
 	import { countries } from '@resplice/utils'
-	import { FlagIcon } from '@resplice/components'
+	import FlagIcon from '$lib/icons/FlagIcon.svelte'
 
 	export let name: string
 	export let label: string
