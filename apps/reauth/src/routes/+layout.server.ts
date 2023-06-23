@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit'
 import { env } from '$env/dynamic/private'
 import { configSchema, type Config } from '$lib/config'
-import type { LayoutServerLoad } from './$types'
 
-export const load = (async () => {
+/** @type {import('./$types').LayoutServerLoad} */
+export async function load() {
 	const configResult = configSchema.safeParse({
 		environment: env.ENV,
 		recaptchaToken: env.RECAPTCHA_TOKEN,
@@ -17,4 +17,4 @@ export const load = (async () => {
 	return {
 		config: configResult.data satisfies Config
 	}
-}) satisfies LayoutServerLoad
+}

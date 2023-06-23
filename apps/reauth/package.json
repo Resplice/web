@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "2.1.0",
-		"@sveltejs/kit": "1.20.4",
+		"@sveltejs/kit": "1.20.5",
 		"autoprefixer": "^10.4.14",
 		"eslint-config-custom": "*",
 		"postcss": "^8.4.24",
