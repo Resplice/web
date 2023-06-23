@@ -2,10 +2,11 @@
 	import { onMount } from 'svelte'
 	import { isValidPhoneNumber, parsePhoneNumber, type CountryCode } from 'libphonenumber-js'
 	import { getNavigatorCountry, validateEmail } from '@resplice/utils'
+	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
 	import store from '$lib/store'
-	import { Button, PhoneField, TextField, Toggle, MailIcon } from '@resplice/components'
+	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
 
 	const config = useConfig()
 	const protocol = useProtocol()
@@ -15,7 +16,6 @@
 		countryCode: 'US' as CountryCode
 	}
 	let email = ''
-	let rememberMe = false
 	let formErrs: Record<string, string> = {}
 	let networkErr: Error
 	let isLoading = false
@@ -27,8 +27,9 @@
 	function validate(): boolean {
 		formErrs = {}
 		const errs: Record<string, string> = {}
-		if (!isValidPhoneNumber(phone.value, phone.countryCode)) errs.phone = 'Invalid Phone'
-		if (!validateEmail(email)) errs.email = 'Invalid Email'
+		if (!isValidPhoneNumber(phone.value, phone.countryCode))
+			errs.phone = $t('auth.errors.invalidPhone')
+		if (!validateEmail(email)) errs.email = $t('auth.errors.invalidEmail')
 		if (Object.keys(errs).length) {
 			formErrs = errs
 			return false
@@ -47,7 +48,7 @@
 				})
 				const isBot = await protocol.isBot(token)
 				if (isBot) {
-					networkErr = new Error('We detected some bot behavior, you must be a robot?')
+					networkErr = new Error($t('auth.errors.botDetected'))
 					resolve(true)
 				} else {
 					resolve(false)
@@ -102,28 +103,22 @@
 	on:submit|preventDefault={onSubmit}
 >
 	<div class="w-full flex flex-col space-y-6">
-		<PhoneField name="phone" label="Enter Phone" bind:phone error={formErrs.phone} />
+		<PhoneField name="phone" label={$t('auth.enterPhone')} bind:phone error={formErrs.phone} />
 		<TextField
 			name="email"
-			label="Enter Email"
+			label={$t('auth.enterEmail')}
 			autocomplete="email"
 			bind:value={email}
 			Icon={MailIcon}
 			error={formErrs.email}
 		/>
-		<Toggle
-			name="remember-me"
-			label="Remember Me"
-			isActive={rememberMe}
-			on:toggle={() => (rememberMe = !rememberMe)}
-		/>
 	</div>
 
-	<div class="flex flex-col items-center justify-center">
+	<div class="flex flex-col items-center justify-center mt-8">
 		<div class="w-40 flex flex-col">
-			<Button type="submit" {isLoading}>Continue</Button>
+			<Button type="submit" {isLoading}>{$t('auth.common.continue')}</Button>
 			{#if networkErr}
-				<p>{networkErr.message}</p>
+				<p class="mt-4 text-red-600">{networkErr.message}</p>
 			{/if}
 		</div>
 		<!-- We have to include this text according to google :( -->

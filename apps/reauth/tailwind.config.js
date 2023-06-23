@@ -5,7 +5,7 @@ export default {
 	content: [
 		'./src/app.html',
 		'./src/**/*.{html,svelte}',
-		'@resplice/components/**/*.{html,svelte}'
+		'../../node_modules/@resplice/components/**/*.{html,svelte}'
 	],
 	darkMode: 'class',
 	theme: {

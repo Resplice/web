@@ -2,7 +2,11 @@ import colors from 'tailwindcss/colors'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: ['./src/app.html', './src/**/*.{html,svelte}'],
+	content: [
+		'./src/app.html',
+		'./src/**/*.{html,svelte}',
+		'../../node_modules/@resplice/components/**/*.{html,svelte}'
+	],
 	darkMode: 'class',
 	theme: {
 		extend: {

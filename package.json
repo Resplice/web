@@ -6,6 +6,7 @@
 		"build:packages": "turbo run build --filter packages",
 		"build:reauth": "turbo run build --filter reauth",
 		"build:resplice": "turbo run build --filter resplice",
+		"build:components": "turbo run build --filter components",
 		"build:proto": "turbo run build --filter proto",
 		"build:utils": "turbo run build --filter utils",
 		"dev": "turbo run dev",
@@ -24,7 +25,7 @@
 		"eslint-config-custom": "*",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
-		"turbo": "1.10.4"
+		"turbo": "1.10.5"
 	},
 	"packageManager": "npm@9.2.0",
 	"workspaces": [
