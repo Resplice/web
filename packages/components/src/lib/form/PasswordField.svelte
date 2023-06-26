@@ -1,12 +1,13 @@
 <script lang="ts">
 	import cx from 'clsx'
+	import type { IconComponent } from '$lib/common/types'
+
 	export let name: string
 	export let label: string
 	export let value: string
 	export let error: string = ''
 	export let disabled = false
-	// TODO: Figure out how to type svelte component prop
-	export let Icon: any = null
+	export let Icon: IconComponent
 	let isTouched = !!value
 
 	function resetError() {

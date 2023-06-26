@@ -11,4 +11,8 @@
 	setContext(protocolContextKey, protocolFactory(data.config.respliceEndpoint))
 </script>
 
+<svelte:head>
+	<title>Resplice Auth</title>
+</svelte:head>
+
 <slot />

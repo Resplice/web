@@ -2,13 +2,13 @@
 	import cx from 'clsx'
 	import { AsYouType, type CountryCode } from 'libphonenumber-js'
 	import CountrySelectMini from '$lib/form/CountrySelectMini.svelte'
+	import type { IconComponent } from '$lib/common/types'
 
 	export let name: string
 	export let label: string
 	export let phone: { value: string; countryCode: CountryCode }
 	export let error: string = ''
-	// TODO: Type svelte component
-	export let Icon: any = null
+	export let Icon: IconComponent
 	let isTouched = !!phone.value
 
 	// handle initial phone value format

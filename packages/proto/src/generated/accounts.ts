@@ -1,16 +1,15 @@
 /* eslint-disable */
-import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export interface CreateAccount {
   email: string;
   phone: string;
   fullName: string;
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface AccountCreated {
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface EditAccountName {
@@ -44,7 +43,7 @@ export interface DeleteAccount {
 }
 
 function createBaseCreateAccount(): CreateAccount {
-  return { email: "", phone: "", fullName: "", accessKey: 0 };
+  return { email: "", phone: "", fullName: "", accessKey: new Uint8Array(0) };
 }
 
 export const CreateAccount = {
@@ -58,8 +57,8 @@ export const CreateAccount = {
     if (message.fullName !== "") {
       writer.uint32(26).string(message.fullName);
     }
-    if (message.accessKey !== 0) {
-      writer.uint32(32).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -93,11 +92,11 @@ export const CreateAccount = {
           message.fullName = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -113,7 +112,7 @@ export const CreateAccount = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       fullName: isSet(object.fullName) ? String(object.fullName) : "",
-      accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -122,7 +121,8 @@ export const CreateAccount = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.fullName !== undefined && (obj.fullName = message.fullName);
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -135,19 +135,19 @@ export const CreateAccount = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.fullName = object.fullName ?? "";
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAccountCreated(): AccountCreated {
-  return { accessKey: 0 };
+  return { accessKey: new Uint8Array(0) };
 }
 
 export const AccountCreated = {
   encode(message: AccountCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey !== 0) {
-      writer.uint32(8).uint64(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(10).bytes(message.accessKey);
     }
     return writer;
   },
@@ -160,11 +160,11 @@ export const AccountCreated = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.accessKey = longToNumber(reader.uint64() as Long);
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -176,12 +176,13 @@ export const AccountCreated = {
   },
 
   fromJSON(object: any): AccountCreated {
-    return { accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0 };
+    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
   },
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -191,7 +192,7 @@ export const AccountCreated = {
 
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
@@ -672,18 +673,6 @@ type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

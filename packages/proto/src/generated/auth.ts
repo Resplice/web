@@ -8,29 +8,29 @@ export interface StartAuth {
 }
 
 export interface AuthStarted {
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface VerifyAuthEmail {
   email: string;
   phone: string;
   verificationCode: number;
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface AuthEmailVerified {
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface VerifyAuthPhone {
   email: string;
   phone: string;
   verificationCode: number;
-  accessKey: number;
+  accessKey: Uint8Array;
 }
 
 export interface AuthPhoneVerified {
-  accessKey: number;
+  accessKey: Uint8Array;
   accountExists: boolean;
 }
 
@@ -120,13 +120,13 @@ export const StartAuth = {
 };
 
 function createBaseAuthStarted(): AuthStarted {
-  return { accessKey: 0 };
+  return { accessKey: new Uint8Array(0) };
 }
 
 export const AuthStarted = {
   encode(message: AuthStarted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey !== 0) {
-      writer.uint32(8).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(10).bytes(message.accessKey);
     }
     return writer;
   },
@@ -139,11 +139,11 @@ export const AuthStarted = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -155,12 +155,13 @@ export const AuthStarted = {
   },
 
   fromJSON(object: any): AuthStarted {
-    return { accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0 };
+    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
   },
 
   toJSON(message: AuthStarted): unknown {
     const obj: any = {};
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -170,13 +171,13 @@ export const AuthStarted = {
 
   fromPartial<I extends Exact<DeepPartial<AuthStarted>, I>>(object: I): AuthStarted {
     const message = createBaseAuthStarted();
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseVerifyAuthEmail(): VerifyAuthEmail {
-  return { email: "", phone: "", verificationCode: 0, accessKey: 0 };
+  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
 }
 
 export const VerifyAuthEmail = {
@@ -190,8 +191,8 @@ export const VerifyAuthEmail = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.accessKey !== 0) {
-      writer.uint32(32).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -225,11 +226,11 @@ export const VerifyAuthEmail = {
           message.verificationCode = reader.uint32();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -245,7 +246,7 @@ export const VerifyAuthEmail = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -254,7 +255,8 @@ export const VerifyAuthEmail = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -267,19 +269,19 @@ export const VerifyAuthEmail = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAuthEmailVerified(): AuthEmailVerified {
-  return { accessKey: 0 };
+  return { accessKey: new Uint8Array(0) };
 }
 
 export const AuthEmailVerified = {
   encode(message: AuthEmailVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey !== 0) {
-      writer.uint32(8).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(10).bytes(message.accessKey);
     }
     return writer;
   },
@@ -292,11 +294,11 @@ export const AuthEmailVerified = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -308,12 +310,13 @@ export const AuthEmailVerified = {
   },
 
   fromJSON(object: any): AuthEmailVerified {
-    return { accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0 };
+    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
   },
 
   toJSON(message: AuthEmailVerified): unknown {
     const obj: any = {};
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -323,13 +326,13 @@ export const AuthEmailVerified = {
 
   fromPartial<I extends Exact<DeepPartial<AuthEmailVerified>, I>>(object: I): AuthEmailVerified {
     const message = createBaseAuthEmailVerified();
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseVerifyAuthPhone(): VerifyAuthPhone {
-  return { email: "", phone: "", verificationCode: 0, accessKey: 0 };
+  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
 }
 
 export const VerifyAuthPhone = {
@@ -343,8 +346,8 @@ export const VerifyAuthPhone = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.accessKey !== 0) {
-      writer.uint32(32).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -378,11 +381,11 @@ export const VerifyAuthPhone = {
           message.verificationCode = reader.uint32();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -398,7 +401,7 @@ export const VerifyAuthPhone = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -407,7 +410,8 @@ export const VerifyAuthPhone = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -420,19 +424,19 @@ export const VerifyAuthPhone = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAuthPhoneVerified(): AuthPhoneVerified {
-  return { accessKey: 0, accountExists: false };
+  return { accessKey: new Uint8Array(0), accountExists: false };
 }
 
 export const AuthPhoneVerified = {
   encode(message: AuthPhoneVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey !== 0) {
-      writer.uint32(8).uint32(message.accessKey);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(10).bytes(message.accessKey);
     }
     if (message.accountExists === true) {
       writer.uint32(16).bool(message.accountExists);
@@ -448,11 +452,11 @@ export const AuthPhoneVerified = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.accessKey = reader.uint32();
+          message.accessKey = reader.bytes();
           continue;
         case 2:
           if (tag !== 16) {
@@ -472,14 +476,15 @@ export const AuthPhoneVerified = {
 
   fromJSON(object: any): AuthPhoneVerified {
     return {
-      accessKey: isSet(object.accessKey) ? Number(object.accessKey) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
       accountExists: isSet(object.accountExists) ? Boolean(object.accountExists) : false,
     };
   },
 
   toJSON(message: AuthPhoneVerified): unknown {
     const obj: any = {};
-    message.accessKey !== undefined && (obj.accessKey = Math.round(message.accessKey));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     message.accountExists !== undefined && (obj.accountExists = message.accountExists);
     return obj;
   },
@@ -490,7 +495,7 @@ export const AuthPhoneVerified = {
 
   fromPartial<I extends Exact<DeepPartial<AuthPhoneVerified>, I>>(object: I): AuthPhoneVerified {
     const message = createBaseAuthPhoneVerified();
-    message.accessKey = object.accessKey ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     message.accountExists = object.accountExists ?? false;
     return message;
   },

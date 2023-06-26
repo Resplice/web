@@ -17,6 +17,8 @@
 	},
 	"dependencies": {
 		"@resplice/components": "*",
+		"@resplice/proto": "*",
+		"@resplice/utils": "*",
 		"clsx": "^1.2.1",
 		"libphonenumber-js": "^1.10.36",
 		"sveltekit-i18n": "^2.2.2",
