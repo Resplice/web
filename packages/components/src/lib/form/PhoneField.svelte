@@ -8,7 +8,7 @@
 	export let label: string
 	export let phone: { value: string; countryCode: CountryCode }
 	export let error: string = ''
-	export let Icon: IconComponent
+	export let Icon: IconComponent | null = null
 	let isTouched = !!phone.value
 
 	// handle initial phone value format

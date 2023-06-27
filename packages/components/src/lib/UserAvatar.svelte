@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	import Avatar from '$lib/Avatar.svelte'
-	import UploadIcon from '@resplice/components/package/icons/UploadIcon.svelte'
+	import UploadIcon from '$lib/icons/UploadIcon.svelte'
 	import Modal from '$lib/Modal.svelte'
 	import Cropper from '$lib/Cropper.svelte'
 

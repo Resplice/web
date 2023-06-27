@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { isValidPhoneNumber, parsePhoneNumber, type CountryCode } from 'libphonenumber-js'
+	import { goto } from '$app/navigation'
 	import { getNavigatorCountry, validateEmail } from '@resplice/utils'
 	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
-	import store from '$lib/store'
+	import store, { AuthStep } from '$lib/store'
 	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
 
 	const config = useConfig()
@@ -19,6 +20,9 @@
 	let formErrs: Record<string, string> = {}
 	let networkErr: Error
 	let isLoading = false
+	$: {
+		if ($store.step === AuthStep.VERIFY_EMAIL) goto('/verify')
+	}
 
 	onMount(() => {
 		phone.countryCode = (getNavigatorCountry() as CountryCode) || ('US' as CountryCode)
@@ -64,7 +68,7 @@
 				email,
 				phone: phoneNumber.number
 			})
-			store.set({ email, phone: phoneNumber.number, accessKey })
+			store.set({ step: AuthStep.VERIFY_EMAIL, email, phone: phoneNumber.number, accessKey })
 		} catch (err) {
 			networkErr = err as Error
 			isLoading = false
