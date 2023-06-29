@@ -5,7 +5,7 @@
 	import store, { AuthStep } from '$lib/store'
 	import useConfig from '$lib/hooks/useConfig'
 	import { RespliceWideIcon } from '@resplice/components'
-	import VerifyForm from './VerifyForm.svelte'
+	import CreateAccountForm from './CreateAccountForm.svelte'
 
 	const config = useConfig()
 
@@ -14,9 +14,6 @@
 			switch ($store.step) {
 				case AuthStep.START:
 					goto('/')
-					break
-				case AuthStep.CREATE_ACCOUNT:
-					goto('/create-account')
 					break
 				case AuthStep.FINISHED:
 					location.replace(config.respliceAppUrl)
@@ -29,11 +26,9 @@
 	<header class="flex-none w-full mb-8">
 		<RespliceWideIcon width="100%" />
 		<p class="text-lg font-semibold mt-4">
-			{$t('auth.verify.header')}
+			{$t('auth.createAccount.header')}
 		</p>
 	</header>
 
-	{#if [AuthStep.VERIFY_EMAIL, AuthStep.VERIFY_PHONE].includes($store.step)}
-		<VerifyForm />
-	{/if}
+	<CreateAccountForm />
 </main>

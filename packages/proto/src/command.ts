@@ -1,5 +1,6 @@
 import proto from './index'
 
+// Auth Commands
 export type StartAuth = {
 	type: proto.CommandType.START_AUTH
 	payload: proto.auth.StartAuth
@@ -16,9 +17,9 @@ export type AuthorizeSocket = {
 	type: proto.CommandType.AUTHORIZE_SOCKET
 	payload: proto.auth.AuthorizeSocket
 }
-type AuthCommands = StartAuth | VerifyAuthEmail | VerifyAuthPhone | AuthorizeSocket
+type AuthCommand = StartAuth | VerifyAuthEmail | VerifyAuthPhone | AuthorizeSocket
 
-// Account
+// Account Commands
 export type CreateAccount = {
 	type: proto.CommandType.CREATE_ACCOUNT
 	payload: proto.accounts.CreateAccount
@@ -39,14 +40,14 @@ export type DeleteAccount = {
 	type: proto.CommandType.DELETE_ACCOUNT
 	payload: proto.accounts.DeleteAccount
 }
-type AccountCommands =
+type AccountCommand =
 	| CreateAccount
 	| EditAccountName
 	| EditAccountHandle
 	| EditAccountAvatar
 	| DeleteAccount
 
-export type Command = AuthCommands | AccountCommands
+export type Command = AuthCommand | AccountCommand
 
 export const commandMapper = {
 	[proto.CommandType.START_AUTH]: proto.auth.StartAuth.encode,

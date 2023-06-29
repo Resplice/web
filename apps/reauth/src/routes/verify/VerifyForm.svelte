@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
-	// import { t } from '$lib/i18n'
+	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
 	import store, { AuthStep, type AuthStore } from '$lib/store'
 	import {
@@ -34,10 +33,12 @@
 
 	let emailCode = ''
 	let emailPromise: Promise<boolean>
+	let emailCodeError = ''
 	$: emailVerified = $store.step === AuthStep.VERIFY_PHONE
 
 	let phoneCode = ''
 	let phonePromise: Promise<boolean>
+	let phoneCodeError = ''
 
 	$: {
 		emailCode = emailCode.toUpperCase().substring(0, CODE_LENGTH)
@@ -45,58 +46,62 @@
 			emailPromise = submitEmailCode(parseInt(emailCode, 10))
 		}
 	}
+
 	$: {
 		phoneCode = phoneCode.toUpperCase().substring(0, CODE_LENGTH)
 		if (phoneCode.length >= CODE_LENGTH) {
-			phonePromise = submitPhoneCode(parseInt(emailCode, 10))
+			phonePromise = submitPhoneCode(parseInt(phoneCode, 10))
 		}
-	}
-	$: {
-		if ($store.step === AuthStep.CREATE_ACCOUNT) goto('/create-account')
 	}
 
 	async function submitEmailCode(verificationCode: number): Promise<boolean> {
-		const authEvent = await protocol.verifyAuthEmail({
+		const { event, errors } = await protocol.verifyAuthEmail({
 			email: email.value.email,
 			phone: phone.value.number,
 			verificationCode,
 			accessKey
 		})
-		// TODO: Handle errors
-		// if (authEvent.status !== AuthStatus.PENDING_PHONE_VERIFICATION)
-		// 	throw Error('Verification code did not work')
+
+		if (errors) {
+			if (errors[0] === 'INVALID_STATE') location.replace('/')
+			emailCodeError = $t(`auth.errors.${errors[0]}`)
+			return false
+		}
 
 		store.set({
 			step: AuthStep.VERIFY_PHONE,
 			email: email.value.email,
 			phone: phone.value.number,
-			accessKey: authEvent.accessKey
+			accessKey: event.accessKey
 		})
 		return true
 	}
 
 	async function submitPhoneCode(verificationCode: number): Promise<boolean> {
-		const authEvent = await protocol.verifyAuthPhone({
+		const { event, errors } = await protocol.verifyAuthPhone({
 			email: email.value.email,
 			phone: phone.value.number,
 			verificationCode,
 			accessKey
 		})
-		// TODO: Handle errors
-		// if (authEvent.status !== AuthStatus.PENDING_USER_REGISRATION)
-		// 	throw Error('Verification code did not work')
 
-		if (authEvent.accountExists) {
+		if (errors) {
+			if (errors[0] === 'INVALID_STATE') location.replace('/')
+			phoneCodeError = $t(`auth.errors.${errors[0]}`)
+			return false
+		}
+
+		if (event.accountExists) {
 			store.set({
 				step: AuthStep.FINISHED,
-				accessKey: authEvent.accessKey
+				accessKey: event.accessKey
 			})
 		} else {
 			store.set({
 				step: AuthStep.CREATE_ACCOUNT,
 				email: email.value.email,
 				phone: phone.value.number,
-				accessKey: authEvent.accessKey
+				accessKey: event.accessKey
 			})
 		}
 
@@ -111,11 +116,12 @@
 			<div class="w-full mr-4">
 				<TextField
 					name="email-code"
-					label="Enter Code"
+					label={$t('auth.enterCode')}
 					autocomplete="one-time-code"
 					bind:value={emailCode}
-					disabled={emailCode.length >= CODE_LENGTH}
+					disabled={emailCode.length >= CODE_LENGTH && !emailCodeError}
 					Icon={LockClosedIcon}
+					bind:error={emailCodeError}
 				/>
 			</div>
 			<span class="text-brand-primary w-7 h-full">
@@ -135,11 +141,12 @@
 			<div class="w-full mr-4">
 				<TextField
 					name="phone-code"
-					label={emailVerified ? 'Enter Code' : 'Verify Email'}
+					label={emailVerified ? $t('auth.enterCode') : $t('auth.verifyEmail')}
 					autocomplete="one-time-code"
 					bind:value={phoneCode}
-					disabled={!emailVerified || phoneCode.length >= CODE_LENGTH}
+					disabled={(!emailVerified || phoneCode.length >= CODE_LENGTH) && !phoneCodeError}
 					Icon={LockClosedIcon}
+					bind:error={phoneCodeError}
 				/>
 			</div>
 			<span class="text-brand-primary w-7 h-full">

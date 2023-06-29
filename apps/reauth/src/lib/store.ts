@@ -22,6 +22,8 @@ export type FinishedStore = {
 }
 export type Store = InitialStore | AuthStore | FinishedStore
 
-export default writable<Store>({
+export const INITIAL_STORE: InitialStore = {
 	step: AuthStep.START
-})
+}
+
+export default writable<Store>(INITIAL_STORE)

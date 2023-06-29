@@ -10,7 +10,7 @@ export enum Errors {
   INVALID_TOKEN = 5,
   INVALID_NAME = 6,
   INVALID_HANDLE = 7,
-  UNKNOWN = 127,
+  SERVER = 127,
   UNRECOGNIZED = -1,
 }
 
@@ -41,8 +41,8 @@ export function errorsFromJSON(object: any): Errors {
     case "INVALID_HANDLE":
       return Errors.INVALID_HANDLE;
     case 127:
-    case "UNKNOWN":
-      return Errors.UNKNOWN;
+    case "SERVER":
+      return Errors.SERVER;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -68,8 +68,8 @@ export function errorsToJSON(object: Errors): string {
       return "INVALID_NAME";
     case Errors.INVALID_HANDLE:
       return "INVALID_HANDLE";
-    case Errors.UNKNOWN:
-      return "UNKNOWN";
+    case Errors.SERVER:
+      return "SERVER";
     case Errors.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

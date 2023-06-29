@@ -1,7 +1,17 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
+	import { onMount } from 'svelte'
+	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
+	import store, { AuthStep, INITIAL_STORE } from '$lib/store'
 	import { RespliceWideIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
+
+	onMount(() => store.set(INITIAL_STORE))
+
+	$: {
+		if (browser && $store.step === AuthStep.VERIFY_EMAIL) goto('/verify')
+	}
 </script>
 
 <main class="w-full h-full p-8 flex flex-col m-auto max-w-lg overflow-auto">

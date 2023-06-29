@@ -7,7 +7,8 @@ export async function load() {
 	const configResult = configSchema.safeParse({
 		environment: env.ENV,
 		recaptchaToken: env.RECAPTCHA_TOKEN,
-		respliceEndpoint: env.RESPLICE_ENDPOINT
+		respliceEndpoint: env.RESPLICE_ENDPOINT,
+		respliceAppUrl: env.RESPLICE_APP_URL
 	})
 
 	if (!configResult.success) {

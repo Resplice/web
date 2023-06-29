@@ -1,6 +1,6 @@
 import proto from './index'
 import { type Command, commandMapper } from './command'
-import { eventMapper } from './event'
+import { type Event, eventMapper } from './event'
 
 // function calculateCommandIV(baseIV: Uint8Array, counter: number): Uint8Array {
 // 	const ivBuf = new ArrayBuffer(12)
@@ -49,11 +49,17 @@ export async function serializeCommand(command: Command): Promise<Uint8Array> {
 function decode(eventBytes: Uint8Array) {
 	const event = proto.Event.decode(eventBytes)
 	const decoder = eventMapper[event.eventType]
-	if (!decoder) throw Error(`Command ${event.eventType} is not supported`)
+	if (!decoder) throw Error(`Event ${event.eventType} is not supported`)
 
-	return decoder(event.payload)
+	const payload = decoder(event.payload)
+
+	return {
+		type: event.eventType,
+		payload
+	} as any
 }
 
-export async function deserializeEvent(eventBytes: Uint8Array) {
+export async function deserializeEvent(eventBytes: Uint8Array): Promise<Event> {
+	// TODO: Add decryption eventually
 	return decode(eventBytes)
 }

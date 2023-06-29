@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { isValidPhoneNumber, parsePhoneNumber, type CountryCode } from 'libphonenumber-js'
-	import { goto } from '$app/navigation'
 	import { getNavigatorCountry, validateEmail } from '@resplice/utils'
 	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
@@ -18,11 +17,8 @@
 	}
 	let email = ''
 	let formErrs: Record<string, string> = {}
-	let networkErr: Error
+	let systemError: string
 	let isLoading = false
-	$: {
-		if ($store.step === AuthStep.VERIFY_EMAIL) goto('/verify')
-	}
 
 	onMount(() => {
 		phone.countryCode = (getNavigatorCountry() as CountryCode) || ('US' as CountryCode)
@@ -32,8 +28,8 @@
 		formErrs = {}
 		const errs: Record<string, string> = {}
 		if (!isValidPhoneNumber(phone.value, phone.countryCode))
-			errs.phone = $t('auth.errors.invalidPhone')
-		if (!validateEmail(email)) errs.email = $t('auth.errors.invalidEmail')
+			errs.phone = $t('auth.errors.INVALID_PHONE')
+		if (!validateEmail(email)) errs.email = $t('auth.errors.INVALID_EMAIL')
 		if (Object.keys(errs).length) {
 			formErrs = errs
 			return false
@@ -46,13 +42,14 @@
 
 		const grecaptcha: any = (window as any).grecaptcha
 		return new Promise((resolve) => {
+			if (!grecaptcha) return resolve(false)
 			grecaptcha.ready(async () => {
 				const token = await grecaptcha.execute(config.recaptchaToken, {
 					action: 'auth'
 				})
 				const isBot = await protocol.isBot(token)
 				if (isBot) {
-					networkErr = new Error($t('auth.errors.botDetected'))
+					systemError = $t('auth.errors.botDetected')
 					resolve(true)
 				} else {
 					resolve(false)
@@ -62,17 +59,24 @@
 	}
 
 	async function startAuth() {
-		try {
-			const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
-			const { accessKey } = await protocol.startAuth({
-				email,
-				phone: phoneNumber.number
-			})
-			store.set({ step: AuthStep.VERIFY_EMAIL, email, phone: phoneNumber.number, accessKey })
-		} catch (err) {
-			networkErr = err as Error
+		const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
+		const { event, errors } = await protocol.startAuth({
+			email,
+			phone: phoneNumber.number
+		})
+
+		if (errors) {
+			systemError = $t(`auth.errors.${errors[0]}`)
 			isLoading = false
+			return
 		}
+
+		store.set({
+			step: AuthStep.VERIFY_EMAIL,
+			email,
+			phone: phoneNumber.number,
+			accessKey: event.accessKey
+		})
 	}
 
 	type SubmitEvent = Event & {
@@ -121,8 +125,8 @@
 	<div class="flex flex-col items-center justify-center mt-8">
 		<div class="w-40 flex flex-col">
 			<Button type="submit" {isLoading}>{$t('auth.common.continue')}</Button>
-			{#if networkErr}
-				<p class="mt-4 text-red-600">{networkErr.message}</p>
+			{#if systemError}
+				<p class="mt-4 text-red-600">{systemError}</p>
 			{/if}
 		</div>
 		<!-- We have to include this text according to google :( -->

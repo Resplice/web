@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export * as errors from "./index.resplice.api.errors";
+export * from "./interface/errors";
 export * from "./interface/command";
 export * from "./interface/event";
 export * as attributes from "./index.resplice.api.attributes";

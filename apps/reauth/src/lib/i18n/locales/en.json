@@ -9,12 +9,16 @@
 	"rememberMe": "Remember Me",
 	"verify": "Verify",
 	"verify.header": "Verify your phone and email by entering the codes that were sent to you.",
-	"register": "Register",
-	"register.header": "Welcome to Resplice! We see you are new here so we just need your full name to get you started. Optionally add a picture of yourself to make it easier for others to recongize you.",
+	"enterCode": "Enter Code",
+	"verifyEmail": "Verify Email",
+	"createAccount": "Create Account",
+	"createAccount.header": "Welcome to Resplice! We see you are new here so we just need your full name to get you started. Optionally add a picture of yourself to make it easier for others to recognize you.",
 	"haveAccount": "I already have an account",
 	"errors": {
-		"invalidPhone": "Invalid Phone",
-		"invalidEmail": "Invalid Email",
-		"botDetected": "We detected some bot behavior, you must be a robot?"
+		"INVALID_PHONE": "Invalid Phone Number. Please enter a valid phone number.",
+		"INVALID_EMAIL": "Invalid Email. Please enter a valid email address.",
+		"INVALID_TOKEN": "Incorrect Verification Code, please check for typos and try again.",
+		"botDetected": "We detected some bot behavior, you must be a robot?",
+		"UNRECOGNIZED": "Unknown Error. Please try again later."
 	}
 }
