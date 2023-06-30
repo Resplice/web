@@ -13,11 +13,11 @@ type Result<T> = Promise<
 >
 
 export interface Protocol {
-	isBot: (token: string) => Promise<boolean>
-	startAuth: (payload: proto.auth.StartAuth) => Result<proto.auth.AuthStarted>
-	verifyAuthEmail: (payload: proto.auth.VerifyAuthEmail) => Result<proto.auth.AuthEmailVerified>
-	verifyAuthPhone: (payload: proto.auth.VerifyAuthPhone) => Result<proto.auth.AuthPhoneVerified>
-	createAccount: (payload: proto.accounts.CreateAccount) => Result<proto.accounts.AccountCreated>
+	isBot(token: string): Promise<boolean>
+	startAuth(payload: proto.auth.StartAuth): Result<proto.auth.AuthStarted>
+	verifyAuthEmail(payload: proto.auth.VerifyAuthEmail): Result<proto.auth.AuthEmailVerified>
+	verifyAuthPhone(payload: proto.auth.VerifyAuthPhone): Result<proto.auth.AuthPhoneVerified>
+	createAccount(payload: proto.accounts.CreateAccount): Result<proto.accounts.AccountCreated>
 }
 
 export function protocolFactory(respliceEndpoint: string): Protocol {

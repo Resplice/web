@@ -29,7 +29,7 @@
 	})
 </script>
 
-<div class="p-4 bg-slate-600 text-slate-200 rounded-lg w-full flex items-center justify-between">
+<div class="p-4 bg-slate-600 text-slate-200 rounded-lg w-full flex items-start justify-between">
 	<code class="overflow-auto">
 		<pre bind:this={code}><slot>Code</slot></pre>
 	</code>

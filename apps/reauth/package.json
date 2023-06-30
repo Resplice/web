@@ -16,6 +16,8 @@
 		"format": "prettier --write --ignore-path=../../.prettierignore ."
 	},
 	"dependencies": {
+		"@dicebear/collection": "^6.0.4",
+		"@dicebear/core": "^6.0.4",
 		"@resplice/components": "*",
 		"@resplice/proto": "*",
 		"@resplice/utils": "*",

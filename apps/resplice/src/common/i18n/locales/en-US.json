@@ -1,0 +1,21 @@
+{
+	"attributes": {},
+	"chat": {
+		"message": "Message"
+	},
+	"common": {
+		"continue": "Continue"
+	},
+	"contacts": {
+		"contacts": "Contacts"
+	},
+	"invites": {
+		"invite": "Invite"
+	},
+	"profile": {
+		"upload": "Upload"
+	},
+	"splices": {
+		"splices": "Splices"
+	}
+}

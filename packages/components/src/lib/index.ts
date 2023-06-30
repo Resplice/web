@@ -42,6 +42,8 @@ export { default as TextField } from './form/TextField.svelte'
 export { default as Toggle } from './form/Toggle.svelte'
 
 // Skeleton
+export { default as AppError } from './skeleton/AppError.svelte'
+export { default as AppLoading } from './skeleton/AppLoading.svelte'
 export { default as Skeleton } from './skeleton/Skeleton.svelte'
 export { default as SkeletonList } from './skeleton/SkeletonList.svelte'
 export { default as Spinner } from './skeleton/Spinner.svelte'

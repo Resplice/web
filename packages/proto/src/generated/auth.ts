@@ -2,50 +2,99 @@
 import _m0 from "protobufjs/minimal";
 import { Event } from "./interface/event";
 
+export enum AuthStatus {
+  ACTIVE_SESSION = 0,
+  PENDING_EMAIL_VERIFICATION = 1,
+  PENDING_PHONE_VERIFICATION = 2,
+  PENDING_ACCOUNT_CREATION = 3,
+  PENDING_MULTI_FACTOR = 4,
+  PENDING_SESSION = 5,
+  UNRECOGNIZED = -1,
+}
+
+export function authStatusFromJSON(object: any): AuthStatus {
+  switch (object) {
+    case 0:
+    case "ACTIVE_SESSION":
+      return AuthStatus.ACTIVE_SESSION;
+    case 1:
+    case "PENDING_EMAIL_VERIFICATION":
+      return AuthStatus.PENDING_EMAIL_VERIFICATION;
+    case 2:
+    case "PENDING_PHONE_VERIFICATION":
+      return AuthStatus.PENDING_PHONE_VERIFICATION;
+    case 3:
+    case "PENDING_ACCOUNT_CREATION":
+      return AuthStatus.PENDING_ACCOUNT_CREATION;
+    case 4:
+    case "PENDING_MULTI_FACTOR":
+      return AuthStatus.PENDING_MULTI_FACTOR;
+    case 5:
+    case "PENDING_SESSION":
+      return AuthStatus.PENDING_SESSION;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return AuthStatus.UNRECOGNIZED;
+  }
+}
+
+export function authStatusToJSON(object: AuthStatus): string {
+  switch (object) {
+    case AuthStatus.ACTIVE_SESSION:
+      return "ACTIVE_SESSION";
+    case AuthStatus.PENDING_EMAIL_VERIFICATION:
+      return "PENDING_EMAIL_VERIFICATION";
+    case AuthStatus.PENDING_PHONE_VERIFICATION:
+      return "PENDING_PHONE_VERIFICATION";
+    case AuthStatus.PENDING_ACCOUNT_CREATION:
+      return "PENDING_ACCOUNT_CREATION";
+    case AuthStatus.PENDING_MULTI_FACTOR:
+      return "PENDING_MULTI_FACTOR";
+    case AuthStatus.PENDING_SESSION:
+      return "PENDING_SESSION";
+    case AuthStatus.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface StartAuth {
   email: string;
   phone: string;
-}
-
-export interface AuthStarted {
-  accessKey: Uint8Array;
 }
 
 export interface VerifyAuthEmail {
   email: string;
   phone: string;
   verificationCode: number;
-  accessKey: Uint8Array;
-}
-
-export interface AuthEmailVerified {
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
 export interface VerifyAuthPhone {
   email: string;
   phone: string;
   verificationCode: number;
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
-export interface AuthPhoneVerified {
-  accessKey: Uint8Array;
-  accountExists: boolean;
+export interface AuthChanged {
+  status: AuthStatus;
+  authCode: Uint8Array;
 }
 
 /**
  * pass remember_me=true on socket open to persist session
- * then authorize socket with access_key will change cookie expiry
+ * then authorize socket with auth_code will change cookie expiry
  */
 export interface AuthorizeSocket {
   lastEventIndex: number;
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
 export interface SocketAuthorized {
   events: Event[];
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
 function createBaseStartAuth(): StartAuth {
@@ -119,65 +168,8 @@ export const StartAuth = {
   },
 };
 
-function createBaseAuthStarted(): AuthStarted {
-  return { accessKey: new Uint8Array(0) };
-}
-
-export const AuthStarted = {
-  encode(message: AuthStarted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey.length !== 0) {
-      writer.uint32(10).bytes(message.accessKey);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthStarted {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthStarted();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.accessKey = reader.bytes();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AuthStarted {
-    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
-  },
-
-  toJSON(message: AuthStarted): unknown {
-    const obj: any = {};
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AuthStarted>, I>>(base?: I): AuthStarted {
-    return AuthStarted.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AuthStarted>, I>>(object: I): AuthStarted {
-    const message = createBaseAuthStarted();
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
-    return message;
-  },
-};
-
 function createBaseVerifyAuthEmail(): VerifyAuthEmail {
-  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
+  return { email: "", phone: "", verificationCode: 0, authCode: new Uint8Array(0) };
 }
 
 export const VerifyAuthEmail = {
@@ -191,8 +183,8 @@ export const VerifyAuthEmail = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(34).bytes(message.accessKey);
+    if (message.authCode.length !== 0) {
+      writer.uint32(34).bytes(message.authCode);
     }
     return writer;
   },
@@ -230,7 +222,7 @@ export const VerifyAuthEmail = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -246,7 +238,7 @@ export const VerifyAuthEmail = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
@@ -255,8 +247,8 @@ export const VerifyAuthEmail = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -269,70 +261,13 @@ export const VerifyAuthEmail = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
-    return message;
-  },
-};
-
-function createBaseAuthEmailVerified(): AuthEmailVerified {
-  return { accessKey: new Uint8Array(0) };
-}
-
-export const AuthEmailVerified = {
-  encode(message: AuthEmailVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey.length !== 0) {
-      writer.uint32(10).bytes(message.accessKey);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthEmailVerified {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthEmailVerified();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.accessKey = reader.bytes();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AuthEmailVerified {
-    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
-  },
-
-  toJSON(message: AuthEmailVerified): unknown {
-    const obj: any = {};
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AuthEmailVerified>, I>>(base?: I): AuthEmailVerified {
-    return AuthEmailVerified.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AuthEmailVerified>, I>>(object: I): AuthEmailVerified {
-    const message = createBaseAuthEmailVerified();
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseVerifyAuthPhone(): VerifyAuthPhone {
-  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
+  return { email: "", phone: "", verificationCode: 0, authCode: new Uint8Array(0) };
 }
 
 export const VerifyAuthPhone = {
@@ -346,8 +281,8 @@ export const VerifyAuthPhone = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(34).bytes(message.accessKey);
+    if (message.authCode.length !== 0) {
+      writer.uint32(34).bytes(message.authCode);
     }
     return writer;
   },
@@ -385,7 +320,7 @@ export const VerifyAuthPhone = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -401,7 +336,7 @@ export const VerifyAuthPhone = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
@@ -410,8 +345,8 @@ export const VerifyAuthPhone = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -424,46 +359,46 @@ export const VerifyAuthPhone = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
 
-function createBaseAuthPhoneVerified(): AuthPhoneVerified {
-  return { accessKey: new Uint8Array(0), accountExists: false };
+function createBaseAuthChanged(): AuthChanged {
+  return { status: 0, authCode: new Uint8Array(0) };
 }
 
-export const AuthPhoneVerified = {
-  encode(message: AuthPhoneVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey.length !== 0) {
-      writer.uint32(10).bytes(message.accessKey);
+export const AuthChanged = {
+  encode(message: AuthChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.status !== 0) {
+      writer.uint32(8).int32(message.status);
     }
-    if (message.accountExists === true) {
-      writer.uint32(16).bool(message.accountExists);
+    if (message.authCode.length !== 0) {
+      writer.uint32(18).bytes(message.authCode);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthPhoneVerified {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthPhoneVerified();
+    const message = createBaseAuthChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.status = reader.int32() as any;
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.accountExists = reader.bool();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -474,35 +409,35 @@ export const AuthPhoneVerified = {
     return message;
   },
 
-  fromJSON(object: any): AuthPhoneVerified {
+  fromJSON(object: any): AuthChanged {
     return {
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
-      accountExists: isSet(object.accountExists) ? Boolean(object.accountExists) : false,
+      status: isSet(object.status) ? authStatusFromJSON(object.status) : 0,
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
-  toJSON(message: AuthPhoneVerified): unknown {
+  toJSON(message: AuthChanged): unknown {
     const obj: any = {};
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
-    message.accountExists !== undefined && (obj.accountExists = message.accountExists);
+    message.status !== undefined && (obj.status = authStatusToJSON(message.status));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AuthPhoneVerified>, I>>(base?: I): AuthPhoneVerified {
-    return AuthPhoneVerified.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AuthChanged>, I>>(base?: I): AuthChanged {
+    return AuthChanged.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<AuthPhoneVerified>, I>>(object: I): AuthPhoneVerified {
-    const message = createBaseAuthPhoneVerified();
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
-    message.accountExists = object.accountExists ?? false;
+  fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
+    const message = createBaseAuthChanged();
+    message.status = object.status ?? 0;
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAuthorizeSocket(): AuthorizeSocket {
-  return { lastEventIndex: 0, accessKey: new Uint8Array(0) };
+  return { lastEventIndex: 0, authCode: new Uint8Array(0) };
 }
 
 export const AuthorizeSocket = {
@@ -510,8 +445,8 @@ export const AuthorizeSocket = {
     if (message.lastEventIndex !== 0) {
       writer.uint32(8).uint32(message.lastEventIndex);
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(18).bytes(message.accessKey);
+    if (message.authCode.length !== 0) {
+      writer.uint32(18).bytes(message.authCode);
     }
     return writer;
   },
@@ -535,7 +470,7 @@ export const AuthorizeSocket = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -549,15 +484,15 @@ export const AuthorizeSocket = {
   fromJSON(object: any): AuthorizeSocket {
     return {
       lastEventIndex: isSet(object.lastEventIndex) ? Number(object.lastEventIndex) : 0,
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
   toJSON(message: AuthorizeSocket): unknown {
     const obj: any = {};
     message.lastEventIndex !== undefined && (obj.lastEventIndex = Math.round(message.lastEventIndex));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -568,13 +503,13 @@ export const AuthorizeSocket = {
   fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
     const message = createBaseAuthorizeSocket();
     message.lastEventIndex = object.lastEventIndex ?? 0;
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseSocketAuthorized(): SocketAuthorized {
-  return { events: [], accessKey: new Uint8Array(0) };
+  return { events: [], authCode: new Uint8Array(0) };
 }
 
 export const SocketAuthorized = {
@@ -582,8 +517,8 @@ export const SocketAuthorized = {
     for (const v of message.events) {
       Event.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(18).bytes(message.accessKey);
+    if (message.authCode.length !== 0) {
+      writer.uint32(18).bytes(message.authCode);
     }
     return writer;
   },
@@ -607,7 +542,7 @@ export const SocketAuthorized = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -621,7 +556,7 @@ export const SocketAuthorized = {
   fromJSON(object: any): SocketAuthorized {
     return {
       events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
@@ -632,8 +567,8 @@ export const SocketAuthorized = {
     } else {
       obj.events = [];
     }
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -644,7 +579,7 @@ export const SocketAuthorized = {
   fromPartial<I extends Exact<DeepPartial<SocketAuthorized>, I>>(object: I): SocketAuthorized {
     const message = createBaseSocketAuthorized();
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };

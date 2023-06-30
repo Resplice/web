@@ -3,85 +3,83 @@ import _m0 from "protobufjs/minimal";
 
 export enum EventType {
   ERROR = 0,
-  /** AUTH_STARTED - Auth */
-  AUTH_STARTED = 1,
-  AUTH_EMAIL_VERIFIED = 2,
-  AUTH_PHONE_VERIFIED = 3,
-  SOCKET_AUTHORIZED = 4,
+  /** AUTH_CHANGED - Auth */
+  AUTH_CHANGED = 1,
+  SOCKET_AUTHORIZED = 2,
   /** SESSION_STARTED - Session */
-  SESSION_STARTED = 5,
-  SESSION_EXPIRED = 6,
+  SESSION_STARTED = 3,
+  SESSION_EXPIRED = 4,
   /** ACCOUNT_CREATED - Account */
-  ACCOUNT_CREATED = 7,
-  ACCOUNT_NAME_EDITED = 8,
-  ACCOUNT_HANDLE_EDITED = 9,
-  ACCOUNT_AVATAR_EDITED = 10,
-  ACCOUNT_DELETED = 11,
-  /** ADDRESS_ADDED - Attributes */
-  ADDRESS_ADDED = 12,
-  ATTRIBUTE_NAME_EDITED = 13,
-  ATTRIBUTE_VALUE_EDITED = 14,
-  ATTRIBUTE_SORTED = 15,
-  ATTRIBUTE_VERIFIED = 16,
-  ATTRIBUTE_DELETED = 17,
+  ACCOUNT_CREATED = 5,
+  ACCOUNT_NAME_EDITED = 6,
+  ACCOUNT_HANDLE_EDITED = 7,
+  ACCOUNT_AVATAR_EDITED = 8,
+  ACCOUNT_DELETED = 9,
+  /** ATTRIBUTE_ADDED - Attributes */
+  ATTRIBUTE_ADDED = 10,
+  ATTRIBUTE_NAME_EDITED = 11,
+  ATTRIBUTE_VALUE_EDITED = 12,
+  ATTRIBUTE_SORTED = 13,
+  ATTRIBUTE_VERIFIED = 14,
+  ATTRIBUTE_DELETED = 15,
   /** INVITE_CREATED - Invites */
-  INVITE_CREATED = 18,
-  INVITE_ATTRIBUTE_ADDED = 19,
-  INVITE_ATTRIBUTE_REMOVED = 20,
-  INVITE_CANCELED = 21,
+  INVITE_CREATED = 16,
+  INVITE_ATTRIBUTE_ADDED = 17,
+  INVITE_ATTRIBUTE_REMOVED = 18,
+  INVITE_CANCELED = 19,
   /** META_INVITE_CREATED - Meta Invites */
-  META_INVITE_CREATED = 22,
-  META_INVITE_ATTRIBUTE_ADDED = 23,
-  META_INVITE_ATTRIBUTE_REMOVED = 24,
-  META_INVITE_DELETED = 25,
-  META_INVITE_OPENED = 26,
+  META_INVITE_CREATED = 20,
+  META_INVITE_ATTRIBUTE_ADDED = 21,
+  META_INVITE_ATTRIBUTE_REMOVED = 22,
+  META_INVITE_DELETED = 23,
+  META_INVITE_OPENED = 24,
   /** PENDING_CONTACT_ACCEPTED - Contacts */
-  PENDING_CONTACT_ACCEPTED = 27,
-  PENDING_CONTACT_DECLINED = 28,
-  CONTACT_ALIAS_EDITED = 29,
-  CONTACT_DESCRIPTION_EDITED = 30,
-  CONTACT_FAVORITED = 31,
-  CONTACT_UNFAVORITED = 32,
-  CONTACT_MUTED = 33,
-  CONTACT_UNMUTED = 34,
-  CONTACT_ARCHIVED = 35,
-  CONTACT_UNARCHIVED = 36,
-  CONTACT_DELETED = 37,
-  CONTACT_ATTRIBUTE_REQUESTED = 38,
-  CONTACT_ATTRIBUTE_HIDDEN = 39,
-  CONTACT_ATTRIBUTE_UNHIDDEN = 40,
-  CONTACT_SHARE_ADDED = 41,
-  CONTACT_SHARE_REMOVED = 42,
+  PENDING_CONTACT_ACCEPTED = 25,
+  PENDING_CONTACT_DECLINED = 26,
+  CONTACT_ALIAS_EDITED = 27,
+  CONTACT_DESCRIPTION_EDITED = 28,
+  CONTACT_FAVORITED = 29,
+  CONTACT_UNFAVORITED = 30,
+  CONTACT_MUTED = 31,
+  CONTACT_UNMUTED = 32,
+  CONTACT_ARCHIVED = 33,
+  CONTACT_UNARCHIVED = 34,
+  CONTACT_DELETED = 35,
+  CONTACT_ATTRIBUTE_REQUESTED = 36,
+  CONTACT_ATTRIBUTE_HIDDEN = 37,
+  CONTACT_ATTRIBUTE_UNHIDDEN = 38,
+  CONTACT_SHARE_ADDED = 39,
+  CONTACT_SHARE_REMOVED = 40,
   /** SPLICE_INVITE_CREATED - Splice Invites */
-  SPLICE_INVITE_CREATED = 43,
-  SPLICE_AUTO_ACCEPT_INVITE_ENABLED = 44,
-  SPLICE_AUTO_ACCEPT_INVITE_DISABLED = 45,
-  SPLICE_INVITE_DELETED = 46,
+  SPLICE_INVITE_CREATED = 41,
+  SPLICE_AUTO_ACCEPT_INVITE_ENABLED = 42,
+  SPLICE_AUTO_ACCEPT_INVITE_DISABLED = 43,
+  SPLICE_INVITE_DELETED = 44,
   /** SPLICE_META_INVITE_CREATED - Splice Meta Invites */
-  SPLICE_META_INVITE_CREATED = 47,
-  SPLICE_META_INVITE_DELETED = 48,
-  SPLICE_META_INVITE_OPENED = 49,
+  SPLICE_META_INVITE_CREATED = 45,
+  SPLICE_META_INVITE_DELETED = 46,
+  SPLICE_META_INVITE_OPENED = 47,
   /** PENDING_SPLICE_ACCEPTED - Splices */
-  PENDING_SPLICE_ACCEPTED = 50,
-  PENDING_SPLICE_DECLINED = 51,
-  SPLICE_CREATED = 52,
-  SPLICE_NAME_EDITED = 53,
-  SPLICE_DESCRIPTION_EDITED = 54,
-  SPLICE_AVATAR_EDITED = 55,
-  SPLICE_FAVORITED = 56,
-  SPLICE_UNFAVORITED = 57,
-  SPLICE_MUTED = 58,
-  SPLICE_UNMUTED = 59,
-  SPLICE_ARCHIVED = 60,
-  SPLICE_UNARCHIVED = 61,
-  SPLICE_SHARE_ADDED = 62,
-  SPLICE_SHARE_REMOVED = 63,
-  SPLICE_LEFT = 64,
+  PENDING_SPLICE_ACCEPTED = 48,
+  PENDING_SPLICE_DECLINED = 49,
+  SPLICE_CREATED = 50,
+  SPLICE_NAME_EDITED = 51,
+  SPLICE_DESCRIPTION_EDITED = 52,
+  SPLICE_AVATAR_EDITED = 53,
+  SPLICE_FAVORITED = 54,
+  SPLICE_UNFAVORITED = 55,
+  SPLICE_MUTED = 56,
+  SPLICE_UNMUTED = 57,
+  SPLICE_ARCHIVED = 58,
+  SPLICE_UNARCHIVED = 59,
+  SPLICE_SHARE_ADDED = 60,
+  SPLICE_SHARE_REMOVED = 61,
+  SPLICE_LEFT = 62,
   /** SPLICE_MEMBER_ADDED - Splice Members */
-  SPLICE_MEMBER_ADDED = 65,
-  SPLICE_MEMBER_REMOVED = 66,
-  SPLICE_MODERATOR_ADDED = 67,
-  SPLICE_MODERATOR_REMOVED = 68,
+  SPLICE_MEMBER_ADDED = 63,
+  SPLICE_MEMBER_REMOVED = 64,
+  SPLICE_MODERATOR_ADDED = 65,
+  SPLICE_MODERATOR_REMOVED = 66,
   EVENTS = 127,
   UNRECOGNIZED = -1,
 }
@@ -92,207 +90,201 @@ export function eventTypeFromJSON(object: any): EventType {
     case "ERROR":
       return EventType.ERROR;
     case 1:
-    case "AUTH_STARTED":
-      return EventType.AUTH_STARTED;
+    case "AUTH_CHANGED":
+      return EventType.AUTH_CHANGED;
     case 2:
-    case "AUTH_EMAIL_VERIFIED":
-      return EventType.AUTH_EMAIL_VERIFIED;
-    case 3:
-    case "AUTH_PHONE_VERIFIED":
-      return EventType.AUTH_PHONE_VERIFIED;
-    case 4:
     case "SOCKET_AUTHORIZED":
       return EventType.SOCKET_AUTHORIZED;
-    case 5:
+    case 3:
     case "SESSION_STARTED":
       return EventType.SESSION_STARTED;
-    case 6:
+    case 4:
     case "SESSION_EXPIRED":
       return EventType.SESSION_EXPIRED;
-    case 7:
+    case 5:
     case "ACCOUNT_CREATED":
       return EventType.ACCOUNT_CREATED;
-    case 8:
+    case 6:
     case "ACCOUNT_NAME_EDITED":
       return EventType.ACCOUNT_NAME_EDITED;
-    case 9:
+    case 7:
     case "ACCOUNT_HANDLE_EDITED":
       return EventType.ACCOUNT_HANDLE_EDITED;
-    case 10:
+    case 8:
     case "ACCOUNT_AVATAR_EDITED":
       return EventType.ACCOUNT_AVATAR_EDITED;
-    case 11:
+    case 9:
     case "ACCOUNT_DELETED":
       return EventType.ACCOUNT_DELETED;
-    case 12:
-    case "ADDRESS_ADDED":
-      return EventType.ADDRESS_ADDED;
-    case 13:
+    case 10:
+    case "ATTRIBUTE_ADDED":
+      return EventType.ATTRIBUTE_ADDED;
+    case 11:
     case "ATTRIBUTE_NAME_EDITED":
       return EventType.ATTRIBUTE_NAME_EDITED;
-    case 14:
+    case 12:
     case "ATTRIBUTE_VALUE_EDITED":
       return EventType.ATTRIBUTE_VALUE_EDITED;
-    case 15:
+    case 13:
     case "ATTRIBUTE_SORTED":
       return EventType.ATTRIBUTE_SORTED;
-    case 16:
+    case 14:
     case "ATTRIBUTE_VERIFIED":
       return EventType.ATTRIBUTE_VERIFIED;
-    case 17:
+    case 15:
     case "ATTRIBUTE_DELETED":
       return EventType.ATTRIBUTE_DELETED;
-    case 18:
+    case 16:
     case "INVITE_CREATED":
       return EventType.INVITE_CREATED;
-    case 19:
+    case 17:
     case "INVITE_ATTRIBUTE_ADDED":
       return EventType.INVITE_ATTRIBUTE_ADDED;
-    case 20:
+    case 18:
     case "INVITE_ATTRIBUTE_REMOVED":
       return EventType.INVITE_ATTRIBUTE_REMOVED;
-    case 21:
+    case 19:
     case "INVITE_CANCELED":
       return EventType.INVITE_CANCELED;
-    case 22:
+    case 20:
     case "META_INVITE_CREATED":
       return EventType.META_INVITE_CREATED;
-    case 23:
+    case 21:
     case "META_INVITE_ATTRIBUTE_ADDED":
       return EventType.META_INVITE_ATTRIBUTE_ADDED;
-    case 24:
+    case 22:
     case "META_INVITE_ATTRIBUTE_REMOVED":
       return EventType.META_INVITE_ATTRIBUTE_REMOVED;
-    case 25:
+    case 23:
     case "META_INVITE_DELETED":
       return EventType.META_INVITE_DELETED;
-    case 26:
+    case 24:
     case "META_INVITE_OPENED":
       return EventType.META_INVITE_OPENED;
-    case 27:
+    case 25:
     case "PENDING_CONTACT_ACCEPTED":
       return EventType.PENDING_CONTACT_ACCEPTED;
-    case 28:
+    case 26:
     case "PENDING_CONTACT_DECLINED":
       return EventType.PENDING_CONTACT_DECLINED;
-    case 29:
+    case 27:
     case "CONTACT_ALIAS_EDITED":
       return EventType.CONTACT_ALIAS_EDITED;
-    case 30:
+    case 28:
     case "CONTACT_DESCRIPTION_EDITED":
       return EventType.CONTACT_DESCRIPTION_EDITED;
-    case 31:
+    case 29:
     case "CONTACT_FAVORITED":
       return EventType.CONTACT_FAVORITED;
-    case 32:
+    case 30:
     case "CONTACT_UNFAVORITED":
       return EventType.CONTACT_UNFAVORITED;
-    case 33:
+    case 31:
     case "CONTACT_MUTED":
       return EventType.CONTACT_MUTED;
-    case 34:
+    case 32:
     case "CONTACT_UNMUTED":
       return EventType.CONTACT_UNMUTED;
-    case 35:
+    case 33:
     case "CONTACT_ARCHIVED":
       return EventType.CONTACT_ARCHIVED;
-    case 36:
+    case 34:
     case "CONTACT_UNARCHIVED":
       return EventType.CONTACT_UNARCHIVED;
-    case 37:
+    case 35:
     case "CONTACT_DELETED":
       return EventType.CONTACT_DELETED;
-    case 38:
+    case 36:
     case "CONTACT_ATTRIBUTE_REQUESTED":
       return EventType.CONTACT_ATTRIBUTE_REQUESTED;
-    case 39:
+    case 37:
     case "CONTACT_ATTRIBUTE_HIDDEN":
       return EventType.CONTACT_ATTRIBUTE_HIDDEN;
-    case 40:
+    case 38:
     case "CONTACT_ATTRIBUTE_UNHIDDEN":
       return EventType.CONTACT_ATTRIBUTE_UNHIDDEN;
-    case 41:
+    case 39:
     case "CONTACT_SHARE_ADDED":
       return EventType.CONTACT_SHARE_ADDED;
-    case 42:
+    case 40:
     case "CONTACT_SHARE_REMOVED":
       return EventType.CONTACT_SHARE_REMOVED;
-    case 43:
+    case 41:
     case "SPLICE_INVITE_CREATED":
       return EventType.SPLICE_INVITE_CREATED;
-    case 44:
+    case 42:
     case "SPLICE_AUTO_ACCEPT_INVITE_ENABLED":
       return EventType.SPLICE_AUTO_ACCEPT_INVITE_ENABLED;
-    case 45:
+    case 43:
     case "SPLICE_AUTO_ACCEPT_INVITE_DISABLED":
       return EventType.SPLICE_AUTO_ACCEPT_INVITE_DISABLED;
-    case 46:
+    case 44:
     case "SPLICE_INVITE_DELETED":
       return EventType.SPLICE_INVITE_DELETED;
-    case 47:
+    case 45:
     case "SPLICE_META_INVITE_CREATED":
       return EventType.SPLICE_META_INVITE_CREATED;
-    case 48:
+    case 46:
     case "SPLICE_META_INVITE_DELETED":
       return EventType.SPLICE_META_INVITE_DELETED;
-    case 49:
+    case 47:
     case "SPLICE_META_INVITE_OPENED":
       return EventType.SPLICE_META_INVITE_OPENED;
-    case 50:
+    case 48:
     case "PENDING_SPLICE_ACCEPTED":
       return EventType.PENDING_SPLICE_ACCEPTED;
-    case 51:
+    case 49:
     case "PENDING_SPLICE_DECLINED":
       return EventType.PENDING_SPLICE_DECLINED;
-    case 52:
+    case 50:
     case "SPLICE_CREATED":
       return EventType.SPLICE_CREATED;
-    case 53:
+    case 51:
     case "SPLICE_NAME_EDITED":
       return EventType.SPLICE_NAME_EDITED;
-    case 54:
+    case 52:
     case "SPLICE_DESCRIPTION_EDITED":
       return EventType.SPLICE_DESCRIPTION_EDITED;
-    case 55:
+    case 53:
     case "SPLICE_AVATAR_EDITED":
       return EventType.SPLICE_AVATAR_EDITED;
-    case 56:
+    case 54:
     case "SPLICE_FAVORITED":
       return EventType.SPLICE_FAVORITED;
-    case 57:
+    case 55:
     case "SPLICE_UNFAVORITED":
       return EventType.SPLICE_UNFAVORITED;
-    case 58:
+    case 56:
     case "SPLICE_MUTED":
       return EventType.SPLICE_MUTED;
-    case 59:
+    case 57:
     case "SPLICE_UNMUTED":
       return EventType.SPLICE_UNMUTED;
-    case 60:
+    case 58:
     case "SPLICE_ARCHIVED":
       return EventType.SPLICE_ARCHIVED;
-    case 61:
+    case 59:
     case "SPLICE_UNARCHIVED":
       return EventType.SPLICE_UNARCHIVED;
-    case 62:
+    case 60:
     case "SPLICE_SHARE_ADDED":
       return EventType.SPLICE_SHARE_ADDED;
-    case 63:
+    case 61:
     case "SPLICE_SHARE_REMOVED":
       return EventType.SPLICE_SHARE_REMOVED;
-    case 64:
+    case 62:
     case "SPLICE_LEFT":
       return EventType.SPLICE_LEFT;
-    case 65:
+    case 63:
     case "SPLICE_MEMBER_ADDED":
       return EventType.SPLICE_MEMBER_ADDED;
-    case 66:
+    case 64:
     case "SPLICE_MEMBER_REMOVED":
       return EventType.SPLICE_MEMBER_REMOVED;
-    case 67:
+    case 65:
     case "SPLICE_MODERATOR_ADDED":
       return EventType.SPLICE_MODERATOR_ADDED;
-    case 68:
+    case 66:
     case "SPLICE_MODERATOR_REMOVED":
       return EventType.SPLICE_MODERATOR_REMOVED;
     case 127:
@@ -309,12 +301,8 @@ export function eventTypeToJSON(object: EventType): string {
   switch (object) {
     case EventType.ERROR:
       return "ERROR";
-    case EventType.AUTH_STARTED:
-      return "AUTH_STARTED";
-    case EventType.AUTH_EMAIL_VERIFIED:
-      return "AUTH_EMAIL_VERIFIED";
-    case EventType.AUTH_PHONE_VERIFIED:
-      return "AUTH_PHONE_VERIFIED";
+    case EventType.AUTH_CHANGED:
+      return "AUTH_CHANGED";
     case EventType.SOCKET_AUTHORIZED:
       return "SOCKET_AUTHORIZED";
     case EventType.SESSION_STARTED:
@@ -331,8 +319,8 @@ export function eventTypeToJSON(object: EventType): string {
       return "ACCOUNT_AVATAR_EDITED";
     case EventType.ACCOUNT_DELETED:
       return "ACCOUNT_DELETED";
-    case EventType.ADDRESS_ADDED:
-      return "ADDRESS_ADDED";
+    case EventType.ATTRIBUTE_ADDED:
+      return "ATTRIBUTE_ADDED";
     case EventType.ATTRIBUTE_NAME_EDITED:
       return "ATTRIBUTE_NAME_EDITED";
     case EventType.ATTRIBUTE_VALUE_EDITED:

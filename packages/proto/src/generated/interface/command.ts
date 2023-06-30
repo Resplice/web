@@ -17,8 +17,8 @@ export enum CommandType {
   EDIT_ACCOUNT_HANDLE = 9,
   EDIT_ACCOUNT_AVATAR = 10,
   DELETE_ACCOUNT = 11,
-  /** ADD_ADDRESS - Attributes */
-  ADD_ADDRESS = 12,
+  /** ADD_ATTRIBUTE - Attributes */
+  ADD_ATTRIBUTE = 12,
   EDIT_ATTRIBUTE_NAME = 13,
   EDIT_ATTRIBUTE_VALUE = 14,
   SORT_ATTRIBUTE = 15,
@@ -130,8 +130,8 @@ export function commandTypeFromJSON(object: any): CommandType {
     case "DELETE_ACCOUNT":
       return CommandType.DELETE_ACCOUNT;
     case 12:
-    case "ADD_ADDRESS":
-      return CommandType.ADD_ADDRESS;
+    case "ADD_ATTRIBUTE":
+      return CommandType.ADD_ATTRIBUTE;
     case 13:
     case "EDIT_ATTRIBUTE_NAME":
       return CommandType.EDIT_ATTRIBUTE_NAME;
@@ -348,8 +348,8 @@ export function commandTypeToJSON(object: CommandType): string {
       return "EDIT_ACCOUNT_AVATAR";
     case CommandType.DELETE_ACCOUNT:
       return "DELETE_ACCOUNT";
-    case CommandType.ADD_ADDRESS:
-      return "ADD_ADDRESS";
+    case CommandType.ADD_ATTRIBUTE:
+      return "ADD_ATTRIBUTE";
     case CommandType.EDIT_ATTRIBUTE_NAME:
       return "EDIT_ATTRIBUTE_NAME";
     case CommandType.EDIT_ATTRIBUTE_VALUE:

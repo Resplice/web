@@ -47,7 +47,57 @@ type AccountCommand =
 	| EditAccountAvatar
 	| DeleteAccount
 
-export type Command = AuthCommand | AccountCommand
+// Session Commands
+export type StartSession = {
+	type: proto.CommandType.START_SESSION
+	payload: proto.sessions.StartSession
+}
+export type ExpireSession = {
+	type: proto.CommandType.EXPIRE_SESSION
+	payload: proto.sessions.ExpireSession
+}
+type SessionCommand = StartSession | ExpireSession
+
+// Attribute Commands
+export type AddAttribute = {
+	type: proto.CommandType.ADD_ATTRIBUTE
+	payload: proto.attributes.AddAttribute
+}
+export type EditAttributeName = {
+	type: proto.CommandType.EDIT_ATTRIBUTE_NAME
+	payload: proto.attributes.EditAttributeName
+}
+export type EditAttributeValue = {
+	type: proto.CommandType.EDIT_ATTRIBUTE_VALUE
+	payload: proto.attributes.EditAttributeValue
+}
+export type SortAttribute = {
+	type: proto.CommandType.SORT_ATTRIBUTE
+	payload: proto.attributes.SortAttribute
+}
+export type SendAttributeVerification = {
+	type: proto.CommandType.SEND_ATTRIBUTE_VERIFICATION
+	payload: proto.attributes.SendAttributeVerification
+}
+export type VerifyAttribute = {
+	type: proto.CommandType.VERIFY_ATTRIBUTE
+	payload: proto.attributes.VerifyAttribute
+}
+export type DeleteAttribute = {
+	type: proto.CommandType.DELETE_ATTRIBUTE
+	payload: proto.attributes.DeleteAttribute
+}
+
+type AttributeCommand =
+	| AddAttribute
+	| EditAttributeName
+	| EditAttributeValue
+	| SortAttribute
+	| SendAttributeVerification
+	| VerifyAttribute
+	| DeleteAttribute
+
+export type Command = AuthCommand | AccountCommand | SessionCommand | AttributeCommand
 
 export const commandMapper = {
 	[proto.CommandType.START_AUTH]: proto.auth.StartAuth.encode,
@@ -58,5 +108,15 @@ export const commandMapper = {
 	[proto.CommandType.EDIT_ACCOUNT_NAME]: proto.accounts.EditAccountName.encode,
 	[proto.CommandType.EDIT_ACCOUNT_HANDLE]: proto.accounts.EditAccountHandle.encode,
 	[proto.CommandType.EDIT_ACCOUNT_AVATAR]: proto.accounts.EditAccountAvatar.encode,
-	[proto.CommandType.DELETE_ACCOUNT]: proto.accounts.DeleteAccount.encode
+	[proto.CommandType.DELETE_ACCOUNT]: proto.accounts.DeleteAccount.encode,
+	[proto.CommandType.START_SESSION]: proto.sessions.StartSession.encode,
+	[proto.CommandType.EXPIRE_SESSION]: proto.sessions.ExpireSession.encode,
+	[proto.CommandType.ADD_ATTRIBUTE]: proto.attributes.AddAttribute.encode,
+	[proto.CommandType.EDIT_ATTRIBUTE_NAME]: proto.attributes.EditAttributeName.encode,
+	[proto.CommandType.EDIT_ATTRIBUTE_VALUE]: proto.attributes.EditAttributeValue.encode,
+	[proto.CommandType.SORT_ATTRIBUTE]: proto.attributes.SortAttribute.encode,
+	[proto.CommandType.SEND_ATTRIBUTE_VERIFICATION]:
+		proto.attributes.SendAttributeVerification.encode,
+	[proto.CommandType.VERIFY_ATTRIBUTE]: proto.attributes.VerifyAttribute.encode,
+	[proto.CommandType.DELETE_ATTRIBUTE]: proto.attributes.DeleteAttribute.encode
 } as const

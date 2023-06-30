@@ -2,12 +2,13 @@
 import _m0 from "protobufjs/minimal";
 
 export interface StartSession {
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
 export interface SessionStarted {
+  sessionId: number;
   expirySeconds: number;
-  accessKey: Uint8Array;
+  authCode: Uint8Array;
 }
 
 export interface ExpireSession {
@@ -19,13 +20,13 @@ export interface SessionExpired {
 }
 
 function createBaseStartSession(): StartSession {
-  return { accessKey: new Uint8Array(0) };
+  return { authCode: new Uint8Array(0) };
 }
 
 export const StartSession = {
   encode(message: StartSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey.length !== 0) {
-      writer.uint32(10).bytes(message.accessKey);
+    if (message.authCode.length !== 0) {
+      writer.uint32(10).bytes(message.authCode);
     }
     return writer;
   },
@@ -42,7 +43,7 @@ export const StartSession = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -54,13 +55,13 @@ export const StartSession = {
   },
 
   fromJSON(object: any): StartSession {
-    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
+    return { authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0) };
   },
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -70,22 +71,25 @@ export const StartSession = {
 
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseSessionStarted(): SessionStarted {
-  return { expirySeconds: 0, accessKey: new Uint8Array(0) };
+  return { sessionId: 0, expirySeconds: 0, authCode: new Uint8Array(0) };
 }
 
 export const SessionStarted = {
   encode(message: SessionStarted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.expirySeconds !== 0) {
-      writer.uint32(8).int32(message.expirySeconds);
+    if (message.sessionId !== 0) {
+      writer.uint32(8).uint32(message.sessionId);
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(18).bytes(message.accessKey);
+    if (message.expirySeconds !== 0) {
+      writer.uint32(16).int32(message.expirySeconds);
+    }
+    if (message.authCode.length !== 0) {
+      writer.uint32(26).bytes(message.authCode);
     }
     return writer;
   },
@@ -102,14 +106,21 @@ export const SessionStarted = {
             break;
           }
 
-          message.expirySeconds = reader.int32();
+          message.sessionId = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.expirySeconds = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.authCode = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -122,16 +133,18 @@ export const SessionStarted = {
 
   fromJSON(object: any): SessionStarted {
     return {
+      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
       expirySeconds: isSet(object.expirySeconds) ? Number(object.expirySeconds) : 0,
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
     };
   },
 
   toJSON(message: SessionStarted): unknown {
     const obj: any = {};
+    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     message.expirySeconds !== undefined && (obj.expirySeconds = Math.round(message.expirySeconds));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.authCode !== undefined &&
+      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
     return obj;
   },
 
@@ -141,8 +154,9 @@ export const SessionStarted = {
 
   fromPartial<I extends Exact<DeepPartial<SessionStarted>, I>>(object: I): SessionStarted {
     const message = createBaseSessionStarted();
+    message.sessionId = object.sessionId ?? 0;
     message.expirySeconds = object.expirySeconds ?? 0;
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.authCode = object.authCode ?? new Uint8Array(0);
     return message;
   },
 };
