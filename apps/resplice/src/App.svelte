@@ -5,45 +5,48 @@
 	import initializeIntl from '$common/i18n'
 	import respliceProtocolFactory, { contextKey } from '$common/protocol'
 	import { AppLoading, AppError } from '@resplice/components'
-	// import Router from './Router.svelte'
+	import Router from './Router.svelte'
 	import './app.css'
 
-	let initialUrl = '/'
+	let initialUrl = '/profile'
 
-	async function loadApp(): Promise<void> {
+	async function loadApp(): Promise<boolean> {
 		if (!isRespliceSupported()) throw new Error('Resplice is not supported on this device.')
 
 		try {
 			const urlData = getUrlData()
 			const respliceProtocol = await respliceProtocolFactory()
 
-			const session = await respliceProtocol.session.initialize(urlData.respliceAccessToken)
+			const session = await respliceProtocol.session.initialize(urlData.respliceAuthToken)
 
 			if (!session) {
 				// If session cannot be stored or started, redirect to auth flow
-				location.href = config.authUrl
-				return
+				console.log('Session not found, redirecting to auth flow')
+				// location.replace(config.authUrl)
+				return false
 			}
 
 			setContext(contextKey, respliceProtocol)
 			await initializeIntl()
 			if (urlData.googleOAuthAccessToken)
 				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
+
+			return true
 		} catch (err) {
 			console.error(err)
-			location.href = config.authUrl
+			// location.replace(config.authUrl)
+			return false
 		}
 	}
 
 	function getUrlData() {
-		console.log(window.location.hash)
-		const params = new URLSearchParams(window.location.hash.substring(1))
+		const params = new URLSearchParams(window.location.search)
 		return {
 			googleOAuthAccessToken: params.get('google-access-token'),
-			respliceAccessToken: params.get('access-key')
+			respliceAuthToken: params.get('auth-token')
 		} as {
 			googleOAuthAccessToken?: string
-			respliceAccessToken?: string
+			respliceAuthToken?: string
 		}
 	}
 
@@ -52,10 +55,11 @@
 
 {#await isLoading}
 	<AppLoading />
-{:then}
-	<!-- <ToastProvider /> -->
-	<p>Loaded</p>
-	<!-- <Router {initialUrl} /> -->
+{:then isValidSession}
+	{#if isValidSession}
+		<Router {initialUrl} />
+		<!-- <ToastProvider /> -->
+	{/if}
 {:catch error}
 	<AppError {error} />
 {/await}

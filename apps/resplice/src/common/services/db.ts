@@ -194,7 +194,7 @@ function clear(): Promise<void> {
 			stores[i] = DOMStringStores[i] as Store
 		}
 
-		const transaction = db.transaction(stores)
+		const transaction = db.transaction(stores, 'readwrite')
 		stores.forEach((s) => {
 			transaction.objectStore(s).clear()
 		})
