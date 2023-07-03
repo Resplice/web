@@ -1,75 +1,79 @@
 import proto from './index'
 
+type BaseEvent = {
+	id: number
+}
+
 // Meta Events
-export type Error = {
+export type Error = BaseEvent & {
 	type: proto.EventType.ERROR
 	payload: proto.Error
 }
 type MetaEvent = Error
 
 // Auth Events
-export type AuthChanged = {
+export type AuthChanged = BaseEvent & {
 	type: proto.EventType.AUTH_CHANGED
 	payload: proto.auth.AuthChanged
 }
-export type SocketAuthorized = {
+export type SocketAuthorized = BaseEvent & {
 	type: proto.EventType.SOCKET_AUTHORIZED
 	payload: proto.auth.SocketAuthorized
 }
 type AuthEvent = AuthChanged | SocketAuthorized
 
 // Account Events
-export type AccountCreated = {
+export type AccountCreated = BaseEvent & {
 	type: proto.EventType.ACCOUNT_CREATED
 	payload: proto.accounts.AccountCreated
 }
-export type AccountNameEdited = {
+export type AccountNameEdited = BaseEvent & {
 	type: proto.EventType.ACCOUNT_NAME_EDITED
 	payload: proto.accounts.AccountNameEdited
 }
-export type AccountHandleEdited = {
+export type AccountHandleEdited = BaseEvent & {
 	type: proto.EventType.ACCOUNT_HANDLE_EDITED
 	payload: proto.accounts.AccountHandleEdited
 }
-export type AccountAvatarEdited = {
+export type AccountAvatarEdited = BaseEvent & {
 	type: proto.EventType.ACCOUNT_AVATAR_EDITED
 	payload: proto.accounts.AccountAvatarEdited
 }
 type AccountEvent = AccountCreated | AccountNameEdited | AccountHandleEdited | AccountAvatarEdited
 
 // Session Events
-export type SessionStarted = {
+export type SessionStarted = BaseEvent & {
 	type: proto.EventType.SESSION_STARTED
 	payload: proto.sessions.SessionStarted
 }
-export type SessionExpired = {
+export type SessionExpired = BaseEvent & {
 	type: proto.EventType.SESSION_EXPIRED
 	payload: proto.sessions.SessionExpired
 }
 type SessionEvent = SessionStarted | SessionExpired
 
 // Attribute Events
-export type AttributeAdded = {
+export type AttributeAdded = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_ADDED
 	payload: proto.attributes.AttributeAdded
 }
-export type AttributeNameEdited = {
+export type AttributeNameEdited = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_NAME_EDITED
 	payload: proto.attributes.AttributeNameEdited
 }
-export type AttributeValueEdited = {
+export type AttributeValueEdited = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_VALUE_EDITED
 	payload: proto.attributes.AttributeValueEdited
 }
-export type AttributeSorted = {
+export type AttributeSorted = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_SORTED
 	payload: proto.attributes.AttributeSorted
 }
-export type AttributeVerified = {
+export type AttributeVerified = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_VERIFIED
 	payload: proto.attributes.AttributeVerified
 }
-export type AttributeDeleted = {
+export type AttributeDeleted = BaseEvent & {
 	type: proto.EventType.ATTRIBUTE_DELETED
 	payload: proto.attributes.AttributeDeleted
 }

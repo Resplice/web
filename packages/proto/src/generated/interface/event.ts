@@ -441,27 +441,30 @@ export function eventTypeToJSON(object: EventType): string {
   }
 }
 
-/** Sent in plain binary, except payload is data encrypted via AES key */
 export interface Event {
+  eventId: number;
   eventType: EventType;
   payload: Uint8Array;
-  aesCounter: number;
+  payloadEncryptionKey: Uint8Array;
 }
 
 function createBaseEvent(): Event {
-  return { eventType: 0, payload: new Uint8Array(0), aesCounter: 0 };
+  return { eventId: 0, eventType: 0, payload: new Uint8Array(0), payloadEncryptionKey: new Uint8Array(0) };
 }
 
 export const Event = {
   encode(message: Event, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.eventId !== 0) {
+      writer.uint32(8).uint32(message.eventId);
+    }
     if (message.eventType !== 0) {
       writer.uint32(16).int32(message.eventType);
     }
     if (message.payload.length !== 0) {
       writer.uint32(26).bytes(message.payload);
     }
-    if (message.aesCounter !== 0) {
-      writer.uint32(32).uint32(message.aesCounter);
+    if (message.payloadEncryptionKey.length !== 0) {
+      writer.uint32(34).bytes(message.payloadEncryptionKey);
     }
     return writer;
   },
@@ -473,6 +476,13 @@ export const Event = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.eventId = reader.uint32();
+          continue;
         case 2:
           if (tag !== 16) {
             break;
@@ -488,11 +498,11 @@ export const Event = {
           message.payload = reader.bytes();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.aesCounter = reader.uint32();
+          message.payloadEncryptionKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -505,18 +515,25 @@ export const Event = {
 
   fromJSON(object: any): Event {
     return {
+      eventId: isSet(object.eventId) ? Number(object.eventId) : 0,
       eventType: isSet(object.eventType) ? eventTypeFromJSON(object.eventType) : 0,
       payload: isSet(object.payload) ? bytesFromBase64(object.payload) : new Uint8Array(0),
-      aesCounter: isSet(object.aesCounter) ? Number(object.aesCounter) : 0,
+      payloadEncryptionKey: isSet(object.payloadEncryptionKey)
+        ? bytesFromBase64(object.payloadEncryptionKey)
+        : new Uint8Array(0),
     };
   },
 
   toJSON(message: Event): unknown {
     const obj: any = {};
+    message.eventId !== undefined && (obj.eventId = Math.round(message.eventId));
     message.eventType !== undefined && (obj.eventType = eventTypeToJSON(message.eventType));
     message.payload !== undefined &&
       (obj.payload = base64FromBytes(message.payload !== undefined ? message.payload : new Uint8Array(0)));
-    message.aesCounter !== undefined && (obj.aesCounter = Math.round(message.aesCounter));
+    message.payloadEncryptionKey !== undefined &&
+      (obj.payloadEncryptionKey = base64FromBytes(
+        message.payloadEncryptionKey !== undefined ? message.payloadEncryptionKey : new Uint8Array(0),
+      ));
     return obj;
   },
 
@@ -526,9 +543,10 @@ export const Event = {
 
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
+    message.eventId = object.eventId ?? 0;
     message.eventType = object.eventType ?? 0;
     message.payload = object.payload ?? new Uint8Array(0);
-    message.aesCounter = object.aesCounter ?? 0;
+    message.payloadEncryptionKey = object.payloadEncryptionKey ?? new Uint8Array(0);
     return message;
   },
 };

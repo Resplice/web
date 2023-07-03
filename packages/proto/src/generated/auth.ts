@@ -68,33 +68,33 @@ export interface VerifyAuthEmail {
   email: string;
   phone: string;
   verificationCode: number;
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 export interface VerifyAuthPhone {
   email: string;
   phone: string;
   verificationCode: number;
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 export interface AuthChanged {
   status: AuthStatus;
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 /**
  * pass remember_me=true on socket open to persist session
- * then authorize socket with auth_code will change cookie expiry
+ * then authorize socket with access_key will change cookie expiry
  */
 export interface AuthorizeSocket {
-  lastEventIndex: number;
-  authCode: Uint8Array;
+  lastEventId: number;
+  accessKey: Uint8Array;
 }
 
 export interface SocketAuthorized {
   events: Event[];
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 function createBaseStartAuth(): StartAuth {
@@ -169,7 +169,7 @@ export const StartAuth = {
 };
 
 function createBaseVerifyAuthEmail(): VerifyAuthEmail {
-  return { email: "", phone: "", verificationCode: 0, authCode: new Uint8Array(0) };
+  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
 }
 
 export const VerifyAuthEmail = {
@@ -183,8 +183,8 @@ export const VerifyAuthEmail = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(34).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -222,7 +222,7 @@ export const VerifyAuthEmail = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -238,7 +238,7 @@ export const VerifyAuthEmail = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -247,8 +247,8 @@ export const VerifyAuthEmail = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -261,13 +261,13 @@ export const VerifyAuthEmail = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseVerifyAuthPhone(): VerifyAuthPhone {
-  return { email: "", phone: "", verificationCode: 0, authCode: new Uint8Array(0) };
+  return { email: "", phone: "", verificationCode: 0, accessKey: new Uint8Array(0) };
 }
 
 export const VerifyAuthPhone = {
@@ -281,8 +281,8 @@ export const VerifyAuthPhone = {
     if (message.verificationCode !== 0) {
       writer.uint32(24).uint32(message.verificationCode);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(34).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -320,7 +320,7 @@ export const VerifyAuthPhone = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -336,7 +336,7 @@ export const VerifyAuthPhone = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verificationCode: isSet(object.verificationCode) ? Number(object.verificationCode) : 0,
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -345,8 +345,8 @@ export const VerifyAuthPhone = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.verificationCode !== undefined && (obj.verificationCode = Math.round(message.verificationCode));
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -359,13 +359,13 @@ export const VerifyAuthPhone = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verificationCode = object.verificationCode ?? 0;
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAuthChanged(): AuthChanged {
-  return { status: 0, authCode: new Uint8Array(0) };
+  return { status: 0, accessKey: new Uint8Array(0) };
 }
 
 export const AuthChanged = {
@@ -373,8 +373,8 @@ export const AuthChanged = {
     if (message.status !== 0) {
       writer.uint32(8).int32(message.status);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(18).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(18).bytes(message.accessKey);
     }
     return writer;
   },
@@ -398,7 +398,7 @@ export const AuthChanged = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -412,15 +412,15 @@ export const AuthChanged = {
   fromJSON(object: any): AuthChanged {
     return {
       status: isSet(object.status) ? authStatusFromJSON(object.status) : 0,
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
   toJSON(message: AuthChanged): unknown {
     const obj: any = {};
     message.status !== undefined && (obj.status = authStatusToJSON(message.status));
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -431,22 +431,22 @@ export const AuthChanged = {
   fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
     const message = createBaseAuthChanged();
     message.status = object.status ?? 0;
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseAuthorizeSocket(): AuthorizeSocket {
-  return { lastEventIndex: 0, authCode: new Uint8Array(0) };
+  return { lastEventId: 0, accessKey: new Uint8Array(0) };
 }
 
 export const AuthorizeSocket = {
   encode(message: AuthorizeSocket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.lastEventIndex !== 0) {
-      writer.uint32(8).uint32(message.lastEventIndex);
+    if (message.lastEventId !== 0) {
+      writer.uint32(8).uint32(message.lastEventId);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(18).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(18).bytes(message.accessKey);
     }
     return writer;
   },
@@ -463,14 +463,14 @@ export const AuthorizeSocket = {
             break;
           }
 
-          message.lastEventIndex = reader.uint32();
+          message.lastEventId = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -483,16 +483,16 @@ export const AuthorizeSocket = {
 
   fromJSON(object: any): AuthorizeSocket {
     return {
-      lastEventIndex: isSet(object.lastEventIndex) ? Number(object.lastEventIndex) : 0,
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
   toJSON(message: AuthorizeSocket): unknown {
     const obj: any = {};
-    message.lastEventIndex !== undefined && (obj.lastEventIndex = Math.round(message.lastEventIndex));
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.lastEventId !== undefined && (obj.lastEventId = Math.round(message.lastEventId));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -502,14 +502,14 @@ export const AuthorizeSocket = {
 
   fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
     const message = createBaseAuthorizeSocket();
-    message.lastEventIndex = object.lastEventIndex ?? 0;
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.lastEventId = object.lastEventId ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseSocketAuthorized(): SocketAuthorized {
-  return { events: [], authCode: new Uint8Array(0) };
+  return { events: [], accessKey: new Uint8Array(0) };
 }
 
 export const SocketAuthorized = {
@@ -517,8 +517,8 @@ export const SocketAuthorized = {
     for (const v of message.events) {
       Event.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(18).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(18).bytes(message.accessKey);
     }
     return writer;
   },
@@ -542,7 +542,7 @@ export const SocketAuthorized = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -556,7 +556,7 @@ export const SocketAuthorized = {
   fromJSON(object: any): SocketAuthorized {
     return {
       events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -567,8 +567,8 @@ export const SocketAuthorized = {
     } else {
       obj.events = [];
     }
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -579,7 +579,7 @@ export const SocketAuthorized = {
   fromPartial<I extends Exact<DeepPartial<SocketAuthorized>, I>>(object: I): SocketAuthorized {
     const message = createBaseSocketAuthorized();
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };

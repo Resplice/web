@@ -1,7 +1,7 @@
 export type Session = {
 	id: number
 	expiry: number
-	authToken: Uint8Array
+	accessToken: Uint8Array
 }
 
 export type SessionItem = {

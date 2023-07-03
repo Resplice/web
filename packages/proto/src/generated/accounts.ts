@@ -6,7 +6,7 @@ export interface CreateAccount {
   email: string;
   phone: string;
   fullName: string;
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 export interface AccountCreated {
@@ -49,7 +49,7 @@ export interface DeleteAccount {
 }
 
 function createBaseCreateAccount(): CreateAccount {
-  return { email: "", phone: "", fullName: "", authCode: new Uint8Array(0) };
+  return { email: "", phone: "", fullName: "", accessKey: new Uint8Array(0) };
 }
 
 export const CreateAccount = {
@@ -63,8 +63,8 @@ export const CreateAccount = {
     if (message.fullName !== "") {
       writer.uint32(26).string(message.fullName);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(34).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(34).bytes(message.accessKey);
     }
     return writer;
   },
@@ -102,7 +102,7 @@ export const CreateAccount = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -118,7 +118,7 @@ export const CreateAccount = {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       fullName: isSet(object.fullName) ? String(object.fullName) : "",
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -127,8 +127,8 @@ export const CreateAccount = {
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
     message.fullName !== undefined && (obj.fullName = message.fullName);
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -141,7 +141,7 @@ export const CreateAccount = {
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.fullName = object.fullName ?? "";
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };

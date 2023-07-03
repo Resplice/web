@@ -2,46 +2,51 @@ import proto, { type Event } from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
-const AUTH_CODE = new Uint8Array([1, 2, 3])
+const ACCESS_KEY = new Uint8Array([1, 2, 3])
 
 // Auth Events
 const authStarted: Event = {
+	id: 0,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const authEmailVerified: Event = {
+	id: 0,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const authPhoneVerified: Event = {
+	id: 0,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const accountCreatedAuth: Event = {
+	id: 0,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_SESSION,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const socketAuthorized: Event = {
+	id: 0,
 	type: proto.EventType.SOCKET_AUTHORIZED,
 	payload: {
 		events: [],
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
@@ -55,6 +60,7 @@ const authEvents = {
 
 // Account Events
 const accountCreated: Event = {
+	id: 0,
 	type: proto.EventType.ACCOUNT_CREATED,
 	payload: {
 		accountId: 1,
@@ -67,6 +73,7 @@ const accountCreated: Event = {
 }
 
 const accountNameEdited: Event = {
+	id: 0,
 	type: proto.EventType.ACCOUNT_NAME_EDITED,
 	payload: {
 		name: 'H@n Sol0'
@@ -74,6 +81,7 @@ const accountNameEdited: Event = {
 }
 
 const accountHandleEdited: Event = {
+	id: 0,
 	type: proto.EventType.ACCOUNT_HANDLE_EDITED,
 	payload: {
 		handle: 'bestSmuggler42'
@@ -81,6 +89,7 @@ const accountHandleEdited: Event = {
 }
 
 const accountAvatarEdited: Event = {
+	id: 0,
 	type: proto.EventType.ACCOUNT_AVATAR_EDITED,
 	payload: {
 		avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg'
@@ -95,15 +104,17 @@ const accountEvents = {
 }
 
 // Session Events
-const SessionStarted = {
+const sessionStarted: Event = {
+	id: 0,
 	type: proto.EventType.SESSION_STARTED,
 	payload: {
 		sessionId: 1,
 		expirySeconds: 34523453,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
-const SessionExpired = {
+const sessionExpired: Event = {
+	id: 0,
 	type: proto.EventType.SESSION_EXPIRED,
 	payload: {
 		sessionId: 2
@@ -111,12 +122,13 @@ const SessionExpired = {
 }
 
 const sessionEvents = {
-	SessionStarted,
-	SessionExpired
+	sessionStarted,
+	sessionExpired
 }
 
 // Attribute Events
 const attributeAdded: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_ADDED,
 	payload: {
 		id: 3,
@@ -137,6 +149,7 @@ const attributeAdded: Event = {
 }
 
 const attributeNameEdited: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_NAME_EDITED,
 	payload: {
 		id: 3,
@@ -145,6 +158,7 @@ const attributeNameEdited: Event = {
 }
 
 const attributeValueEdited: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_VALUE_EDITED,
 	payload: {
 		id: 3,
@@ -164,6 +178,7 @@ const attributeValueEdited: Event = {
 }
 
 const attributeSorted: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_SORTED,
 	payload: {
 		id: 3,
@@ -172,6 +187,7 @@ const attributeSorted: Event = {
 }
 
 const attributeVerified: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_VERIFIED,
 	payload: {
 		id: 3,
@@ -180,6 +196,7 @@ const attributeVerified: Event = {
 }
 
 const attributeDeleted: Event = {
+	id: 0,
 	type: proto.EventType.ATTRIBUTE_DELETED,
 	payload: {
 		id: 3

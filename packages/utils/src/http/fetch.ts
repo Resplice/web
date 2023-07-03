@@ -2,6 +2,7 @@ type FetchOptions = {
 	endpoint: string
 	headers?: Record<string, string>
 	useBinary?: boolean
+	commandType?: number
 }
 
 type FetchParams = FetchOptions & { data: unknown }

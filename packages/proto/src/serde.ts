@@ -26,11 +26,12 @@ import { type Event, eventMapper } from './event'
 // 	return ivArr
 // }
 
-function encode(command: Command) {
+function encode(command: Command, payloadEncryptionKey?: Uint8Array) {
 	return proto.Command.encode({
+		commandId: command.id,
 		commandType: command.type,
 		payload: encodePayload(command),
-		aesCounter: 0
+		payloadEncryptionKey
 	}).finish()
 }
 

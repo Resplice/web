@@ -2,13 +2,13 @@
 import _m0 from "protobufjs/minimal";
 
 export interface StartSession {
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 export interface SessionStarted {
   sessionId: number;
   expirySeconds: number;
-  authCode: Uint8Array;
+  accessKey: Uint8Array;
 }
 
 export interface ExpireSession {
@@ -20,13 +20,13 @@ export interface SessionExpired {
 }
 
 function createBaseStartSession(): StartSession {
-  return { authCode: new Uint8Array(0) };
+  return { accessKey: new Uint8Array(0) };
 }
 
 export const StartSession = {
   encode(message: StartSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.authCode.length !== 0) {
-      writer.uint32(10).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(10).bytes(message.accessKey);
     }
     return writer;
   },
@@ -43,7 +43,7 @@ export const StartSession = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -55,13 +55,13 @@ export const StartSession = {
   },
 
   fromJSON(object: any): StartSession {
-    return { authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0) };
+    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
   },
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -71,13 +71,13 @@ export const StartSession = {
 
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseSessionStarted(): SessionStarted {
-  return { sessionId: 0, expirySeconds: 0, authCode: new Uint8Array(0) };
+  return { sessionId: 0, expirySeconds: 0, accessKey: new Uint8Array(0) };
 }
 
 export const SessionStarted = {
@@ -88,8 +88,8 @@ export const SessionStarted = {
     if (message.expirySeconds !== 0) {
       writer.uint32(16).int32(message.expirySeconds);
     }
-    if (message.authCode.length !== 0) {
-      writer.uint32(26).bytes(message.authCode);
+    if (message.accessKey.length !== 0) {
+      writer.uint32(26).bytes(message.accessKey);
     }
     return writer;
   },
@@ -120,7 +120,7 @@ export const SessionStarted = {
             break;
           }
 
-          message.authCode = reader.bytes();
+          message.accessKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -135,7 +135,7 @@ export const SessionStarted = {
     return {
       sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
       expirySeconds: isSet(object.expirySeconds) ? Number(object.expirySeconds) : 0,
-      authCode: isSet(object.authCode) ? bytesFromBase64(object.authCode) : new Uint8Array(0),
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
     };
   },
 
@@ -143,8 +143,8 @@ export const SessionStarted = {
     const obj: any = {};
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     message.expirySeconds !== undefined && (obj.expirySeconds = Math.round(message.expirySeconds));
-    message.authCode !== undefined &&
-      (obj.authCode = base64FromBytes(message.authCode !== undefined ? message.authCode : new Uint8Array(0)));
+    message.accessKey !== undefined &&
+      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
     return obj;
   },
 
@@ -156,7 +156,7 @@ export const SessionStarted = {
     const message = createBaseSessionStarted();
     message.sessionId = object.sessionId ?? 0;
     message.expirySeconds = object.expirySeconds ?? 0;
-    message.authCode = object.authCode ?? new Uint8Array(0);
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
     return message;
   },
 };

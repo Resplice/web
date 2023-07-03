@@ -479,26 +479,29 @@ export function commandTypeToJSON(object: CommandType): string {
 }
 
 export interface Command {
+  commandId: number;
   commandType: CommandType;
   payload: Uint8Array;
-  /** if 0, use PKI */
-  aesCounter: number;
+  payloadEncryptionKey: Uint8Array;
 }
 
 function createBaseCommand(): Command {
-  return { commandType: 0, payload: new Uint8Array(0), aesCounter: 0 };
+  return { commandId: 0, commandType: 0, payload: new Uint8Array(0), payloadEncryptionKey: new Uint8Array(0) };
 }
 
 export const Command = {
   encode(message: Command, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.commandId !== 0) {
+      writer.uint32(8).uint32(message.commandId);
+    }
     if (message.commandType !== 0) {
-      writer.uint32(8).int32(message.commandType);
+      writer.uint32(16).int32(message.commandType);
     }
     if (message.payload.length !== 0) {
-      writer.uint32(18).bytes(message.payload);
+      writer.uint32(26).bytes(message.payload);
     }
-    if (message.aesCounter !== 0) {
-      writer.uint32(24).uint32(message.aesCounter);
+    if (message.payloadEncryptionKey.length !== 0) {
+      writer.uint32(34).bytes(message.payloadEncryptionKey);
     }
     return writer;
   },
@@ -515,21 +518,28 @@ export const Command = {
             break;
           }
 
-          message.commandType = reader.int32() as any;
+          message.commandId = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.commandType = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
           message.payload = reader.bytes();
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
-          message.aesCounter = reader.uint32();
+          message.payloadEncryptionKey = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -542,18 +552,25 @@ export const Command = {
 
   fromJSON(object: any): Command {
     return {
+      commandId: isSet(object.commandId) ? Number(object.commandId) : 0,
       commandType: isSet(object.commandType) ? commandTypeFromJSON(object.commandType) : 0,
       payload: isSet(object.payload) ? bytesFromBase64(object.payload) : new Uint8Array(0),
-      aesCounter: isSet(object.aesCounter) ? Number(object.aesCounter) : 0,
+      payloadEncryptionKey: isSet(object.payloadEncryptionKey)
+        ? bytesFromBase64(object.payloadEncryptionKey)
+        : new Uint8Array(0),
     };
   },
 
   toJSON(message: Command): unknown {
     const obj: any = {};
+    message.commandId !== undefined && (obj.commandId = Math.round(message.commandId));
     message.commandType !== undefined && (obj.commandType = commandTypeToJSON(message.commandType));
     message.payload !== undefined &&
       (obj.payload = base64FromBytes(message.payload !== undefined ? message.payload : new Uint8Array(0)));
-    message.aesCounter !== undefined && (obj.aesCounter = Math.round(message.aesCounter));
+    message.payloadEncryptionKey !== undefined &&
+      (obj.payloadEncryptionKey = base64FromBytes(
+        message.payloadEncryptionKey !== undefined ? message.payloadEncryptionKey : new Uint8Array(0),
+      ));
     return obj;
   },
 
@@ -563,9 +580,10 @@ export const Command = {
 
   fromPartial<I extends Exact<DeepPartial<Command>, I>>(object: I): Command {
     const message = createBaseCommand();
+    message.commandId = object.commandId ?? 0;
     message.commandType = object.commandType ?? 0;
     message.payload = object.payload ?? new Uint8Array(0);
-    message.aesCounter = object.aesCounter ?? 0;
+    message.payloadEncryptionKey = object.payloadEncryptionKey ?? new Uint8Array(0);
     return message;
   },
 };

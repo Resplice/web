@@ -47,8 +47,8 @@ function open(): Promise<void> {
 	})
 }
 
-function read<T>(store: Store): Promise<Record<Store, T>>
-function read<T>(stores: Store[]): Promise<Record<Store, T>>
+function read<T>(store: Store): Promise<Record<Store, T[]>>
+function read<T>(stores: Store[]): Promise<Record<Store, T[]>>
 function read<T>(store: Store | Store[]) {
 	return new Promise((resolve, reject) => {
 		if (!db || db.version !== DB_VERSION) {

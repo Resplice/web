@@ -2,10 +2,11 @@ import proto, { type Command } from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
-const AUTH_CODE = new Uint8Array([1, 2, 3])
+const ACCESS_KEY = new Uint8Array([1, 2, 3])
 
 // Auth Commands
 const startAuth: Command = {
+	id: 0,
 	type: proto.CommandType.START_AUTH,
 	payload: {
 		email: EMAIL,
@@ -14,30 +15,33 @@ const startAuth: Command = {
 }
 
 const verifyAuthEmail: Command = {
+	id: 0,
 	type: proto.CommandType.VERIFY_AUTH_EMAIL,
 	payload: {
 		email: EMAIL,
 		phone: PHONE,
 		verificationCode: 123456,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const verifyAuthPhone: Command = {
+	id: 0,
 	type: proto.CommandType.VERIFY_AUTH_EMAIL,
 	payload: {
 		email: EMAIL,
 		phone: PHONE,
 		verificationCode: 123456,
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const authorizeSocket: Command = {
+	id: 0,
 	type: proto.CommandType.AUTHORIZE_SOCKET,
 	payload: {
-		lastEventIndex: 0,
-		authCode: AUTH_CODE
+		lastEventId: 0,
+		accessKey: ACCESS_KEY
 	}
 }
 
@@ -45,16 +49,18 @@ const authCommands = { startAuth, verifyAuthEmail, verifyAuthPhone, authorizeSoc
 
 // Account Commands
 const createAccount: Command = {
+	id: 0,
 	type: proto.CommandType.CREATE_ACCOUNT,
 	payload: {
 		email: EMAIL,
 		phone: PHONE,
 		fullName: 'Han Solo',
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const editAccountName: Command = {
+	id: 0,
 	type: proto.CommandType.EDIT_ACCOUNT_NAME,
 	payload: {
 		name: 'H@n Sol0'
@@ -62,6 +68,7 @@ const editAccountName: Command = {
 }
 
 const editAccountHandle: Command = {
+	id: 0,
 	type: proto.CommandType.EDIT_ACCOUNT_HANDLE,
 	payload: {
 		handle: 'bestSmuggler42'
@@ -69,6 +76,7 @@ const editAccountHandle: Command = {
 }
 
 const editAccountAvatar: Command = {
+	id: 0,
 	type: proto.CommandType.EDIT_ACCOUNT_AVATAR,
 	payload: {
 		avatar: new Uint8Array([255, 255, 255])
@@ -76,6 +84,7 @@ const editAccountAvatar: Command = {
 }
 
 const deleteAccount: Command = {
+	id: 0,
 	type: proto.CommandType.DELETE_ACCOUNT,
 	payload: {
 		email: EMAIL,
@@ -94,13 +103,15 @@ const accountCommands = {
 
 // Session Commands
 const startSession: Command = {
+	id: 0,
 	type: proto.CommandType.START_SESSION,
 	payload: {
-		authCode: AUTH_CODE
+		accessKey: ACCESS_KEY
 	}
 }
 
 const expireSession: Command = {
+	id: 0,
 	type: proto.CommandType.EXPIRE_SESSION,
 	payload: {
 		sessionId: 1
@@ -111,6 +122,7 @@ const sessionCommands = { startSession, expireSession }
 
 // Attribute Commands
 const addAttribute: Command = {
+	id: 0,
 	type: proto.CommandType.ADD_ATTRIBUTE,
 	payload: {
 		name: 'Earth Address',
@@ -130,6 +142,7 @@ const addAttribute: Command = {
 }
 
 const editAttributeName: Command = {
+	id: 0,
 	type: proto.CommandType.EDIT_ATTRIBUTE_NAME,
 	payload: {
 		id: 3,
@@ -138,6 +151,7 @@ const editAttributeName: Command = {
 }
 
 const editAttributeValue: Command = {
+	id: 0,
 	type: proto.CommandType.EDIT_ATTRIBUTE_VALUE,
 	payload: {
 		id: 3,
@@ -157,6 +171,7 @@ const editAttributeValue: Command = {
 }
 
 const sortAttribute: Command = {
+	id: 0,
 	type: proto.CommandType.SORT_ATTRIBUTE,
 	payload: {
 		id: 3,
@@ -165,6 +180,7 @@ const sortAttribute: Command = {
 }
 
 const sendAttributeVerification: Command = {
+	id: 0,
 	type: proto.CommandType.SEND_ATTRIBUTE_VERIFICATION,
 	payload: {
 		id: 3
@@ -172,6 +188,7 @@ const sendAttributeVerification: Command = {
 }
 
 const verifyAttribute: Command = {
+	id: 0,
 	type: proto.CommandType.VERIFY_ATTRIBUTE,
 	payload: {
 		id: 3,
@@ -180,6 +197,7 @@ const verifyAttribute: Command = {
 }
 
 const deleteAttribute: Command = {
+	id: 0,
 	type: proto.CommandType.DELETE_ATTRIBUTE,
 	payload: {
 		id: 3
