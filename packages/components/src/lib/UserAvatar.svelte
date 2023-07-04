@@ -7,7 +7,7 @@
 
 	const dispatch = createEventDispatcher()
 
-	export let uuid: string
+	export let id: number
 	export let avatarUrl: string | null
 
 	let imageInput: HTMLInputElement
@@ -21,7 +21,7 @@
 
 <div class="w-full flex flex-col items-center">
 	<button class="relative active:scale-95" on:click={() => imageInput.click()}>
-		<Avatar {uuid} src={avatarUrl} size="xl" />
+		<Avatar seed={id.toString()} src={avatarUrl} size="xl" />
 		<div class="absolute right-2 bottom-0 bg-white rounded-full p-2 text-gray-600">
 			<UploadIcon width={24} height={24} />
 		</div>

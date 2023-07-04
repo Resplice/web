@@ -2,8 +2,9 @@ const DB_VERSION = 1
 const DB_NAME = 'RESPLICE_CACHE'
 
 type Store =
-	| 'events'
 	| 'currentSession'
+	| 'commands'
+	| 'events'
 	| 'attributes'
 	| 'chats'
 	| 'contacts'
@@ -21,8 +22,9 @@ function createDatabase(newDB: IDBDatabase) {
 	}
 
 	// Create new stores
-	newDB.createObjectStore('events', { autoIncrement: true })
 	newDB.createObjectStore('currentSession', { autoIncrement: true })
+	newDB.createObjectStore('commands', { autoIncrement: true })
+	newDB.createObjectStore('events', { keyPath: 'id' })
 	newDB.createObjectStore('attributes', { keyPath: 'id' })
 	newDB.createObjectStore('chats', { keyPath: 'id' })
 	newDB.createObjectStore('contacts', { keyPath: 'id' })

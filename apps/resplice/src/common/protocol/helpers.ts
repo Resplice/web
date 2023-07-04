@@ -1,13 +1,20 @@
 import proto, { type Command, serializeCommand, deserializeEvent } from '@resplice/proto'
+import type { DB } from '$services/db'
 import type { Fetch } from '@resplice/utils'
+import { SocketCommandType, type SocketCommuter } from '$common/workers/socketCommuter'
 
-// export async function sendCommand(cache: DB, commuter: ConnCommuter, command: Command) {
-// 	const [counter] = await cache.insert('events', command)
-// 	commuter.postMessage({
-// 		type: ConnCommandType.SEND,
-// 		message: { counter, command }
-// 	})
-// }
+export async function sendCommand(
+	cache: DB,
+	commuter: SocketCommuter,
+	params: Omit<Command, 'id'>
+) {
+	const [id] = await cache.insert('commands', params)
+	const command = { id, ...params } as Command
+	commuter.postMessage({
+		type: SocketCommandType.SEND,
+		payload: command
+	})
+}
 
 type ExecuteOptions = {
 	fetch: Fetch
@@ -31,7 +38,8 @@ export async function executeHttpCommand<E>(
 
 		const resBinary = await fetch.post<ArrayBuffer>({
 			endpoint: '/core',
-			data: serializedCommand
+			data: serializedCommand,
+			commandType: command.type
 		})
 
 		const event = await deserializeEvent(new Uint8Array(resBinary))

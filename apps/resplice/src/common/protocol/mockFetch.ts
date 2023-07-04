@@ -6,7 +6,7 @@ function encodeEvent(event: Event, encoder: any) {
 		eventId: event.id,
 		eventType: event.type,
 		payload: encoder(event.payload).finish(),
-		payloadEncryptionKey: null
+		payloadEncryptionKey: new Uint8Array(0)
 	}).finish()
 }
 

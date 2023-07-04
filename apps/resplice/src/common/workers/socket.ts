@@ -52,6 +52,7 @@ async function send(command: SendCommand['payload']) {
 
 function openSocket(wsEndpoint: string, handshake: HandshakeCommand) {
 	console.log('Initializing socket', wsEndpoint)
+	// TODO: Mock websocket
 	ctx.socket$ = webSocket({
 		url: wsEndpoint,
 		serializer: (m) => m,

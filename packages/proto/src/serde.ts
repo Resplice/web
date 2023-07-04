@@ -26,7 +26,7 @@ import { type Event, eventMapper } from './event'
 // 	return ivArr
 // }
 
-function encode(command: Command, payloadEncryptionKey?: Uint8Array) {
+function encode(command: Command, payloadEncryptionKey: Uint8Array = new Uint8Array(0)) {
 	return proto.Command.encode({
 		commandId: command.id,
 		commandType: command.type,

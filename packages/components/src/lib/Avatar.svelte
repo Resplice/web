@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createAvatar } from '@dicebear/core'
 	import { thumbs } from '@dicebear/collection'
-	export let uuid: string
+	export let seed: string
 	export let src: string | null
 	export let size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' = 'md'
 
@@ -13,12 +13,12 @@
 		xl: 144,
 		'2xl': 256
 	}
-	const svg = createAvatar(thumbs, { seed: uuid, size: widthMap[size] })
+	const svg = createAvatar(thumbs, { seed, size: widthMap[size] })
 </script>
 
 <button class="bg-gray-100 rounded-full w-max overflow-clip" on:click>
 	{#if src}
-		<img class="rounded-full" {src} loading="lazy" width={widthMap[size]} alt={uuid} />
+		<img class="rounded-full" {src} loading="lazy" width={widthMap[size]} alt="User Avatar" />
 	{:else}
 		{@html svg}
 	{/if}

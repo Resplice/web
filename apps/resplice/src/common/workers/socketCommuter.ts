@@ -61,7 +61,7 @@ type ClosedEvent = {
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
 
-export function onlyRecievedMessages() {
+export function onlyReceivedMessages() {
 	return pipe(
 		filter<SocketEvent>(
 			(m) => m.type === SocketEventType.RECEIVED
@@ -73,9 +73,6 @@ export function onlyRecievedMessages() {
 export type SocketCommuter = Commuter<SocketCommand, SocketEvent>
 
 function startCommuter() {
-	// const socketWorker = new Worker(new URL('./socket', import.meta.url), {
-	// 	type: 'module'
-	// })
 	const socketWorker = new SocketWorker()
 
 	return workerCommuterFactory<SocketCommand, SocketEvent>(socketWorker)

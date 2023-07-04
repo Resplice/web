@@ -35,7 +35,7 @@
 	<Header {account} showUser={showUserOnHeader} on:back={() => push('/app/home/contacts')} />
 	<main class="flex-1 overflow-auto relative w-full max-w-xl m-auto py-4 rounded-t-3xl bg-white">
 		{#if !!account}
-			<UserAvatar uuid={account.id} avatarUrl={account.avatarUrl} />
+			<UserAvatar id={account.id} avatarUrl={account.avatarUrl} />
 			<h1 class="w-full overflow-auto truncate text-4xl font-bold mt-2 text-center mb-4">
 				{account.name}
 			</h1>

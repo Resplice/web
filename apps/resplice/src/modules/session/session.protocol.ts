@@ -1,4 +1,4 @@
-import proto from '@resplice/proto'
+import proto, { type Command } from '@resplice/proto'
 import { executeHttpCommand } from '$common/protocol/helpers'
 import { b64tob, type Fetch } from '@resplice/utils'
 import type { DB } from '$services/db'
@@ -19,14 +19,17 @@ function sessionProtocolFactory({ cache, store, fetch }: Dependencies): SessionP
 	return {
 		async initialize(accessToken) {
 			if (accessToken) {
-				const payload: proto.sessions.StartSession = {
-					accessKey: b64tob(accessToken) as Uint8Array
+				const params: Omit<Command, 'id'> = {
+					type: proto.CommandType.START_SESSION,
+					payload: {
+						accessKey: new Uint8Array(b64tob(accessToken))
+					}
 				}
-				// TODO: insert into `commands` cache to generate next command id
-				const startSessionPromise = executeHttpCommand<proto.sessions.SessionStarted>(
-					{ id: 0, type: proto.CommandType.START_SESSION, payload },
-					{ fetch }
-				)
+				const [id] = await cache.insert('commands', params)
+				const command = { id, ...params } as Command
+				const startSessionPromise = executeHttpCommand<proto.sessions.SessionStarted>(command, {
+					fetch
+				})
 				const clearCachePromise = cache.clear()
 				const [{ event, errors }] = await Promise.all([startSessionPromise, clearCachePromise])
 

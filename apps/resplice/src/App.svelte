@@ -25,7 +25,7 @@
 			if (!session) {
 				// If session cannot be stored or started, redirect to auth flow
 				console.log('Session not found, redirecting to auth flow')
-				location.replace(config.authUrl)
+				// location.replace(config.authUrl)
 				return false
 			}
 

@@ -63,7 +63,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 
 	return {
 		session: sessionProtocolFactory({ cache: db, store: stores.session, fetch }),
-		openSocket: (payload) => {
+		openSocket(payload) {
 			// TODO: insert into `commands` cache to generate next command id
 			socketCommuter.postMessage({
 				type: SocketCommandType.OPEN,
