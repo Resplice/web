@@ -80,8 +80,7 @@ export type Phone = BaseAttribute & {
 	value: PhoneValue
 }
 export type PhoneValue = {
-	number: number
-	extension?: number
+	number: string
 	smsEnabled: boolean
 }
 
@@ -125,14 +124,14 @@ export type Attribute =
 	| Text
 
 export enum AttributeAction {
-	Calendar = 'CALENDAR',
-	Call = 'CALL',
-	Copy = 'COPY',
-	Email = 'EMAIL',
-	Link = 'LINK',
-	Locate = 'LOCATE',
-	Navigate = 'NAVIGATE',
-	Sms = 'SMS'
+	CALENDAR = 'CALENDAR',
+	CALL = 'CALL',
+	COPY = 'COPY',
+	EMAIL = 'EMAIL',
+	LINK = 'LINK',
+	LOCATE = 'LOCATE',
+	NAVIGATE = 'NAVIGATE',
+	SMS = 'SMS'
 }
 
 export type AttributeTypeConfig = {

@@ -1714,7 +1714,7 @@ export interface Address {
   locality: string;
   region: string;
   postalCode: string;
-  country: Country;
+  country: string;
 }
 
 /** Precise to 0.00001 (divide by 10^5 to get actual) */
@@ -1764,7 +1764,7 @@ export interface Text {
 }
 
 function createBaseAddress(): Address {
-  return { streetAddress1: "", streetAddress2: "", locality: "", region: "", postalCode: "", country: 0 };
+  return { streetAddress1: "", streetAddress2: "", locality: "", region: "", postalCode: "", country: "" };
 }
 
 export const Address = {
@@ -1784,8 +1784,8 @@ export const Address = {
     if (message.postalCode !== "") {
       writer.uint32(42).string(message.postalCode);
     }
-    if (message.country !== 0) {
-      writer.uint32(48).int32(message.country);
+    if (message.country !== "") {
+      writer.uint32(50).string(message.country);
     }
     return writer;
   },
@@ -1833,11 +1833,11 @@ export const Address = {
           message.postalCode = reader.string();
           continue;
         case 6:
-          if (tag !== 48) {
+          if (tag !== 50) {
             break;
           }
 
-          message.country = reader.int32() as any;
+          message.country = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1855,7 +1855,7 @@ export const Address = {
       locality: isSet(object.locality) ? String(object.locality) : "",
       region: isSet(object.region) ? String(object.region) : "",
       postalCode: isSet(object.postalCode) ? String(object.postalCode) : "",
-      country: isSet(object.country) ? countryFromJSON(object.country) : 0,
+      country: isSet(object.country) ? String(object.country) : "",
     };
   },
 
@@ -1866,7 +1866,7 @@ export const Address = {
     message.locality !== undefined && (obj.locality = message.locality);
     message.region !== undefined && (obj.region = message.region);
     message.postalCode !== undefined && (obj.postalCode = message.postalCode);
-    message.country !== undefined && (obj.country = countryToJSON(message.country));
+    message.country !== undefined && (obj.country = message.country);
     return obj;
   },
 
@@ -1881,7 +1881,7 @@ export const Address = {
     message.locality = object.locality ?? "";
     message.region = object.region ?? "";
     message.postalCode = object.postalCode ?? "";
-    message.country = object.country ?? 0;
+    message.country = object.country ?? "";
     return message;
   },
 };

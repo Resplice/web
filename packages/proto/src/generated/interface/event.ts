@@ -445,11 +445,11 @@ export interface Event {
   eventId: number;
   eventType: EventType;
   payload: Uint8Array;
-  payloadEncryptionKey: Uint8Array;
+  timestamp: number;
 }
 
 function createBaseEvent(): Event {
-  return { eventId: 0, eventType: 0, payload: new Uint8Array(0), payloadEncryptionKey: new Uint8Array(0) };
+  return { eventId: 0, eventType: 0, payload: new Uint8Array(0), timestamp: 0 };
 }
 
 export const Event = {
@@ -463,8 +463,8 @@ export const Event = {
     if (message.payload.length !== 0) {
       writer.uint32(26).bytes(message.payload);
     }
-    if (message.payloadEncryptionKey.length !== 0) {
-      writer.uint32(34).bytes(message.payloadEncryptionKey);
+    if (message.timestamp !== 0) {
+      writer.uint32(32).uint32(message.timestamp);
     }
     return writer;
   },
@@ -498,11 +498,11 @@ export const Event = {
           message.payload = reader.bytes();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.payloadEncryptionKey = reader.bytes();
+          message.timestamp = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -518,9 +518,7 @@ export const Event = {
       eventId: isSet(object.eventId) ? Number(object.eventId) : 0,
       eventType: isSet(object.eventType) ? eventTypeFromJSON(object.eventType) : 0,
       payload: isSet(object.payload) ? bytesFromBase64(object.payload) : new Uint8Array(0),
-      payloadEncryptionKey: isSet(object.payloadEncryptionKey)
-        ? bytesFromBase64(object.payloadEncryptionKey)
-        : new Uint8Array(0),
+      timestamp: isSet(object.timestamp) ? Number(object.timestamp) : 0,
     };
   },
 
@@ -530,10 +528,7 @@ export const Event = {
     message.eventType !== undefined && (obj.eventType = eventTypeToJSON(message.eventType));
     message.payload !== undefined &&
       (obj.payload = base64FromBytes(message.payload !== undefined ? message.payload : new Uint8Array(0)));
-    message.payloadEncryptionKey !== undefined &&
-      (obj.payloadEncryptionKey = base64FromBytes(
-        message.payloadEncryptionKey !== undefined ? message.payloadEncryptionKey : new Uint8Array(0),
-      ));
+    message.timestamp !== undefined && (obj.timestamp = Math.round(message.timestamp));
     return obj;
   },
 
@@ -546,7 +541,7 @@ export const Event = {
     message.eventId = object.eventId ?? 0;
     message.eventType = object.eventType ?? 0;
     message.payload = object.payload ?? new Uint8Array(0);
-    message.payloadEncryptionKey = object.payloadEncryptionKey ?? new Uint8Array(0);
+    message.timestamp = object.timestamp ?? 0;
     return message;
   },
 };

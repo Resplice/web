@@ -2,6 +2,7 @@ import proto from './index'
 
 type BaseEvent = {
 	id: number
+	timestamp: number
 }
 
 // Meta Events
@@ -86,7 +87,7 @@ type AttributeEvent =
 	| AttributeDeleted
 
 export type Event = MetaEvent | AuthEvent | AccountEvent | SessionEvent | AttributeEvent
-export type UserEvents = AccountEvent | SessionEvent | AttributeEvent
+export type UserEvent = AccountEvent | SessionEvent | AttributeEvent
 
 export const eventMapper = {
 	[proto.EventType.AUTH_CHANGED]: proto.auth.AuthChanged.decode,

@@ -6,48 +6,53 @@ const ACCESS_KEY = new Uint8Array([1, 2, 3])
 
 // Auth Events
 const authStarted: Event = {
-	id: 0,
+	id: 1,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 1
 }
 
 const authEmailVerified: Event = {
-	id: 0,
+	id: 2,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 2
 }
 
 const authPhoneVerified: Event = {
-	id: 0,
+	id: 3,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 3
 }
 
 const accountCreatedAuth: Event = {
-	id: 0,
+	id: 4,
 	type: proto.EventType.AUTH_CHANGED,
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_SESSION,
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 4
 }
 
 const socketAuthorized: Event = {
-	id: 0,
+	id: 7,
 	type: proto.EventType.SOCKET_AUTHORIZED,
 	payload: {
 		events: [],
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 7
 }
 
 const authEvents = {
@@ -60,40 +65,46 @@ const authEvents = {
 
 // Account Events
 const accountCreated: Event = {
-	id: 0,
+	id: 5,
 	type: proto.EventType.ACCOUNT_CREATED,
 	payload: {
 		accountId: 1,
 		fullName: 'Han Solo',
+		handle: 'han.solo.1',
+		avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
 		emailId: 1,
 		email: EMAIL,
 		phoneId: 2,
 		phone: PHONE
-	}
+	},
+	timestamp: 5
 }
 
 const accountNameEdited: Event = {
-	id: 0,
+	id: 8,
 	type: proto.EventType.ACCOUNT_NAME_EDITED,
 	payload: {
 		name: 'H@n Sol0'
-	}
+	},
+	timestamp: 8
 }
 
 const accountHandleEdited: Event = {
-	id: 0,
+	id: 9,
 	type: proto.EventType.ACCOUNT_HANDLE_EDITED,
 	payload: {
 		handle: 'bestSmuggler42'
-	}
+	},
+	timestamp: 9
 }
 
 const accountAvatarEdited: Event = {
-	id: 0,
+	id: 10,
 	type: proto.EventType.ACCOUNT_AVATAR_EDITED,
 	payload: {
 		avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg'
-	}
+	},
+	timestamp: 10
 }
 
 const accountEvents = {
@@ -105,20 +116,22 @@ const accountEvents = {
 
 // Session Events
 const sessionStarted: Event = {
-	id: 0,
+	id: 6,
 	type: proto.EventType.SESSION_STARTED,
 	payload: {
 		sessionId: 1,
 		expirySeconds: 34523453,
 		accessKey: ACCESS_KEY
-	}
+	},
+	timestamp: 6
 }
 const sessionExpired: Event = {
-	id: 0,
+	id: 127,
 	type: proto.EventType.SESSION_EXPIRED,
 	payload: {
 		sessionId: 2
-	}
+	},
+	timestamp: 127
 }
 
 const sessionEvents = {
@@ -128,7 +141,7 @@ const sessionEvents = {
 
 // Attribute Events
 const attributeAdded: Event = {
-	id: 0,
+	id: 11,
 	type: proto.EventType.ATTRIBUTE_ADDED,
 	payload: {
 		id: 3,
@@ -145,20 +158,22 @@ const attributeAdded: Event = {
 				country: proto.attributes.types.Country.UNITED_STATES
 			}
 		}
-	}
+	},
+	timestamp: 11
 }
 
 const attributeNameEdited: Event = {
-	id: 0,
+	id: 12,
 	type: proto.EventType.ATTRIBUTE_NAME_EDITED,
 	payload: {
 		id: 3,
 		name: '1st Earth Address'
-	}
+	},
+	timestamp: 12
 }
 
 const attributeValueEdited: Event = {
-	id: 0,
+	id: 13,
 	type: proto.EventType.ATTRIBUTE_VALUE_EDITED,
 	payload: {
 		id: 3,
@@ -174,33 +189,37 @@ const attributeValueEdited: Event = {
 				country: proto.attributes.types.Country.UNITED_STATES
 			}
 		}
-	}
+	},
+	timestamp: 13
 }
 
 const attributeSorted: Event = {
-	id: 0,
+	id: 14,
 	type: proto.EventType.ATTRIBUTE_SORTED,
 	payload: {
 		id: 3,
 		sortIndex: 1
-	}
+	},
+	timestamp: 14
 }
 
 const attributeVerified: Event = {
-	id: 0,
+	id: 15,
 	type: proto.EventType.ATTRIBUTE_VERIFIED,
 	payload: {
 		id: 3,
 		verifiedAt: 3454563
-	}
+	},
+	timestamp: 15
 }
 
 const attributeDeleted: Event = {
-	id: 0,
+	id: 16,
 	type: proto.EventType.ATTRIBUTE_DELETED,
 	payload: {
 		id: 3
-	}
+	},
+	timestamp: 16
 }
 
 const attributeEvents = {

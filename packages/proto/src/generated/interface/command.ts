@@ -482,11 +482,10 @@ export interface Command {
   commandId: number;
   commandType: CommandType;
   payload: Uint8Array;
-  payloadEncryptionKey: Uint8Array;
 }
 
 function createBaseCommand(): Command {
-  return { commandId: 0, commandType: 0, payload: new Uint8Array(0), payloadEncryptionKey: new Uint8Array(0) };
+  return { commandId: 0, commandType: 0, payload: new Uint8Array(0) };
 }
 
 export const Command = {
@@ -499,9 +498,6 @@ export const Command = {
     }
     if (message.payload.length !== 0) {
       writer.uint32(26).bytes(message.payload);
-    }
-    if (message.payloadEncryptionKey.length !== 0) {
-      writer.uint32(34).bytes(message.payloadEncryptionKey);
     }
     return writer;
   },
@@ -534,13 +530,6 @@ export const Command = {
 
           message.payload = reader.bytes();
           continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.payloadEncryptionKey = reader.bytes();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -555,9 +544,6 @@ export const Command = {
       commandId: isSet(object.commandId) ? Number(object.commandId) : 0,
       commandType: isSet(object.commandType) ? commandTypeFromJSON(object.commandType) : 0,
       payload: isSet(object.payload) ? bytesFromBase64(object.payload) : new Uint8Array(0),
-      payloadEncryptionKey: isSet(object.payloadEncryptionKey)
-        ? bytesFromBase64(object.payloadEncryptionKey)
-        : new Uint8Array(0),
     };
   },
 
@@ -567,10 +553,6 @@ export const Command = {
     message.commandType !== undefined && (obj.commandType = commandTypeToJSON(message.commandType));
     message.payload !== undefined &&
       (obj.payload = base64FromBytes(message.payload !== undefined ? message.payload : new Uint8Array(0)));
-    message.payloadEncryptionKey !== undefined &&
-      (obj.payloadEncryptionKey = base64FromBytes(
-        message.payloadEncryptionKey !== undefined ? message.payloadEncryptionKey : new Uint8Array(0),
-      ));
     return obj;
   },
 
@@ -583,7 +565,6 @@ export const Command = {
     message.commandId = object.commandId ?? 0;
     message.commandType = object.commandType ?? 0;
     message.payload = object.payload ?? new Uint8Array(0);
-    message.payloadEncryptionKey = object.payloadEncryptionKey ?? new Uint8Array(0);
     return message;
   },
 };

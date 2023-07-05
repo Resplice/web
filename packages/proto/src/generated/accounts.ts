@@ -12,6 +12,8 @@ export interface CreateAccount {
 export interface AccountCreated {
   accountId: number;
   fullName: string;
+  handle: string;
+  avatarUrl: string;
   emailId: number;
   email: string;
   phoneId: number;
@@ -147,7 +149,7 @@ export const CreateAccount = {
 };
 
 function createBaseAccountCreated(): AccountCreated {
-  return { accountId: 0, fullName: "", emailId: 0, email: "", phoneId: 0, phone: "" };
+  return { accountId: 0, fullName: "", handle: "", avatarUrl: "", emailId: 0, email: "", phoneId: 0, phone: "" };
 }
 
 export const AccountCreated = {
@@ -158,17 +160,23 @@ export const AccountCreated = {
     if (message.fullName !== "") {
       writer.uint32(18).string(message.fullName);
     }
+    if (message.handle !== "") {
+      writer.uint32(26).string(message.handle);
+    }
+    if (message.avatarUrl !== "") {
+      writer.uint32(34).string(message.avatarUrl);
+    }
     if (message.emailId !== 0) {
-      writer.uint32(24).uint32(message.emailId);
+      writer.uint32(40).uint32(message.emailId);
     }
     if (message.email !== "") {
-      writer.uint32(34).string(message.email);
+      writer.uint32(50).string(message.email);
     }
     if (message.phoneId !== 0) {
-      writer.uint32(40).uint32(message.phoneId);
+      writer.uint32(56).uint32(message.phoneId);
     }
     if (message.phone !== "") {
-      writer.uint32(50).string(message.phone);
+      writer.uint32(66).string(message.phone);
     }
     return writer;
   },
@@ -195,28 +203,42 @@ export const AccountCreated = {
           message.fullName = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.emailId = reader.uint32();
+          message.handle = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.email = reader.string();
+          message.avatarUrl = reader.string();
           continue;
         case 5:
           if (tag !== 40) {
             break;
           }
 
-          message.phoneId = reader.uint32();
+          message.emailId = reader.uint32();
           continue;
         case 6:
           if (tag !== 50) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.phoneId = reader.uint32();
+          continue;
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -235,6 +257,8 @@ export const AccountCreated = {
     return {
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       fullName: isSet(object.fullName) ? String(object.fullName) : "",
+      handle: isSet(object.handle) ? String(object.handle) : "",
+      avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
       emailId: isSet(object.emailId) ? Number(object.emailId) : 0,
       email: isSet(object.email) ? String(object.email) : "",
       phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
@@ -246,6 +270,8 @@ export const AccountCreated = {
     const obj: any = {};
     message.accountId !== undefined && (obj.accountId = Math.round(message.accountId));
     message.fullName !== undefined && (obj.fullName = message.fullName);
+    message.handle !== undefined && (obj.handle = message.handle);
+    message.avatarUrl !== undefined && (obj.avatarUrl = message.avatarUrl);
     message.emailId !== undefined && (obj.emailId = Math.round(message.emailId));
     message.email !== undefined && (obj.email = message.email);
     message.phoneId !== undefined && (obj.phoneId = Math.round(message.phoneId));
@@ -261,6 +287,8 @@ export const AccountCreated = {
     const message = createBaseAccountCreated();
     message.accountId = object.accountId ?? 0;
     message.fullName = object.fullName ?? "";
+    message.handle = object.handle ?? "";
+    message.avatarUrl = object.avatarUrl ?? "";
     message.emailId = object.emailId ?? 0;
     message.email = object.email ?? "";
     message.phoneId = object.phoneId ?? 0;
