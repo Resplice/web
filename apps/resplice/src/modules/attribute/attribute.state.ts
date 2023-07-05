@@ -65,11 +65,11 @@ export function applyAttributeEvent(
 	return aggregate
 }
 
-function mapAttributeType(type: proto.attributes.types.AttributeType): AttributeType {
+export function mapAttributeType(type: proto.attributes.types.AttributeType): AttributeType {
 	return AttributeType[proto.attributes.types.attributeTypeToJSON(type)]
 }
 
-function mapAttributeValue(
+export function mapAttributeValue(
 	value: proto.attributes.AttributeAdded['value'] | proto.attributes.AttributeValueEdited['value']
 ): AttributeValue {
 	switch (value.$case) {

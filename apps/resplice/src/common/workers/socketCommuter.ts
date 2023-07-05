@@ -6,9 +6,9 @@ import {
 	type UnaryFunction,
 	type Observable
 } from 'rxjs'
+import proto, { type Command, type Event, type UserEvent } from '@resplice/proto'
 import SocketWorker from '$common/workers/socket?worker'
 import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
-import proto, { type Command, type Event } from '@resplice/proto'
 
 export enum SocketCommandType {
 	OPEN = 'OPEN',
@@ -61,13 +61,18 @@ type ClosedEvent = {
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
 
-export function onlyReceivedMessages() {
+export function onlyUserEvents() {
+	const nonUserEventTypes = [
+		proto.EventType.ERROR,
+		proto.EventType.AUTH_CHANGED,
+		proto.EventType.SOCKET_AUTHORIZED
+	]
 	return pipe(
 		filter<SocketEvent>(
-			(m) => m.type === SocketEventType.RECEIVED
+			(m) => m.type === SocketEventType.RECEIVED && !nonUserEventTypes.includes(m.event.type)
 		) as MonoTypeOperatorFunction<ReceivedEvent>,
 		map((m) => m.event)
-	) as UnaryFunction<Observable<SocketEvent>, Observable<Event>>
+	) as UnaryFunction<Observable<SocketEvent>, Observable<UserEvent>>
 }
 
 export type SocketCommuter = Commuter<SocketCommand, SocketEvent>

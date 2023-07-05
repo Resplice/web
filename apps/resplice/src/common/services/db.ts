@@ -33,6 +33,19 @@ function createDatabase(newDB: IDBDatabase) {
 	newDB.createObjectStore('sessions', { keyPath: 'id' })
 }
 
+function deleteDatabase(): Promise<void> {
+	return new Promise((resolve, reject) => {
+		const request = indexedDB.deleteDatabase(DB_NAME)
+		request.onsuccess = () => {
+			db = null
+			resolve()
+		}
+		request.onerror = (e: any) => {
+			reject(e.target.errorCode)
+		}
+	})
+}
+
 function open(): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION)
@@ -212,7 +225,8 @@ const DBWrapper = {
 	insert,
 	upsert,
 	remove,
-	clear
+	clear,
+	delete: deleteDatabase
 }
 
 export type DB = typeof DBWrapper
