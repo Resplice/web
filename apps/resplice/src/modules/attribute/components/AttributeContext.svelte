@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
-	import { attributeTypes, capitalize } from '@resplice/utils'
+	import { attributeTypes, capitalize, type Attribute } from '@resplice/utils'
 	import { AttributeValue, AttributeActionIcon, Button } from '@resplice/components'
-	import type { Attribute } from '$modules/attribute/attribute.types'
 
 	export let attribute: Attribute
 	export let itemType: 'contact' | 'user' | 'disabled'

@@ -28,14 +28,14 @@
 		if (phone.value) {
 			// Country code is not optional
 			const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
-			number = phoneNumber.number
+			number = phoneNumber ? phoneNumber.number : ''
 		} else {
 			number = ''
 		}
 	}
 </script>
 
-<form class="flex flex-col items-center justify-between mt-4 px-2 flex-1">
+<form class="flex flex-col items-center justify-between mt-4 px-2 flex-1" on:submit|preventDefault>
 	<div class="w-full flex flex-col space-y-6">
 		<TextField name="attribute-name" label="Name" bind:value={name} error={formErrs.name} />
 		<PhoneField name="phone" label="Phone" bind:phone error={formErrs.phone} />

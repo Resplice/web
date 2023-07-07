@@ -8,6 +8,7 @@
 	// Attribute Pages
 	import SelectAttributeTypePage from '$modules/attribute/pages/SelectAttributeTypePage.svelte'
 	import CreateAttributePage from '$modules/attribute/pages/CreateAttributePage.svelte'
+	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
 
 	export let initialUrl: string
 
@@ -34,7 +35,7 @@
 		// '/invite/qr/:id': UnlockQrPage,
 		'/profile': ProfilePage,
 		// '/search': SearchPage,
-		// '/settings': SettingsPage,
+		'/settings': SettingsPage,
 		'*': NotFoundPage
 	}
 

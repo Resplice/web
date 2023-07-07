@@ -21,5 +21,5 @@
 			</div>
 		{/if}
 	</div>
-	<IconButton Icon={SettingsIcon} on:click={() => push('/app/settings')} />
+	<IconButton Icon={SettingsIcon} on:click={() => push('/settings')} />
 </nav>

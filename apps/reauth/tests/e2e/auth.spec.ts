@@ -1,10 +1,8 @@
 import { test, expect } from '@playwright/test'
 
-const BASE_URL = 'http://localhost:5173'
-
 test.describe('Auth Flow', () => {
 	test('Auth Renders', async ({ page }) => {
-		await page.goto(`${BASE_URL}/auth`)
+		await page.goto('/auth')
 		await expect(page).toHaveTitle('Login')
 
 		const welcomeText = page.locator('text=Welcome')
@@ -13,7 +11,7 @@ test.describe('Auth Flow', () => {
 	})
 
 	test('New User Flow', async ({ page }) => {
-		await page.goto(`${BASE_URL}/auth`)
+		await page.goto('/auth')
 		const continueBtnLocator = page.locator('button:has-text("Continue")')
 
 		// Auth Start
