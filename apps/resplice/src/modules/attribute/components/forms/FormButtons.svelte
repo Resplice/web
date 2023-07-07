@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import Button from '@resplice/components/package/Button.svelte'
+	import { Button } from '@resplice/components'
 
 	const dispatch = createEventDispatcher()
 </script>

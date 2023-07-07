@@ -1,5 +1,5 @@
 import type { Attribute } from '$modules/account/account.types'
-import { AttributeType } from '$modules/attribute/attribute.types'
+import { AttributeType } from '@resplice/utils'
 
 export const attributes = new Map<number, Attribute>([
 	[
@@ -9,8 +9,7 @@ export const attributes = new Map<number, Attribute>([
 			type: AttributeType.PHONE,
 			name: 'Personal Phone',
 			value: {
-				number: 12185910657,
-				extension: undefined,
+				number: '+16452135555',
 				smsEnabled: true
 			},
 			groupId: null,
@@ -26,7 +25,7 @@ export const attributes = new Map<number, Attribute>([
 			type: AttributeType.EMAIL,
 			name: 'Personal Email',
 			value: {
-				email: 'bastilla@jedi.com'
+				email: 'han@falcon.com'
 			},
 			groupId: null,
 			sortOrder: 2,
@@ -79,7 +78,7 @@ export const attributes = new Map<number, Attribute>([
 			type: AttributeType.CREDENTIAL,
 			name: 'Holocron Passcode',
 			value: {
-				identity: 'bastilla',
+				identity: 'solo-han',
 				passcode: 'r2-d2&c3p0'
 			},
 			groupId: null,
@@ -93,7 +92,7 @@ export const attributes = new Map<number, Attribute>([
 		{
 			id: 6,
 			type: AttributeType.DATE,
-			name: 'Council Meeting',
+			name: 'Scoundrel Meeting',
 			value: {
 				year: 2167,
 				month: 1,
@@ -112,8 +111,8 @@ export const attributes = new Map<number, Attribute>([
 			type: AttributeType.SOCIAL,
 			name: 'Instagram',
 			value: {
-				handle: 'bastilla_shan',
-				url: 'https://www.instagram.com/bastilla_shan/'
+				handle: '__han.solo__',
+				url: 'https://www.instagram.com/__han.solo__/'
 			},
 			groupId: null,
 			sortOrder: 7,

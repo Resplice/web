@@ -8,7 +8,7 @@
 	export let autocomplete = 'on'
 	export let error = ''
 	export let disabled = false
-	export let Icon: IconComponent
+	export let Icon: IconComponent | null = null
 	let isTouched = false
 
 	$: {

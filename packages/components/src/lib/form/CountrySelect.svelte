@@ -9,7 +9,7 @@
 	export let value: string
 	export let error: string = ''
 	export let disabled = false
-	export let Icon: IconComponent
+	export let Icon: IconComponent | null = null
 	let isTouched = !!value
 
 	function resetError() {

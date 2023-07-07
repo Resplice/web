@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import TextField from '@resplice/components/package/form/TextField.svelte'
+	import { TextField, CountrySelect } from '@resplice/components'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
-	import CountrySelect from '@resplice/components/package/form/CountrySelect.svelte'
 
 	const dispatch = createEventDispatcher()
 

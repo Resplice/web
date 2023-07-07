@@ -5,8 +5,8 @@ import { type SocketCommuter, onlyUserEvents } from '$common/workers/socketCommu
 import { sendCommand } from '$common/protocol/helpers'
 import {
 	applyAttributeEvent,
-	mapAttributeType,
-	mapAttributeValue
+	mapProtoAttributeType,
+	mapProtoAttributeValue
 } from '$modules/attribute/attribute.state'
 import type { AttributeStore } from '$modules/attribute/attribute.store'
 import type { Attribute } from '$modules/account/account.types'
@@ -39,9 +39,9 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 			})
 			const placeholderAttribute = {
 				id: new Date().getTime(),
-				type: mapAttributeType(payload.type),
+				type: mapProtoAttributeType(payload.type),
 				name: payload.name,
-				value: mapAttributeValue(payload.value),
+				value: mapProtoAttributeValue(payload.value),
 				sortOrder: 0,
 				groupId: null,
 				verifiedAt: null,
@@ -68,8 +68,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				payload
 			})
 			store.update((state) => {
-				state.get(payload.id).type = mapAttributeType(payload.type)
-				state.get(payload.id).value = mapAttributeValue(payload.value)
+				state.get(payload.id).type = mapProtoAttributeType(payload.type)
+				state.get(payload.id).value = mapProtoAttributeValue(payload.value)
 				return state
 			})
 		},

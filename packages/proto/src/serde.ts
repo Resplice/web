@@ -26,11 +26,12 @@ import { type Event, eventMapper } from './event'
 // 	return ivArr
 // }
 
-function encode(command: Command) {
+function encode(command: Command, payloadKey?: Uint8Array) {
 	return proto.Command.encode({
 		commandId: command.id,
 		commandType: command.type,
-		payload: encodePayload(command)
+		payload: encodePayload(command),
+		payloadKey
 	}).finish()
 }
 
@@ -59,8 +60,7 @@ function decode(eventBytes: Uint8Array): Event {
 	return {
 		id: event.eventId,
 		type: event.eventType as Event['type'],
-		payload,
-		timestamp: event.timestamp
+		payload
 	}
 }
 

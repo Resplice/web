@@ -24,7 +24,7 @@ export interface Address extends BaseAttribute {
 }
 export type AddressValue = {
 	streetAddress1: string
-	streetAddress2?: string | null
+	streetAddress2: string
 	locality: string
 	region: string
 	postalCode: string
@@ -81,6 +81,7 @@ export interface Phone extends BaseAttribute {
 }
 export type PhoneValue = {
 	number: string
+	smsEnabled: boolean
 }
 
 export interface Social extends BaseAttribute {

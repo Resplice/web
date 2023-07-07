@@ -14,6 +14,7 @@
 		"dev:overseer": "turbo run dev --filter overseer",
 		"dev:reauth": "turbo run dev --filter reauth",
 		"dev:resplice": "turbo run dev --filter resplice",
+		"dev:components": "turbo run dev --filter components",
 		"preview": "turbo run preview",
 		"preview:reauth": "turbo run preview --filter reauth",
 		"preview:resplice": "turbo run preview --filter resplice",

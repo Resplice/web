@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AttributeAction from '@resplice/components/package/attribute/AttributeAction.svelte'
+	import { AttributeAction } from '@resplice/components'
 	import type { AttributeTypeConfig } from '@resplice/utils'
 
 	export let attributeTypeConfig: AttributeTypeConfig

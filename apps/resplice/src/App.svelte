@@ -4,6 +4,7 @@
 	import config from '$services/config'
 	import initializeIntl from '$common/i18n'
 	import respliceProtocolFactory, { contextKey } from '$common/protocol'
+	import accountStore from '$modules/account/account.store'
 	import { AppLoading, AppError } from '@resplice/components'
 	import Router from './Router.svelte'
 	import './app.css'
@@ -54,12 +55,15 @@
 	}
 
 	const isLoading = loadApp()
+
+	// Can do additional store checks here
+	$: accountLoaded = !!accountStore
 </script>
 
 {#await isLoading}
 	<AppLoading />
 {:then isValidSession}
-	{#if isValidSession}
+	{#if isValidSession && accountLoaded}
 		<Router {initialUrl} />
 		<!-- <ToastProvider /> -->
 	{/if}

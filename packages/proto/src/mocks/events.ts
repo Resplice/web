@@ -11,8 +11,7 @@ const authStarted: Event = {
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 1
+	}
 }
 
 const authEmailVerified: Event = {
@@ -21,8 +20,7 @@ const authEmailVerified: Event = {
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 2
+	}
 }
 
 const authPhoneVerified: Event = {
@@ -31,8 +29,7 @@ const authPhoneVerified: Event = {
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 3
+	}
 }
 
 const accountCreatedAuth: Event = {
@@ -41,8 +38,7 @@ const accountCreatedAuth: Event = {
 	payload: {
 		status: proto.auth.AuthStatus.PENDING_SESSION,
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 4
+	}
 }
 
 const socketAuthorized: Event = {
@@ -51,8 +47,7 @@ const socketAuthorized: Event = {
 	payload: {
 		events: [],
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 7
+	}
 }
 
 const authEvents = {
@@ -76,8 +71,7 @@ const accountCreated: Event = {
 		email: EMAIL,
 		phoneId: 2,
 		phone: PHONE
-	},
-	timestamp: 5
+	}
 }
 
 const accountNameEdited: Event = {
@@ -85,8 +79,7 @@ const accountNameEdited: Event = {
 	type: proto.EventType.ACCOUNT_NAME_EDITED,
 	payload: {
 		name: 'H@n Sol0'
-	},
-	timestamp: 8
+	}
 }
 
 const accountHandleEdited: Event = {
@@ -94,8 +87,7 @@ const accountHandleEdited: Event = {
 	type: proto.EventType.ACCOUNT_HANDLE_EDITED,
 	payload: {
 		handle: 'bestSmuggler42'
-	},
-	timestamp: 9
+	}
 }
 
 const accountAvatarEdited: Event = {
@@ -103,8 +95,7 @@ const accountAvatarEdited: Event = {
 	type: proto.EventType.ACCOUNT_AVATAR_EDITED,
 	payload: {
 		avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg'
-	},
-	timestamp: 10
+	}
 }
 
 const accountEvents = {
@@ -122,16 +113,14 @@ const sessionStarted: Event = {
 		sessionId: 1,
 		expirySeconds: 34523453,
 		accessKey: ACCESS_KEY
-	},
-	timestamp: 6
+	}
 }
 const sessionExpired: Event = {
 	id: 127,
 	type: proto.EventType.SESSION_EXPIRED,
 	payload: {
 		sessionId: 2
-	},
-	timestamp: 127
+	}
 }
 
 const sessionEvents = {
@@ -155,11 +144,10 @@ const attributeAdded: Event = {
 				locality: 'Lake Buena Vista',
 				region: 'FL',
 				postalCode: '32830',
-				country: proto.attributes.types.Country.UNITED_STATES
+				country: 'US'
 			}
 		}
-	},
-	timestamp: 11
+	}
 }
 
 const attributeNameEdited: Event = {
@@ -168,8 +156,7 @@ const attributeNameEdited: Event = {
 	payload: {
 		id: 3,
 		name: '1st Earth Address'
-	},
-	timestamp: 12
+	}
 }
 
 const attributeValueEdited: Event = {
@@ -186,11 +173,10 @@ const attributeValueEdited: Event = {
 				locality: 'Lake Buena Vista',
 				region: 'FL',
 				postalCode: '32830',
-				country: proto.attributes.types.Country.UNITED_STATES
+				country: 'US'
 			}
 		}
-	},
-	timestamp: 13
+	}
 }
 
 const attributeSorted: Event = {
@@ -199,8 +185,7 @@ const attributeSorted: Event = {
 	payload: {
 		id: 3,
 		sortIndex: 1
-	},
-	timestamp: 14
+	}
 }
 
 const attributeVerified: Event = {
@@ -209,8 +194,7 @@ const attributeVerified: Event = {
 	payload: {
 		id: 3,
 		verifiedAt: 3454563
-	},
-	timestamp: 15
+	}
 }
 
 const attributeDeleted: Event = {
@@ -218,8 +202,7 @@ const attributeDeleted: Event = {
 	type: proto.EventType.ATTRIBUTE_DELETED,
 	payload: {
 		id: 3
-	},
-	timestamp: 16
+	}
 }
 
 const attributeEvents = {

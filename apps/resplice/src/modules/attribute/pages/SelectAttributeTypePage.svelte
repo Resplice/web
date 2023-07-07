@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { push, pop } from 'svelte-spa-router'
 	import { attributeTypes } from '@resplice/utils'
-	import IconButton from '@resplice/components/package/IconButton.svelte'
-	import BackIcon from '@resplice/components/package/icons/BackIcon.svelte'
+	import { IconButton, BackIcon } from '@resplice/components'
 	import TypeItem from '$modules/attribute/components/TypeItem.svelte'
 
 	$: typeConfigs = Object.entries(attributeTypes)
@@ -19,7 +18,7 @@
 				{#each typeConfigs as [type, config]}
 					<TypeItem
 						attributeTypeConfig={config}
-						on:click={() => push(`/app/attribute/create/${type.toLowerCase()}`)}
+						on:click={() => push(`/attribute/create/${type.toLowerCase()}`)}
 					/>
 				{/each}
 			</div>

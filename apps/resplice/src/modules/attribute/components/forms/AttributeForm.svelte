@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import { AttributeType } from '$modules/attribute/attribute.types'
-	import AttributeItem from '@resplice/components/package/attribute/AttributeItem.svelte'
+	import { AttributeType, type AttributeTypeConfig, type Attribute } from '@resplice/utils'
+	import { AttributeItem } from '@resplice/components'
 	import AddressForm from '$modules/attribute/components/forms/AddressForm.svelte'
 	import CoordinateForm from '$modules/attribute/components/forms/CoordinateForm.svelte'
 	import CredentialForm from '$modules/attribute/components/forms/CredentialForm.svelte'
@@ -11,7 +11,6 @@
 	import SocialForm from '$modules/attribute/components/forms/SocialForm.svelte'
 	import DateForm from '$modules/attribute/components/forms/DateForm.svelte'
 	import TextForm from '$modules/attribute/components/forms/TextForm.svelte'
-	import type { Attribute, AttributeTypeConfig } from '$modules/attribute/attribute.types'
 
 	const dispatch = createEventDispatcher()
 
@@ -77,7 +76,6 @@
 		<PhoneForm
 			bind:name={attribute.name}
 			bind:number={attribute.value.number}
-			bind:extension={attribute.value.extension}
 			bind:smsEnabled={attribute.value.smsEnabled}
 			on:save={() => dispatch('save', attribute)}
 		/>

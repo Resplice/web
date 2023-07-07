@@ -55,6 +55,7 @@ const createAccount: Command = {
 		email: EMAIL,
 		phone: PHONE,
 		fullName: 'Han Solo',
+		avatar: new Uint8Array([255, 255, 255]),
 		accessKey: ACCESS_KEY
 	}
 }
@@ -135,7 +136,7 @@ const addAttribute: Command = {
 				locality: 'Lake Buena Vista',
 				region: 'FL',
 				postalCode: '32830',
-				country: proto.attributes.types.Country.UNITED_STATES
+				country: 'US'
 			}
 		}
 	}
@@ -164,7 +165,7 @@ const editAttributeValue: Command = {
 				locality: 'Lake Buena Vista',
 				region: 'FL',
 				postalCode: '32830',
-				country: proto.attributes.types.Country.UNITED_STATES
+				country: 'US'
 			}
 		}
 	}

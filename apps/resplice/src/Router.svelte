@@ -1,16 +1,21 @@
 <script lang="ts">
 	import Router, { replace } from 'svelte-spa-router'
+	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
-	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
+	// Account Pages
+	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
+	// Attribute Pages
+	import SelectAttributeTypePage from '$modules/attribute/pages/SelectAttributeTypePage.svelte'
+	import CreateAttributePage from '$modules/attribute/pages/CreateAttributePage.svelte'
 
 	export let initialUrl: string
 
 	const routes = {
 		'/': RootPage,
 		// '/events': AppEventPage,
-		// '/attribute/create': SelectAttributeTypePage,
-		// '/attribute/create/:type': CreateAttributePage,
+		'/attribute/create': SelectAttributeTypePage,
+		'/attribute/create/:type': CreateAttributePage,
 		// '/attribute/:id/detail': AttributeDetailPage,
 		// '/attribute/:id/edit': EditAttributePage,
 		// '/contact/pending/:id': PendingContactDetailPage,

@@ -1,5 +1,6 @@
 type Feature =
 	| 'contacts'
+	| 'credentials'
 	| 'Crypto'
 	| 'geolocation'
 	| 'indexedDB'
@@ -13,6 +14,7 @@ export function isSupported(features: Feature[]): [boolean, Partial<FeatureMap>]
 export function isSupported(feature: Feature | Feature[]) {
 	const features: FeatureMap = {
 		contacts: 'contacts' in navigator && 'ContactsManager' in window,
+		credentials: 'credentials' in navigator,
 		Crypto: 'Crypto' in window,
 		geolocation: 'geolocation' in navigator,
 		indexedDB: 'indexedDB' in window,

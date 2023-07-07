@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	// import { zonedTimeToUtc } from 'date-fns-tz'
-	import TextField from '@resplice/components/package/form/TextField.svelte'
-	import DateField from '@resplice/components/package/form/DateField.svelte'
+	import { TextField, DateField } from '@resplice/components'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
 
 	const dispatch = createEventDispatcher()
@@ -11,14 +9,6 @@
 	export let year: number
 	export let month: number
 	export let day: number
-
-	// function toEpochTime(date: Date | string) {
-	//   if (!date) return null
-	//   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-	//   const utc = zonedTimeToUtc(date, timeZone)
-	//   return utc.getTime()
-	// }
-
 	let dateStr = (() => {
 		const now = new Date()
 		const paddedMonth = `0${now.getMonth() + 1}`.slice(-2)

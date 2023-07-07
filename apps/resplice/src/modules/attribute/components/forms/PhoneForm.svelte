@@ -1,27 +1,23 @@
 <script lang="ts">
-	import parsePhoneNumber, { isValidPhoneNumber } from 'libphonenumber-js'
+	import parsePhoneNumber, { isValidPhoneNumber, type CountryCode } from 'libphonenumber-js'
 	import { createEventDispatcher } from 'svelte'
-	import TextField from '@resplice/components/package/form/TextField.svelte'
-	import PhoneField from '@resplice/components/package/form/PhoneField.svelte'
-	import Toggle from '@resplice/components/package/form/Toggle.svelte'
+	import { TextField, PhoneField, Toggle } from '@resplice/components'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
-
-	import type { CountryCode } from 'libphonenumber-js'
 
 	const dispatch = createEventDispatcher()
 
 	export let name = ''
-	export let number: number | undefined
-	export let extension: number | undefined
+	export let number = ''
 	export let smsEnabled = true
 
-	let phone = { countryCode: 'US' as CountryCode, value: number ? number.toString() : '' }
+	let phone = { countryCode: 'US' as CountryCode, value: number }
 	let formErrs: any = {}
 
 	function onSave() {
 		formErrs = {}
 		if (!name) formErrs.name = 'A name is required'
-		if (!isValidPhoneNumber(`+${number}`)) formErrs.phone = 'Please enter a valid phone number'
+		if (!isValidPhoneNumber(phone.value, phone.countryCode))
+			formErrs.phone = 'Please enter a valid phone number'
 
 		if (!Object.keys(formErrs).length) {
 			dispatch('save')
@@ -31,14 +27,10 @@
 	$: {
 		if (phone.value) {
 			// Country code is not optional
-			const ph = parsePhoneNumber(phone.value, phone.countryCode as CountryCode)
-			if (ph) {
-				number = parseInt(ph.number, 10)
-				extension = ph.ext ? parseInt(ph.ext, 10) : undefined
-			}
+			const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
+			number = phoneNumber.number
 		} else {
-			number = undefined
-			extension = undefined
+			number = ''
 		}
 	}
 </script>

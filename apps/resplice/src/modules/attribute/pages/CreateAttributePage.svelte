@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { pop } from 'svelte-spa-router'
-	import { attributeTypes } from '@resplice/utils'
-	import useRespliceProtocol from '$common/hooks/useRespliceProtocol'
-	import IconButton from '@resplice/components/package/IconButton.svelte'
-	import BackIcon from '@resplice/components/package/icons/BackIcon.svelte'
+	import { attributeTypes, type Attribute, AttributeType } from '@resplice/utils'
+	import useProtocol from '$common/protocol/useProtocol'
+	import { IconButton, BackIcon } from '@resplice/components'
 	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
-	import type { Attribute, AttributeType } from '$modules/attribute/attribute.types'
+	import { mapAttributeType, mapAttributeValue } from '$modules/attribute/attribute.state'
 
-	const protocol = useRespliceProtocol()
+	const protocol = useProtocol()
 
 	export let params: { type: string }
 	const attributeType = params.type.toUpperCase() as AttributeType
@@ -23,9 +22,9 @@
 
 	async function saveAttribute(attribute: Attribute) {
 		await protocol.attribute.add({
-			type: attribute.type,
+			type: mapAttributeType(attribute.type),
 			name: attribute.name,
-			value: attribute.value
+			value: mapAttributeValue(attribute.type, attribute.value)
 		})
 		pop()
 	}

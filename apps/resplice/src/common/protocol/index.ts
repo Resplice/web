@@ -64,7 +64,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 		}
 	})
 
-	const protocol = {
+	const protocol: RespliceProtocol = {
 		account: accountProtocolFactory({ cache: db, store: stores.account, commuter: socketCommuter }),
 		attribute: attributeProtocolFactory({
 			cache: db,

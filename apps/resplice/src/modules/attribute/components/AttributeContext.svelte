@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { attributeTypes, capitalize } from '@resplice/utils'
-	import AttributeValue from '@resplice/components/package/attribute/AttributeValue.svelte'
-	import ActionIcon from '@resplice/components/package/attribute/AttributeActionIcon.svelte'
-	import Button from '@resplice/components/package/ButtonAlt.svelte'
+	import { AttributeValue, AttributeActionIcon, Button } from '@resplice/components'
 	import type { Attribute } from '$modules/attribute/attribute.types'
 
 	export let attribute: Attribute
@@ -39,7 +37,7 @@
 				<div
 					class="bg-brand-primary text-brand-primary outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none"
 				>
-					<ActionIcon attributeAction={action} />
+					<AttributeActionIcon attributeAction={action} />
 				</div>
 				<p class="ml-4">{capitalize(action.toLowerCase())}</p>
 			</button>

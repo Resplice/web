@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import TextField from '@resplice/components/package/form/TextField.svelte'
-	import PasswordField from '@resplice/components/package/form/PasswordField.svelte'
+	import { TextField, PasswordField } from '@resplice/components'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
 
 	const dispatch = createEventDispatcher()

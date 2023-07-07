@@ -2,7 +2,6 @@ import proto from './index'
 
 type BaseEvent = {
 	id: number
-	timestamp: number
 }
 
 // Meta Events
