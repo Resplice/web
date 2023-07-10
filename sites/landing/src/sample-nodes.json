@@ -1,0 +1,57 @@
+[
+	{
+		"accountId": 1,
+		"name": "Han Solo",
+		"invitedBy": 0
+	},
+	{
+		"accountId": 2,
+		"name": "Luke Skywalker",
+		"invitedBy": 0
+	},
+	{
+		"accountId": 3,
+		"name": "Leia Organa",
+		"invitedBy": 2
+	},
+	{
+		"accountId": 4,
+		"name": "Chewbacca",
+		"invitedBy": 1
+	},
+	{
+		"accountId": 5,
+		"name": "Cad Bane",
+		"invitedBy": 4
+	},
+	{
+		"accountId": 6,
+		"name": "Ben Kenobi",
+		"invitedBy": 2
+	},
+	{
+		"accountId": 7,
+		"name": "Greedo",
+		"invitedBy": 5
+	},
+	{
+		"accountId": 8,
+		"name": "Din Djarin",
+		"invitedBy": 5
+	},
+	{
+		"accountId": 9,
+		"name": "Aurra Sing",
+		"invitedBy": 5
+	},
+	{
+		"accountId": 10,
+		"name": "Embo",
+		"invitedBy": 5
+	},
+	{
+		"accountId": 11,
+		"name": "Jango Fett",
+		"invitedBy": 5
+	}
+]
