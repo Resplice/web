@@ -7,7 +7,8 @@ const ACCESS_TOKEN = new Uint8Array([1, 2, 3])
 // Auth Commands
 const startAuth: proto.auth.StartAuth = {
 	email: EMAIL,
-	phone: PHONE
+	phone: PHONE,
+	encryptionKey: new Uint8Array([255, 255, 255])
 }
 
 const verifyAuthEmail: proto.auth.VerifyAuthEmail = {

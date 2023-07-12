@@ -3,14 +3,16 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
-	import store, { AuthStep, INITIAL_STORE } from '$lib/store'
+	import store, { AuthStatus, INITIAL_STORE } from '$lib/store'
 	import { RespliceWideIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
+
+	const nextStatus = [AuthStatus.PENDING_EMAIL_VERIFICATION, AuthStatus.PENDING_PHONE_VERIFICATION]
 
 	onMount(() => store.set(INITIAL_STORE))
 
 	$: {
-		if (browser && $store.step === AuthStep.VERIFY_EMAIL) goto('/verify')
+		if (browser && nextStatus.includes($store.status)) goto('/verify')
 	}
 </script>
 

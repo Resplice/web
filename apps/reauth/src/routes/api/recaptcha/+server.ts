@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit'
 import { z } from 'zod'
 import { env } from '$env/dynamic/private'
-import { configSchema } from '$lib/config'
+import { configSchema } from '../config'
 import type { RequestHandler } from './$types'
 
 const requestSchema = z.object({ token: z.string() })

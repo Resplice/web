@@ -76,6 +76,19 @@ export function importPublicKey(rawKey: ArrayBuffer): Promise<CryptoKey> {
 	)
 }
 
+function buildJwk(rawKey: ArrayBuffer): JsonWebKey {
+	// NOTE: 'AQAB' = base64(65537)
+	const b64Key = btob64(rawKey)
+	const b64UrlKey = b64tob64u(b64Key)
+	return {
+		kty: 'RSA',
+		e: 'AQAB',
+		n: b64UrlKey,
+		alg: 'RSA-OAEP-256',
+		ext: true
+	}
+}
+
 export async function publicKeyEncrypt(key: CryptoKey, data: Uint8Array): Promise<Uint8Array> {
 	const encryptedBuffer = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, key, data)
 
@@ -152,19 +165,6 @@ export function combineBufferArrays(arr1: Uint8Array, arr2: Uint8Array): Uint8Ar
 	newBufView.set(arr1)
 	newBufView.set(arr2, arr1.byteLength)
 	return newBufView
-}
-
-function buildJwk(rawKey: ArrayBuffer) {
-	// NOTE: 'AQAB' = base64(65537)
-	const b64Key = btob64(rawKey)
-	const b64UrlKey = b64tob64u(b64Key)
-	return {
-		kty: 'RSA',
-		e: 'AQAB',
-		n: b64UrlKey,
-		alg: 'RSA-OAEP-256',
-		ext: true
-	}
 }
 
 export type ReCrypto = {

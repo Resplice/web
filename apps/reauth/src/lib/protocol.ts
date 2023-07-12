@@ -1,47 +1,104 @@
-import { fetchFactory } from '@resplice/utils'
-import proto, { type Command, serializeCommand, deserializeEvent } from '@resplice/proto'
+import {
+	publicKeyEncrypt,
+	encrypt,
+	fetchFactory,
+	importPublicKey,
+	decrypt,
+	buildServerIV,
+	buildClientIV,
+	generateAesKey,
+	exportKey
+} from '@resplice/utils'
+import proto from '@resplice/proto'
 
 type Result<T> = Promise<
 	| {
 			event: T
-			errors: null
+			error: null
 	  }
 	| {
 			event: null
-			errors: string[]
+			error: ErrorResult
 	  }
 >
 
+type ErrorResult = {
+	type: string
+	fields?: string[]
+}
+
 export interface Protocol {
 	isBot(token: string): Promise<boolean>
-	startAuth(payload: proto.auth.StartAuth): Result<proto.auth.AuthStarted>
-	verifyAuthEmail(payload: proto.auth.VerifyAuthEmail): Result<proto.auth.AuthEmailVerified>
-	verifyAuthPhone(payload: proto.auth.VerifyAuthPhone): Result<proto.auth.AuthPhoneVerified>
-	createAccount(payload: proto.accounts.CreateAccount): Result<proto.accounts.AccountCreated>
+	startAuth(payload: Omit<proto.auth.StartAuth, 'encryptionKey'>): Result<proto.auth.AuthChanged>
+	verifyAuthEmail(payload: proto.auth.VerifyAuthEmail): Result<proto.auth.AuthChanged>
+	verifyAuthPhone(payload: proto.auth.VerifyAuthPhone): Result<proto.auth.AuthChanged>
+	createAccount(payload: proto.auth.CreateAccount): Result<proto.auth.AuthChanged>
 }
 
 export function protocolFactory(respliceEndpoint: string): Protocol {
 	const fetch = fetchFactory(respliceEndpoint)
 	const localFetch = fetchFactory('/api')
 
-	async function executeCommand<E>(command: Command): Promise<E> {
-		try {
-			const serializedCommand = await serializeCommand(command)
+	let aesKey: CryptoKey | null = null
 
-			const resBinary = await fetch.post<ArrayBuffer>({
+	async function startAuth(payload: proto.auth.StartAuth): Result<proto.auth.AuthChanged> {
+		try {
+			const publicKeyBytes = await fetch.get<ArrayBuffer>({ endpoint: '/public-key' })
+			const publicKey = await importPublicKey(publicKeyBytes)
+			aesKey = await generateAesKey()
+			const encryptionKey = await exportKey(aesKey)
+
+			const encodedCommand = proto.auth.StartAuth.encode({ ...payload, encryptionKey }).finish()
+			const serializedCommand = publicKeyEncrypt(publicKey, encodedCommand)
+
+			const encryptedAuthChange = await fetch.post<ArrayBuffer>({
 				endpoint: '/auth',
 				data: serializedCommand
 			})
 
-			const event = await deserializeEvent(new Uint8Array(resBinary))
+			const serverIV = buildServerIV(0, true)
+			const authChangeBytes = await decrypt(aesKey, serverIV, new Uint8Array(encryptedAuthChange))
+			// TODO: This could decode into an error
+			const authChange = proto.auth.AuthChanged.decode(authChangeBytes)
 
-			if (event.type === proto.EventType.ERROR)
-				return { event: null, errors: errors_as_strings(event.payload.errors) } as E
+			return { event: authChange, error: null }
+		} catch (err) {
+			console.error(err)
+			const error = {
+				type: errorToString(proto.ErrorType.UNRECOGNIZED)
+			}
+			return { event: null, error }
+		}
+	}
 
-			return { event: event.payload, errors: null } as E
-		} catch (error) {
-			console.error(error)
-			return { event: null, errors: errors_as_strings([proto.Errors.UNRECOGNIZED]) } as E
+	async function executeAuthStep<P>(
+		payload: P,
+		protoMod: any,
+		counter: number
+	): Result<proto.auth.AuthChanged> {
+		try {
+			if (!aesKey) throw new Error('AES key not initialized')
+
+			const clientIV = buildClientIV(counter, true)
+			const serializedCommand = encrypt(aesKey, clientIV, protoMod.encode(payload).finish())
+
+			const encryptedAuthChange = await fetch.post<ArrayBuffer>({
+				endpoint: '/auth',
+				data: serializedCommand
+			})
+
+			const serverIV = buildServerIV(counter, true)
+			const authChangeBytes = await decrypt(aesKey, serverIV, new Uint8Array(encryptedAuthChange))
+			// TODO: This could decode into an error
+			const authChange = proto.auth.AuthChanged.decode(authChangeBytes)
+
+			return { event: authChange, error: null }
+		} catch (err) {
+			console.error(err)
+			const error = {
+				type: errorToString(proto.ErrorType.UNRECOGNIZED)
+			}
+			return { event: null, error }
 		}
 	}
 
@@ -57,17 +114,15 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 				return false
 			}
 		},
-		startAuth: (payload) => executeCommand({ type: proto.CommandType.START_AUTH, payload }),
-		verifyAuthEmail: (payload) =>
-			executeCommand({ type: proto.CommandType.VERIFY_AUTH_EMAIL, payload }),
-		verifyAuthPhone: (payload) =>
-			executeCommand({ type: proto.CommandType.VERIFY_AUTH_PHONE, payload }),
-		createAccount: (payload) => executeCommand({ type: proto.CommandType.CREATE_ACCOUNT, payload })
+		startAuth,
+		verifyAuthEmail: (payload) => executeAuthStep(payload, proto.auth.VerifyAuthEmail, 1),
+		verifyAuthPhone: (payload) => executeAuthStep(payload, proto.auth.VerifyAuthPhone, 2),
+		createAccount: (payload) => executeAuthStep(payload, proto.auth.CreateAccount, 3)
 	}
 }
 
-function errors_as_strings(errors: proto.Errors[]): string[] {
-	return errors.map((e) => proto.errorsToJSON(e))
+function errorToString(error: proto.ErrorType): string {
+	return proto.errorTypeToJSON(error)
 }
 
 export const contextKey = 'protocol'

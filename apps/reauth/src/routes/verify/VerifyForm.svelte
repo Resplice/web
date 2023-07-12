@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
-	import store, { AuthStep, type AuthStore } from '$lib/store'
+	import store, { AuthStatus } from '$lib/store'
 	import {
 		AttributeItem,
 		TextField,
@@ -19,22 +19,22 @@
 		id: 0,
 		type: AttributeType.EMAIL,
 		name: 'Email',
-		value: { email: ($store as AuthStore).email },
+		value: { email: $store.email },
 		sortOrder: 1
 	}
 	const phone: Phone = {
 		id: 1,
 		type: AttributeType.PHONE,
 		name: 'Phone',
-		value: { number: ($store as AuthStore).phone },
+		value: { number: $store.phone, smsEnabled: true },
 		sortOrder: 2
 	}
-	$: accessKey = ($store as AuthStore).accessKey
+	$: accessToken = $store.accessToken
 
 	let emailCode = ''
 	let emailPromise: Promise<boolean>
 	let emailCodeError = ''
-	$: emailVerified = $store.step === AuthStep.VERIFY_PHONE
+	$: emailVerified = $store.status === AuthStatus.PENDING_PHONE_VERIFICATION
 
 	let phoneCode = ''
 	let phonePromise: Promise<boolean>
@@ -55,55 +55,47 @@
 	}
 
 	async function submitEmailCode(verificationCode: number): Promise<boolean> {
-		const { event, errors } = await protocol.verifyAuthEmail({
+		const { event, error } = await protocol.verifyAuthEmail({
 			email: email.value.email,
 			phone: phone.value.number,
 			verificationCode,
-			accessKey
+			accessToken
 		})
 
-		if (errors) {
-			if (errors[0] === 'INVALID_STATE') location.replace('/')
-			emailCodeError = $t(`auth.errors.${errors[0]}`)
+		if (error) {
+			if (error.type === 'INVALID_STATE') location.replace('/')
+			emailCodeError = $t(`auth.errors.${error.type}`)
 			return false
 		}
 
-		store.set({
-			step: AuthStep.VERIFY_PHONE,
-			email: email.value.email,
-			phone: phone.value.number,
-			accessKey: event.accessKey
-		})
+		store.update((state) => ({
+			...state,
+			status: AuthStatus.PENDING_PHONE_VERIFICATION,
+			accessToken: event.accessToken
+		}))
+
 		return true
 	}
 
 	async function submitPhoneCode(verificationCode: number): Promise<boolean> {
-		const { event, errors } = await protocol.verifyAuthPhone({
+		const { event, error } = await protocol.verifyAuthPhone({
 			email: email.value.email,
 			phone: phone.value.number,
 			verificationCode,
-			accessKey
+			accessToken
 		})
 
-		if (errors) {
-			if (errors[0] === 'INVALID_STATE') location.replace('/')
-			phoneCodeError = $t(`auth.errors.${errors[0]}`)
+		if (error) {
+			if (error.type === 'INVALID_STATE') location.replace('/')
+			phoneCodeError = $t(`auth.errors.${error.type}`)
 			return false
 		}
 
-		if (event.accountExists) {
-			store.set({
-				step: AuthStep.FINISHED,
-				accessKey: event.accessKey
-			})
-		} else {
-			store.set({
-				step: AuthStep.CREATE_ACCOUNT,
-				email: email.value.email,
-				phone: phone.value.number,
-				accessKey: event.accessKey
-			})
-		}
+		store.update((state) => ({
+			...state,
+			status: AuthStatus.PENDING_PHONE_VERIFICATION,
+			accessToken: event.accessToken
+		}))
 
 		return true
 	}

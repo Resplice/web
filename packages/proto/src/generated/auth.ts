@@ -66,6 +66,7 @@ export interface AuthChanged {
 export interface StartAuth {
   email: string;
   phone: string;
+  encryptionKey: Uint8Array;
 }
 
 export interface VerifyAuthEmail {
@@ -169,7 +170,7 @@ export const AuthChanged = {
 };
 
 function createBaseStartAuth(): StartAuth {
-  return { email: "", phone: "" };
+  return { email: "", phone: "", encryptionKey: new Uint8Array(0) };
 }
 
 export const StartAuth = {
@@ -179,6 +180,9 @@ export const StartAuth = {
     }
     if (message.phone !== "") {
       writer.uint32(18).string(message.phone);
+    }
+    if (message.encryptionKey.length !== 0) {
+      writer.uint32(26).bytes(message.encryptionKey);
     }
     return writer;
   },
@@ -204,6 +208,13 @@ export const StartAuth = {
 
           message.phone = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.encryptionKey = reader.bytes();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -217,6 +228,7 @@ export const StartAuth = {
     return {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
+      encryptionKey: isSet(object.encryptionKey) ? bytesFromBase64(object.encryptionKey) : new Uint8Array(0),
     };
   },
 
@@ -224,6 +236,10 @@ export const StartAuth = {
     const obj: any = {};
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
+    message.encryptionKey !== undefined &&
+      (obj.encryptionKey = base64FromBytes(
+        message.encryptionKey !== undefined ? message.encryptionKey : new Uint8Array(0),
+      ));
     return obj;
   },
 
@@ -235,6 +251,7 @@ export const StartAuth = {
     const message = createBaseStartAuth();
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
+    message.encryptionKey = object.encryptionKey ?? new Uint8Array(0);
     return message;
   },
 };

@@ -5,7 +5,7 @@
 	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
-	import store, { AuthStep } from '$lib/store'
+	import store, { AuthStatus } from '$lib/store'
 	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
 
 	const config = useConfig()
@@ -38,14 +38,14 @@
 	}
 
 	function checkBot(): Promise<boolean> {
-		if (config.environment !== 'production') return Promise.resolve(false)
+		if (config.environment === 'local') return Promise.resolve(false)
 
 		const grecaptcha: any = (window as any).grecaptcha
 		return new Promise((resolve) => {
 			if (!grecaptcha) return resolve(false)
 			grecaptcha.ready(async () => {
-				const token = await grecaptcha.execute(config.recaptchaToken, {
-					action: 'auth'
+				const token = await grecaptcha.execute(config.recaptchaSiteKey, {
+					action: 'start-auth'
 				})
 				const isBot = await protocol.isBot(token)
 				if (isBot) {
@@ -60,22 +60,22 @@
 
 	async function startAuth() {
 		const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
-		const { event, errors } = await protocol.startAuth({
+		const { event, error } = await protocol.startAuth({
 			email,
 			phone: phoneNumber.number
 		})
 
-		if (errors) {
-			systemError = $t(`auth.errors.${errors[0]}`)
+		if (error) {
+			systemError = $t(`auth.errors.${error.type}`)
 			isLoading = false
 			return
 		}
 
 		store.set({
-			step: AuthStep.VERIFY_EMAIL,
+			status: AuthStatus.PENDING_EMAIL_VERIFICATION,
 			email,
 			phone: phoneNumber.number,
-			accessKey: event.accessKey
+			accessToken: event.accessToken
 		})
 	}
 
@@ -96,9 +96,9 @@
 </script>
 
 <svelte:head>
-	{#if config.environment === 'production'}
+	{#if config.environment !== 'local'}
 		<script
-			src={`https://www.google.com/recaptcha/api.js?render=${config.recaptchaToken}`}
+			src={`https://www.google.com/recaptcha/api.js?render=${config.recaptchaSiteKey}`}
 			async
 			defer
 		>

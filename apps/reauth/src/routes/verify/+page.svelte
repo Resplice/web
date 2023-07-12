@@ -2,23 +2,27 @@
 	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
-	import store, { AuthStep } from '$lib/store'
+	import store, { AuthStatus } from '$lib/store'
 	import useConfig from '$lib/hooks/useConfig'
 	import { RespliceWideIcon } from '@resplice/components'
 	import VerifyForm from './VerifyForm.svelte'
 
 	const config = useConfig()
+	const currentStatus = [
+		AuthStatus.PENDING_EMAIL_VERIFICATION,
+		AuthStatus.PENDING_PHONE_VERIFICATION
+	]
 
 	$: {
 		if (browser)
-			switch ($store.step) {
-				case AuthStep.START:
+			switch ($store.status) {
+				case AuthStatus.UNRECOGNIZED:
 					goto('/')
 					break
-				case AuthStep.CREATE_ACCOUNT:
+				case AuthStatus.PENDING_ACCOUNT_CREATION:
 					goto('/create-account')
 					break
-				case AuthStep.FINISHED:
+				case AuthStatus.PENDING_SESSION:
 					location.replace(config.respliceAppUrl)
 					break
 			}
@@ -33,7 +37,7 @@
 		</p>
 	</header>
 
-	{#if [AuthStep.VERIFY_EMAIL, AuthStep.VERIFY_PHONE].includes($store.step)}
+	{#if currentStatus.includes($store.status)}
 		<VerifyForm />
 	{/if}
 </main>

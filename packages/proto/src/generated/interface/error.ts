@@ -38,7 +38,8 @@ export enum Fields {
   NAME = 0,
   EMAIL = 1,
   PHONE = 2,
-  HANDLE = 3,
+  VERIFICATION_CODE = 3,
+  HANDLE = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -54,6 +55,9 @@ export function fieldsFromJSON(object: any): Fields {
     case "PHONE":
       return Fields.PHONE;
     case 3:
+    case "VERIFICATION_CODE":
+      return Fields.VERIFICATION_CODE;
+    case 4:
     case "HANDLE":
       return Fields.HANDLE;
     case -1:
@@ -71,6 +75,8 @@ export function fieldsToJSON(object: Fields): string {
       return "EMAIL";
     case Fields.PHONE:
       return "PHONE";
+    case Fields.VERIFICATION_CODE:
+      return "VERIFICATION_CODE";
     case Fields.HANDLE:
       return "HANDLE";
     case Fields.UNRECOGNIZED:
