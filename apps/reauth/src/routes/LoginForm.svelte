@@ -5,7 +5,7 @@
 	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
-	import store, { AuthStatus } from '$lib/store'
+	import store from '$lib/store'
 	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
 
 	const config = useConfig()
@@ -72,7 +72,7 @@
 		}
 
 		store.set({
-			status: AuthStatus.PENDING_EMAIL_VERIFICATION,
+			status: event.status,
 			email,
 			phone: phoneNumber.number,
 			accessToken: event.accessToken

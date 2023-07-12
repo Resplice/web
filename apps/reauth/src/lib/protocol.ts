@@ -33,6 +33,7 @@ export interface Protocol {
 	verifyAuthEmail(payload: proto.auth.VerifyAuthEmail): Result<proto.auth.AuthChanged>
 	verifyAuthPhone(payload: proto.auth.VerifyAuthPhone): Result<proto.auth.AuthChanged>
 	createAccount(payload: proto.auth.CreateAccount): Result<proto.auth.AuthChanged>
+	redirectToApp(respliceAppUrl: string, message: proto.auth.StartSession): void
 }
 
 export function protocolFactory(respliceEndpoint: string): Protocol {
@@ -102,6 +103,22 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		}
 	}
 
+	function redirectToApp(respliceAppUrl: string, message: proto.auth.StartSession) {
+		const src = `${respliceAppUrl}/mailbox.html`
+		const appIframe = document.createElement('iframe')
+		appIframe.src = src
+		appIframe.width = '0'
+		appIframe.height = '0'
+		appIframe.style.position = 'absolute'
+		appIframe.style.width = '0'
+		appIframe.style.height = '0'
+		appIframe.style.border = '0'
+		appIframe.style.visibility = 'hidden'
+		document.body.appendChild(appIframe)
+		appIframe.contentWindow?.postMessage(message, src)
+		location.replace(respliceAppUrl)
+	}
+
 	return {
 		async isBot(token) {
 			try {
@@ -117,7 +134,8 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		startAuth,
 		verifyAuthEmail: (payload) => executeAuthStep(payload, proto.auth.VerifyAuthEmail, 1),
 		verifyAuthPhone: (payload) => executeAuthStep(payload, proto.auth.VerifyAuthPhone, 2),
-		createAccount: (payload) => executeAuthStep(payload, proto.auth.CreateAccount, 3)
+		createAccount: (payload) => executeAuthStep(payload, proto.auth.CreateAccount, 3),
+		redirectToApp
 	}
 }
 

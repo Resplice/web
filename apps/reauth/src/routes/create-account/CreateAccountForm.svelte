@@ -1,12 +1,12 @@
 <script lang="ts">
-	import store, { AuthStep, type AuthStore } from '$lib/store'
+	import store from '$lib/store'
 	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
 	import { UserAvatar, TextField, PeopleIcon, Button, Link } from '@resplice/components'
 
 	const protocol = useProtocol()
 
-	const RAND_ID = Math.random().toString(36)
+	const RAND_ID = Math.random()
 
 	let avatar: Blob | null = null
 	let fullName = ''
@@ -23,23 +23,26 @@
 
 	async function createAccount() {
 		isLoading = true
-		const { event, errors } = await protocol.createAccount({
-			email: ($store as AuthStore).email,
-			phone: ($store as AuthStore).phone,
+		const avatarBytes = avatar ? new Uint8Array(await avatar.arrayBuffer()) : new Uint8Array()
+		const { event, error } = await protocol.createAccount({
+			email: $store.email,
+			phone: $store.phone,
 			fullName,
-			accessKey: ($store as AuthStore).accessKey
+			avatar: avatarBytes,
+			accessToken: $store.accessToken
 		})
 
-		if (errors) {
-			systemError = $t(`auth.errors.${errors[0]}`)
+		if (error) {
+			systemError = $t(`auth.errors.${error.type}`)
 			isLoading = false
 			return
 		}
 
-		store.set({
-			step: AuthStep.FINISHED,
-			accessKey: event.accessKey
-		})
+		store.update((state) => ({
+			...state,
+			status: event.status,
+			accessToken: event.accessToken
+		}))
 	}
 
 	function validate(): boolean {
@@ -57,7 +60,7 @@
 <div class="flex-1 space-y-6 flex flex-col justify-between overflow-auto">
 	<div>
 		<UserAvatar
-			uuid={RAND_ID}
+			id={RAND_ID}
 			avatarUrl={avatar ? URL.createObjectURL(avatar) : null}
 			on:crop={(e) => (avatar = e.detail)}
 		/>

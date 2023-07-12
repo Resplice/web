@@ -7,17 +7,19 @@
 	</head>
 	<script>
 		window.addEventListener('message', (event) => {
-			if (event.origin !== 'https://auth.resplice.com') {
-				return
-			}
-			if (event.data.accessToken) {
-				localStorage.setItem('accessToken', event.data.accessToken)
-			}
+			console.log(event)
+			// TODO: Check event.origin
+			// if (event.origin !== 'https://auth.resplice.com') {
+			// 	return
+			// }
 			if (event.data.email) {
 				localStorage.setItem('email', event.data.email)
 			}
 			if (event.data.phone) {
 				localStorage.setItem('phone', event.data.phone)
+			}
+			if (event.data.accessToken) {
+				localStorage.setItem('accessToken', event.data.accessToken)
 			}
 		})
 	</script>

@@ -70,7 +70,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: AuthStatus.PENDING_PHONE_VERIFICATION,
+			status: event.status,
 			accessToken: event.accessToken
 		}))
 
@@ -93,7 +93,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: AuthStatus.PENDING_PHONE_VERIFICATION,
+			status: event.status,
 			accessToken: event.accessToken
 		}))
 
