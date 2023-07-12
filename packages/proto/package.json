@@ -24,6 +24,7 @@
 		"protoc": "protoc -I=../../../proto $(find ../../../proto -name \"*.proto\") --plugin=../../node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/generated --ts_proto_opt=oneof=unions --ts_proto_opt=esModuleInterop=true --ts_proto_opt=env=browser --ts_proto_opt=outputIndex=true --ts_proto_opt=outputServices=false"
 	},
 	"devDependencies": {
+		"@resplice/utils": "*",
 		"@rollup/plugin-typescript": "^11.1.1",
 		"@typescript-eslint/eslint-plugin": "^5.60.0",
 		"@typescript-eslint/parser": "^5.60.0",

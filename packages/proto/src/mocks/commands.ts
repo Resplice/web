@@ -2,95 +2,75 @@ import proto, { type Command } from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
-const ACCESS_KEY = new Uint8Array([1, 2, 3])
+const ACCESS_TOKEN = new Uint8Array([1, 2, 3])
 
 // Auth Commands
-const startAuth: Command = {
-	id: 0,
-	type: proto.CommandType.START_AUTH,
-	payload: {
-		email: EMAIL,
-		phone: PHONE
-	}
+const startAuth: proto.auth.StartAuth = {
+	email: EMAIL,
+	phone: PHONE
 }
 
-const verifyAuthEmail: Command = {
-	id: 0,
-	type: proto.CommandType.VERIFY_AUTH_EMAIL,
-	payload: {
-		email: EMAIL,
-		phone: PHONE,
-		verificationCode: 123456,
-		accessKey: ACCESS_KEY
-	}
+const verifyAuthEmail: proto.auth.VerifyAuthEmail = {
+	email: EMAIL,
+	phone: PHONE,
+	verificationCode: 123456,
+	accessToken: ACCESS_TOKEN
 }
 
-const verifyAuthPhone: Command = {
-	id: 0,
-	type: proto.CommandType.VERIFY_AUTH_EMAIL,
-	payload: {
-		email: EMAIL,
-		phone: PHONE,
-		verificationCode: 123456,
-		accessKey: ACCESS_KEY
-	}
+const verifyAuthPhone: proto.auth.VerifyAuthPhone = {
+	email: EMAIL,
+	phone: PHONE,
+	verificationCode: 123456,
+	accessToken: ACCESS_TOKEN
 }
 
-const authorizeSocket: Command = {
-	id: 0,
-	type: proto.CommandType.AUTHORIZE_SOCKET,
-	payload: {
-		lastEventId: 0,
-		accessKey: ACCESS_KEY
-	}
+const createAccount: proto.auth.CreateAccount = {
+	email: EMAIL,
+	phone: PHONE,
+	fullName: 'Han Solo',
+	avatar: new Uint8Array([255, 255, 255]),
+	accessToken: ACCESS_TOKEN
 }
 
-const authCommands = { startAuth, verifyAuthEmail, verifyAuthPhone, authorizeSocket }
+const startSession: proto.auth.StartSession = {
+	email: EMAIL,
+	phone: PHONE,
+	accessToken: ACCESS_TOKEN
+}
+
+const authCommands = { startAuth, verifyAuthEmail, verifyAuthPhone, createAccount, startSession }
 
 // Account Commands
-const createAccount: Command = {
-	id: 0,
-	type: proto.CommandType.CREATE_ACCOUNT,
-	payload: {
-		email: EMAIL,
-		phone: PHONE,
-		fullName: 'Han Solo',
-		avatar: new Uint8Array([255, 255, 255]),
-		accessKey: ACCESS_KEY
-	}
-}
-
 const editAccountName: Command = {
 	id: 0,
-	type: proto.CommandType.EDIT_ACCOUNT_NAME,
+	version: 0,
 	payload: {
-		name: 'H@n Sol0'
+		$case: 'editAccountName',
+		editAccountName: {
+			name: 'H@n Sol0'
+		}
 	}
 }
 
 const editAccountHandle: Command = {
 	id: 0,
-	type: proto.CommandType.EDIT_ACCOUNT_HANDLE,
+	version: 0,
 	payload: {
-		handle: 'bestSmuggler42'
+		$case: 'editAccountHandle',
+		editAccountHandle: {
+			handle: 'bestSmuggler42'
+		}
 	}
 }
 
 const editAccountAvatar: Command = {
 	id: 0,
-	type: proto.CommandType.EDIT_ACCOUNT_AVATAR,
+	version: 0,
 	payload: {
-		avatar: new Uint8Array([255, 255, 255])
-	}
-}
-
-const deleteAccount: Command = {
-	id: 0,
-	type: proto.CommandType.DELETE_ACCOUNT,
-	payload: {
-		email: EMAIL,
-		phone: PHONE,
-		removeAllExistingData: true
+		$case: 'editAccountAvatar',
+		editAccountAvatar: {
+			avatar: new Uint8Array([255, 255, 255])
+		}
 	}
 }
 
@@ -98,45 +78,27 @@ const accountCommands = {
 	createAccount,
 	editAccountName,
 	editAccountHandle,
-	editAccountAvatar,
-	deleteAccount
+	editAccountAvatar
 }
-
-// Session Commands
-const startSession: Command = {
-	id: 0,
-	type: proto.CommandType.START_SESSION,
-	payload: {
-		accessKey: ACCESS_KEY
-	}
-}
-
-const expireSession: Command = {
-	id: 0,
-	type: proto.CommandType.EXPIRE_SESSION,
-	payload: {
-		sessionId: 1
-	}
-}
-
-const sessionCommands = { startSession, expireSession }
 
 // Attribute Commands
 const addAttribute: Command = {
 	id: 0,
-	type: proto.CommandType.ADD_ATTRIBUTE,
+	version: 0,
 	payload: {
-		name: 'Earth Address',
-		type: proto.attributes.types.AttributeType.ADDRESS,
-		value: {
-			$case: 'address',
-			address: {
-				streetAddress1: '351 S Studio Dr',
-				streetAddress2: '',
-				locality: 'Lake Buena Vista',
-				region: 'FL',
-				postalCode: '32830',
-				country: 'US'
+		$case: 'addAttribute',
+		addAttribute: {
+			name: 'Earth Address',
+			value: {
+				$case: 'address',
+				address: {
+					streetAddress1: '351 S Studio Dr',
+					streetAddress2: '',
+					locality: 'Lake Buena Vista',
+					region: 'FL',
+					postalCode: '32830',
+					country: 'US'
+				}
 			}
 		}
 	}
@@ -144,28 +106,33 @@ const addAttribute: Command = {
 
 const editAttributeName: Command = {
 	id: 0,
-	type: proto.CommandType.EDIT_ATTRIBUTE_NAME,
+	version: 0,
 	payload: {
-		id: 3,
-		name: '1st Earth Address'
+		$case: 'editAttributeName',
+		editAttributeName: {
+			id: 3,
+			name: '1st Earth Address'
+		}
 	}
 }
 
 const editAttributeValue: Command = {
 	id: 0,
-	type: proto.CommandType.EDIT_ATTRIBUTE_VALUE,
+	version: 0,
 	payload: {
-		id: 3,
-		type: proto.attributes.types.AttributeType.ADDRESS,
-		value: {
-			$case: 'address',
-			address: {
-				streetAddress1: '351 S Studio Dr',
-				streetAddress2: 'Unit 10',
-				locality: 'Lake Buena Vista',
-				region: 'FL',
-				postalCode: '32830',
-				country: 'US'
+		$case: 'editAttributeValue',
+		editAttributeValue: {
+			id: 3,
+			value: {
+				$case: 'address',
+				address: {
+					streetAddress1: '351 S Studio Dr',
+					streetAddress2: 'Unit 10',
+					locality: 'Lake Buena Vista',
+					region: 'FL',
+					postalCode: '32830',
+					country: 'US'
+				}
 			}
 		}
 	}
@@ -173,35 +140,47 @@ const editAttributeValue: Command = {
 
 const sortAttribute: Command = {
 	id: 0,
-	type: proto.CommandType.SORT_ATTRIBUTE,
+	version: 0,
 	payload: {
-		id: 3,
-		sortIndex: 1
+		$case: 'sortAttribute',
+		sortAttribute: {
+			id: 3,
+			sortIndex: 1
+		}
 	}
 }
 
 const sendAttributeVerification: Command = {
 	id: 0,
-	type: proto.CommandType.SEND_ATTRIBUTE_VERIFICATION,
+	version: 0,
 	payload: {
-		id: 3
+		$case: 'sendAttributeVerification',
+		sendAttributeVerification: {
+			id: 3
+		}
 	}
 }
 
 const verifyAttribute: Command = {
 	id: 0,
-	type: proto.CommandType.VERIFY_ATTRIBUTE,
+	version: 0,
 	payload: {
-		id: 3,
-		verificationCode: 123456
+		$case: 'verifyAttribute',
+		verifyAttribute: {
+			id: 3,
+			verificationCode: 123456
+		}
 	}
 }
 
 const deleteAttribute: Command = {
 	id: 0,
-	type: proto.CommandType.DELETE_ATTRIBUTE,
+	version: 0,
 	payload: {
-		id: 3
+		$case: 'deleteAttribute',
+		deleteAttribute: {
+			id: 3
+		}
 	}
 }
 
@@ -215,4 +194,4 @@ const attributeCommands = {
 	deleteAttribute
 }
 
-export default { ...authCommands, ...accountCommands, ...sessionCommands, ...attributeCommands }
+export default { ...authCommands, ...accountCommands, ...attributeCommands }

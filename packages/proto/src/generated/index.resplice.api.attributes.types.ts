@@ -1,3 +1,3 @@
 /* eslint-disable */
 
-export * from "./attributes/types";
+export * from "./attribute_types";

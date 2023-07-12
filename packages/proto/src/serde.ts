@@ -1,73 +1,71 @@
-import proto from './index'
-import { type Command, commandMapper } from './command'
-import { type Event, eventMapper } from './event'
-
-// function calculateCommandIV(baseIV: Uint8Array, counter: number): Uint8Array {
-// 	const ivBuf = new ArrayBuffer(12)
-// 	const ivArr = new Uint8Array(ivBuf)
-
-// 	// set first 8 bytes of buffer with base
-// 	ivArr.set(baseIV)
-// 	// set last 4 bytes of buffer with message id int32
-// 	new DataView(ivBuf).setUint32(8, counter * 2)
-
-// 	return ivArr
-// }
-
-// function calculateEventIV(baseIV: Uint8Array, counter: number): Uint8Array {
-// 	const ivBuf = new ArrayBuffer(12)
-// 	const ivArr = new Uint8Array(ivBuf)
-
-// 	// set first 8 bytes of buffer with base
-// 	ivArr.set(baseIV)
-// 	// set last 4 bytes of buffer with message id int32
-// 	new DataView(ivBuf).setUint32(8, counter * 2 + 1)
-
-// 	return ivArr
-// }
-
-function encode(command: Command, payloadKey?: Uint8Array) {
-	return proto.Command.encode({
-		commandId: command.id,
-		commandType: command.type,
-		payload: encodePayload(command),
-		payloadKey
-	}).finish()
-}
-
-function encodePayload(command: Command) {
-	const encoder = commandMapper[command.type]
-	if (!encoder) throw Error(`Command ${command.type} is not supported`)
-
-	return encoder(command.payload as any).finish()
-}
+import proto, { type Command, type Query, type Event, type Events } from './index'
+import { decrypt, encrypt, buildClientIV, buildServerIV } from '@resplice/utils'
 
 export async function serializeCommand(
 	command: Command,
-	_encryptionKey = new Uint8Array(0)
+	encryptionKey: Uint8Array
 ): Promise<Uint8Array> {
-	// TODO: Add encryption eventually
-	return encode(command)
+	const encryptedMessage = await encrypt(
+		encryptionKey,
+		buildClientIV(command.id),
+		encodeCommand(command)
+	)
+
+	return proto.Message.encode({
+		id: command.id,
+		type: proto.MessageType.COMMAND,
+		encryptedMessage
+	}).finish()
 }
 
-function decode(eventBytes: Uint8Array): Event {
-	const event = proto.Event.decode(eventBytes)
-	const decoder = eventMapper[event.eventType]
-	if (!decoder) throw Error(`Event ${event.eventType} is not supported`)
-
-	const payload = decoder(event.payload)
-
-	return {
-		id: event.eventId,
-		type: event.eventType as Event['type'],
-		payload
-	}
+function encodeCommand(command: Command) {
+	return proto.Command.encode({
+		version: command.version,
+		payload: command.payload
+	}).finish()
 }
 
+export async function serializeQuery(query: Query, encryptionKey: Uint8Array): Promise<Uint8Array> {
+	const encryptedMessage = await encrypt(encryptionKey, buildClientIV(query.id), encodeQuery(query))
+
+	return proto.Message.encode({
+		id: query.id,
+		type: proto.MessageType.QUERY,
+		encryptedMessage
+	}).finish()
+}
+
+function encodeQuery(query: Query) {
+	return proto.Query.encode({
+		version: query.version,
+		payload: query.payload
+	}).finish()
+}
+
+type EventResult =
+	| { event: Event; events: undefined; error: undefined }
+	| { event: undefined; events: Events; error: undefined }
+	| { event: undefined; events: undefined; error: proto.Error }
 export async function deserializeEvent(
-	eventBytes: Uint8Array,
-	_decryptionKey = new Uint8Array(0)
-): Promise<Event> {
-	// TODO: Add decryption eventually
-	return decode(eventBytes)
+	messageBytes: Uint8Array,
+	decryptionKey: Uint8Array
+): Promise<EventResult> {
+	const message = proto.Message.decode(messageBytes)
+	const decryptedMessage = await decrypt(
+		decryptionKey,
+		buildServerIV(message.id),
+		message.encryptedMessage
+	)
+
+	if (message.type === proto.MessageType.EVENT) {
+		return { event: proto.Event.decode(decryptedMessage), events: undefined, error: undefined }
+	}
+	if (message.type === proto.MessageType.EVENTS) {
+		return { event: undefined, events: proto.Events.decode(decryptedMessage), error: undefined }
+	}
+	if (message.type === proto.MessageType.ERROR) {
+		return { event: undefined, events: undefined, error: proto.Error.decode(decryptedMessage) }
+	}
+
+	throw Error(`Message type ${message.type} is not supported`)
 }

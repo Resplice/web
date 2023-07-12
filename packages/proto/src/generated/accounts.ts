@@ -2,14 +2,6 @@
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 
-export interface CreateAccount {
-  email: string;
-  phone: string;
-  fullName: string;
-  avatar: Uint8Array;
-  accessKey: Uint8Array;
-}
-
 export interface AccountCreated {
   accountId: number;
   fullName: string;
@@ -50,118 +42,6 @@ export interface DeleteAccount {
   phone: string;
   removeAllExistingData: boolean;
 }
-
-function createBaseCreateAccount(): CreateAccount {
-  return { email: "", phone: "", fullName: "", avatar: new Uint8Array(0), accessKey: new Uint8Array(0) };
-}
-
-export const CreateAccount = {
-  encode(message: CreateAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
-    if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
-    }
-    if (message.fullName !== "") {
-      writer.uint32(26).string(message.fullName);
-    }
-    if (message.avatar.length !== 0) {
-      writer.uint32(34).bytes(message.avatar);
-    }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(42).bytes(message.accessKey);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateAccount {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateAccount();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.phone = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.fullName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.avatar = reader.bytes();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.accessKey = reader.bytes();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CreateAccount {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      fullName: isSet(object.fullName) ? String(object.fullName) : "",
-      avatar: isSet(object.avatar) ? bytesFromBase64(object.avatar) : new Uint8Array(0),
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
-    };
-  },
-
-  toJSON(message: CreateAccount): unknown {
-    const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.fullName !== undefined && (obj.fullName = message.fullName);
-    message.avatar !== undefined &&
-      (obj.avatar = base64FromBytes(message.avatar !== undefined ? message.avatar : new Uint8Array(0)));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CreateAccount>, I>>(base?: I): CreateAccount {
-    return CreateAccount.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CreateAccount>, I>>(object: I): CreateAccount {
-    const message = createBaseCreateAccount();
-    message.email = object.email ?? "";
-    message.phone = object.phone ?? "";
-    message.fullName = object.fullName ?? "";
-    message.avatar = object.avatar ?? new Uint8Array(0);
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
-    return message;
-  },
-};
 
 function createBaseAccountCreated(): AccountCreated {
   return { accountId: 0, fullName: "", handle: "", avatarUrl: "", emailId: 0, email: "", phoneId: 0, phone: "" };

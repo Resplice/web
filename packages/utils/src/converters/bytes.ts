@@ -1,8 +1,8 @@
-export function bytesToInt32(bytes: Uint8Array, offset = 0) {
+export function bytesToUint32(bytes: Uint8Array, offset = 0) {
 	return new DataView(bytes.buffer).getUint32(offset)
 }
 
-export function int32ToBytes(int: number): Uint8Array {
+export function uint32ToBytes(int: number): Uint8Array {
 	const bufView = new Uint8Array(4)
 	new DataView(bufView.buffer).setUint32(0, int)
 	return bufView
@@ -22,11 +22,11 @@ if (import.meta.vitest) {
 		const twelve_thousand = new Uint8Array([0, 0, 46, 224])
 		const max = new Uint8Array([255, 255, 255, 255])
 
-		expect(bytesToInt32(two)).toBe(2)
-		expect(bytesToInt32(ten)).toBe(10)
-		expect(bytesToInt32(fifteen)).toBe(15)
-		expect(bytesToInt32(twelve_thousand)).toBe(12000)
-		expect(bytesToInt32(max)).toBe(4294967295)
+		expect(bytesToUint32(two)).toBe(2)
+		expect(bytesToUint32(ten)).toBe(10)
+		expect(bytesToUint32(fifteen)).toBe(15)
+		expect(bytesToUint32(twelve_thousand)).toBe(12000)
+		expect(bytesToUint32(max)).toBe(4294967295)
 	})
 
 	test('converts an integer to a byte array', () => {
@@ -35,9 +35,9 @@ if (import.meta.vitest) {
 		const twelve_thousand = 12000
 		const max = 4294967295
 
-		expect(int32ToBytes(ten)).toEqual(new Uint8Array([0, 0, 0, 10]))
-		expect(int32ToBytes(fifteen)).toEqual(new Uint8Array([0, 0, 0, 15]))
-		expect(int32ToBytes(twelve_thousand)).toEqual(new Uint8Array([0, 0, 46, 224]))
-		expect(int32ToBytes(max)).toEqual(new Uint8Array([255, 255, 255, 255]))
+		expect(uint32ToBytes(ten)).toEqual(new Uint8Array([0, 0, 0, 10]))
+		expect(uint32ToBytes(fifteen)).toEqual(new Uint8Array([0, 0, 0, 15]))
+		expect(uint32ToBytes(twelve_thousand)).toEqual(new Uint8Array([0, 0, 46, 224]))
+		expect(uint32ToBytes(max)).toEqual(new Uint8Array([255, 255, 255, 255]))
 	})
 }

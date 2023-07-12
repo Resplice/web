@@ -2,31 +2,31 @@
 import _m0 from "protobufjs/minimal";
 
 export interface StartSession {
-  accessKey: Uint8Array;
+  accessToken: Uint8Array;
 }
 
 export interface SessionStarted {
   sessionId: number;
   expirySeconds: number;
-  accessKey: Uint8Array;
+  accessToken: Uint8Array;
 }
 
-export interface ExpireSession {
+export interface EndSession {
   sessionId: number;
 }
 
-export interface SessionExpired {
+export interface SessionEnded {
   sessionId: number;
 }
 
 function createBaseStartSession(): StartSession {
-  return { accessKey: new Uint8Array(0) };
+  return { accessToken: new Uint8Array(0) };
 }
 
 export const StartSession = {
   encode(message: StartSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessKey.length !== 0) {
-      writer.uint32(10).bytes(message.accessKey);
+    if (message.accessToken.length !== 0) {
+      writer.uint32(10).bytes(message.accessToken);
     }
     return writer;
   },
@@ -43,7 +43,7 @@ export const StartSession = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.accessToken = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -55,13 +55,13 @@ export const StartSession = {
   },
 
   fromJSON(object: any): StartSession {
-    return { accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0) };
+    return { accessToken: isSet(object.accessToken) ? bytesFromBase64(object.accessToken) : new Uint8Array(0) };
   },
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.accessToken !== undefined &&
+      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     return obj;
   },
 
@@ -71,13 +71,13 @@ export const StartSession = {
 
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.accessToken = object.accessToken ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseSessionStarted(): SessionStarted {
-  return { sessionId: 0, expirySeconds: 0, accessKey: new Uint8Array(0) };
+  return { sessionId: 0, expirySeconds: 0, accessToken: new Uint8Array(0) };
 }
 
 export const SessionStarted = {
@@ -88,8 +88,8 @@ export const SessionStarted = {
     if (message.expirySeconds !== 0) {
       writer.uint32(16).int32(message.expirySeconds);
     }
-    if (message.accessKey.length !== 0) {
-      writer.uint32(26).bytes(message.accessKey);
+    if (message.accessToken.length !== 0) {
+      writer.uint32(26).bytes(message.accessToken);
     }
     return writer;
   },
@@ -120,7 +120,7 @@ export const SessionStarted = {
             break;
           }
 
-          message.accessKey = reader.bytes();
+          message.accessToken = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -135,7 +135,7 @@ export const SessionStarted = {
     return {
       sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
       expirySeconds: isSet(object.expirySeconds) ? Number(object.expirySeconds) : 0,
-      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      accessToken: isSet(object.accessToken) ? bytesFromBase64(object.accessToken) : new Uint8Array(0),
     };
   },
 
@@ -143,8 +143,8 @@ export const SessionStarted = {
     const obj: any = {};
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     message.expirySeconds !== undefined && (obj.expirySeconds = Math.round(message.expirySeconds));
-    message.accessKey !== undefined &&
-      (obj.accessKey = base64FromBytes(message.accessKey !== undefined ? message.accessKey : new Uint8Array(0)));
+    message.accessToken !== undefined &&
+      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     return obj;
   },
 
@@ -156,27 +156,27 @@ export const SessionStarted = {
     const message = createBaseSessionStarted();
     message.sessionId = object.sessionId ?? 0;
     message.expirySeconds = object.expirySeconds ?? 0;
-    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.accessToken = object.accessToken ?? new Uint8Array(0);
     return message;
   },
 };
 
-function createBaseExpireSession(): ExpireSession {
+function createBaseEndSession(): EndSession {
   return { sessionId: 0 };
 }
 
-export const ExpireSession = {
-  encode(message: ExpireSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EndSession = {
+  encode(message: EndSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.sessionId !== 0) {
       writer.uint32(8).uint32(message.sessionId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ExpireSession {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EndSession {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseExpireSession();
+    const message = createBaseEndSession();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -196,43 +196,43 @@ export const ExpireSession = {
     return message;
   },
 
-  fromJSON(object: any): ExpireSession {
+  fromJSON(object: any): EndSession {
     return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
   },
 
-  toJSON(message: ExpireSession): unknown {
+  toJSON(message: EndSession): unknown {
     const obj: any = {};
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ExpireSession>, I>>(base?: I): ExpireSession {
-    return ExpireSession.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<EndSession>, I>>(base?: I): EndSession {
+    return EndSession.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ExpireSession>, I>>(object: I): ExpireSession {
-    const message = createBaseExpireSession();
+  fromPartial<I extends Exact<DeepPartial<EndSession>, I>>(object: I): EndSession {
+    const message = createBaseEndSession();
     message.sessionId = object.sessionId ?? 0;
     return message;
   },
 };
 
-function createBaseSessionExpired(): SessionExpired {
+function createBaseSessionEnded(): SessionEnded {
   return { sessionId: 0 };
 }
 
-export const SessionExpired = {
-  encode(message: SessionExpired, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SessionEnded = {
+  encode(message: SessionEnded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.sessionId !== 0) {
       writer.uint32(8).uint32(message.sessionId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SessionExpired {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SessionEnded {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSessionExpired();
+    const message = createBaseSessionEnded();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -252,22 +252,22 @@ export const SessionExpired = {
     return message;
   },
 
-  fromJSON(object: any): SessionExpired {
+  fromJSON(object: any): SessionEnded {
     return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
   },
 
-  toJSON(message: SessionExpired): unknown {
+  toJSON(message: SessionEnded): unknown {
     const obj: any = {};
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SessionExpired>, I>>(base?: I): SessionExpired {
-    return SessionExpired.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SessionEnded>, I>>(base?: I): SessionEnded {
+    return SessionEnded.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<SessionExpired>, I>>(object: I): SessionExpired {
-    const message = createBaseSessionExpired();
+  fromPartial<I extends Exact<DeepPartial<SessionEnded>, I>>(object: I): SessionEnded {
+    const message = createBaseSessionEnded();
     message.sessionId = object.sessionId ?? 0;
     return message;
   },
