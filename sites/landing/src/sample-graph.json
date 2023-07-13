@@ -1,0 +1,182 @@
+{
+	"nodes": [
+		{
+			"id": 0,
+			"name": "Genesis",
+			"avatarUrl": null,
+			"invitedBy": null
+		},
+		{
+			"id": 1,
+			"name": "Han Solo",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 2,
+			"name": "Luke Skywalker",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 3,
+			"name": "Leia Organa",
+			"avatarUrl": "",
+			"invitedBy": "Luke Skywalker"
+		},
+		{
+			"id": 4,
+			"name": "Chewbacca",
+			"avatarUrl": "",
+			"invitedBy": "Han Solo"
+		},
+		{
+			"id": 5,
+			"name": "Cad Bane",
+			"avatarUrl": "",
+			"invitedBy": "Chewbacca"
+		},
+		{
+			"id": 6,
+			"name": "Ben Kenobi",
+			"avatarUrl": "",
+			"invitedBy": "Luke Skywalker"
+		},
+		{
+			"id": 7,
+			"name": "Greedo",
+			"avatarUrl": "",
+			"invitedBy": "Cad Bane"
+		},
+		{
+			"id": 8,
+			"name": "Din Djarin",
+			"avatarUrl": "",
+			"invitedBy": "Cad Bane"
+		},
+		{
+			"id": 9,
+			"name": "Aurra Sing",
+			"avatarUrl": "",
+			"invitedBy": "Cad Bane"
+		},
+		{
+			"id": 10,
+			"name": "Embo",
+			"avatarUrl": "",
+			"invitedBy": "Cad Bane"
+		},
+		{
+			"id": 11,
+			"name": "Jango Fett",
+			"avatarUrl": "",
+			"invitedBy": "Cad Bane"
+		},
+		{
+			"id": 12,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Leia Organa"
+		},
+		{
+			"id": 13,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 14,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 15,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 16,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Genesis"
+		},
+		{
+			"id": 17,
+			"name": "Anonymous",
+			"avatarUrl": "",
+			"invitedBy": "Chewbacca"
+		}
+	],
+	"links": [
+		{
+			"source": 0,
+			"target": 1
+		},
+		{
+			"source": 0,
+			"target": 2
+		},
+		{
+			"source": 0,
+			"target": 4
+		},
+		{
+			"source": 2,
+			"target": 3
+		},
+		{
+			"source": 2,
+			"target": 6
+		},
+		{
+			"source": 3,
+			"target": 12
+		},
+		{
+			"source": 0,
+			"target": 5
+		},
+		{
+			"source": 5,
+			"target": 7
+		},
+		{
+			"source": 5,
+			"target": 8
+		},
+		{
+			"source": 5,
+			"target": 9
+		},
+		{
+			"source": 5,
+			"target": 10
+		},
+		{
+			"source": 5,
+			"target": 11
+		},
+		{
+			"source": 0,
+			"target": 13
+		},
+		{
+			"source": 0,
+			"target": 14
+		},
+		{
+			"source": 0,
+			"target": 15
+		},
+		{
+			"source": 0,
+			"target": 16
+		},
+		{
+			"source": 4,
+			"target": 17
+		}
+	]
+}

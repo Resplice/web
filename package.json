@@ -33,6 +33,7 @@
 	"packageManager": "npm@9.2.0",
 	"workspaces": [
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"sites/*"
 	]
 }
