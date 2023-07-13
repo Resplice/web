@@ -1,4 +1,6 @@
 import * as three from 'three'
+import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { ForceGraph3DInstance } from '3d-force-graph'
 
 export type Node =
 	| {
@@ -16,7 +18,10 @@ export type Node =
 			__threeObj: three.Mesh
 	  }
 
-export function initializeNodeContext() {
+export function initializeNodeContext(graph: ForceGraph3DInstance) {
+	// three js objects
+	const controls = graph.controls() as OrbitControls
+
 	// node material
 	let previousNode: {
 		mesh: three.Mesh
@@ -25,7 +30,13 @@ export function initializeNodeContext() {
 	let activeNodeMaterial: three.MeshLambertMaterial | null = null
 
 	return function renderNodeContext(node: Node) {
+		console.log(node)
 		if (node.id === 0) return
+
+		if (!activeNodeMaterial) {
+			activeNodeMaterial = (node.__threeObj.material as three.MeshLambertMaterial).clone()
+			activeNodeMaterial.color = new three.Color(0x6c7dd5)
+		}
 
 		const ctxEl = document.getElementById('node-ctx')
 		if (!ctxEl) return
@@ -51,11 +62,10 @@ export function initializeNodeContext() {
       </div>
     `
 
-		if (!activeNodeMaterial) {
-			activeNodeMaterial = (node.__threeObj.material as three.MeshLambertMaterial).clone()
-			activeNodeMaterial.color = new three.Color(0x6c7dd5)
-		}
+		// Change Camera Controls
+		controls.target = node.__threeObj.position
 
+		// Swap node material
 		if (previousNode) {
 			previousNode.mesh.material = previousNode.material
 		}
@@ -67,6 +77,19 @@ export function initializeNodeContext() {
 
 		node.__threeObj.material = activeNodeMaterial
 
+		// Update URL
 		history.pushState({ id: node.id }, '', `/${node.id}`)
 	}
+}
+
+export function snapToNodeId(
+	graph: ForceGraph3DInstance,
+	nodeId: number,
+	renderNodeContext: (node: Node) => void
+) {
+	// This is hacky
+	setTimeout(() => {
+		const node = graph.graphData().nodes.find((n) => n.id === nodeId) as Node
+		renderNodeContext(node)
+	}, 100)
 }
