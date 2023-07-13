@@ -12,7 +12,17 @@ graph(document.getElementById('graph') as HTMLElement)
 	.dagMode('radialout')
 	.dagLevelDistance(75)
 	.backgroundColor('#242424')
-	.nodeColor(() => '#1BBC9B')
+	.nodeVal((n) => {
+		const node = n as Node
+		if (node.name === 'Genesis') return 5
+		if (node.name === 'Anonymous') return 1
+		return 2
+	})
+	.nodeColor((n) => {
+		const node = n as Node
+		if (node.name === 'Anonymous') return '#94A3B8'
+		return '#1BBC9B'
+	})
 	.enableNodeDrag(false)
 
 // Build Context
