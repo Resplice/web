@@ -11,8 +11,8 @@ import {
 } from "../attributes";
 
 export interface Events {
-  events: Event[];
   accessToken: Uint8Array;
+  events: Event[];
 }
 
 export interface Event {
@@ -32,16 +32,16 @@ export interface Event {
 }
 
 function createBaseEvents(): Events {
-  return { events: [], accessToken: new Uint8Array(0) };
+  return { accessToken: new Uint8Array(0), events: [] };
 }
 
 export const Events = {
   encode(message: Events, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.events) {
-      Event.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
     if (message.accessToken.length !== 0) {
-      writer.uint32(18).bytes(message.accessToken);
+      writer.uint32(10).bytes(message.accessToken);
+    }
+    for (const v of message.events) {
+      Event.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -58,14 +58,14 @@ export const Events = {
             break;
           }
 
-          message.events.push(Event.decode(reader, reader.uint32()));
+          message.accessToken = reader.bytes();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.accessToken = reader.bytes();
+          message.events.push(Event.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -78,20 +78,20 @@ export const Events = {
 
   fromJSON(object: any): Events {
     return {
-      events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
       accessToken: isSet(object.accessToken) ? bytesFromBase64(object.accessToken) : new Uint8Array(0),
+      events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: Events): unknown {
     const obj: any = {};
+    message.accessToken !== undefined &&
+      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     if (message.events) {
       obj.events = message.events.map((e) => e ? Event.toJSON(e) : undefined);
     } else {
       obj.events = [];
     }
-    message.accessToken !== undefined &&
-      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     return obj;
   },
 
@@ -101,8 +101,8 @@ export const Events = {
 
   fromPartial<I extends Exact<DeepPartial<Events>, I>>(object: I): Events {
     const message = createBaseEvents();
-    message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
     message.accessToken = object.accessToken ?? new Uint8Array(0);
+    message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
     return message;
   },
 };

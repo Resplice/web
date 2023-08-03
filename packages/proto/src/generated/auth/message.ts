@@ -2,19 +2,18 @@
 import _m0 from "protobufjs/minimal";
 
 export enum MessageType {
-  EVENT = 0,
+  AUTH_INFO = 0,
   COMMAND = 1,
   QUERY = 2,
-  EVENTS = 3,
-  ERROR = 4,
+  ERROR = 3,
   UNRECOGNIZED = -1,
 }
 
 export function messageTypeFromJSON(object: any): MessageType {
   switch (object) {
     case 0:
-    case "EVENT":
-      return MessageType.EVENT;
+    case "AUTH_INFO":
+      return MessageType.AUTH_INFO;
     case 1:
     case "COMMAND":
       return MessageType.COMMAND;
@@ -22,9 +21,6 @@ export function messageTypeFromJSON(object: any): MessageType {
     case "QUERY":
       return MessageType.QUERY;
     case 3:
-    case "EVENTS":
-      return MessageType.EVENTS;
-    case 4:
     case "ERROR":
       return MessageType.ERROR;
     case -1:
@@ -36,14 +32,12 @@ export function messageTypeFromJSON(object: any): MessageType {
 
 export function messageTypeToJSON(object: MessageType): string {
   switch (object) {
-    case MessageType.EVENT:
-      return "EVENT";
+    case MessageType.AUTH_INFO:
+      return "AUTH_INFO";
     case MessageType.COMMAND:
       return "COMMAND";
     case MessageType.QUERY:
       return "QUERY";
-    case MessageType.EVENTS:
-      return "EVENTS";
     case MessageType.ERROR:
       return "ERROR";
     case MessageType.UNRECOGNIZED:

@@ -1,5 +1,19 @@
-import { btob64, b64tob64u } from '$utils/converters/base64'
+// import { btob64, b64tob64u } from '$utils/converters/base64'
 // const LARGEST_INT_32 = 4294967295
+
+export function generateRsaKey() {
+	return crypto.subtle.generateKey(
+		{
+			name: 'RSA-OAEP',
+			modulusLength: 2048,
+			// 65537
+			publicExponent: new Uint8Array([1, 0, 1]),
+			hash: 'SHA-512'
+		},
+		true,
+		['encrypt', 'decrypt']
+	)
+}
 
 export function generateAesKey() {
 	return crypto.subtle.generateKey(
@@ -65,8 +79,8 @@ export function verify(key: CryptoKey, signature: Uint8Array, data: Uint8Array) 
 
 export function importPublicKey(rawKey: ArrayBuffer): Promise<CryptoKey> {
 	return crypto.subtle.importKey(
-		'jwk',
-		buildJwk(rawKey),
+		'pkcs8',
+		rawKey,
 		{
 			name: 'RSA-OAEP',
 			hash: 'SHA-256'
@@ -76,23 +90,31 @@ export function importPublicKey(rawKey: ArrayBuffer): Promise<CryptoKey> {
 	)
 }
 
-function buildJwk(rawKey: ArrayBuffer): JsonWebKey {
-	// NOTE: 'AQAB' = base64(65537)
-	const b64Key = btob64(rawKey)
-	const b64UrlKey = b64tob64u(b64Key)
-	return {
-		kty: 'RSA',
-		e: 'AQAB',
-		n: b64UrlKey,
-		alg: 'RSA-OAEP-256',
-		ext: true
-	}
-}
+// function buildJwk(rawKey: ArrayBuffer): JsonWebKey {
+// 	// NOTE: 'AQAB' = base64(65537)
+// 	const b64Key = btob64(rawKey)
+// 	const b64UrlKey = b64tob64u(b64Key)
+// 	return {
+// 		kty: 'RSA',
+// 		e: 'AQAB',
+// 		n: b64UrlKey,
+// 		alg: 'RSA-OAEP-256',
+// 		ext: true
+// 	}
+// }
 
 export async function publicKeyEncrypt(key: CryptoKey, data: Uint8Array): Promise<Uint8Array> {
 	const encryptedBuffer = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, key, data)
 
 	return new Uint8Array(encryptedBuffer)
+}
+
+export function buildIV(ivCounter: number): Uint8Array {
+	const ivBuf = new ArrayBuffer(12)
+
+	new DataView(ivBuf).setUint32(0, ivCounter)
+
+	return new Uint8Array(ivBuf)
 }
 
 // ac = auth client
@@ -144,19 +166,6 @@ export function buildServerIV(ivCounter: number, isAuth = false): Uint8Array {
 	new DataView(ivBuf).setUint32(8, ivCounter)
 
 	return ivArr
-}
-
-export function parseServerCipher(cipher: Uint8Array): {
-	iv: Uint8Array
-	cipherText: Uint8Array
-} {
-	const iv = cipher.slice(0, 4) // TODO: Add base IV
-	const cipherText = cipher.slice(4)
-
-	return {
-		iv,
-		cipherText
-	}
 }
 
 export function combineBufferArrays(arr1: Uint8Array, arr2: Uint8Array): Uint8Array {

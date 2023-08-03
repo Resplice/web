@@ -2,19 +2,27 @@
 import _m0 from "protobufjs/minimal";
 
 export enum ErrorType {
-  INVALID_INPUT = 0,
-  INVALID_STATE = 1,
+  UNKNOWN = 0,
+  INVALID_SESSION = 1,
+  INVALID_STATE = 2,
+  INVALID_INPUT = 3,
   UNRECOGNIZED = -1,
 }
 
 export function errorTypeFromJSON(object: any): ErrorType {
   switch (object) {
     case 0:
-    case "INVALID_INPUT":
-      return ErrorType.INVALID_INPUT;
+    case "UNKNOWN":
+      return ErrorType.UNKNOWN;
     case 1:
+    case "INVALID_SESSION":
+      return ErrorType.INVALID_SESSION;
+    case 2:
     case "INVALID_STATE":
       return ErrorType.INVALID_STATE;
+    case 3:
+    case "INVALID_INPUT":
+      return ErrorType.INVALID_INPUT;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -24,10 +32,14 @@ export function errorTypeFromJSON(object: any): ErrorType {
 
 export function errorTypeToJSON(object: ErrorType): string {
   switch (object) {
-    case ErrorType.INVALID_INPUT:
-      return "INVALID_INPUT";
+    case ErrorType.UNKNOWN:
+      return "UNKNOWN";
+    case ErrorType.INVALID_SESSION:
+      return "INVALID_SESSION";
     case ErrorType.INVALID_STATE:
       return "INVALID_STATE";
+    case ErrorType.INVALID_INPUT:
+      return "INVALID_INPUT";
     case ErrorType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

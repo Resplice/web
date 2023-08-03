@@ -45,9 +45,9 @@ export function initializeNodeContext(graph: ForceGraph3DInstance) {
       <div class="flex flex-col items-center justify-between space-y-4">
         <div class="w-16 h-16 rounded-full bg-gray-400"></div>
         <div>
-          <p class="w-full text-lg text-center font-semibold text-gray-200 truncate">${
-						node.name
-					}</p>
+          <p class="w-full text-lg text-center font-semibold text-gray-200 truncate">
+						${node.name}
+					</p>
           <p class="text-sm text-gray-400">Invited by ${node.invitedBy}</p>
         </div>
         ${

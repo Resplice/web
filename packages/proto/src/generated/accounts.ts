@@ -37,12 +37,6 @@ export interface AccountAvatarEdited {
   avatarUrl: string;
 }
 
-export interface DeleteAccount {
-  email: string;
-  phone: string;
-  removeAllExistingData: boolean;
-}
-
 function createBaseAccountCreated(): AccountCreated {
   return { accountId: 0, fullName: "", handle: "", avatarUrl: "", emailId: 0, email: "", phoneId: 0, phone: "" };
 }
@@ -525,90 +519,6 @@ export const AccountAvatarEdited = {
   fromPartial<I extends Exact<DeepPartial<AccountAvatarEdited>, I>>(object: I): AccountAvatarEdited {
     const message = createBaseAccountAvatarEdited();
     message.avatarUrl = object.avatarUrl ?? "";
-    return message;
-  },
-};
-
-function createBaseDeleteAccount(): DeleteAccount {
-  return { email: "", phone: "", removeAllExistingData: false };
-}
-
-export const DeleteAccount = {
-  encode(message: DeleteAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
-    if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
-    }
-    if (message.removeAllExistingData === true) {
-      writer.uint32(24).bool(message.removeAllExistingData);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteAccount {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteAccount();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.phone = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.removeAllExistingData = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): DeleteAccount {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      removeAllExistingData: isSet(object.removeAllExistingData) ? Boolean(object.removeAllExistingData) : false,
-    };
-  },
-
-  toJSON(message: DeleteAccount): unknown {
-    const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.removeAllExistingData !== undefined && (obj.removeAllExistingData = message.removeAllExistingData);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<DeleteAccount>, I>>(base?: I): DeleteAccount {
-    return DeleteAccount.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<DeleteAccount>, I>>(object: I): DeleteAccount {
-    const message = createBaseDeleteAccount();
-    message.email = object.email ?? "";
-    message.phone = object.phone ?? "";
-    message.removeAllExistingData = object.removeAllExistingData ?? false;
     return message;
   },
 };

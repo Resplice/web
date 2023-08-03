@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { DeleteAccount, EditAccountAvatar, EditAccountHandle, EditAccountName } from "../accounts";
+import { EditAccountAvatar, EditAccountHandle, EditAccountName } from "../accounts";
 import {
   AddAttribute,
   DeleteAttribute,
@@ -17,7 +17,6 @@ export interface Command {
     | { $case: "editAccountName"; editAccountName: EditAccountName }
     | { $case: "editAccountHandle"; editAccountHandle: EditAccountHandle }
     | { $case: "editAccountAvatar"; editAccountAvatar: EditAccountAvatar }
-    | { $case: "deleteAccount"; deleteAccount: DeleteAccount }
     | { $case: "addAttribute"; addAttribute: AddAttribute }
     | { $case: "editAttributeName"; editAttributeName: EditAttributeName }
     | { $case: "editAttributeValue"; editAttributeValue: EditAttributeValue }
@@ -46,29 +45,26 @@ export const Command = {
       case "editAccountAvatar":
         EditAccountAvatar.encode(message.payload.editAccountAvatar, writer.uint32(34).fork()).ldelim();
         break;
-      case "deleteAccount":
-        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(42).fork()).ldelim();
-        break;
       case "addAttribute":
-        AddAttribute.encode(message.payload.addAttribute, writer.uint32(50).fork()).ldelim();
+        AddAttribute.encode(message.payload.addAttribute, writer.uint32(42).fork()).ldelim();
         break;
       case "editAttributeName":
-        EditAttributeName.encode(message.payload.editAttributeName, writer.uint32(58).fork()).ldelim();
+        EditAttributeName.encode(message.payload.editAttributeName, writer.uint32(50).fork()).ldelim();
         break;
       case "editAttributeValue":
-        EditAttributeValue.encode(message.payload.editAttributeValue, writer.uint32(66).fork()).ldelim();
+        EditAttributeValue.encode(message.payload.editAttributeValue, writer.uint32(58).fork()).ldelim();
         break;
       case "sortAttribute":
-        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(74).fork()).ldelim();
+        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(66).fork()).ldelim();
         break;
       case "sendAttributeVerification":
-        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(82).fork()).ldelim();
+        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(74).fork()).ldelim();
         break;
       case "verifyAttribute":
-        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(90).fork()).ldelim();
+        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(82).fork()).ldelim();
         break;
       case "deleteAttribute":
-        DeleteAttribute.encode(message.payload.deleteAttribute, writer.uint32(98).fork()).ldelim();
+        DeleteAttribute.encode(message.payload.deleteAttribute, writer.uint32(90).fork()).ldelim();
         break;
     }
     return writer;
@@ -123,17 +119,10 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
-            break;
-          }
-
-          message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
-          continue;
-        case 7:
-          if (tag !== 58) {
             break;
           }
 
@@ -142,8 +131,8 @@ export const Command = {
             editAttributeName: EditAttributeName.decode(reader, reader.uint32()),
           };
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -152,15 +141,15 @@ export const Command = {
             editAttributeValue: EditAttributeValue.decode(reader, reader.uint32()),
           };
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
           message.payload = { $case: "sortAttribute", sortAttribute: SortAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -169,8 +158,8 @@ export const Command = {
             sendAttributeVerification: SendAttributeVerification.decode(reader, reader.uint32()),
           };
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -179,8 +168,8 @@ export const Command = {
             verifyAttribute: VerifyAttribute.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -207,8 +196,6 @@ export const Command = {
         ? { $case: "editAccountHandle", editAccountHandle: EditAccountHandle.fromJSON(object.editAccountHandle) }
         : isSet(object.editAccountAvatar)
         ? { $case: "editAccountAvatar", editAccountAvatar: EditAccountAvatar.fromJSON(object.editAccountAvatar) }
-        : isSet(object.deleteAccount)
-        ? { $case: "deleteAccount", deleteAccount: DeleteAccount.fromJSON(object.deleteAccount) }
         : isSet(object.addAttribute)
         ? { $case: "addAttribute", addAttribute: AddAttribute.fromJSON(object.addAttribute) }
         : isSet(object.editAttributeName)
@@ -241,9 +228,6 @@ export const Command = {
       : undefined);
     message.payload?.$case === "editAccountAvatar" && (obj.editAccountAvatar = message.payload?.editAccountAvatar
       ? EditAccountAvatar.toJSON(message.payload?.editAccountAvatar)
-      : undefined);
-    message.payload?.$case === "deleteAccount" && (obj.deleteAccount = message.payload?.deleteAccount
-      ? DeleteAccount.toJSON(message.payload?.deleteAccount)
       : undefined);
     message.payload?.$case === "addAttribute" &&
       (obj.addAttribute = message.payload?.addAttribute
@@ -306,16 +290,6 @@ export const Command = {
       message.payload = {
         $case: "editAccountAvatar",
         editAccountAvatar: EditAccountAvatar.fromPartial(object.payload.editAccountAvatar),
-      };
-    }
-    if (
-      object.payload?.$case === "deleteAccount" &&
-      object.payload?.deleteAccount !== undefined &&
-      object.payload?.deleteAccount !== null
-    ) {
-      message.payload = {
-        $case: "deleteAccount",
-        deleteAccount: DeleteAccount.fromPartial(object.payload.deleteAccount),
       };
     }
     if (

@@ -3,7 +3,6 @@ import _m0 from "protobufjs/minimal";
 
 export interface GetEvents {
   lastEventId: number;
-  accessToken: Uint8Array;
 }
 
 export interface Query {
@@ -12,16 +11,13 @@ export interface Query {
 }
 
 function createBaseGetEvents(): GetEvents {
-  return { lastEventId: 0, accessToken: new Uint8Array(0) };
+  return { lastEventId: 0 };
 }
 
 export const GetEvents = {
   encode(message: GetEvents, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lastEventId !== 0) {
       writer.uint32(8).uint32(message.lastEventId);
-    }
-    if (message.accessToken.length !== 0) {
-      writer.uint32(18).bytes(message.accessToken);
     }
     return writer;
   },
@@ -40,13 +36,6 @@ export const GetEvents = {
 
           message.lastEventId = reader.uint32();
           continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.accessToken = reader.bytes();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -57,17 +46,12 @@ export const GetEvents = {
   },
 
   fromJSON(object: any): GetEvents {
-    return {
-      lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0,
-      accessToken: isSet(object.accessToken) ? bytesFromBase64(object.accessToken) : new Uint8Array(0),
-    };
+    return { lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0 };
   },
 
   toJSON(message: GetEvents): unknown {
     const obj: any = {};
     message.lastEventId !== undefined && (obj.lastEventId = Math.round(message.lastEventId));
-    message.accessToken !== undefined &&
-      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     return obj;
   },
 
@@ -78,7 +62,6 @@ export const GetEvents = {
   fromPartial<I extends Exact<DeepPartial<GetEvents>, I>>(object: I): GetEvents {
     const message = createBaseGetEvents();
     message.lastEventId = object.lastEventId ?? 0;
-    message.accessToken = object.accessToken ?? new Uint8Array(0);
     return message;
   },
 };
@@ -158,50 +141,6 @@ export const Query = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
-function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
-  } else {
-    const bin = tsProtoGlobalThis.atob(b64);
-    const arr = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-    }
-    return arr;
-  }
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
-  } else {
-    const bin: string[] = [];
-    arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
-    });
-    return tsProtoGlobalThis.btoa(bin.join(""));
-  }
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

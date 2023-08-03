@@ -2,32 +2,31 @@ import proto, { type Event } from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
-const ACCESS_TOKEN = new Uint8Array([1, 2, 3])
 
 // Auth Events
-const authStarted: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
-	accessToken: ACCESS_TOKEN
+const authStarted: proto.auth.AuthInfo = {
+	status: proto.auth.AuthStatus.VERIFY_EMAIL,
+	allowedAttempts: 3
 }
 
-const authEmailVerified: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
-	accessToken: ACCESS_TOKEN
+const authEmailVerified: proto.auth.AuthInfo = {
+	status: proto.auth.AuthStatus.VERIFY_PHONE,
+	allowedAttempts: 3
 }
 
-const authPhoneVerified: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
-	accessToken: ACCESS_TOKEN
+const authPhoneVerified: proto.auth.AuthInfo = {
+	status: proto.auth.AuthStatus.CREATE_ACCOUNT,
+	allowedAttempts: 1
 }
 
-const accountCreatedAuth: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_SESSION,
-	accessToken: ACCESS_TOKEN
+const accountCreatedAuth: proto.auth.AuthInfo = {
+	status: proto.auth.AuthStatus.CREATE_SESSION,
+	allowedAttempts: 1
 }
 
-const sessionStarted: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.ACTIVE_SESSION,
-	accessToken: ACCESS_TOKEN
+const sessionStarted: proto.auth.AuthInfo = {
+	status: proto.auth.AuthStatus.SESSION_AUTHORIZED,
+	allowedAttempts: 1
 }
 
 const authEvents = {

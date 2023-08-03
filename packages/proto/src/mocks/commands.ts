@@ -2,44 +2,39 @@ import proto, { type Command } from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
-const ACCESS_TOKEN = new Uint8Array([1, 2, 3])
 
 // Auth Commands
 const startAuth: proto.auth.StartAuth = {
 	email: EMAIL,
 	phone: PHONE,
-	encryptionKey: new Uint8Array([255, 255, 255])
+	rememberMe: true
 }
 
-const verifyAuthEmail: proto.auth.VerifyAuthEmail = {
+const verifyEmail: proto.auth.VerifyEmail = {
 	email: EMAIL,
 	phone: PHONE,
-	verificationCode: 123456,
-	accessToken: ACCESS_TOKEN
+	verifyCode: 123456
 }
 
-const verifyAuthPhone: proto.auth.VerifyAuthPhone = {
+const verifyPhone: proto.auth.VerifyPhone = {
 	email: EMAIL,
 	phone: PHONE,
-	verificationCode: 123456,
-	accessToken: ACCESS_TOKEN
+	verifyCode: 123456
 }
 
 const createAccount: proto.auth.CreateAccount = {
 	email: EMAIL,
 	phone: PHONE,
 	fullName: 'Han Solo',
-	avatar: new Uint8Array([255, 255, 255]),
-	accessToken: ACCESS_TOKEN
+	avatar: new Uint8Array([255, 255, 255])
 }
 
-const startSession: proto.auth.StartSession = {
+const createSession: proto.auth.CreateSession = {
 	email: EMAIL,
-	phone: PHONE,
-	accessToken: ACCESS_TOKEN
+	phone: PHONE
 }
 
-const authCommands = { startAuth, verifyAuthEmail, verifyAuthPhone, createAccount, startSession }
+const authCommands = { startAuth, verifyEmail, verifyPhone, createAccount, createSession }
 
 // Account Commands
 const editAccountName: Command = {
