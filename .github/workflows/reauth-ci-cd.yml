@@ -1,0 +1,30 @@
+name: Reauth CI/CD
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - apps/reauth/**
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - apps/reauth/**
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+    with:
+      app: reauth
+
+  cd:
+    if: ${{ github.event_name == 'push' }}
+    needs: ci
+    uses: ./.github/workflows/cd.yml
+    with:
+      app: reauth
+      environment: preview
+    secrets:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.REAUTH_VERCEL_PROJECT_ID }}

@@ -1,15 +1,14 @@
-name: CI
+name: Integration
 
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    branches:
-      - 'main'
+  workflow_call:
+    inputs:
+      app:
+        type: string
+        required: true
 
 jobs:
-  build:
+  integrate:
     runs-on: ubuntu-latest
     # To use Remote Caching, uncomment the next lines and follow the steps below.
     # env:
@@ -29,8 +28,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Apps
-        run: npm run build:apps
+      - name: Lint App
+        run: npm run ${{ inputs.app }}:lint
 
-      - name: Test Apps & Libs
-        run: npm test
+      - name: Build App
+        run: npm run ${{ inputs.app }}:build
+
+      - name: Test App
+        run: npm run ${{ inputs.app }}:test

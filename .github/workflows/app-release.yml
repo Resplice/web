@@ -1,0 +1,4 @@
+name: App Release
+
+# Trigger on GitHub release
+# Pass in app name then build and deploy that specific app to production

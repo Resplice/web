@@ -1,4 +1,4 @@
-type ENV = 'local' | 'development' | 'production'
+type ENV = 'local' | 'preview' | 'production'
 
 export type RespliceConfig = {
 	env: ENV

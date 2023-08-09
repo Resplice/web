@@ -2,42 +2,6 @@
 
 This is the monorepo for all Resplice web products
 
-## Build & Run
-
-### Node
-
-Use this method if you have node installed on your local machine:
-
-1. Install dependencies.
-
-```sh
-npm install
-```
-
-2. Build shared packages
-
-```sh
-npm run build:packages
-```
-
-3. Build applications
-
-```sh
-npm run build:apps
-```
-
-4. Finally, run the application of your choice.
-
-```sh
-npm run preview:resplice
-```
-
-or
-
-```sh
-npm run preview:reauth
-```
-
 ## Development
 
 ### Structure
@@ -62,6 +26,40 @@ This repo is a monorepo with NPM workspace support. Here is an outline of its st
 
 2. Install workspace dependencies: `npm install`
 
-3. Build libraries: `npm run build:libs`
+3. Build libraries: `npm run packages:build`
 
 4. Spin up the Vite dev server: `npm run dev:resplice`
+
+## Build & Run
+
+### Node
+
+Use this method if you have node installed on your local machine:
+
+1. Install dependencies.
+
+```sh
+npm install
+```
+
+2. Build shared packages
+
+```sh
+npm run packages:build
+```
+
+3. Build applications
+
+```sh
+npm run apps:build
+```
+
+4. Finally, run the applications.
+
+```sh
+npm run apps:preview
+```
+
+### Docker
+
+Coming soon
