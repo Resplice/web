@@ -1,4 +1,4 @@
-name: Reauth CI/CD
+name: Resplice CI/CD
 
 on:
   push:

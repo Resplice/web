@@ -24,7 +24,7 @@
 		"date-fns": "^2.30.0",
 		"date-fns-tz": "^2.0.0",
 		"jsqr": "^1.4.0",
-		"libphonenumber-js": "^1.10.37",
+		"libphonenumber-js": "^1.10.39",
 		"qrcode": "^1.5.3",
 		"rxjs": "^7.8.1",
 		"svelte-i18n": "^3.6.0",
