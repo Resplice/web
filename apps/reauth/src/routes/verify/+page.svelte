@@ -3,17 +3,10 @@
 	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
 	import store, { AuthStatus } from '$lib/store'
-	import useConfig from '$lib/hooks/useConfig'
-	import useProtocol from '$lib/hooks/useProtocol'
 	import { RespliceWideIcon } from '@resplice/components'
 	import VerifyForm from './VerifyForm.svelte'
 
-	const config = useConfig()
-	const protocol = useProtocol()
-	const currentStatus = [
-		AuthStatus.PENDING_EMAIL_VERIFICATION,
-		AuthStatus.PENDING_PHONE_VERIFICATION
-	]
+	const currentStatus = [AuthStatus.VERIFY_EMAIL, AuthStatus.VERIFY_PHONE]
 
 	$: {
 		if (browser)
@@ -21,15 +14,11 @@
 				case AuthStatus.UNRECOGNIZED:
 					goto('/')
 					break
-				case AuthStatus.PENDING_ACCOUNT_CREATION:
+				case AuthStatus.CREATE_ACCOUNT:
 					goto('/create-account')
 					break
-				case AuthStatus.PENDING_SESSION:
-					protocol.redirectToApp(config.respliceAppUrl, {
-						email: $store.email,
-						phone: $store.phone,
-						accessToken: $store.accessToken
-					})
+				case AuthStatus.CREATE_SESSION:
+					goto('/create-session')
 					break
 			}
 	}

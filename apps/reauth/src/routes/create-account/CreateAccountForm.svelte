@@ -2,6 +2,7 @@
 	import store from '$lib/store'
 	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
+	import { ErrorType, errorTypeToString } from '$lib/protocol'
 	import { UserAvatar, TextField, PeopleIcon, Button, Link } from '@resplice/components'
 
 	const protocol = useProtocol()
@@ -24,24 +25,25 @@
 	async function createAccount() {
 		isLoading = true
 		const avatarBytes = avatar ? new Uint8Array(await avatar.arrayBuffer()) : new Uint8Array()
-		const { event, error } = await protocol.createAccount({
+		const { authInfo, error } = await protocol.createAccount({
 			email: $store.email,
 			phone: $store.phone,
 			fullName,
-			avatar: avatarBytes,
-			accessToken: $store.accessToken
+			avatar: avatarBytes
 		})
 
 		if (error) {
-			systemError = $t(`auth.errors.${error.type}`)
+			if ([ErrorType.INVALID_STATE, ErrorType.INVALID_SESSION].includes(error.type))
+				location.replace('/')
+			const errorString = errorTypeToString(error.type)
+			systemError = $t(`auth.errors.${errorString}`)
 			isLoading = false
 			return
 		}
 
 		store.update((state) => ({
 			...state,
-			status: event.status,
-			accessToken: event.accessToken
+			status: authInfo.status
 		}))
 	}
 

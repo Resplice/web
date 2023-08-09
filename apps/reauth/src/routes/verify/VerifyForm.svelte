@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { AttributeType, type Email, type Phone } from '@resplice/utils'
 	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
+	import { ErrorType, errorFieldToString } from '$lib/protocol'
 	import store, { AuthStatus } from '$lib/store'
 	import {
 		AttributeItem,
@@ -9,7 +11,6 @@
 		ShieldCheckmarkIcon,
 		Spinner
 	} from '@resplice/components'
-	import { AttributeType, type Email, type Phone } from '@resplice/utils'
 
 	const CODE_LENGTH = 6
 
@@ -29,12 +30,11 @@
 		value: { number: $store.phone, smsEnabled: true },
 		sortOrder: 2
 	}
-	$: accessToken = $store.accessToken
 
 	let emailCode = ''
 	let emailPromise: Promise<boolean>
 	let emailCodeError = ''
-	$: emailVerified = $store.status === AuthStatus.PENDING_PHONE_VERIFICATION
+	$: emailVerified = $store.status === AuthStatus.VERIFY_PHONE
 
 	let phoneCode = ''
 	let phonePromise: Promise<boolean>
@@ -54,47 +54,53 @@
 		}
 	}
 
-	async function submitEmailCode(verificationCode: number): Promise<boolean> {
-		const { event, error } = await protocol.verifyAuthEmail({
+	async function submitEmailCode(verifyCode: number): Promise<boolean> {
+		const { authInfo, error } = await protocol.verifyEmail({
 			email: email.value.email,
 			phone: phone.value.number,
-			verificationCode,
-			accessToken
+			verifyCode
 		})
 
 		if (error) {
-			if (error.type === 'INVALID_STATE') location.replace('/')
-			emailCodeError = $t(`auth.errors.${error.type}`)
+			if ([ErrorType.INVALID_STATE, ErrorType.INVALID_SESSION].includes(error.type))
+				location.replace('/')
+			if (error.type === ErrorType.INVALID_INPUT) {
+				const errorString = errorFieldToString(error.fields[0])
+				emailCodeError = $t(`auth.errors.${errorString}`)
+			}
+
 			return false
 		}
 
 		store.update((state) => ({
 			...state,
-			status: event.status,
-			accessToken: event.accessToken
+			status: authInfo.status
 		}))
 
 		return true
 	}
 
-	async function submitPhoneCode(verificationCode: number): Promise<boolean> {
-		const { event, error } = await protocol.verifyAuthPhone({
+	async function submitPhoneCode(verifyCode: number): Promise<boolean> {
+		const { authInfo, error } = await protocol.verifyPhone({
 			email: email.value.email,
 			phone: phone.value.number,
-			verificationCode,
-			accessToken
+			verifyCode
 		})
 
 		if (error) {
-			if (error.type === 'INVALID_STATE') location.replace('/')
-			phoneCodeError = $t(`auth.errors.${error.type}`)
+			if ([ErrorType.INVALID_STATE, ErrorType.INVALID_SESSION].includes(error.type))
+				location.replace('/')
+			if (error.type === ErrorType.INVALID_INPUT) {
+				const errorString = errorFieldToString(error.fields[0])
+				emailCodeError = $t(`auth.errors.${errorString}`)
+			}
+
 			return false
 		}
 
 		store.update((state) => ({
 			...state,
-			status: event.status,
-			accessToken: event.accessToken
+			status: authInfo.status
 		}))
 
 		return true

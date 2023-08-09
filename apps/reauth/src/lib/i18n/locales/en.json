@@ -15,9 +15,10 @@
 	"createAccount.header": "Welcome to Resplice! We see you are new here so we just need your full name to get you started. Optionally add a picture of yourself to make it easier for others to recognize you.",
 	"haveAccount": "I already have an account",
 	"errors": {
-		"INVALID_PHONE": "Invalid Phone Number. Please enter a valid phone number.",
-		"INVALID_EMAIL": "Invalid Email. Please enter a valid email address.",
-		"INVALID_TOKEN": "Incorrect Verification Code, please check for typos and try again.",
+		"PHONE": "Invalid phone number. Please enter a valid phone number.",
+		"EMAIL": "Invalid email. Please enter a valid email address.",
+		"VERIFICATION_CODE": "Incorrect verification code, please double check your code and try again.",
+		"INVALID_INPUT": "One or many fields are invalid. Please try again.",
 		"botDetected": "We detected some bot behavior, you must be a robot?",
 		"UNRECOGNIZED": "Unknown Error. Please try again later."
 	}

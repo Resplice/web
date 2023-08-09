@@ -7,6 +7,7 @@
 	import useProtocol from '$lib/hooks/useProtocol'
 	import store from '$lib/store'
 	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
+	import { errorTypeToString } from '$lib/protocol'
 
 	const config = useConfig()
 	const protocol = useProtocol()
@@ -60,22 +61,23 @@
 
 	async function startAuth() {
 		const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
-		const { event, error } = await protocol.startAuth({
+		const { authInfo, error } = await protocol.startAuth({
 			email,
-			phone: phoneNumber.number
+			phone: phoneNumber.number,
+			rememberMe: true
 		})
 
 		if (error) {
-			systemError = $t(`auth.errors.${error.type}`)
+			const errorString = errorTypeToString(error.type)
+			systemError = $t(`auth.errors.${errorString}`)
 			isLoading = false
 			return
 		}
 
 		store.set({
-			status: event.status,
+			status: authInfo.status,
 			email,
-			phone: phoneNumber.number,
-			accessToken: event.accessToken
+			phone: phoneNumber.number
 		})
 	}
 

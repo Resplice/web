@@ -1,7 +1,9 @@
+type Content = 'binary' | 'json' | 'text'
+
 type FetchOptions = {
 	endpoint: string
 	headers?: Record<string, string>
-	useBinary?: boolean
+	content?: Content
 	commandType?: number
 }
 
@@ -17,43 +19,43 @@ export interface Fetch {
 
 export function fetchFactory(baseUrl: string): Fetch {
 	return {
-		get: ({ endpoint, headers, useBinary = true }) =>
+		get: ({ endpoint, headers, content }) =>
 			commonFetch({
 				URL: baseUrl + endpoint,
 				method: 'GET',
 				headers,
-				useBinary
+				content
 			}),
-		post: async ({ endpoint, headers, useBinary = true, data }) =>
+		post: ({ endpoint, headers, content, data }) =>
 			commonFetch({
 				URL: baseUrl + endpoint,
 				method: 'POST',
 				headers,
-				useBinary,
+				content,
 				data
 			}),
-		patch: async ({ endpoint, headers, useBinary = true, data }) =>
+		patch: ({ endpoint, headers, content, data }) =>
 			commonFetch({
 				URL: baseUrl + endpoint,
 				method: 'PATCH',
 				headers,
-				useBinary,
+				content,
 				data
 			}),
-		put: async ({ endpoint, headers, useBinary = true, data }) =>
+		put: ({ endpoint, headers, content, data }) =>
 			commonFetch({
 				URL: baseUrl + endpoint,
 				method: 'PUT',
 				headers,
-				useBinary,
+				content,
 				data
 			}),
-		delete: async ({ endpoint, headers, useBinary = true, data }) =>
+		delete: ({ endpoint, headers, content, data }) =>
 			commonFetch({
 				URL: baseUrl + endpoint,
 				method: 'DELETE',
 				headers,
-				useBinary,
+				content,
 				data
 			})
 	}
@@ -63,24 +65,43 @@ type FetchConfig = {
 	URL: string
 	method: string
 	headers?: Record<string, string>
-	useBinary?: boolean
+	content?: Content
 	data?: unknown
 }
-async function commonFetch({ URL, method, headers = {}, useBinary = false, data }: FetchConfig) {
-	const contentType = useBinary ? 'application/octet-stream' : 'application/json'
-
+async function commonFetch({ URL, method, headers = {}, content = 'binary', data }: FetchConfig) {
 	const res = await fetch(URL, {
 		method,
 		credentials: 'include',
 		headers: {
-			'Content-Type': contentType,
+			'Content-Type': getContentType(content),
 			...headers
 		},
 		body: data as BodyInit
 	})
-	if (!res.ok) throw res
+	if (res.status === 500) throw res
 	if (res.status === 204) return
 
-	const parsedBody = useBinary ? res.arrayBuffer() : res.json()
-	return parsedBody
+	return getBody(res, content)
+}
+
+function getContentType(content: Content) {
+	switch (content) {
+		case 'binary':
+			return 'application/octet-stream'
+		case 'json':
+			return 'application/json'
+		case 'text':
+			return 'text/plain'
+	}
+}
+
+function getBody(res: Response, content: Content) {
+	switch (content) {
+		case 'binary':
+			return res.arrayBuffer()
+		case 'json':
+			return res.json()
+		case 'text':
+			return res.text()
+	}
 }

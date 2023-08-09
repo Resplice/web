@@ -1,4 +1,4 @@
-// import { btob64, b64tob64u } from '$utils/converters/base64'
+import { b64tob } from '$utils/converters/base64'
 // const LARGEST_INT_32 = 4294967295
 
 export function generateRsaKey() {
@@ -77,10 +77,19 @@ export function verify(key: CryptoKey, signature: Uint8Array, data: Uint8Array) 
 	return crypto.subtle.verify('HMAC', key, signature, data)
 }
 
-export function importPublicKey(rawKey: ArrayBuffer): Promise<CryptoKey> {
+// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/importKey#subjectpublickeyinfo_import
+function convertPemToBinary(pem: string): ArrayBuffer {
+	// fetch the part of the PEM string between header and footer
+	const pemHeader = '-----BEGIN PUBLIC KEY-----'
+	const pemFooter = '-----END PUBLIC KEY-----'
+	const pemContents = pem.trim().substring(pemHeader.length, pem.length - pemFooter.length - 1)
+	return b64tob(pemContents)
+}
+
+export function importPublicKey(publicKeyPem: string): Promise<CryptoKey> {
 	return crypto.subtle.importKey(
-		'pkcs8',
-		rawKey,
+		'spki',
+		convertPemToBinary(publicKeyPem),
 		{
 			name: 'RSA-OAEP',
 			hash: 'SHA-256'
@@ -89,19 +98,6 @@ export function importPublicKey(rawKey: ArrayBuffer): Promise<CryptoKey> {
 		['encrypt']
 	)
 }
-
-// function buildJwk(rawKey: ArrayBuffer): JsonWebKey {
-// 	// NOTE: 'AQAB' = base64(65537)
-// 	const b64Key = btob64(rawKey)
-// 	const b64UrlKey = b64tob64u(b64Key)
-// 	return {
-// 		kty: 'RSA',
-// 		e: 'AQAB',
-// 		n: b64UrlKey,
-// 		alg: 'RSA-OAEP-256',
-// 		ext: true
-// 	}
-// }
 
 export async function publicKeyEncrypt(key: CryptoKey, data: Uint8Array): Promise<Uint8Array> {
 	const encryptedBuffer = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, key, data)

@@ -8,21 +8,14 @@
 	import { RespliceWideIcon } from '@resplice/components'
 	import CreateAccountForm from './CreateAccountForm.svelte'
 
-	const config = useConfig()
-	const protocol = useProtocol()
-
 	$: {
 		if (browser)
 			switch ($store.status) {
 				case AuthStatus.UNRECOGNIZED:
 					goto('/')
 					break
-				case AuthStatus.PENDING_SESSION:
-					protocol.redirectToApp(config.respliceAppUrl, {
-						email: $store.email,
-						phone: $store.phone,
-						accessToken: $store.accessToken
-					})
+				case AuthStatus.CREATE_SESSION:
+					goto('/create-session')
 					break
 			}
 	}
@@ -36,7 +29,7 @@
 		</p>
 	</header>
 
-	{#if $store.status === AuthStatus.PENDING_ACCOUNT_CREATION}
+	{#if $store.status === AuthStatus.CREATE_ACCOUNT}
 		<CreateAccountForm />
 	{/if}
 </main>

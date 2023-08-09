@@ -46,7 +46,7 @@ export function errorTypeToJSON(object: ErrorType): string {
   }
 }
 
-export enum Fields {
+export enum ErrorField {
   NAME = 0,
   EMAIL = 1,
   PHONE = 2,
@@ -55,43 +55,43 @@ export enum Fields {
   UNRECOGNIZED = -1,
 }
 
-export function fieldsFromJSON(object: any): Fields {
+export function errorFieldFromJSON(object: any): ErrorField {
   switch (object) {
     case 0:
     case "NAME":
-      return Fields.NAME;
+      return ErrorField.NAME;
     case 1:
     case "EMAIL":
-      return Fields.EMAIL;
+      return ErrorField.EMAIL;
     case 2:
     case "PHONE":
-      return Fields.PHONE;
+      return ErrorField.PHONE;
     case 3:
     case "VERIFICATION_CODE":
-      return Fields.VERIFICATION_CODE;
+      return ErrorField.VERIFICATION_CODE;
     case 4:
     case "HANDLE":
-      return Fields.HANDLE;
+      return ErrorField.HANDLE;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return Fields.UNRECOGNIZED;
+      return ErrorField.UNRECOGNIZED;
   }
 }
 
-export function fieldsToJSON(object: Fields): string {
+export function errorFieldToJSON(object: ErrorField): string {
   switch (object) {
-    case Fields.NAME:
+    case ErrorField.NAME:
       return "NAME";
-    case Fields.EMAIL:
+    case ErrorField.EMAIL:
       return "EMAIL";
-    case Fields.PHONE:
+    case ErrorField.PHONE:
       return "PHONE";
-    case Fields.VERIFICATION_CODE:
+    case ErrorField.VERIFICATION_CODE:
       return "VERIFICATION_CODE";
-    case Fields.HANDLE:
+    case ErrorField.HANDLE:
       return "HANDLE";
-    case Fields.UNRECOGNIZED:
+    case ErrorField.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -99,7 +99,7 @@ export function fieldsToJSON(object: Fields): string {
 
 export interface Error {
   type: ErrorType;
-  fields: Fields[];
+  fields: ErrorField[];
 }
 
 function createBaseError(): Error {
@@ -162,7 +162,7 @@ export const Error = {
   fromJSON(object: any): Error {
     return {
       type: isSet(object.type) ? errorTypeFromJSON(object.type) : 0,
-      fields: Array.isArray(object?.fields) ? object.fields.map((e: any) => fieldsFromJSON(e)) : [],
+      fields: Array.isArray(object?.fields) ? object.fields.map((e: any) => errorFieldFromJSON(e)) : [],
     };
   },
 
@@ -170,7 +170,7 @@ export const Error = {
     const obj: any = {};
     message.type !== undefined && (obj.type = errorTypeToJSON(message.type));
     if (message.fields) {
-      obj.fields = message.fields.map((e) => fieldsToJSON(e));
+      obj.fields = message.fields.map((e) => errorFieldToJSON(e));
     } else {
       obj.fields = [];
     }
