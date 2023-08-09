@@ -49,12 +49,9 @@
 					action: 'start-auth'
 				})
 				const isBot = await protocol.isBot(token)
-				if (isBot) {
-					systemError = $t('auth.errors.botDetected')
-					resolve(true)
-				} else {
-					resolve(false)
-				}
+				if (isBot) systemError = $t('auth.errors.botDetected')
+
+				resolve(isBot)
 			})
 		})
 	}

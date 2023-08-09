@@ -18,23 +18,15 @@
 	},
 	"scripts": {
 		"build": "vite build",
-		"test": "vitest",
-		"test:coverage": "vitest run --coverage",
 		"lint": "eslint --cache . && prettier --check .",
 		"protoc": "protoc -I=../../../proto $(find ../../../proto -name \"*.proto\") --plugin=../../node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/generated --ts_proto_opt=oneof=unions --ts_proto_opt=esModuleInterop=true --ts_proto_opt=env=browser --ts_proto_opt=outputIndex=true --ts_proto_opt=outputServices=false"
 	},
 	"devDependencies": {
 		"@resplice/utils": "*",
-		"@rollup/plugin-typescript": "^11.1.1",
-		"@typescript-eslint/eslint-plugin": "^5.60.0",
-		"@typescript-eslint/parser": "^5.60.0",
-		"eslint": "^8.43.0",
-		"eslint-config-prettier": "^8.8.0",
-		"prettier": "^2.8.8",
+		"@rollup/plugin-typescript": "^11.1.2",
 		"ts-proto": "^1.150.0",
-		"typescript": "^5.1.3",
-		"vite": "^4.3.9",
-		"vite-plugin-dts": "^2.3.0",
+		"vite": "^4.4.9",
+		"vite-plugin-dts": "^3.5.1",
 		"vitest": "^0.32.2"
 	}
 }
