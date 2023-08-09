@@ -9,8 +9,17 @@
 	--brand-primary: 27, 188, 155;
 	--brand-primary-dark: 27, 188, 155;
 	--brand-primary-light: 27, 188, 155;
-	font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-		Cantarell, 'Helvetica Neue', sans-serif;
+	font-family:
+		'Open Sans',
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Helvetica Neue',
+		sans-serif;
 
 	/* color-scheme: light dark; */
 
