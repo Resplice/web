@@ -34,6 +34,7 @@
 	"peerDependencies": {
 		"@dicebear/collection": "^6.0.4",
 		"@dicebear/core": "^6.0.4",
+		"@resplice/utils": "*",
 		"clsx": "^2.0.0",
 		"croppie": "^2.6.5",
 		"svelte": "^3.59.2"
@@ -41,6 +42,7 @@
 	"devDependencies": {
 		"@dicebear/collection": "^6.0.4",
 		"@dicebear/core": "^6.0.4",
+		"@resplice/utils": "*",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/kit": "^1.20.5",
 		"@sveltejs/package": "^2.1.0",
