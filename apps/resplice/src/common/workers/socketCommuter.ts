@@ -7,7 +7,7 @@ import {
 	type Observable
 } from 'rxjs'
 import proto, { type Command, type Event, type UserEvent } from '@resplice/proto'
-import SocketWorker from '$common/workers/socket?worker'
+import socketWorkerUrl from '$common/workers/socket?url'
 import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
 
 export enum SocketCommandType {
@@ -78,7 +78,7 @@ export function onlyUserEvents() {
 export type SocketCommuter = Commuter<SocketCommand, SocketEvent>
 
 function startCommuter() {
-	const socketWorker = new SocketWorker()
+	const socketWorker = new Worker(socketWorkerUrl, { type: 'module' })
 
 	return workerCommuterFactory<SocketCommand, SocketEvent>(socketWorker)
 }

@@ -17,7 +17,7 @@ export interface Protocol {
 	verifyEmail(payload: proto.auth.VerifyEmail): AuthResult
 	verifyPhone(payload: proto.auth.VerifyPhone): AuthResult
 	createAccount(payload: proto.auth.CreateAccount): AuthResult
-	createSession(payload: proto.auth.CreateSession): AuthResult
+	startSession(payload: proto.auth.CreateSession): AuthResult
 	redirectToApp(respliceAppUrl: string, message: AppMessage): void
 }
 
@@ -176,7 +176,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		verifyEmail: (verifyEmail) => executeAuthStep({ $case: 'verifyEmail', verifyEmail }),
 		verifyPhone: (verifyPhone) => executeAuthStep({ $case: 'verifyPhone', verifyPhone }),
 		createAccount: (createAccount) => executeAuthStep({ $case: 'createAccount', createAccount }),
-		createSession: (createSession) => executeAuthStep({ $case: 'createSession', createSession }),
+		startSession: (startSession) => executeAuthStep({ $case: 'startSession', startSession }),
 		redirectToApp
 	}
 }

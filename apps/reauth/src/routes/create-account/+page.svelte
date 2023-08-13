@@ -15,7 +15,7 @@
 					goto('/')
 					break
 				case AuthStatus.CREATE_SESSION:
-					goto('/create-session')
+					goto('/start-session')
 					break
 			}
 	}

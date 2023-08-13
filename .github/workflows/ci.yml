@@ -17,13 +17,13 @@ jobs:
     #  TURBO_REMOTE_ONLY: true
 
     steps:
-      - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
+
+      - uses: actions/checkout@v3
 
       - name: Install Dependencies
         run: npm ci

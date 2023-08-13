@@ -20,13 +20,19 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  APP_PATH: apps/${{ inputs.app }}
+  APP_DOMAIN: ${{ inputs.environment == 'preview' && 'pre-' || '' }}${{ inputs.app == 'reauth' && 'auth' || 'app' }}.resplice.com
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
       - uses: actions/checkout@v3
 
       - name: Install Vercel CLI
@@ -40,3 +46,6 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+
+      # - name: Alias Live URL
+      #   run: vercel alias set [deployment-url] $APP_DOMAIN

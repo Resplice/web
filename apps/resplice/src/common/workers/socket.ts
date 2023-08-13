@@ -18,6 +18,7 @@ interface ConnWorker extends Worker {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ctx: ConnWorker = self as any
 
 fromEvent<MessageEvent<SocketCommand>>(ctx, 'message')

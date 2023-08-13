@@ -25,7 +25,7 @@
 	}
 
 	onMount(async () => {
-		const { authInfo, error } = await protocol.createSession({
+		const { authInfo, error } = await protocol.startSession({
 			email: $store.email,
 			phone: $store.phone
 		})
