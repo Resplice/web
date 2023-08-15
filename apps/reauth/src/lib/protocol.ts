@@ -152,7 +152,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			try {
 				return localFetch.post<boolean>({
 					endpoint: '/recaptcha',
-					data: token,
+					data: JSON.stringify({ token }),
 					content: 'json'
 				})
 			} catch {

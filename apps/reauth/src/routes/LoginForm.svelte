@@ -88,10 +88,14 @@
 
 		isLoading = true
 
-		const isBot = await checkBot()
-		if (isBot) return
+		try {
+			const isBot = await checkBot()
+			if (isBot) return
 
-		startAuth()
+			await startAuth()
+		} catch (err) {
+			systemError = $t(`auth.errors.UNRECOGNIZED`)
+		}
 	}
 </script>
 
