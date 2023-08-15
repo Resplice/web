@@ -33,14 +33,10 @@ export const POST = (async ({ request }) => {
 		throw error(400, JSON.stringify(requestResult.error.format()))
 	}
 
-	console.log(config)
-
 	const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
 		method: 'POST',
-		body: JSON.stringify({
-			secret: config.recaptchaToken,
-			response: requestResult.data.token
-		})
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		body: `secret=${config.recaptchaToken}&response=${requestResult.data.token}`
 	})
 
 	if (!res.ok) throw error(res.status, res.statusText)
