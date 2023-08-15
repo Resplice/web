@@ -48,10 +48,7 @@ jobs:
         id: deployment
         run: echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }})" >> $GITHUB_OUTPUT
 
-      - name: Print Deployment URLs
+      - name: Deployment URL
         run: |
-          echo ${{ steps.deployment.outputs.url }}
-          echo $APP_DOMAIN
-
-      - name: Alias Live URL
-        run: vercel alias set ${{ steps.deployment.outputs.url }} $APP_DOMAIN
+          vercel alias set ${{ steps.deployment.outputs.url }} $APP_DOMAIN --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+          echo "${{ inputs.app }} has been deployed at https://$APP_DOMAIN"

@@ -49,7 +49,7 @@ export const POST = (async ({ request }) => {
 		throw error(500, JSON.stringify(responseResult.error.format()))
 	}
 
-	console.log('botResult:', responseResult.data)
+	console.log('botResult', responseResult.data)
 
 	const isBot = responseResult.data.score < 0.5
 
