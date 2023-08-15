@@ -17,6 +17,7 @@
 		countryCode: 'US' as CountryCode
 	}
 	let email = ''
+	let persistSession = false
 	let formErrs: Record<string, string> = {}
 	let systemError: string
 	let isLoading = false
@@ -58,10 +59,9 @@
 
 	async function startAuth() {
 		const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
-		const { authInfo, error } = await protocol.startAuth({
+		const { event, error } = await protocol.startAuth({
 			email,
-			phone: phoneNumber.number,
-			rememberMe: true
+			phone: phoneNumber.number
 		})
 
 		if (error) {
@@ -72,9 +72,10 @@
 		}
 
 		store.set({
-			status: authInfo.status,
+			status: event.status,
 			email,
-			phone: phoneNumber.number
+			phone: phoneNumber.number,
+			persistSession
 		})
 	}
 

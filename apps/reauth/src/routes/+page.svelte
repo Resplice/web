@@ -7,7 +7,7 @@
 	import { RespliceWideIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
 
-	const nextStatus = [AuthStatus.VERIFY_EMAIL, AuthStatus.VERIFY_PHONE]
+	const nextStatus = [AuthStatus.PENDING_EMAIL_VERIFICATION, AuthStatus.PENDING_PHONE_VERIFICATION]
 
 	onMount(() => store.set(INITIAL_STORE))
 

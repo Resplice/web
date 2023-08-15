@@ -3,8 +3,6 @@
 	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
 	import store, { AuthStatus } from '$lib/store'
-	import useConfig from '$lib/hooks/useConfig'
-	import useProtocol from '$lib/hooks/useProtocol'
 	import { RespliceWideIcon } from '@resplice/components'
 	import CreateAccountForm from './CreateAccountForm.svelte'
 
@@ -14,7 +12,7 @@
 				case AuthStatus.UNRECOGNIZED:
 					goto('/')
 					break
-				case AuthStatus.CREATE_SESSION:
+				case AuthStatus.PENDING_SESSION_START:
 					goto('/start-session')
 					break
 			}
@@ -29,7 +27,7 @@
 		</p>
 	</header>
 
-	{#if $store.status === AuthStatus.CREATE_ACCOUNT}
+	{#if $store.status === AuthStatus.PENDING_ACCOUNT_CREATION}
 		<CreateAccountForm />
 	{/if}
 </main>

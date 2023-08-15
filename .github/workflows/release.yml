@@ -1,3 +1,7 @@
 name: Release
 # Trigger on GitHub release
 # Pass in app name then build and deploy that specific app to production
+
+on:
+  release:
+    types: [published]

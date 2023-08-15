@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { HTMLAttributes } from 'svelte/elements'
 	import cx from 'clsx'
 	import type { IconComponent } from '$lib/common/types'
 
@@ -6,8 +7,9 @@
 	export let label: string
 	export let value: string
 	export let autocomplete = 'on'
-	export let error = ''
+	export let inputmode: HTMLAttributes<HTMLInputElement>['inputmode'] = 'text' as const
 	export let disabled = false
+	export let error = ''
 	export let Icon: IconComponent | null = null
 	let isTouched = false
 
@@ -53,8 +55,9 @@
 			class:ring-red-600={!disabled && !!error}
 			title={name}
 			{name}
-			{disabled}
 			{autocomplete}
+			{inputmode}
+			{disabled}
 			bind:value
 			on:input={resetError}
 			on:focus={() => (isTouched = true)}

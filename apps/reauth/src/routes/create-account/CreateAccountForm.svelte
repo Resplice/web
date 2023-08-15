@@ -7,8 +7,6 @@
 
 	const protocol = useProtocol()
 
-	const RAND_ID = Math.random()
-
 	let avatar: Blob | null = null
 	let fullName = ''
 	let formErrs: Record<string, string> = {}
@@ -22,31 +20,6 @@
 		return createAccount()
 	}
 
-	async function createAccount() {
-		isLoading = true
-		const avatarBytes = avatar ? new Uint8Array(await avatar.arrayBuffer()) : new Uint8Array()
-		const { authInfo, error } = await protocol.createAccount({
-			email: $store.email,
-			phone: $store.phone,
-			fullName,
-			avatar: avatarBytes
-		})
-
-		if (error) {
-			if ([ErrorType.INVALID_STATE, ErrorType.INVALID_SESSION].includes(error.type))
-				location.replace('/')
-			const errorString = errorTypeToString(error.type)
-			systemError = $t(`auth.errors.${errorString}`)
-			isLoading = false
-			return
-		}
-
-		store.update((state) => ({
-			...state,
-			status: authInfo.status
-		}))
-	}
-
 	function validate(): boolean {
 		formErrs = {}
 		const errs: Record<string, string> = {}
@@ -57,12 +30,48 @@
 		}
 		return true
 	}
+
+	async function createAccount() {
+		isLoading = true
+		const avatarDataUri = await avatarImageToDataUri(avatar)
+		console.log(avatarDataUri)
+
+		const { event, error } = await protocol.createAccount({
+			email: $store.email,
+			phone: $store.phone,
+			fullName,
+			avatar: avatarDataUri
+		})
+
+		if (error) {
+			if ([ErrorType.INVALID_STATE, ErrorType.UNAUTHORIZED].includes(error.type))
+				location.replace('/')
+			const errorString = errorTypeToString(error.type)
+			systemError = $t(`auth.errors.${errorString}`)
+			isLoading = false
+			return
+		}
+
+		store.update((state) => ({
+			...state,
+			status: event.status
+		}))
+	}
+
+	function avatarImageToDataUri(image: Blob | null): Promise<string> {
+		return new Promise<string>((resolve) => {
+			if (!image) return resolve('')
+			const reader = new FileReader()
+			reader.onloadend = () => resolve(reader.result as string)
+			reader.readAsDataURL(image)
+		})
+	}
 </script>
 
 <div class="flex-1 space-y-6 flex flex-col justify-between overflow-auto">
 	<div>
 		<UserAvatar
-			id={RAND_ID}
+			id={Math.random()}
 			avatarUrl={avatar ? URL.createObjectURL(avatar) : null}
 			on:crop={(e) => (avatar = e.detail)}
 		/>

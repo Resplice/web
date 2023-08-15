@@ -13,27 +13,15 @@ export interface AccountCreated {
   phone: string;
 }
 
-export interface EditAccountName {
+export interface AccountNameChanged {
   name: string;
 }
 
-export interface AccountNameEdited {
-  name: string;
-}
-
-export interface EditAccountHandle {
+export interface AccountHandleChanged {
   handle: string;
 }
 
-export interface AccountHandleEdited {
-  handle: string;
-}
-
-export interface EditAccountAvatar {
-  avatar: Uint8Array;
-}
-
-export interface AccountAvatarEdited {
+export interface AccountAvatarChanged {
   avatarUrl: string;
 }
 
@@ -186,22 +174,22 @@ export const AccountCreated = {
   },
 };
 
-function createBaseEditAccountName(): EditAccountName {
+function createBaseAccountNameChanged(): AccountNameChanged {
   return { name: "" };
 }
 
-export const EditAccountName = {
-  encode(message: EditAccountName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AccountNameChanged = {
+  encode(message: AccountNameChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EditAccountName {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AccountNameChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEditAccountName();
+    const message = createBaseAccountNameChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -221,99 +209,43 @@ export const EditAccountName = {
     return message;
   },
 
-  fromJSON(object: any): EditAccountName {
+  fromJSON(object: any): AccountNameChanged {
     return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
-  toJSON(message: EditAccountName): unknown {
+  toJSON(message: AccountNameChanged): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EditAccountName>, I>>(base?: I): EditAccountName {
-    return EditAccountName.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AccountNameChanged>, I>>(base?: I): AccountNameChanged {
+    return AccountNameChanged.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<EditAccountName>, I>>(object: I): EditAccountName {
-    const message = createBaseEditAccountName();
+  fromPartial<I extends Exact<DeepPartial<AccountNameChanged>, I>>(object: I): AccountNameChanged {
+    const message = createBaseAccountNameChanged();
     message.name = object.name ?? "";
     return message;
   },
 };
 
-function createBaseAccountNameEdited(): AccountNameEdited {
-  return { name: "" };
-}
-
-export const AccountNameEdited = {
-  encode(message: AccountNameEdited, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AccountNameEdited {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAccountNameEdited();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AccountNameEdited {
-    return { name: isSet(object.name) ? String(object.name) : "" };
-  },
-
-  toJSON(message: AccountNameEdited): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AccountNameEdited>, I>>(base?: I): AccountNameEdited {
-    return AccountNameEdited.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AccountNameEdited>, I>>(object: I): AccountNameEdited {
-    const message = createBaseAccountNameEdited();
-    message.name = object.name ?? "";
-    return message;
-  },
-};
-
-function createBaseEditAccountHandle(): EditAccountHandle {
+function createBaseAccountHandleChanged(): AccountHandleChanged {
   return { handle: "" };
 }
 
-export const EditAccountHandle = {
-  encode(message: EditAccountHandle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AccountHandleChanged = {
+  encode(message: AccountHandleChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.handle !== "") {
       writer.uint32(10).string(message.handle);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EditAccountHandle {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AccountHandleChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEditAccountHandle();
+    const message = createBaseAccountHandleChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -333,156 +265,43 @@ export const EditAccountHandle = {
     return message;
   },
 
-  fromJSON(object: any): EditAccountHandle {
+  fromJSON(object: any): AccountHandleChanged {
     return { handle: isSet(object.handle) ? String(object.handle) : "" };
   },
 
-  toJSON(message: EditAccountHandle): unknown {
+  toJSON(message: AccountHandleChanged): unknown {
     const obj: any = {};
     message.handle !== undefined && (obj.handle = message.handle);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EditAccountHandle>, I>>(base?: I): EditAccountHandle {
-    return EditAccountHandle.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(base?: I): AccountHandleChanged {
+    return AccountHandleChanged.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<EditAccountHandle>, I>>(object: I): EditAccountHandle {
-    const message = createBaseEditAccountHandle();
+  fromPartial<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(object: I): AccountHandleChanged {
+    const message = createBaseAccountHandleChanged();
     message.handle = object.handle ?? "";
     return message;
   },
 };
 
-function createBaseAccountHandleEdited(): AccountHandleEdited {
-  return { handle: "" };
-}
-
-export const AccountHandleEdited = {
-  encode(message: AccountHandleEdited, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.handle !== "") {
-      writer.uint32(10).string(message.handle);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AccountHandleEdited {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAccountHandleEdited();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.handle = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AccountHandleEdited {
-    return { handle: isSet(object.handle) ? String(object.handle) : "" };
-  },
-
-  toJSON(message: AccountHandleEdited): unknown {
-    const obj: any = {};
-    message.handle !== undefined && (obj.handle = message.handle);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AccountHandleEdited>, I>>(base?: I): AccountHandleEdited {
-    return AccountHandleEdited.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AccountHandleEdited>, I>>(object: I): AccountHandleEdited {
-    const message = createBaseAccountHandleEdited();
-    message.handle = object.handle ?? "";
-    return message;
-  },
-};
-
-function createBaseEditAccountAvatar(): EditAccountAvatar {
-  return { avatar: new Uint8Array(0) };
-}
-
-export const EditAccountAvatar = {
-  encode(message: EditAccountAvatar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.avatar.length !== 0) {
-      writer.uint32(10).bytes(message.avatar);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EditAccountAvatar {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEditAccountAvatar();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.avatar = reader.bytes();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EditAccountAvatar {
-    return { avatar: isSet(object.avatar) ? bytesFromBase64(object.avatar) : new Uint8Array(0) };
-  },
-
-  toJSON(message: EditAccountAvatar): unknown {
-    const obj: any = {};
-    message.avatar !== undefined &&
-      (obj.avatar = base64FromBytes(message.avatar !== undefined ? message.avatar : new Uint8Array(0)));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<EditAccountAvatar>, I>>(base?: I): EditAccountAvatar {
-    return EditAccountAvatar.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EditAccountAvatar>, I>>(object: I): EditAccountAvatar {
-    const message = createBaseEditAccountAvatar();
-    message.avatar = object.avatar ?? new Uint8Array(0);
-    return message;
-  },
-};
-
-function createBaseAccountAvatarEdited(): AccountAvatarEdited {
+function createBaseAccountAvatarChanged(): AccountAvatarChanged {
   return { avatarUrl: "" };
 }
 
-export const AccountAvatarEdited = {
-  encode(message: AccountAvatarEdited, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AccountAvatarChanged = {
+  encode(message: AccountAvatarChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.avatarUrl !== "") {
       writer.uint32(10).string(message.avatarUrl);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AccountAvatarEdited {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AccountAvatarChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAccountAvatarEdited();
+    const message = createBaseAccountAvatarChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -502,22 +321,22 @@ export const AccountAvatarEdited = {
     return message;
   },
 
-  fromJSON(object: any): AccountAvatarEdited {
+  fromJSON(object: any): AccountAvatarChanged {
     return { avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "" };
   },
 
-  toJSON(message: AccountAvatarEdited): unknown {
+  toJSON(message: AccountAvatarChanged): unknown {
     const obj: any = {};
     message.avatarUrl !== undefined && (obj.avatarUrl = message.avatarUrl);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AccountAvatarEdited>, I>>(base?: I): AccountAvatarEdited {
-    return AccountAvatarEdited.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AccountAvatarChanged>, I>>(base?: I): AccountAvatarChanged {
+    return AccountAvatarChanged.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<AccountAvatarEdited>, I>>(object: I): AccountAvatarEdited {
-    const message = createBaseAccountAvatarEdited();
+  fromPartial<I extends Exact<DeepPartial<AccountAvatarChanged>, I>>(object: I): AccountAvatarChanged {
+    const message = createBaseAccountAvatarChanged();
     message.avatarUrl = object.avatarUrl ?? "";
     return message;
   },
@@ -541,31 +360,6 @@ var tsProtoGlobalThis: any = (() => {
   }
   throw "Unable to locate global object";
 })();
-
-function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
-  } else {
-    const bin = tsProtoGlobalThis.atob(b64);
-    const arr = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-    }
-    return arr;
-  }
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
-  } else {
-    const bin: string[] = [];
-    arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
-    });
-    return tsProtoGlobalThis.btoa(bin.join(""));
-  }
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

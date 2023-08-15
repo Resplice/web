@@ -25,9 +25,12 @@
 	}
 
 	onMount(async () => {
-		const { authInfo, error } = await protocol.startSession({
+		const { event, error } = await protocol.startSession({
 			email: $store.email,
-			phone: $store.phone
+			phone: $store.phone,
+			persist: $store.persistSession,
+			userAgent: navigator.userAgent,
+			location: undefined
 		})
 
 		if (error) {
@@ -37,7 +40,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: authInfo.status
+			status: event.status
 		}))
 	})
 </script>

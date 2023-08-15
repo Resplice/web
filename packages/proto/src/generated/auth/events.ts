@@ -3,10 +3,10 @@ import _m0 from "protobufjs/minimal";
 
 export enum AuthStatus {
   SESSION_AUTHORIZED = 0,
-  VERIFY_EMAIL = 1,
-  VERIFY_PHONE = 2,
-  CREATE_ACCOUNT = 3,
-  CREATE_SESSION = 4,
+  PENDING_EMAIL_VERIFICATION = 1,
+  PENDING_PHONE_VERIFICATION = 2,
+  PENDING_ACCOUNT_CREATION = 3,
+  PENDING_SESSION_START = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -16,17 +16,17 @@ export function authStatusFromJSON(object: any): AuthStatus {
     case "SESSION_AUTHORIZED":
       return AuthStatus.SESSION_AUTHORIZED;
     case 1:
-    case "VERIFY_EMAIL":
-      return AuthStatus.VERIFY_EMAIL;
+    case "PENDING_EMAIL_VERIFICATION":
+      return AuthStatus.PENDING_EMAIL_VERIFICATION;
     case 2:
-    case "VERIFY_PHONE":
-      return AuthStatus.VERIFY_PHONE;
+    case "PENDING_PHONE_VERIFICATION":
+      return AuthStatus.PENDING_PHONE_VERIFICATION;
     case 3:
-    case "CREATE_ACCOUNT":
-      return AuthStatus.CREATE_ACCOUNT;
+    case "PENDING_ACCOUNT_CREATION":
+      return AuthStatus.PENDING_ACCOUNT_CREATION;
     case 4:
-    case "CREATE_SESSION":
-      return AuthStatus.CREATE_SESSION;
+    case "PENDING_SESSION_START":
+      return AuthStatus.PENDING_SESSION_START;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -38,44 +38,48 @@ export function authStatusToJSON(object: AuthStatus): string {
   switch (object) {
     case AuthStatus.SESSION_AUTHORIZED:
       return "SESSION_AUTHORIZED";
-    case AuthStatus.VERIFY_EMAIL:
-      return "VERIFY_EMAIL";
-    case AuthStatus.VERIFY_PHONE:
-      return "VERIFY_PHONE";
-    case AuthStatus.CREATE_ACCOUNT:
-      return "CREATE_ACCOUNT";
-    case AuthStatus.CREATE_SESSION:
-      return "CREATE_SESSION";
+    case AuthStatus.PENDING_EMAIL_VERIFICATION:
+      return "PENDING_EMAIL_VERIFICATION";
+    case AuthStatus.PENDING_PHONE_VERIFICATION:
+      return "PENDING_PHONE_VERIFICATION";
+    case AuthStatus.PENDING_ACCOUNT_CREATION:
+      return "PENDING_ACCOUNT_CREATION";
+    case AuthStatus.PENDING_SESSION_START:
+      return "PENDING_SESSION_START";
     case AuthStatus.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-export interface AuthInfo {
+export interface AuthChanged {
   status: AuthStatus;
-  allowedAttempts: number;
+  expiry: number;
+  sessionId: number;
 }
 
-function createBaseAuthInfo(): AuthInfo {
-  return { status: 0, allowedAttempts: 0 };
+function createBaseAuthChanged(): AuthChanged {
+  return { status: 0, expiry: 0, sessionId: 0 };
 }
 
-export const AuthInfo = {
-  encode(message: AuthInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AuthChanged = {
+  encode(message: AuthChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.status !== 0) {
       writer.uint32(8).int32(message.status);
     }
-    if (message.allowedAttempts !== 0) {
-      writer.uint32(16).uint32(message.allowedAttempts);
+    if (message.expiry !== 0) {
+      writer.uint32(16).uint32(message.expiry);
+    }
+    if (message.sessionId !== 0) {
+      writer.uint32(24).uint32(message.sessionId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthInfo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthInfo();
+    const message = createBaseAuthChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -91,7 +95,14 @@ export const AuthInfo = {
             break;
           }
 
-          message.allowedAttempts = reader.uint32();
+          message.expiry = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.sessionId = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -102,28 +113,31 @@ export const AuthInfo = {
     return message;
   },
 
-  fromJSON(object: any): AuthInfo {
+  fromJSON(object: any): AuthChanged {
     return {
       status: isSet(object.status) ? authStatusFromJSON(object.status) : 0,
-      allowedAttempts: isSet(object.allowedAttempts) ? Number(object.allowedAttempts) : 0,
+      expiry: isSet(object.expiry) ? Number(object.expiry) : 0,
+      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
     };
   },
 
-  toJSON(message: AuthInfo): unknown {
+  toJSON(message: AuthChanged): unknown {
     const obj: any = {};
     message.status !== undefined && (obj.status = authStatusToJSON(message.status));
-    message.allowedAttempts !== undefined && (obj.allowedAttempts = Math.round(message.allowedAttempts));
+    message.expiry !== undefined && (obj.expiry = Math.round(message.expiry));
+    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AuthInfo>, I>>(base?: I): AuthInfo {
-    return AuthInfo.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AuthChanged>, I>>(base?: I): AuthChanged {
+    return AuthChanged.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<AuthInfo>, I>>(object: I): AuthInfo {
-    const message = createBaseAuthInfo();
+  fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
+    const message = createBaseAuthChanged();
     message.status = object.status ?? 0;
-    message.allowedAttempts = object.allowedAttempts ?? 0;
+    message.expiry = object.expiry ?? 0;
+    message.sessionId = object.sessionId ?? 0;
     return message;
   },
 };

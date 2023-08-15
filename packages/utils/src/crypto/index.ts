@@ -164,12 +164,17 @@ export function buildServerIV(ivCounter: number, isAuth = false): Uint8Array {
 	return ivArr
 }
 
-export function combineBufferArrays(arr1: Uint8Array, arr2: Uint8Array): Uint8Array {
-	const newBuf = new ArrayBuffer(arr1.byteLength + arr2.byteLength)
+export function joinBuffers(buf1: Uint8Array, buf2: Uint8Array): Uint8Array {
+	const newBuf = new ArrayBuffer(buf1.byteLength + buf2.byteLength)
 	const newBufView = new Uint8Array(newBuf)
-	newBufView.set(arr1)
-	newBufView.set(arr2, arr1.byteLength)
+	newBufView.set(buf1)
+	newBufView.set(buf2, buf1.byteLength)
 	return newBufView
+}
+
+// buf.subarray does not make a copy of the ArrayBuffer store
+export function splitBuffer(buf: Uint8Array, bytePos: number): [Uint8Array, Uint8Array] {
+	return [buf.subarray(0, bytePos + 1), buf.subarray(bytePos)]
 }
 
 export type ReCrypto = {

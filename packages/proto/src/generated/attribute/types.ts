@@ -10,7 +10,6 @@ export interface Address {
   country: string;
 }
 
-/** Precise to 0.00001 (divide by 10^5 to get actual) */
 export interface Coordinate {
   latitude: number;
   longitude: number;
@@ -185,10 +184,10 @@ function createBaseCoordinate(): Coordinate {
 export const Coordinate = {
   encode(message: Coordinate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.latitude !== 0) {
-      writer.uint32(13).sfixed32(message.latitude);
+      writer.uint32(13).float(message.latitude);
     }
     if (message.longitude !== 0) {
-      writer.uint32(21).sfixed32(message.longitude);
+      writer.uint32(21).float(message.longitude);
     }
     return writer;
   },
@@ -205,14 +204,14 @@ export const Coordinate = {
             break;
           }
 
-          message.latitude = reader.sfixed32();
+          message.latitude = reader.float();
           continue;
         case 2:
           if (tag !== 21) {
             break;
           }
 
-          message.longitude = reader.sfixed32();
+          message.longitude = reader.float();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -232,8 +231,8 @@ export const Coordinate = {
 
   toJSON(message: Coordinate): unknown {
     const obj: any = {};
-    message.latitude !== undefined && (obj.latitude = Math.round(message.latitude));
-    message.longitude !== undefined && (obj.longitude = Math.round(message.longitude));
+    message.latitude !== undefined && (obj.latitude = message.latitude);
+    message.longitude !== undefined && (obj.longitude = message.longitude);
     return obj;
   },
 

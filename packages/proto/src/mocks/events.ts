@@ -1,32 +1,37 @@
-import proto, { type Event } from '../index'
+import proto from '../index'
 
 const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
 
 // Auth Events
-const authStarted: proto.auth.AuthInfo = {
-	status: proto.auth.AuthStatus.VERIFY_EMAIL,
-	allowedAttempts: 3
+const authStarted: proto.auth.AuthChanged = {
+	status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
+	expiry: 0,
+	sessionId: 0
 }
 
-const authEmailVerified: proto.auth.AuthInfo = {
-	status: proto.auth.AuthStatus.VERIFY_PHONE,
-	allowedAttempts: 3
+const authEmailVerified: proto.auth.AuthChanged = {
+	status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
+	expiry: 0,
+	sessionId: 0
 }
 
-const authPhoneVerified: proto.auth.AuthInfo = {
-	status: proto.auth.AuthStatus.CREATE_ACCOUNT,
-	allowedAttempts: 1
+const authPhoneVerified: proto.auth.AuthChanged = {
+	status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
+	expiry: 0,
+	sessionId: 0
 }
 
-const accountCreatedAuth: proto.auth.AuthInfo = {
-	status: proto.auth.AuthStatus.CREATE_SESSION,
-	allowedAttempts: 1
+const accountCreatedAuth: proto.auth.AuthChanged = {
+	status: proto.auth.AuthStatus.PENDING_SESSION_START,
+	expiry: 0,
+	sessionId: 0
 }
 
-const sessionStarted: proto.auth.AuthInfo = {
+const sessionStarted: proto.auth.AuthChanged = {
 	status: proto.auth.AuthStatus.SESSION_AUTHORIZED,
-	allowedAttempts: 1
+	expiry: 0,
+	sessionId: 1
 }
 
 const authEvents = {
@@ -38,164 +43,94 @@ const authEvents = {
 }
 
 // Account Events
-const accountCreated: Event = {
-	id: 5,
-	version: 0,
-	payload: {
-		$case: 'accountCreated',
-		accountCreated: {
-			accountId: 1,
-			fullName: 'Han Solo',
-			handle: 'han.solo.1',
-			avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
-			emailId: 1,
-			email: EMAIL,
-			phoneId: 2,
-			phone: PHONE
-		}
-	}
+const accountCreated: proto.account.AccountCreated = {
+	accountId: 1,
+	fullName: 'Han Solo',
+	handle: 'han.solo.1',
+	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
+	emailId: 1,
+	email: EMAIL,
+	phoneId: 2,
+	phone: PHONE
 }
 
-const accountNameEdited: Event = {
-	id: 8,
-	version: 0,
-	payload: {
-		$case: 'accountNameEdited',
-		accountNameEdited: {
-			name: 'H@n Sol0'
-		}
-	}
+const accountNameChanged: proto.account.AccountNameChanged = {
+	name: 'H@n Sol0'
 }
 
-const accountHandleEdited: Event = {
-	id: 9,
-	version: 0,
-	payload: {
-		$case: 'accountHandleEdited',
-		accountHandleEdited: {
-			handle: 'bestSmuggler42'
-		}
-	}
+const accountHandleChanged: proto.account.AccountHandleChanged = {
+	handle: 'bestSmuggler42'
 }
 
-const accountAvatarEdited: Event = {
-	id: 10,
-	version: 0,
-	payload: {
-		$case: 'accountAvatarEdited',
-		accountAvatarEdited: {
-			avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg'
-		}
-	}
+const accountAvatarChanged: proto.account.AccountAvatarChanged = {
+	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg'
 }
 
 const accountEvents = {
 	accountCreated,
-	accountNameEdited,
-	accountHandleEdited,
-	accountAvatarEdited
+	accountNameChanged,
+	accountHandleChanged,
+	accountAvatarChanged
 }
 
 // Attribute Events
-const attributeAdded: Event = {
-	id: 11,
-	version: 0,
-	payload: {
-		$case: 'attributeAdded',
-		attributeAdded: {
-			id: 3,
-			name: 'Earth Address',
-			value: {
-				$case: 'address',
-				address: {
-					streetAddress1: '351 S Studio Dr',
-					streetAddress2: '',
-					locality: 'Lake Buena Vista',
-					region: 'FL',
-					postalCode: '32830',
-					country: 'US'
-				}
-			}
+const attributeAdded: proto.attribute.AttributeAdded = {
+	id: 3,
+	name: 'Earth Address',
+	value: {
+		$case: 'address',
+		address: {
+			streetAddress1: '351 S Studio Dr',
+			streetAddress2: '',
+			locality: 'Lake Buena Vista',
+			region: 'FL',
+			postalCode: '32830',
+			country: 'US'
 		}
 	}
 }
 
-const attributeNameEdited: Event = {
-	id: 12,
-	version: 0,
-	payload: {
-		$case: 'attributeNameEdited',
-		attributeNameEdited: {
-			id: 3,
-			name: '1st Earth Address'
+const attributeNameChanged: proto.attribute.AttributeNameChanged = {
+	id: 3,
+	name: '1st Earth Address'
+}
+
+const attributeValueChanged: proto.attribute.AttributeValueChanged = {
+	id: 3,
+	value: {
+		$case: 'address',
+		address: {
+			streetAddress1: '351 S Studio Dr',
+			streetAddress2: 'Unit 10',
+			locality: 'Lake Buena Vista',
+			region: 'FL',
+			postalCode: '32830',
+			country: 'US'
 		}
 	}
 }
 
-const attributeValueEdited: Event = {
-	id: 13,
-	version: 0,
-	payload: {
-		$case: 'attributeValueEdited',
-		attributeValueEdited: {
-			id: 3,
-			value: {
-				$case: 'address',
-				address: {
-					streetAddress1: '351 S Studio Dr',
-					streetAddress2: 'Unit 10',
-					locality: 'Lake Buena Vista',
-					region: 'FL',
-					postalCode: '32830',
-					country: 'US'
-				}
-			}
-		}
-	}
+const attributeSorted: proto.attribute.AttributeSorted = {
+	id: 3,
+	sortIndex: 1
 }
 
-const attributeSorted: Event = {
-	id: 14,
-	version: 0,
-	payload: {
-		$case: 'attributeSorted',
-		attributeSorted: {
-			id: 3,
-			sortIndex: 1
-		}
-	}
+const attributeVerified: proto.attribute.AttributeVerified = {
+	id: 3,
+	verifiedAt: 3454563
 }
 
-const attributeVerified: Event = {
-	id: 15,
-	version: 0,
-	payload: {
-		$case: 'attributeVerified',
-		attributeVerified: {
-			id: 3,
-			verifiedAt: 3454563
-		}
-	}
-}
-
-const attributeDeleted: Event = {
-	id: 16,
-	version: 0,
-	payload: {
-		$case: 'attributeDeleted',
-		attributeDeleted: {
-			id: 3
-		}
-	}
+const attributeRemoved: proto.attribute.AttributeRemoved = {
+	id: 3
 }
 
 const attributeEvents = {
 	attributeAdded,
-	attributeNameEdited,
-	attributeValueEdited,
+	attributeNameChanged,
+	attributeValueChanged,
 	attributeSorted,
 	attributeVerified,
-	attributeDeleted
+	attributeRemoved
 }
 
 export default { ...authEvents, ...accountEvents, ...attributeEvents }

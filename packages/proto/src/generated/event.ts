@@ -1,67 +1,57 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { AccountAvatarEdited, AccountCreated, AccountHandleEdited, AccountNameEdited } from "../accounts";
+import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
 import {
   AttributeAdded,
-  AttributeDeleted,
-  AttributeNameEdited,
+  AttributeNameChanged,
+  AttributeRemoved,
   AttributeSorted,
-  AttributeValueEdited,
+  AttributeValueChanged,
   AttributeVerified,
-} from "../attributes";
+} from "./attribute/events";
+import { AuthChanged } from "./auth/events";
 
-export interface Events {
-  accessToken: Uint8Array;
+export interface EventStream {
   events: Event[];
 }
 
 export interface Event {
   id: number;
-  version: number;
   payload?:
+    | { $case: "authChanged"; authChanged: AuthChanged }
     | { $case: "accountCreated"; accountCreated: AccountCreated }
-    | { $case: "accountNameEdited"; accountNameEdited: AccountNameEdited }
-    | { $case: "accountHandleEdited"; accountHandleEdited: AccountHandleEdited }
-    | { $case: "accountAvatarEdited"; accountAvatarEdited: AccountAvatarEdited }
+    | { $case: "accountNameChanged"; accountNameChanged: AccountNameChanged }
+    | { $case: "accountHandleChanged"; accountHandleChanged: AccountHandleChanged }
+    | { $case: "accountAvatarChanged"; accountAvatarChanged: AccountAvatarChanged }
     | { $case: "attributeAdded"; attributeAdded: AttributeAdded }
-    | { $case: "attributeNameEdited"; attributeNameEdited: AttributeNameEdited }
-    | { $case: "attributeValueEdited"; attributeValueEdited: AttributeValueEdited }
+    | { $case: "attributeNameChanged"; attributeNameChanged: AttributeNameChanged }
+    | { $case: "attributeValueChanged"; attributeValueChanged: AttributeValueChanged }
     | { $case: "attributeSorted"; attributeSorted: AttributeSorted }
     | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
-    | { $case: "attributeDeleted"; attributeDeleted: AttributeDeleted };
+    | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved };
 }
 
-function createBaseEvents(): Events {
-  return { accessToken: new Uint8Array(0), events: [] };
+function createBaseEventStream(): EventStream {
+  return { events: [] };
 }
 
-export const Events = {
-  encode(message: Events, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accessToken.length !== 0) {
-      writer.uint32(10).bytes(message.accessToken);
-    }
+export const EventStream = {
+  encode(message: EventStream, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.events) {
-      Event.encode(v!, writer.uint32(18).fork()).ldelim();
+      Event.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Events {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventStream {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEvents();
+    const message = createBaseEventStream();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           if (tag !== 10) {
-            break;
-          }
-
-          message.accessToken = reader.bytes();
-          continue;
-        case 2:
-          if (tag !== 18) {
             break;
           }
 
@@ -76,17 +66,12 @@ export const Events = {
     return message;
   },
 
-  fromJSON(object: any): Events {
-    return {
-      accessToken: isSet(object.accessToken) ? bytesFromBase64(object.accessToken) : new Uint8Array(0),
-      events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
-    };
+  fromJSON(object: any): EventStream {
+    return { events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [] };
   },
 
-  toJSON(message: Events): unknown {
+  toJSON(message: EventStream): unknown {
     const obj: any = {};
-    message.accessToken !== undefined &&
-      (obj.accessToken = base64FromBytes(message.accessToken !== undefined ? message.accessToken : new Uint8Array(0)));
     if (message.events) {
       obj.events = message.events.map((e) => e ? Event.toJSON(e) : undefined);
     } else {
@@ -95,20 +80,19 @@ export const Events = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Events>, I>>(base?: I): Events {
-    return Events.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<EventStream>, I>>(base?: I): EventStream {
+    return EventStream.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<Events>, I>>(object: I): Events {
-    const message = createBaseEvents();
-    message.accessToken = object.accessToken ?? new Uint8Array(0);
+  fromPartial<I extends Exact<DeepPartial<EventStream>, I>>(object: I): EventStream {
+    const message = createBaseEventStream();
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseEvent(): Event {
-  return { id: 0, version: 0, payload: undefined };
+  return { id: 0, payload: undefined };
 }
 
 export const Event = {
@@ -116,30 +100,30 @@ export const Event = {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
-    if (message.version !== 0) {
-      writer.uint32(16).uint32(message.version);
-    }
     switch (message.payload?.$case) {
+      case "authChanged":
+        AuthChanged.encode(message.payload.authChanged, writer.uint32(18).fork()).ldelim();
+        break;
       case "accountCreated":
         AccountCreated.encode(message.payload.accountCreated, writer.uint32(26).fork()).ldelim();
         break;
-      case "accountNameEdited":
-        AccountNameEdited.encode(message.payload.accountNameEdited, writer.uint32(34).fork()).ldelim();
+      case "accountNameChanged":
+        AccountNameChanged.encode(message.payload.accountNameChanged, writer.uint32(34).fork()).ldelim();
         break;
-      case "accountHandleEdited":
-        AccountHandleEdited.encode(message.payload.accountHandleEdited, writer.uint32(42).fork()).ldelim();
+      case "accountHandleChanged":
+        AccountHandleChanged.encode(message.payload.accountHandleChanged, writer.uint32(42).fork()).ldelim();
         break;
-      case "accountAvatarEdited":
-        AccountAvatarEdited.encode(message.payload.accountAvatarEdited, writer.uint32(50).fork()).ldelim();
+      case "accountAvatarChanged":
+        AccountAvatarChanged.encode(message.payload.accountAvatarChanged, writer.uint32(50).fork()).ldelim();
         break;
       case "attributeAdded":
         AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(58).fork()).ldelim();
         break;
-      case "attributeNameEdited":
-        AttributeNameEdited.encode(message.payload.attributeNameEdited, writer.uint32(66).fork()).ldelim();
+      case "attributeNameChanged":
+        AttributeNameChanged.encode(message.payload.attributeNameChanged, writer.uint32(66).fork()).ldelim();
         break;
-      case "attributeValueEdited":
-        AttributeValueEdited.encode(message.payload.attributeValueEdited, writer.uint32(74).fork()).ldelim();
+      case "attributeValueChanged":
+        AttributeValueChanged.encode(message.payload.attributeValueChanged, writer.uint32(74).fork()).ldelim();
         break;
       case "attributeSorted":
         AttributeSorted.encode(message.payload.attributeSorted, writer.uint32(82).fork()).ldelim();
@@ -147,8 +131,8 @@ export const Event = {
       case "attributeVerified":
         AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(90).fork()).ldelim();
         break;
-      case "attributeDeleted":
-        AttributeDeleted.encode(message.payload.attributeDeleted, writer.uint32(98).fork()).ldelim();
+      case "attributeRemoved":
+        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(98).fork()).ldelim();
         break;
     }
     return writer;
@@ -169,11 +153,11 @@ export const Event = {
           message.id = reader.uint32();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.version = reader.uint32();
+          message.payload = { $case: "authChanged", authChanged: AuthChanged.decode(reader, reader.uint32()) };
           continue;
         case 3:
           if (tag !== 26) {
@@ -188,8 +172,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "accountNameEdited",
-            accountNameEdited: AccountNameEdited.decode(reader, reader.uint32()),
+            $case: "accountNameChanged",
+            accountNameChanged: AccountNameChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 5:
@@ -198,8 +182,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "accountHandleEdited",
-            accountHandleEdited: AccountHandleEdited.decode(reader, reader.uint32()),
+            $case: "accountHandleChanged",
+            accountHandleChanged: AccountHandleChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 6:
@@ -208,8 +192,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "accountAvatarEdited",
-            accountAvatarEdited: AccountAvatarEdited.decode(reader, reader.uint32()),
+            $case: "accountAvatarChanged",
+            accountAvatarChanged: AccountAvatarChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 7:
@@ -225,8 +209,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeNameEdited",
-            attributeNameEdited: AttributeNameEdited.decode(reader, reader.uint32()),
+            $case: "attributeNameChanged",
+            attributeNameChanged: AttributeNameChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 9:
@@ -235,8 +219,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeValueEdited",
-            attributeValueEdited: AttributeValueEdited.decode(reader, reader.uint32()),
+            $case: "attributeValueChanged",
+            attributeValueChanged: AttributeValueChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 10:
@@ -265,8 +249,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeDeleted",
-            attributeDeleted: AttributeDeleted.decode(reader, reader.uint32()),
+            $case: "attributeRemoved",
+            attributeRemoved: AttributeRemoved.decode(reader, reader.uint32()),
           };
           continue;
       }
@@ -281,39 +265,40 @@ export const Event = {
   fromJSON(object: any): Event {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      version: isSet(object.version) ? Number(object.version) : 0,
-      payload: isSet(object.accountCreated)
+      payload: isSet(object.authChanged)
+        ? { $case: "authChanged", authChanged: AuthChanged.fromJSON(object.authChanged) }
+        : isSet(object.accountCreated)
         ? { $case: "accountCreated", accountCreated: AccountCreated.fromJSON(object.accountCreated) }
-        : isSet(object.accountNameEdited)
-        ? { $case: "accountNameEdited", accountNameEdited: AccountNameEdited.fromJSON(object.accountNameEdited) }
-        : isSet(object.accountHandleEdited)
+        : isSet(object.accountNameChanged)
+        ? { $case: "accountNameChanged", accountNameChanged: AccountNameChanged.fromJSON(object.accountNameChanged) }
+        : isSet(object.accountHandleChanged)
         ? {
-          $case: "accountHandleEdited",
-          accountHandleEdited: AccountHandleEdited.fromJSON(object.accountHandleEdited),
+          $case: "accountHandleChanged",
+          accountHandleChanged: AccountHandleChanged.fromJSON(object.accountHandleChanged),
         }
-        : isSet(object.accountAvatarEdited)
+        : isSet(object.accountAvatarChanged)
         ? {
-          $case: "accountAvatarEdited",
-          accountAvatarEdited: AccountAvatarEdited.fromJSON(object.accountAvatarEdited),
+          $case: "accountAvatarChanged",
+          accountAvatarChanged: AccountAvatarChanged.fromJSON(object.accountAvatarChanged),
         }
         : isSet(object.attributeAdded)
         ? { $case: "attributeAdded", attributeAdded: AttributeAdded.fromJSON(object.attributeAdded) }
-        : isSet(object.attributeNameEdited)
+        : isSet(object.attributeNameChanged)
         ? {
-          $case: "attributeNameEdited",
-          attributeNameEdited: AttributeNameEdited.fromJSON(object.attributeNameEdited),
+          $case: "attributeNameChanged",
+          attributeNameChanged: AttributeNameChanged.fromJSON(object.attributeNameChanged),
         }
-        : isSet(object.attributeValueEdited)
+        : isSet(object.attributeValueChanged)
         ? {
-          $case: "attributeValueEdited",
-          attributeValueEdited: AttributeValueEdited.fromJSON(object.attributeValueEdited),
+          $case: "attributeValueChanged",
+          attributeValueChanged: AttributeValueChanged.fromJSON(object.attributeValueChanged),
         }
         : isSet(object.attributeSorted)
         ? { $case: "attributeSorted", attributeSorted: AttributeSorted.fromJSON(object.attributeSorted) }
         : isSet(object.attributeVerified)
         ? { $case: "attributeVerified", attributeVerified: AttributeVerified.fromJSON(object.attributeVerified) }
-        : isSet(object.attributeDeleted)
-        ? { $case: "attributeDeleted", attributeDeleted: AttributeDeleted.fromJSON(object.attributeDeleted) }
+        : isSet(object.attributeRemoved)
+        ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
         : undefined,
     };
   },
@@ -321,28 +306,32 @@ export const Event = {
   toJSON(message: Event): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.version !== undefined && (obj.version = Math.round(message.version));
+    message.payload?.$case === "authChanged" &&
+      (obj.authChanged = message.payload?.authChanged ? AuthChanged.toJSON(message.payload?.authChanged) : undefined);
     message.payload?.$case === "accountCreated" && (obj.accountCreated = message.payload?.accountCreated
       ? AccountCreated.toJSON(message.payload?.accountCreated)
       : undefined);
-    message.payload?.$case === "accountNameEdited" && (obj.accountNameEdited = message.payload?.accountNameEdited
-      ? AccountNameEdited.toJSON(message.payload?.accountNameEdited)
+    message.payload?.$case === "accountNameChanged" && (obj.accountNameChanged = message.payload?.accountNameChanged
+      ? AccountNameChanged.toJSON(message.payload?.accountNameChanged)
       : undefined);
-    message.payload?.$case === "accountHandleEdited" && (obj.accountHandleEdited = message.payload?.accountHandleEdited
-      ? AccountHandleEdited.toJSON(message.payload?.accountHandleEdited)
-      : undefined);
-    message.payload?.$case === "accountAvatarEdited" && (obj.accountAvatarEdited = message.payload?.accountAvatarEdited
-      ? AccountAvatarEdited.toJSON(message.payload?.accountAvatarEdited)
-      : undefined);
+    message.payload?.$case === "accountHandleChanged" &&
+      (obj.accountHandleChanged = message.payload?.accountHandleChanged
+        ? AccountHandleChanged.toJSON(message.payload?.accountHandleChanged)
+        : undefined);
+    message.payload?.$case === "accountAvatarChanged" &&
+      (obj.accountAvatarChanged = message.payload?.accountAvatarChanged
+        ? AccountAvatarChanged.toJSON(message.payload?.accountAvatarChanged)
+        : undefined);
     message.payload?.$case === "attributeAdded" && (obj.attributeAdded = message.payload?.attributeAdded
       ? AttributeAdded.toJSON(message.payload?.attributeAdded)
       : undefined);
-    message.payload?.$case === "attributeNameEdited" && (obj.attributeNameEdited = message.payload?.attributeNameEdited
-      ? AttributeNameEdited.toJSON(message.payload?.attributeNameEdited)
-      : undefined);
-    message.payload?.$case === "attributeValueEdited" &&
-      (obj.attributeValueEdited = message.payload?.attributeValueEdited
-        ? AttributeValueEdited.toJSON(message.payload?.attributeValueEdited)
+    message.payload?.$case === "attributeNameChanged" &&
+      (obj.attributeNameChanged = message.payload?.attributeNameChanged
+        ? AttributeNameChanged.toJSON(message.payload?.attributeNameChanged)
+        : undefined);
+    message.payload?.$case === "attributeValueChanged" &&
+      (obj.attributeValueChanged = message.payload?.attributeValueChanged
+        ? AttributeValueChanged.toJSON(message.payload?.attributeValueChanged)
         : undefined);
     message.payload?.$case === "attributeSorted" && (obj.attributeSorted = message.payload?.attributeSorted
       ? AttributeSorted.toJSON(message.payload?.attributeSorted)
@@ -350,8 +339,8 @@ export const Event = {
     message.payload?.$case === "attributeVerified" && (obj.attributeVerified = message.payload?.attributeVerified
       ? AttributeVerified.toJSON(message.payload?.attributeVerified)
       : undefined);
-    message.payload?.$case === "attributeDeleted" && (obj.attributeDeleted = message.payload?.attributeDeleted
-      ? AttributeDeleted.toJSON(message.payload?.attributeDeleted)
+    message.payload?.$case === "attributeRemoved" && (obj.attributeRemoved = message.payload?.attributeRemoved
+      ? AttributeRemoved.toJSON(message.payload?.attributeRemoved)
       : undefined);
     return obj;
   },
@@ -363,7 +352,13 @@ export const Event = {
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
     message.id = object.id ?? 0;
-    message.version = object.version ?? 0;
+    if (
+      object.payload?.$case === "authChanged" &&
+      object.payload?.authChanged !== undefined &&
+      object.payload?.authChanged !== null
+    ) {
+      message.payload = { $case: "authChanged", authChanged: AuthChanged.fromPartial(object.payload.authChanged) };
+    }
     if (
       object.payload?.$case === "accountCreated" &&
       object.payload?.accountCreated !== undefined &&
@@ -375,33 +370,33 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "accountNameEdited" &&
-      object.payload?.accountNameEdited !== undefined &&
-      object.payload?.accountNameEdited !== null
+      object.payload?.$case === "accountNameChanged" &&
+      object.payload?.accountNameChanged !== undefined &&
+      object.payload?.accountNameChanged !== null
     ) {
       message.payload = {
-        $case: "accountNameEdited",
-        accountNameEdited: AccountNameEdited.fromPartial(object.payload.accountNameEdited),
+        $case: "accountNameChanged",
+        accountNameChanged: AccountNameChanged.fromPartial(object.payload.accountNameChanged),
       };
     }
     if (
-      object.payload?.$case === "accountHandleEdited" &&
-      object.payload?.accountHandleEdited !== undefined &&
-      object.payload?.accountHandleEdited !== null
+      object.payload?.$case === "accountHandleChanged" &&
+      object.payload?.accountHandleChanged !== undefined &&
+      object.payload?.accountHandleChanged !== null
     ) {
       message.payload = {
-        $case: "accountHandleEdited",
-        accountHandleEdited: AccountHandleEdited.fromPartial(object.payload.accountHandleEdited),
+        $case: "accountHandleChanged",
+        accountHandleChanged: AccountHandleChanged.fromPartial(object.payload.accountHandleChanged),
       };
     }
     if (
-      object.payload?.$case === "accountAvatarEdited" &&
-      object.payload?.accountAvatarEdited !== undefined &&
-      object.payload?.accountAvatarEdited !== null
+      object.payload?.$case === "accountAvatarChanged" &&
+      object.payload?.accountAvatarChanged !== undefined &&
+      object.payload?.accountAvatarChanged !== null
     ) {
       message.payload = {
-        $case: "accountAvatarEdited",
-        accountAvatarEdited: AccountAvatarEdited.fromPartial(object.payload.accountAvatarEdited),
+        $case: "accountAvatarChanged",
+        accountAvatarChanged: AccountAvatarChanged.fromPartial(object.payload.accountAvatarChanged),
       };
     }
     if (
@@ -415,23 +410,23 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeNameEdited" &&
-      object.payload?.attributeNameEdited !== undefined &&
-      object.payload?.attributeNameEdited !== null
+      object.payload?.$case === "attributeNameChanged" &&
+      object.payload?.attributeNameChanged !== undefined &&
+      object.payload?.attributeNameChanged !== null
     ) {
       message.payload = {
-        $case: "attributeNameEdited",
-        attributeNameEdited: AttributeNameEdited.fromPartial(object.payload.attributeNameEdited),
+        $case: "attributeNameChanged",
+        attributeNameChanged: AttributeNameChanged.fromPartial(object.payload.attributeNameChanged),
       };
     }
     if (
-      object.payload?.$case === "attributeValueEdited" &&
-      object.payload?.attributeValueEdited !== undefined &&
-      object.payload?.attributeValueEdited !== null
+      object.payload?.$case === "attributeValueChanged" &&
+      object.payload?.attributeValueChanged !== undefined &&
+      object.payload?.attributeValueChanged !== null
     ) {
       message.payload = {
-        $case: "attributeValueEdited",
-        attributeValueEdited: AttributeValueEdited.fromPartial(object.payload.attributeValueEdited),
+        $case: "attributeValueChanged",
+        attributeValueChanged: AttributeValueChanged.fromPartial(object.payload.attributeValueChanged),
       };
     }
     if (
@@ -455,62 +450,18 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeDeleted" &&
-      object.payload?.attributeDeleted !== undefined &&
-      object.payload?.attributeDeleted !== null
+      object.payload?.$case === "attributeRemoved" &&
+      object.payload?.attributeRemoved !== undefined &&
+      object.payload?.attributeRemoved !== null
     ) {
       message.payload = {
-        $case: "attributeDeleted",
-        attributeDeleted: AttributeDeleted.fromPartial(object.payload.attributeDeleted),
+        $case: "attributeRemoved",
+        attributeRemoved: AttributeRemoved.fromPartial(object.payload.attributeRemoved),
       };
     }
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
-function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
-  } else {
-    const bin = tsProtoGlobalThis.atob(b64);
-    const arr = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-    }
-    return arr;
-  }
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
-  } else {
-    const bin: string[] = [];
-    arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
-    });
-    return tsProtoGlobalThis.btoa(bin.join(""));
-  }
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

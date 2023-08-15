@@ -2,8 +2,8 @@
 import _m0 from "protobufjs/minimal";
 
 export enum ErrorType {
-  UNKNOWN = 0,
-  INVALID_SESSION = 1,
+  NOT_IMPLEMENTED = 0,
+  UNAUTHORIZED = 1,
   INVALID_STATE = 2,
   INVALID_INPUT = 3,
   UNRECOGNIZED = -1,
@@ -12,11 +12,11 @@ export enum ErrorType {
 export function errorTypeFromJSON(object: any): ErrorType {
   switch (object) {
     case 0:
-    case "UNKNOWN":
-      return ErrorType.UNKNOWN;
+    case "NOT_IMPLEMENTED":
+      return ErrorType.NOT_IMPLEMENTED;
     case 1:
-    case "INVALID_SESSION":
-      return ErrorType.INVALID_SESSION;
+    case "UNAUTHORIZED":
+      return ErrorType.UNAUTHORIZED;
     case 2:
     case "INVALID_STATE":
       return ErrorType.INVALID_STATE;
@@ -32,10 +32,10 @@ export function errorTypeFromJSON(object: any): ErrorType {
 
 export function errorTypeToJSON(object: ErrorType): string {
   switch (object) {
-    case ErrorType.UNKNOWN:
-      return "UNKNOWN";
-    case ErrorType.INVALID_SESSION:
-      return "INVALID_SESSION";
+    case ErrorType.NOT_IMPLEMENTED:
+      return "NOT_IMPLEMENTED";
+    case ErrorType.UNAUTHORIZED:
+      return "UNAUTHORIZED";
     case ErrorType.INVALID_STATE:
       return "INVALID_STATE";
     case ErrorType.INVALID_INPUT:
@@ -46,52 +46,64 @@ export function errorTypeToJSON(object: ErrorType): string {
   }
 }
 
-export enum ErrorField {
-  NAME = 0,
-  EMAIL = 1,
-  PHONE = 2,
-  VERIFICATION_CODE = 3,
-  HANDLE = 4,
+export enum InputField {
+  EMAIL = 0,
+  PHONE = 1,
+  VERIFY_CODE = 2,
+  FULL_NAME = 3,
+  AVATAR = 4,
+  USER_AGENT = 5,
+  LOCATION = 6,
   UNRECOGNIZED = -1,
 }
 
-export function errorFieldFromJSON(object: any): ErrorField {
+export function inputFieldFromJSON(object: any): InputField {
   switch (object) {
     case 0:
-    case "NAME":
-      return ErrorField.NAME;
-    case 1:
     case "EMAIL":
-      return ErrorField.EMAIL;
-    case 2:
+      return InputField.EMAIL;
+    case 1:
     case "PHONE":
-      return ErrorField.PHONE;
+      return InputField.PHONE;
+    case 2:
+    case "VERIFY_CODE":
+      return InputField.VERIFY_CODE;
     case 3:
-    case "VERIFICATION_CODE":
-      return ErrorField.VERIFICATION_CODE;
+    case "FULL_NAME":
+      return InputField.FULL_NAME;
     case 4:
-    case "HANDLE":
-      return ErrorField.HANDLE;
+    case "AVATAR":
+      return InputField.AVATAR;
+    case 5:
+    case "USER_AGENT":
+      return InputField.USER_AGENT;
+    case 6:
+    case "LOCATION":
+      return InputField.LOCATION;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return ErrorField.UNRECOGNIZED;
+      return InputField.UNRECOGNIZED;
   }
 }
 
-export function errorFieldToJSON(object: ErrorField): string {
+export function inputFieldToJSON(object: InputField): string {
   switch (object) {
-    case ErrorField.NAME:
-      return "NAME";
-    case ErrorField.EMAIL:
+    case InputField.EMAIL:
       return "EMAIL";
-    case ErrorField.PHONE:
+    case InputField.PHONE:
       return "PHONE";
-    case ErrorField.VERIFICATION_CODE:
-      return "VERIFICATION_CODE";
-    case ErrorField.HANDLE:
-      return "HANDLE";
-    case ErrorField.UNRECOGNIZED:
+    case InputField.VERIFY_CODE:
+      return "VERIFY_CODE";
+    case InputField.FULL_NAME:
+      return "FULL_NAME";
+    case InputField.AVATAR:
+      return "AVATAR";
+    case InputField.USER_AGENT:
+      return "USER_AGENT";
+    case InputField.LOCATION:
+      return "LOCATION";
+    case InputField.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -99,11 +111,12 @@ export function errorFieldToJSON(object: ErrorField): string {
 
 export interface Error {
   type: ErrorType;
-  fields: ErrorField[];
+  fields: InputField[];
+  attemptsRemaining: number;
 }
 
 function createBaseError(): Error {
-  return { type: 0, fields: [] };
+  return { type: 0, fields: [], attemptsRemaining: 0 };
 }
 
 export const Error = {
@@ -116,6 +129,9 @@ export const Error = {
       writer.int32(v);
     }
     writer.ldelim();
+    if (message.attemptsRemaining !== 0) {
+      writer.uint32(24).uint32(message.attemptsRemaining);
+    }
     return writer;
   },
 
@@ -150,6 +166,13 @@ export const Error = {
           }
 
           break;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.attemptsRemaining = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -162,7 +185,8 @@ export const Error = {
   fromJSON(object: any): Error {
     return {
       type: isSet(object.type) ? errorTypeFromJSON(object.type) : 0,
-      fields: Array.isArray(object?.fields) ? object.fields.map((e: any) => errorFieldFromJSON(e)) : [],
+      fields: Array.isArray(object?.fields) ? object.fields.map((e: any) => inputFieldFromJSON(e)) : [],
+      attemptsRemaining: isSet(object.attemptsRemaining) ? Number(object.attemptsRemaining) : 0,
     };
   },
 
@@ -170,10 +194,11 @@ export const Error = {
     const obj: any = {};
     message.type !== undefined && (obj.type = errorTypeToJSON(message.type));
     if (message.fields) {
-      obj.fields = message.fields.map((e) => errorFieldToJSON(e));
+      obj.fields = message.fields.map((e) => inputFieldToJSON(e));
     } else {
       obj.fields = [];
     }
+    message.attemptsRemaining !== undefined && (obj.attemptsRemaining = Math.round(message.attemptsRemaining));
     return obj;
   },
 
@@ -185,6 +210,7 @@ export const Error = {
     const message = createBaseError();
     message.type = object.type ?? 0;
     message.fields = object.fields?.map((e) => e) || [];
+    message.attemptsRemaining = object.attemptsRemaining ?? 0;
     return message;
   },
 };
