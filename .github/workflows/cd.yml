@@ -45,7 +45,13 @@ jobs:
         run: vercel build --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+        id: deployment
+        run: echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }})" >> $GITHUB_OUTPUT
 
-      # - name: Alias Live URL
-      #   run: vercel alias set [deployment-url] $APP_DOMAIN
+      - name: Print Deployment URLs
+        run: |
+          echo ${{ steps.deployment.outputs.url }}
+          echo $APP_DOMAIN
+
+      - name: Alias Live URL
+        run: vercel alias set ${{ steps.deployment.outputs.url }} $APP_DOMAIN

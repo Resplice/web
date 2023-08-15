@@ -30,7 +30,7 @@ export const POST = (async ({ request }) => {
 		throw error(400, JSON.stringify(requestResult.error.format()))
 	}
 
-	const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+	const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
 		method: 'POST',
 		body: JSON.stringify({
 			secret: config.recaptchaToken,
@@ -38,13 +38,18 @@ export const POST = (async ({ request }) => {
 		})
 	})
 
-	const responseResult = responseSchema.safeParse(await response.json())
+	if (!res.ok) throw error(res.status, res.statusText)
+
+	const data = await res.json()
+	console.log(data)
+
+	const responseResult = responseSchema.safeParse(data)
 
 	if (!responseResult.success) {
 		throw error(500, JSON.stringify(responseResult.error.format()))
 	}
 
-	console.log('botResult', responseResult.data)
+	console.log('botResult:', responseResult.data)
 
 	const isBot = responseResult.data.score < 0.5
 

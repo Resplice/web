@@ -150,7 +150,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 	return {
 		async isBot(token) {
 			try {
-				return localFetch.post<boolean>({
+				return await localFetch.post<boolean>({
 					endpoint: '/recaptcha',
 					data: JSON.stringify({ token }),
 					content: 'json'
