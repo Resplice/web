@@ -5,7 +5,10 @@ import { configSchema } from '../config'
 import type { RequestHandler } from './$types'
 
 const requestSchema = z.object({ token: z.string() })
-const responseSchema = z.object({ success: z.boolean(), score: z.number(), action: z.string() })
+const responseSchema = z.discriminatedUnion('success', [
+	z.object({ success: z.literal(true), score: z.number(), action: z.string() }),
+	z.object({ success: z.literal(false), 'error-codes': z.array(z.string()) })
+])
 
 function getConfig() {
 	const configResult = configSchema.safeParse({
@@ -30,6 +33,8 @@ export const POST = (async ({ request }) => {
 		throw error(400, JSON.stringify(requestResult.error.format()))
 	}
 
+	console.log(config)
+
 	const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -40,13 +45,14 @@ export const POST = (async ({ request }) => {
 
 	if (!res.ok) throw error(res.status, res.statusText)
 
-	const data = await res.json()
-	console.log(data)
-
-	const responseResult = responseSchema.safeParse(data)
+	const responseResult = responseSchema.safeParse(await res.json())
 
 	if (!responseResult.success) {
 		throw error(500, JSON.stringify(responseResult.error.format()))
+	}
+
+	if (!responseResult.data.success) {
+		throw error(500, JSON.stringify(responseResult.data))
 	}
 
 	console.log('botResult', responseResult.data)
