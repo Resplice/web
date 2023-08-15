@@ -46,13 +46,18 @@
 		return new Promise((resolve) => {
 			if (!grecaptcha) return resolve(false)
 			grecaptcha.ready(async () => {
-				const token = await grecaptcha.execute(config.recaptchaSiteKey, {
-					action: 'start-auth'
-				})
-				const isBot = await protocol.isBot(token)
-				if (isBot) systemError = $t('auth.errors.botDetected')
+				try {
+					const token = await grecaptcha.execute(config.recaptchaSiteKey, {
+						action: 'start_auth'
+					})
+					const isBot = await protocol.isBot(token)
+					if (isBot) systemError = $t('auth.errors.botDetected')
 
-				resolve(isBot)
+					resolve(isBot)
+				} catch (err) {
+					console.error(err)
+					resolve(false)
+				}
 			})
 		})
 	}

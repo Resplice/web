@@ -149,15 +149,11 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 
 	return {
 		async isBot(token) {
-			try {
-				return await localFetch.post<boolean>({
-					endpoint: '/recaptcha',
-					data: JSON.stringify({ token }),
-					content: 'json'
-				})
-			} catch {
-				return false
-			}
+			return localFetch.post<boolean>({
+				endpoint: '/recaptcha',
+				data: JSON.stringify({ token }),
+				content: 'json'
+			})
 		},
 		startAuth,
 		verifyEmail: (verifyEmail) => executeAuthStep({ $case: 'verifyEmail', verifyEmail }),
