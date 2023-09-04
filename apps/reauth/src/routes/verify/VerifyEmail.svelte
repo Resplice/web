@@ -53,7 +53,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: event.status
+			status: event.authStatus
 		}))
 
 		return true

@@ -9,16 +9,23 @@ import {
   AttributeValueChanged,
   AttributeVerified,
 } from "./attribute/events";
-import { AuthChanged } from "./auth/events";
+import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 
 export interface EventStream {
   events: Event[];
 }
 
+export interface EventInfo {
+  occurredAt: number;
+}
+
 export interface Event {
   id: number;
+  eventInfo: EventInfo | undefined;
   payload?:
     | { $case: "authChanged"; authChanged: AuthChanged }
+    | { $case: "sessionStarted"; sessionStarted: SessionStarted }
+    | { $case: "sessionEnded"; sessionEnded: SessionEnded }
     | { $case: "accountCreated"; accountCreated: AccountCreated }
     | { $case: "accountNameChanged"; accountNameChanged: AccountNameChanged }
     | { $case: "accountHandleChanged"; accountHandleChanged: AccountHandleChanged }
@@ -91,8 +98,64 @@ export const EventStream = {
   },
 };
 
+function createBaseEventInfo(): EventInfo {
+  return { occurredAt: 0 };
+}
+
+export const EventInfo = {
+  encode(message: EventInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.occurredAt !== 0) {
+      writer.uint32(8).uint32(message.occurredAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.occurredAt = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventInfo {
+    return { occurredAt: isSet(object.occurredAt) ? Number(object.occurredAt) : 0 };
+  },
+
+  toJSON(message: EventInfo): unknown {
+    const obj: any = {};
+    message.occurredAt !== undefined && (obj.occurredAt = Math.round(message.occurredAt));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventInfo>, I>>(base?: I): EventInfo {
+    return EventInfo.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventInfo>, I>>(object: I): EventInfo {
+    const message = createBaseEventInfo();
+    message.occurredAt = object.occurredAt ?? 0;
+    return message;
+  },
+};
+
 function createBaseEvent(): Event {
-  return { id: 0, payload: undefined };
+  return { id: 0, eventInfo: undefined, payload: undefined };
 }
 
 export const Event = {
@@ -100,39 +163,48 @@ export const Event = {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
+    if (message.eventInfo !== undefined) {
+      EventInfo.encode(message.eventInfo, writer.uint32(18).fork()).ldelim();
+    }
     switch (message.payload?.$case) {
       case "authChanged":
-        AuthChanged.encode(message.payload.authChanged, writer.uint32(18).fork()).ldelim();
+        AuthChanged.encode(message.payload.authChanged, writer.uint32(26).fork()).ldelim();
+        break;
+      case "sessionStarted":
+        SessionStarted.encode(message.payload.sessionStarted, writer.uint32(34).fork()).ldelim();
+        break;
+      case "sessionEnded":
+        SessionEnded.encode(message.payload.sessionEnded, writer.uint32(42).fork()).ldelim();
         break;
       case "accountCreated":
-        AccountCreated.encode(message.payload.accountCreated, writer.uint32(26).fork()).ldelim();
+        AccountCreated.encode(message.payload.accountCreated, writer.uint32(50).fork()).ldelim();
         break;
       case "accountNameChanged":
-        AccountNameChanged.encode(message.payload.accountNameChanged, writer.uint32(34).fork()).ldelim();
+        AccountNameChanged.encode(message.payload.accountNameChanged, writer.uint32(58).fork()).ldelim();
         break;
       case "accountHandleChanged":
-        AccountHandleChanged.encode(message.payload.accountHandleChanged, writer.uint32(42).fork()).ldelim();
+        AccountHandleChanged.encode(message.payload.accountHandleChanged, writer.uint32(66).fork()).ldelim();
         break;
       case "accountAvatarChanged":
-        AccountAvatarChanged.encode(message.payload.accountAvatarChanged, writer.uint32(50).fork()).ldelim();
+        AccountAvatarChanged.encode(message.payload.accountAvatarChanged, writer.uint32(74).fork()).ldelim();
         break;
       case "attributeAdded":
-        AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(58).fork()).ldelim();
+        AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(82).fork()).ldelim();
         break;
       case "attributeNameChanged":
-        AttributeNameChanged.encode(message.payload.attributeNameChanged, writer.uint32(66).fork()).ldelim();
+        AttributeNameChanged.encode(message.payload.attributeNameChanged, writer.uint32(90).fork()).ldelim();
         break;
       case "attributeValueChanged":
-        AttributeValueChanged.encode(message.payload.attributeValueChanged, writer.uint32(74).fork()).ldelim();
+        AttributeValueChanged.encode(message.payload.attributeValueChanged, writer.uint32(98).fork()).ldelim();
         break;
       case "attributeSorted":
-        AttributeSorted.encode(message.payload.attributeSorted, writer.uint32(82).fork()).ldelim();
+        AttributeSorted.encode(message.payload.attributeSorted, writer.uint32(106).fork()).ldelim();
         break;
       case "attributeVerified":
-        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(90).fork()).ldelim();
+        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(114).fork()).ldelim();
         break;
       case "attributeRemoved":
-        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(98).fork()).ldelim();
+        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(122).fork()).ldelim();
         break;
     }
     return writer;
@@ -157,17 +229,38 @@ export const Event = {
             break;
           }
 
-          message.payload = { $case: "authChanged", authChanged: AuthChanged.decode(reader, reader.uint32()) };
+          message.eventInfo = EventInfo.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.payload = { $case: "accountCreated", accountCreated: AccountCreated.decode(reader, reader.uint32()) };
+          message.payload = { $case: "authChanged", authChanged: AuthChanged.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
+            break;
+          }
+
+          message.payload = { $case: "sessionStarted", sessionStarted: SessionStarted.decode(reader, reader.uint32()) };
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.payload = { $case: "sessionEnded", sessionEnded: SessionEnded.decode(reader, reader.uint32()) };
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.payload = { $case: "accountCreated", accountCreated: AccountCreated.decode(reader, reader.uint32()) };
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -176,8 +269,8 @@ export const Event = {
             accountNameChanged: AccountNameChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 5:
-          if (tag !== 42) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -186,8 +279,8 @@ export const Event = {
             accountHandleChanged: AccountHandleChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 6:
-          if (tag !== 50) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -196,15 +289,15 @@ export const Event = {
             accountAvatarChanged: AccountAvatarChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
           message.payload = { $case: "attributeAdded", attributeAdded: AttributeAdded.decode(reader, reader.uint32()) };
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -213,8 +306,8 @@ export const Event = {
             attributeNameChanged: AttributeNameChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
@@ -223,8 +316,8 @@ export const Event = {
             attributeValueChanged: AttributeValueChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
@@ -233,8 +326,8 @@ export const Event = {
             attributeSorted: AttributeSorted.decode(reader, reader.uint32()),
           };
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -243,8 +336,8 @@ export const Event = {
             attributeVerified: AttributeVerified.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
@@ -265,8 +358,13 @@ export const Event = {
   fromJSON(object: any): Event {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
+      eventInfo: isSet(object.eventInfo) ? EventInfo.fromJSON(object.eventInfo) : undefined,
       payload: isSet(object.authChanged)
         ? { $case: "authChanged", authChanged: AuthChanged.fromJSON(object.authChanged) }
+        : isSet(object.sessionStarted)
+        ? { $case: "sessionStarted", sessionStarted: SessionStarted.fromJSON(object.sessionStarted) }
+        : isSet(object.sessionEnded)
+        ? { $case: "sessionEnded", sessionEnded: SessionEnded.fromJSON(object.sessionEnded) }
         : isSet(object.accountCreated)
         ? { $case: "accountCreated", accountCreated: AccountCreated.fromJSON(object.accountCreated) }
         : isSet(object.accountNameChanged)
@@ -306,8 +404,17 @@ export const Event = {
   toJSON(message: Event): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
+    message.eventInfo !== undefined &&
+      (obj.eventInfo = message.eventInfo ? EventInfo.toJSON(message.eventInfo) : undefined);
     message.payload?.$case === "authChanged" &&
       (obj.authChanged = message.payload?.authChanged ? AuthChanged.toJSON(message.payload?.authChanged) : undefined);
+    message.payload?.$case === "sessionStarted" && (obj.sessionStarted = message.payload?.sessionStarted
+      ? SessionStarted.toJSON(message.payload?.sessionStarted)
+      : undefined);
+    message.payload?.$case === "sessionEnded" &&
+      (obj.sessionEnded = message.payload?.sessionEnded
+        ? SessionEnded.toJSON(message.payload?.sessionEnded)
+        : undefined);
     message.payload?.$case === "accountCreated" && (obj.accountCreated = message.payload?.accountCreated
       ? AccountCreated.toJSON(message.payload?.accountCreated)
       : undefined);
@@ -352,12 +459,32 @@ export const Event = {
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
     message.id = object.id ?? 0;
+    message.eventInfo = (object.eventInfo !== undefined && object.eventInfo !== null)
+      ? EventInfo.fromPartial(object.eventInfo)
+      : undefined;
     if (
       object.payload?.$case === "authChanged" &&
       object.payload?.authChanged !== undefined &&
       object.payload?.authChanged !== null
     ) {
       message.payload = { $case: "authChanged", authChanged: AuthChanged.fromPartial(object.payload.authChanged) };
+    }
+    if (
+      object.payload?.$case === "sessionStarted" &&
+      object.payload?.sessionStarted !== undefined &&
+      object.payload?.sessionStarted !== null
+    ) {
+      message.payload = {
+        $case: "sessionStarted",
+        sessionStarted: SessionStarted.fromPartial(object.payload.sessionStarted),
+      };
+    }
+    if (
+      object.payload?.$case === "sessionEnded" &&
+      object.payload?.sessionEnded !== undefined &&
+      object.payload?.sessionEnded !== null
+    ) {
+      message.payload = { $case: "sessionEnded", sessionEnded: SessionEnded.fromPartial(object.payload.sessionEnded) };
     }
     if (
       object.payload?.$case === "accountCreated" &&

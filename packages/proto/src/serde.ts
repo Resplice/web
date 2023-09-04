@@ -5,9 +5,8 @@ export async function serializeCommand(
 	command: proto.Command,
 	encryptionKey: CryptoKey
 ): Promise<Uint8Array> {
-	const iv = buildIV(command.id)
-	const serializedCommand = await encrypt(encryptionKey, iv, encodeCommand(command))
-	return joinBuffers(iv, serializedCommand)
+	const serializedCommand = await encrypt(encryptionKey, command.id, encodeCommand(command))
+	return joinBuffers(buildIV(command.id, 4), serializedCommand)
 }
 
 function encodeCommand(command: proto.Command) {
@@ -19,7 +18,8 @@ export async function deserializeMessage(
 	decryptionKey: CryptoKey
 ): Promise<proto.Message> {
 	const [ivBuf, messageBuf] = splitBuffer(messageBytes, 4)
-	const decryptedMessage = await decrypt(decryptionKey, ivBuf, messageBuf)
+	const iv = joinBuffers(new Uint8Array(8), ivBuf)
+	const decryptedMessage = await decrypt(decryptionKey, iv, messageBuf)
 
 	return decodeMessage(decryptedMessage)
 }

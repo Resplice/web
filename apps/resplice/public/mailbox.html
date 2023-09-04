@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -12,14 +12,20 @@
 			// if (event.origin !== 'https://auth.resplice.com') {
 			// 	return
 			// }
-			if (event.data.email) {
-				localStorage.setItem('email', event.data.email)
+
+			const request = indexedDB.open('RESPLICE_CACHE')
+
+			request.onsuccess = () => {
+				const txn = request.result.transaction('context', 'readwrite')
+				txn.objectStore('context').put(event.data, 1)
 			}
-			if (event.data.phone) {
-				localStorage.setItem('phone', event.data.phone)
+			request.onerror = (e) => {
+				console.error(e)
 			}
-			if (event.data.accessToken) {
-				localStorage.setItem('accessToken', event.data.accessToken)
+			request.onupgradeneeded = () => {
+				const db = request.result
+				db.deleteObjectStore('context')
+				db.createObjectStore('context', { autoIncrement: true })
 			}
 		})
 	</script>

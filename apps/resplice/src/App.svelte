@@ -3,7 +3,7 @@
 	import { isRespliceSupported } from '@resplice/utils'
 	import config from '$services/config'
 	import initializeIntl from '$common/i18n'
-	import respliceProtocolFactory, { contextKey } from '$common/protocol'
+	import protocolFactory, { contextKey } from '$common/protocol'
 	import accountStore from '$modules/account/account.store'
 	import { AppLoading, AppError } from '@resplice/components'
 	import Router from './Router.svelte'
@@ -19,18 +19,17 @@
 
 		try {
 			const urlData = getUrlData()
-			const respliceProtocol = await respliceProtocolFactory()
+			const protocol = await protocolFactory()
 
-			const session = await respliceProtocol.session.initialize(urlData.respliceAccessToken)
+			const sessionIsValid = await protocol.session.isValid()
 
-			if (!session) {
+			if (!sessionIsValid) {
 				// If session cannot be stored or started, redirect to auth flow
-				console.log('Session not found, redirecting to auth flow')
-				// location.replace(config.authUrl)
+				location.replace(config.authUrl)
 				return false
 			}
 
-			protocolContext.protocol = respliceProtocol
+			protocolContext.protocol = protocol
 			await initializeIntl()
 			if (urlData.googleOAuthAccessToken)
 				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
@@ -54,13 +53,13 @@
 		}
 	}
 
-	const isLoading = loadApp()
+	const loading = loadApp()
 
 	// Can do additional store checks here
 	$: accountLoaded = !!accountStore
 </script>
 
-{#await isLoading}
+{#await loading}
 	<AppLoading />
 {:then isValidSession}
 	{#if isValidSession && accountLoaded}

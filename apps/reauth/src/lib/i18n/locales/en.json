@@ -17,7 +17,8 @@
 	"errors": {
 		"PHONE": "Invalid phone number. Please enter a valid phone number.",
 		"EMAIL": "Invalid email. Please enter a valid email address.",
-		"VERIFICATION_CODE": "Incorrect verification code, please double check your code and try again.",
+		"VERIFY_CODE": "Incorrect verification code, please double check your code and try again.",
+		"FULL_NAME": "Please enter a valid name.",
 		"INVALID_INPUT": "One or many fields are invalid. Please try again.",
 		"botDetected": "We detected some bot behavior, you must be a robot?",
 		"UNRECOGNIZED": "Unknown Error. Please try again later."

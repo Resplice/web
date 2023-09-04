@@ -1,5 +1,6 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
+/// <reference types="vite-plugin-pwa/svelte" />
 
 interface ImportMetaEnv {
 	readonly VITE_APP_URL?: string

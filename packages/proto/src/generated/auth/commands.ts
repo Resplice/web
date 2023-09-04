@@ -26,21 +26,22 @@ export interface CreateAccount {
   avatar: string;
 }
 
-export interface StartSession {
-  email: string;
-  phone: string;
-  persist: boolean;
-  userAgent: string;
-  location: Coordinate | undefined;
-}
-
 export interface DeleteAccount {
   email: string;
   phone: string;
-  removeAllExistingData: boolean;
+}
+
+export interface StartSession {
+  email: string;
+  phone: string;
+  userAgent: string;
+  ipAddress: string;
+  location: Coordinate | undefined;
 }
 
 export interface EndSession {
+  email: string;
+  phone: string;
   sessionId: number;
 }
 
@@ -380,8 +381,79 @@ export const CreateAccount = {
   },
 };
 
+function createBaseDeleteAccount(): DeleteAccount {
+  return { email: "", phone: "" };
+}
+
+export const DeleteAccount = {
+  encode(message: DeleteAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.email !== "") {
+      writer.uint32(10).string(message.email);
+    }
+    if (message.phone !== "") {
+      writer.uint32(18).string(message.phone);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteAccount {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteAccount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.phone = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteAccount {
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      phone: isSet(object.phone) ? String(object.phone) : "",
+    };
+  },
+
+  toJSON(message: DeleteAccount): unknown {
+    const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.phone !== undefined && (obj.phone = message.phone);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteAccount>, I>>(base?: I): DeleteAccount {
+    return DeleteAccount.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteAccount>, I>>(object: I): DeleteAccount {
+    const message = createBaseDeleteAccount();
+    message.email = object.email ?? "";
+    message.phone = object.phone ?? "";
+    return message;
+  },
+};
+
 function createBaseStartSession(): StartSession {
-  return { email: "", phone: "", persist: false, userAgent: "", location: undefined };
+  return { email: "", phone: "", userAgent: "", ipAddress: "", location: undefined };
 }
 
 export const StartSession = {
@@ -392,11 +464,11 @@ export const StartSession = {
     if (message.phone !== "") {
       writer.uint32(18).string(message.phone);
     }
-    if (message.persist === true) {
-      writer.uint32(24).bool(message.persist);
-    }
     if (message.userAgent !== "") {
-      writer.uint32(34).string(message.userAgent);
+      writer.uint32(26).string(message.userAgent);
+    }
+    if (message.ipAddress !== "") {
+      writer.uint32(34).string(message.ipAddress);
     }
     if (message.location !== undefined) {
       Coordinate.encode(message.location, writer.uint32(42).fork()).ldelim();
@@ -426,18 +498,18 @@ export const StartSession = {
           message.phone = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.persist = reader.bool();
+          message.userAgent = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.userAgent = reader.string();
+          message.ipAddress = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -459,8 +531,8 @@ export const StartSession = {
     return {
       email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
-      persist: isSet(object.persist) ? Boolean(object.persist) : false,
       userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
+      ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
       location: isSet(object.location) ? Coordinate.fromJSON(object.location) : undefined,
     };
   },
@@ -469,8 +541,8 @@ export const StartSession = {
     const obj: any = {};
     message.email !== undefined && (obj.email = message.email);
     message.phone !== undefined && (obj.phone = message.phone);
-    message.persist !== undefined && (obj.persist = message.persist);
     message.userAgent !== undefined && (obj.userAgent = message.userAgent);
+    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
     message.location !== undefined &&
       (obj.location = message.location ? Coordinate.toJSON(message.location) : undefined);
     return obj;
@@ -484,8 +556,8 @@ export const StartSession = {
     const message = createBaseStartSession();
     message.email = object.email ?? "";
     message.phone = object.phone ?? "";
-    message.persist = object.persist ?? false;
     message.userAgent = object.userAgent ?? "";
+    message.ipAddress = object.ipAddress ?? "";
     message.location = (object.location !== undefined && object.location !== null)
       ? Coordinate.fromPartial(object.location)
       : undefined;
@@ -493,28 +565,28 @@ export const StartSession = {
   },
 };
 
-function createBaseDeleteAccount(): DeleteAccount {
-  return { email: "", phone: "", removeAllExistingData: false };
+function createBaseEndSession(): EndSession {
+  return { email: "", phone: "", sessionId: 0 };
 }
 
-export const DeleteAccount = {
-  encode(message: DeleteAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EndSession = {
+  encode(message: EndSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
     if (message.phone !== "") {
       writer.uint32(18).string(message.phone);
     }
-    if (message.removeAllExistingData === true) {
-      writer.uint32(24).bool(message.removeAllExistingData);
+    if (message.sessionId !== 0) {
+      writer.uint32(24).uint32(message.sessionId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteAccount {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EndSession {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteAccount();
+    const message = createBaseEndSession();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -537,70 +609,6 @@ export const DeleteAccount = {
             break;
           }
 
-          message.removeAllExistingData = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): DeleteAccount {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      removeAllExistingData: isSet(object.removeAllExistingData) ? Boolean(object.removeAllExistingData) : false,
-    };
-  },
-
-  toJSON(message: DeleteAccount): unknown {
-    const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.removeAllExistingData !== undefined && (obj.removeAllExistingData = message.removeAllExistingData);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<DeleteAccount>, I>>(base?: I): DeleteAccount {
-    return DeleteAccount.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<DeleteAccount>, I>>(object: I): DeleteAccount {
-    const message = createBaseDeleteAccount();
-    message.email = object.email ?? "";
-    message.phone = object.phone ?? "";
-    message.removeAllExistingData = object.removeAllExistingData ?? false;
-    return message;
-  },
-};
-
-function createBaseEndSession(): EndSession {
-  return { sessionId: 0 };
-}
-
-export const EndSession = {
-  encode(message: EndSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sessionId !== 0) {
-      writer.uint32(8).uint32(message.sessionId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EndSession {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEndSession();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
           message.sessionId = reader.uint32();
           continue;
       }
@@ -613,11 +621,17 @@ export const EndSession = {
   },
 
   fromJSON(object: any): EndSession {
-    return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      phone: isSet(object.phone) ? String(object.phone) : "",
+      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
+    };
   },
 
   toJSON(message: EndSession): unknown {
     const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.phone !== undefined && (obj.phone = message.phone);
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     return obj;
   },
@@ -628,6 +642,8 @@ export const EndSession = {
 
   fromPartial<I extends Exact<DeepPartial<EndSession>, I>>(object: I): EndSession {
     const message = createBaseEndSession();
+    message.email = object.email ?? "";
+    message.phone = object.phone ?? "";
     message.sessionId = object.sessionId ?? 0;
     return message;
   },

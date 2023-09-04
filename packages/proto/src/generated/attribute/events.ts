@@ -41,6 +41,10 @@ export interface AttributeSorted {
   sortIndex: number;
 }
 
+export interface AttributeVerifyCodeSent {
+  expiry: number;
+}
+
 export interface AttributeVerified {
   id: number;
   verifiedAt: number;
@@ -638,6 +642,62 @@ export const AttributeSorted = {
     const message = createBaseAttributeSorted();
     message.id = object.id ?? 0;
     message.sortIndex = object.sortIndex ?? 0;
+    return message;
+  },
+};
+
+function createBaseAttributeVerifyCodeSent(): AttributeVerifyCodeSent {
+  return { expiry: 0 };
+}
+
+export const AttributeVerifyCodeSent = {
+  encode(message: AttributeVerifyCodeSent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.expiry !== 0) {
+      writer.uint32(8).uint32(message.expiry);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeVerifyCodeSent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAttributeVerifyCodeSent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.expiry = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AttributeVerifyCodeSent {
+    return { expiry: isSet(object.expiry) ? Number(object.expiry) : 0 };
+  },
+
+  toJSON(message: AttributeVerifyCodeSent): unknown {
+    const obj: any = {};
+    message.expiry !== undefined && (obj.expiry = Math.round(message.expiry));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AttributeVerifyCodeSent>, I>>(base?: I): AttributeVerifyCodeSent {
+    return AttributeVerifyCodeSent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AttributeVerifyCodeSent>, I>>(object: I): AttributeVerifyCodeSent {
+    const message = createBaseAttributeVerifyCodeSent();
+    message.expiry = object.expiry ?? 0;
     return message;
   },
 };

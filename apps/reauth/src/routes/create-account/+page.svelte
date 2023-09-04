@@ -9,12 +9,13 @@
 	$: {
 		if (browser)
 			switch ($store.status) {
-				case AuthStatus.UNRECOGNIZED:
-					goto('/')
+				case AuthStatus.PENDING_CREATE_ACCOUNT:
 					break
-				case AuthStatus.PENDING_SESSION_START:
+				case AuthStatus.PENDING_START_SESSION:
 					goto('/start-session')
 					break
+				default:
+					goto('/')
 			}
 	}
 </script>
@@ -27,7 +28,7 @@
 		</p>
 	</header>
 
-	{#if $store.status === AuthStatus.PENDING_ACCOUNT_CREATION}
+	{#if $store.status === AuthStatus.PENDING_CREATE_ACCOUNT}
 		<CreateAccountForm />
 	{/if}
 </main>

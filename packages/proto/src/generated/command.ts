@@ -27,8 +27,8 @@ export interface Command {
     | { $case: "verifyEmail"; verifyEmail: VerifyEmail }
     | { $case: "verifyPhone"; verifyPhone: VerifyPhone }
     | { $case: "createAccount"; createAccount: CreateAccount }
-    | { $case: "startSession"; startSession: StartSession }
     | { $case: "deleteAccount"; deleteAccount: DeleteAccount }
+    | { $case: "startSession"; startSession: StartSession }
     | { $case: "endSession"; endSession: EndSession }
     | { $case: "changeAccountName"; changeAccountName: ChangeAccountName }
     | { $case: "changeAccountHandle"; changeAccountHandle: ChangeAccountHandle }
@@ -64,11 +64,11 @@ export const Command = {
       case "createAccount":
         CreateAccount.encode(message.payload.createAccount, writer.uint32(42).fork()).ldelim();
         break;
-      case "startSession":
-        StartSession.encode(message.payload.startSession, writer.uint32(50).fork()).ldelim();
-        break;
       case "deleteAccount":
-        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(58).fork()).ldelim();
+        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(50).fork()).ldelim();
+        break;
+      case "startSession":
+        StartSession.encode(message.payload.startSession, writer.uint32(58).fork()).ldelim();
         break;
       case "endSession":
         EndSession.encode(message.payload.endSession, writer.uint32(66).fork()).ldelim();
@@ -154,14 +154,14 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
+          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
           continue;
         case 8:
           if (tag !== 66) {
@@ -284,10 +284,10 @@ export const Command = {
         ? { $case: "verifyPhone", verifyPhone: VerifyPhone.fromJSON(object.verifyPhone) }
         : isSet(object.createAccount)
         ? { $case: "createAccount", createAccount: CreateAccount.fromJSON(object.createAccount) }
-        : isSet(object.startSession)
-        ? { $case: "startSession", startSession: StartSession.fromJSON(object.startSession) }
         : isSet(object.deleteAccount)
         ? { $case: "deleteAccount", deleteAccount: DeleteAccount.fromJSON(object.deleteAccount) }
+        : isSet(object.startSession)
+        ? { $case: "startSession", startSession: StartSession.fromJSON(object.startSession) }
         : isSet(object.endSession)
         ? { $case: "endSession", endSession: EndSession.fromJSON(object.endSession) }
         : isSet(object.changeAccountName)
@@ -341,13 +341,13 @@ export const Command = {
     message.payload?.$case === "createAccount" && (obj.createAccount = message.payload?.createAccount
       ? CreateAccount.toJSON(message.payload?.createAccount)
       : undefined);
+    message.payload?.$case === "deleteAccount" && (obj.deleteAccount = message.payload?.deleteAccount
+      ? DeleteAccount.toJSON(message.payload?.deleteAccount)
+      : undefined);
     message.payload?.$case === "startSession" &&
       (obj.startSession = message.payload?.startSession
         ? StartSession.toJSON(message.payload?.startSession)
         : undefined);
-    message.payload?.$case === "deleteAccount" && (obj.deleteAccount = message.payload?.deleteAccount
-      ? DeleteAccount.toJSON(message.payload?.deleteAccount)
-      : undefined);
     message.payload?.$case === "endSession" &&
       (obj.endSession = message.payload?.endSession ? EndSession.toJSON(message.payload?.endSession) : undefined);
     message.payload?.$case === "changeAccountName" && (obj.changeAccountName = message.payload?.changeAccountName
@@ -425,13 +425,6 @@ export const Command = {
       };
     }
     if (
-      object.payload?.$case === "startSession" &&
-      object.payload?.startSession !== undefined &&
-      object.payload?.startSession !== null
-    ) {
-      message.payload = { $case: "startSession", startSession: StartSession.fromPartial(object.payload.startSession) };
-    }
-    if (
       object.payload?.$case === "deleteAccount" &&
       object.payload?.deleteAccount !== undefined &&
       object.payload?.deleteAccount !== null
@@ -440,6 +433,13 @@ export const Command = {
         $case: "deleteAccount",
         deleteAccount: DeleteAccount.fromPartial(object.payload.deleteAccount),
       };
+    }
+    if (
+      object.payload?.$case === "startSession" &&
+      object.payload?.startSession !== undefined &&
+      object.payload?.startSession !== null
+    ) {
+      message.payload = { $case: "startSession", startSession: StartSession.fromPartial(object.payload.startSession) };
     }
     if (
       object.payload?.$case === "endSession" &&

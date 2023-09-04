@@ -26,7 +26,7 @@
 	let phoneCode = ''
 	let phonePromise: Promise<boolean>
 	let phoneCodeError = ''
-	$: emailVerified = $store.status === AuthStatus.PENDING_PHONE_VERIFICATION
+	$: emailVerified = $store.status === AuthStatus.PENDING_VERIFY_PHONE
 
 	$: {
 		if (phoneCode.length >= CODE_LENGTH) {
@@ -54,7 +54,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: event.status
+			status: event.authStatus
 		}))
 
 		return true

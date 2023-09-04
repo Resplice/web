@@ -1,12 +1,14 @@
 import config from '$services/config'
-import { fetchFactory } from '@resplice/utils'
-import proto, { type AuthorizeSocket } from '@resplice/proto'
+// import { fetchFactory } from '@resplice/utils'
+import type proto from '@resplice/proto'
 import stores from '$common/stores'
 import db from '$services/db'
-import mockFetch from '$common/protocol/mockFetch'
+// import mockFetch from '$common/protocol/mockFetch'
 import startSocketCommuter, {
 	SocketEventType,
-	SocketCommandType
+	SocketCommandType,
+	type CryptoKeys,
+	type SocketEvent
 } from '$common/workers/socketCommuter'
 import accountProtocolFactory, { type AccountProtocol } from '$modules/account/account.protocol'
 import attributeProtocolFactory, {
@@ -17,7 +19,7 @@ import attributeProtocolFactory, {
 // import inviteProtocolFactory, { type InviteProtocol } from '$modules/invite/invite.protocol'
 // import profileProtocolFactory, { type ProfileProtocol } from '$modules/user/profile.protocol'
 import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/session.protocol'
-import { SocketStatus } from '$modules/app-event/app-event.types'
+import { SocketStatus } from '$modules/_context/context.types'
 
 export interface RespliceProtocol {
 	account: AccountProtocol
@@ -27,39 +29,83 @@ export interface RespliceProtocol {
 	// invite: InviteProtocol
 	// profile: ProfileProtocol
 	session: SessionProtocol
-	openSocket: (payload: proto.auth.AuthorizeSocket) => Promise<void>
+	openSocket: () => Promise<void>
+}
+
+function onSocketOpen() {
+	stores.context.update((state) => ({
+		socketStatus: SocketStatus.CONNECTED,
+		error: null,
+		events: [],
+		settings: state.settings
+	}))
+}
+
+function onSocketMessage(message: proto.Message) {
+	if (message.payload.$case === 'event') {
+		const event = message.payload.event
+		stores.context.update((state) => ({
+			...state,
+			events: [event, ...state.events]
+		}))
+		return
+	}
+
+	if (message.payload.$case === 'stream') {
+		const stream = message.payload.stream
+		stores.context.update((state) => ({
+			...state,
+			events: [...stream.events, ...state.events]
+		}))
+		return
+	}
+
+	if (message.payload.$case === 'error') {
+		// TODO: trigger toast
+		console.error(message.payload.error)
+		return
+	}
+}
+
+function onSocketError(e: Extract<SocketEvent, { type: SocketEventType.ERRORED }>) {
+	// TODO: trigger toast
+	stores.context.update((state) => ({
+		socketStatus: SocketStatus.DISCONNECTED,
+		error: e.error,
+		events: state.events,
+		settings: state.settings
+	}))
+}
+
+function onSocketClose() {
+	stores.context.update((state) => ({
+		socketStatus: SocketStatus.DISCONNECTED,
+		error: state.error,
+		events: state.events,
+		settings: state.settings
+	}))
 }
 
 async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 	await db.open()
 
-	const fetch = config.respliceApiUrl ? fetchFactory(config.respliceApiUrl) : mockFetch
+	// const fetch = config.respliceApiUrl ? fetchFactory(config.respliceApiUrl) : mockFetch
 
 	const socketCommuter = startSocketCommuter()
 
 	socketCommuter.messages$.subscribe((e) => {
 		switch (e.type) {
 			case SocketEventType.OPENED:
-				stores.appEvent.set({ socketStatus: SocketStatus.CONNECTED, error: null, events: [] })
+				onSocketOpen()
 				break
 			case SocketEventType.RECEIVED:
-				stores.appEvent.update((state) => ({ ...state, events: [e.event, ...state.events] }))
-				// TODO: Trigger toast on error events
+				onSocketMessage(e.message)
 				break
 			case SocketEventType.ERRORED:
-				// TODO: trigger toast
-				stores.appEvent.update((state) => ({
-					socketStatus: SocketStatus.DISCONNECTED,
-					error: e.error,
-					events: state.events
-				}))
+				onSocketError(e)
 				break
 			case SocketEventType.CLOSED:
-				stores.appEvent.update((state) => ({
-					socketStatus: SocketStatus.DISCONNECTED,
-					error: state.error,
-					events: state.events
-				}))
+				onSocketClose()
 				break
 		}
 	})
@@ -71,18 +117,14 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.attribute,
 			commuter: socketCommuter
 		}),
-		session: sessionProtocolFactory({ cache: db, store: stores.session, fetch }),
-		async openSocket(payload) {
-			const params = {
-				type: proto.CommandType.AUTHORIZE_SOCKET,
-				payload
-			}
-			const [id] = await db.insert('commands', params)
-			const handshake = { id, ...params } as AuthorizeSocket
+		session: sessionProtocolFactory(),
+		async openSocket() {
+			const { cryptoKeys } = await db.getById<{ cryptoKeys: CryptoKeys }>('context', 1)
+
 			socketCommuter.postMessage({
 				type: SocketCommandType.OPEN,
-				handshake,
-				respliceWsUrl: config.respliceWsUrl
+				respliceWsUrl: config.respliceWsUrl,
+				cryptoKeys
 			})
 		}
 	}

@@ -1,10 +1,11 @@
-const DB_VERSION = 1
 const DB_NAME = 'RESPLICE_CACHE'
+const DB_VERSION = 1
 
 type Store =
-	| 'currentSession'
+	| 'context'
 	| 'commands'
 	| 'events'
+	| 'account'
 	| 'attributes'
 	| 'chats'
 	| 'contacts'
@@ -15,21 +16,21 @@ type Store =
 let db: IDBDatabase | null = null
 
 function createDatabase(newDB: IDBDatabase) {
-	// Remove current stores
+	// Remove existing stores except for context
 	const DOMStringStores = newDB.objectStoreNames
 	for (let i = 0; i < DOMStringStores.length; i++) {
+		if (DOMStringStores[i] === 'context') continue
 		newDB.deleteObjectStore(DOMStringStores[i])
 	}
 
 	// Create new stores
-	newDB.createObjectStore('currentSession', { autoIncrement: true })
 	newDB.createObjectStore('commands', { autoIncrement: true })
 	newDB.createObjectStore('events', { keyPath: 'id' })
+	newDB.createObjectStore('account', { autoIncrement: true })
 	newDB.createObjectStore('attributes', { keyPath: 'id' })
 	newDB.createObjectStore('chats', { keyPath: 'id' })
 	newDB.createObjectStore('contacts', { keyPath: 'id' })
 	newDB.createObjectStore('invites', { keyPath: 'id' })
-	newDB.createObjectStore('profile', { keyPath: 'id' })
 	newDB.createObjectStore('sessions', { keyPath: 'id' })
 }
 
@@ -40,8 +41,8 @@ function deleteDatabase(): Promise<void> {
 			db = null
 			resolve()
 		}
-		request.onerror = (e: any) => {
-			reject(e.target.errorCode)
+		request.onerror = (e) => {
+			reject(e)
 		}
 	})
 }
@@ -53,8 +54,8 @@ function open(): Promise<void> {
 			db = request.result
 			resolve()
 		}
-		request.onerror = (e: any) => {
-			reject(e.target.errorCode)
+		request.onerror = (e) => {
+			reject(e)
 		}
 		request.onupgradeneeded = () => {
 			createDatabase(request.result)
@@ -93,7 +94,7 @@ function read<T>(store: Store | Store[]) {
 	})
 }
 
-function getById<T = any>(store: Store, id: number): Promise<T | undefined> {
+function getById<T>(store: Store, id: number): Promise<T | undefined> {
 	return new Promise((resolve, reject) => {
 		if (!db || db.version !== DB_VERSION) {
 			reject('Please open the database before using it.')
@@ -107,9 +108,9 @@ function getById<T = any>(store: Store, id: number): Promise<T | undefined> {
 	})
 }
 
-function insert<T = any>(store: Store, data: T): Promise<number[]>
-function insert<T = any>(store: Store, data: T[]): Promise<number[]>
-function insert<T = any>(store: Store, data: T | T[]) {
+function insert<T>(store: Store, data: T): Promise<number[]>
+function insert<T>(store: Store, data: T[]): Promise<number[]>
+function insert<T>(store: Store, data: T | T[]) {
 	return new Promise((resolve, reject) => {
 		if (!db || db.version !== DB_VERSION) {
 			reject('Please open the database before using it.')
@@ -138,10 +139,10 @@ function insert<T = any>(store: Store, data: T | T[]) {
 	})
 }
 
-function upsert<T = any>(store: Store, data: T): Promise<number[]>
-function upsert<T = any>(store: Store, data: T[]): Promise<number[]>
-function upsert<T = any>(store: Store, data: T, key: number): Promise<number[]>
-function upsert<T = any>(store: Store, data: T | T[], key?: number) {
+function upsert<T>(store: Store, data: T): Promise<number[]>
+function upsert<T>(store: Store, data: T[]): Promise<number[]>
+function upsert<T>(store: Store, data: T, key: number): Promise<number[]>
+function upsert<T>(store: Store, data: T | T[], key?: number) {
 	return new Promise((resolve, reject) => {
 		if (!db || db.version !== DB_VERSION) {
 			reject('Please open the database before using it.')

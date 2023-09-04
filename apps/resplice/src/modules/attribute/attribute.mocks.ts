@@ -41,6 +41,7 @@ export const attributes = new Map<number, Attribute>([
 			name: 'Apartment',
 			value: {
 				streetAddress1: '778 Central Emporium',
+				streetAddress2: '',
 				locality: 'Inner City',
 				region: '2nd Quadrant',
 				postalCode: '88961',
@@ -60,6 +61,7 @@ export const attributes = new Map<number, Attribute>([
 			name: 'Vacation Home',
 			value: {
 				streetAddress1: '1961 S Palm Canyon Dr',
+				streetAddress2: '',
 				locality: 'Palm Springs',
 				region: 'CA',
 				postalCode: '92264',

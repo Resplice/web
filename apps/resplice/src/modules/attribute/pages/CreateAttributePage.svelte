@@ -4,7 +4,7 @@
 	import useProtocol from '$common/protocol/useProtocol'
 	import { IconButton, BackIcon } from '@resplice/components'
 	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
-	import { mapAttributeType, mapAttributeValue } from '$modules/attribute/attribute.state'
+	import { mapAttributeValue } from '$modules/attribute/attribute.state'
 
 	const protocol = useProtocol()
 
@@ -22,7 +22,6 @@
 
 	async function saveAttribute(attribute: Attribute) {
 		await protocol.attribute.add({
-			type: mapAttributeType(attribute.type),
 			name: attribute.name,
 			value: mapAttributeValue(attribute.type, attribute.value)
 		})

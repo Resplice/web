@@ -1,4 +1,4 @@
-import proto, { type UserEvent } from '@resplice/proto'
+import proto from '@resplice/proto'
 import type { Attribute } from '$modules/account/account.types'
 import type { AttributeState } from '$modules/attribute/attribute.store'
 import {
@@ -19,74 +19,76 @@ export type AttributeAggregate = AttributeState
 
 export function applyAttributeEvent(
 	aggregate: AttributeAggregate,
-	event: UserEvent
+	event: proto.Event
 ): AttributeAggregate {
-	switch (event.type) {
-		case proto.EventType.ACCOUNT_CREATED:
-			aggregate.set(event.payload.emailId, {
-				id: event.payload.emailId,
+	switch (event.payload.$case) {
+		case 'accountCreated':
+			aggregate.set(event.payload.accountCreated.emailId, {
+				id: event.payload.accountCreated.emailId,
 				type: AttributeType.EMAIL,
 				name: 'Primary Email',
-				value: { email: event.payload.email },
+				value: { email: event.payload.accountCreated.email },
 				sortOrder: 1,
 				groupId: null,
 				verifiedAt: null,
 				verifyExpiry: null
 			})
-			aggregate.set(event.payload.phoneId, {
-				id: event.payload.phoneId,
+			aggregate.set(event.payload.accountCreated.phoneId, {
+				id: event.payload.accountCreated.phoneId,
 				type: AttributeType.PHONE,
 				name: 'Primary Phone',
-				value: { number: event.payload.phone, smsEnabled: true },
+				value: { number: event.payload.accountCreated.phone, smsEnabled: true },
 				sortOrder: 1,
 				groupId: null,
 				verifiedAt: null,
 				verifyExpiry: null
 			})
 			break
-		case proto.EventType.ATTRIBUTE_ADDED:
-			aggregate.set(event.payload.id, {
-				id: event.payload.id,
-				type: mapProtoAttributeType(event.payload.type),
-				name: event.payload.name,
-				value: mapProtoAttributeValue(event.payload.value),
+		case 'attributeAdded':
+			aggregate.set(event.payload.attributeAdded.id, {
+				id: event.payload.attributeAdded.id,
+				type: mapProtoAttributeType(event.payload.attributeAdded.value.$case),
+				name: event.payload.attributeAdded.name,
+				value: mapProtoAttributeValue(event.payload.attributeAdded.value),
 				sortOrder: 0,
 				groupId: null,
 				verifiedAt: null,
 				verifyExpiry: null
 			} as Attribute)
 			break
-		case proto.EventType.ATTRIBUTE_NAME_EDITED:
-			aggregate.get(event.payload.id).name = event.payload.name
+		case 'attributeNameChanged':
+			aggregate.get(event.payload.attributeNameChanged.id).name =
+				event.payload.attributeNameChanged.name
 			break
-		case proto.EventType.ATTRIBUTE_VALUE_EDITED:
-			aggregate.get(event.payload.id).type = mapProtoAttributeType(event.payload.type)
-			aggregate.get(event.payload.id).value = mapProtoAttributeValue(event.payload.value)
+		case 'attributeValueChanged':
+			aggregate.get(event.payload.attributeValueChanged.id).value = mapProtoAttributeValue(
+				event.payload.attributeValueChanged.value
+			)
 			break
-		case proto.EventType.ATTRIBUTE_SORTED:
-			aggregate.get(event.payload.id).sortOrder = event.payload.sortIndex
+		case 'attributeSorted':
+			aggregate.get(event.payload.attributeSorted.id).sortOrder =
+				event.payload.attributeSorted.sortIndex
 			break
-		case proto.EventType.ATTRIBUTE_VERIFIED:
-			aggregate.get(event.payload.id).verifiedAt = event.payload.verifiedAt
+		case 'attributeVerified':
+			aggregate.get(event.payload.attributeVerified.id).verifiedAt =
+				event.payload.attributeVerified.verifiedAt
 			break
-		case proto.EventType.ATTRIBUTE_DELETED:
-			aggregate.delete(event.payload.id)
+		case 'attributeRemoved':
+			aggregate.delete(event.payload.attributeRemoved.id)
 			break
 	}
 
 	return aggregate
 }
 
-export function mapProtoAttributeType(type: proto.attributes.types.AttributeType): AttributeType {
-	return AttributeType[proto.attributes.types.attributeTypeToJSON(type)]
-}
-
-export function mapAttributeType(type: AttributeType): proto.attributes.types.AttributeType {
-	return proto.attributes.types.attributeTypeFromJSON(type)
+export function mapProtoAttributeType(
+	type: proto.attribute.AddAttribute['value']['$case']
+): AttributeType {
+	return AttributeType[type.toUpperCase() as keyof typeof AttributeType]
 }
 
 export function mapProtoAttributeValue(
-	value: proto.attributes.AttributeAdded['value'] | proto.attributes.AttributeValueEdited['value']
+	value: proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeValueChanged['value']
 ): AttributeValue {
 	switch (value.$case) {
 		case 'address':
@@ -113,7 +115,7 @@ export function mapProtoAttributeValue(
 export function mapAttributeValue(
 	type: AttributeType,
 	value: AttributeValue
-): proto.attributes.AttributeAdded['value'] | proto.attributes.AttributeValueEdited['value'] {
+): proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeValueChanged['value'] {
 	switch (type) {
 		case AttributeType.ADDRESS:
 			return { $case: 'address', address: value as AddressValue }

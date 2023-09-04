@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { attributeTypes } from '@resplice/utils'
-	import useRespliceProtocol from '$common/hooks/useRespliceProtocol'
+	import useProtocol from '$common/protocol/useProtocol'
 	import Header from '$common/components/Header.svelte'
 	import attributeStore from '$modules/attribute/attribute.store'
 	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
-	import type { Attribute } from '$modules/user/user.types'
+	import { mapAttributeValue } from '$modules/attribute/attribute.state'
+	import type { Attribute } from '$modules/account/account.types'
 
-	const protocol = useRespliceProtocol()
+	const protocol = useProtocol()
 
 	export let params: { id: string }
 	let editingAttribute: Attribute
@@ -26,9 +27,13 @@
 	}
 
 	async function editAttribute(attribute: Attribute) {
+		// TODO: These should be different forms
 		await Promise.all([
-			protocol.attribute.editName(attribute.id, attribute.name),
-			protocol.attribute.editValue(attribute.id, attribute.value)
+			protocol.attribute.changeName({ id: attribute.id, name: attribute.name }),
+			protocol.attribute.changeValue({
+				id: attribute.id,
+				value: mapAttributeValue(attribute.type, attribute.value)
+			})
 		])
 		push(`/app/attribute/${id}/detail`)
 	}

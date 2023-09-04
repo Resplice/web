@@ -35,15 +35,11 @@ export async function exportKey(key: CryptoKey) {
 	return new Uint8Array(rawBuf)
 }
 
-export async function encrypt(
-	key: CryptoKey,
-	iv: Uint8Array,
-	data: Uint8Array
-): Promise<Uint8Array> {
+export async function encrypt(key: CryptoKey, iv: number, data: Uint8Array): Promise<Uint8Array> {
 	const encryptedBuffer: ArrayBuffer = await crypto.subtle.encrypt(
 		{
 			name: 'AES-GCM',
-			iv
+			iv: buildIV(iv, 12)
 		},
 		key,
 		data
@@ -105,19 +101,13 @@ export async function publicKeyEncrypt(key: CryptoKey, data: Uint8Array): Promis
 	return new Uint8Array(encryptedBuffer)
 }
 
-export function buildIV(ivCounter: number): Uint8Array {
-	const ivBuf = new ArrayBuffer(12)
+export function buildIV(ivCounter: number, bufSize: number): Uint8Array {
+	const ivBuf = new ArrayBuffer(bufSize)
 
-	new DataView(ivBuf).setUint32(0, ivCounter)
+	new DataView(ivBuf).setUint32(bufSize - 4, ivCounter)
 
 	return new Uint8Array(ivBuf)
 }
-
-// ac = auth client
-// as = auth server
-// c = client
-// s = server
-// IV structure: [ac, ac, as, as, c, c, c, c, s, s, s, s]
 
 export function buildClientIV(ivCounter: number, isAuth = false): Uint8Array {
 	const ivBuf = new ArrayBuffer(12)
@@ -172,9 +162,8 @@ export function joinBuffers(buf1: Uint8Array, buf2: Uint8Array): Uint8Array {
 	return newBufView
 }
 
-// buf.subarray does not make a copy of the ArrayBuffer store
 export function splitBuffer(buf: Uint8Array, bytePos: number): [Uint8Array, Uint8Array] {
-	return [buf.subarray(0, bytePos + 1), buf.subarray(bytePos)]
+	return [buf.slice(0, bytePos), buf.slice(bytePos)]
 }
 
 export type ReCrypto = {

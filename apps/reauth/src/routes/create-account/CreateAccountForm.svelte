@@ -34,7 +34,6 @@
 	async function createAccount() {
 		isLoading = true
 		const avatarDataUri = await avatarImageToDataUri(avatar)
-		console.log(avatarDataUri)
 
 		const { event, error } = await protocol.createAccount({
 			email: $store.email,
@@ -54,7 +53,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: event.status
+			status: event.authStatus
 		}))
 	}
 

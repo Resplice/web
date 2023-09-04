@@ -1,12 +1,5 @@
-import {
-	filter,
-	map,
-	pipe,
-	type MonoTypeOperatorFunction,
-	type UnaryFunction,
-	type Observable
-} from 'rxjs'
-import proto, { type Command, type Event, type UserEvent } from '@resplice/proto'
+import { filter, map, pipe, type OperatorFunction } from 'rxjs'
+import proto from '@resplice/proto'
 import socketWorkerUrl from '$common/workers/socket?url'
 import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
 
@@ -15,16 +8,19 @@ export enum SocketCommandType {
 	SEND = 'SEND',
 	CLOSE = 'CLOSE'
 }
+export type CryptoKeys = {
+	client: CryptoKey
+	server: CryptoKey
+}
 
-export type HandshakeCommand = Extract<Command, { type: proto.CommandType.AUTHORIZE_SOCKET }>
-type OpenCommand = {
+export type OpenCommand = {
 	type: SocketCommandType.OPEN
 	respliceWsUrl: string
-	handshake: HandshakeCommand
+	cryptoKeys: CryptoKeys
 }
 export type SendCommand = {
 	type: SocketCommandType.SEND
-	payload: Command
+	payload: proto.Command
 }
 type CloseCommand = {
 	type: SocketCommandType.CLOSE
@@ -45,7 +41,7 @@ type OpenedEvent = {
 }
 type ReceivedEvent = {
 	type: SocketEventType.RECEIVED
-	event: Event
+	message: proto.Message
 }
 type SentEvent = {
 	type: SocketEventType.SENT
@@ -61,18 +57,16 @@ type ClosedEvent = {
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
 
-export function onlyUserEvents() {
-	const nonUserEventTypes = [
-		proto.EventType.ERROR,
-		proto.EventType.AUTH_CHANGED,
-		proto.EventType.SOCKET_AUTHORIZED
-	]
+type ReceivedEventAccount = ReceivedEvent & {
+	message: proto.Message & { payload: { $case: 'event'; event: proto.Event } }
+}
+export function onlyAccountEvents() {
 	return pipe(
 		filter<SocketEvent>(
-			(m) => m.type === SocketEventType.RECEIVED && !nonUserEventTypes.includes(m.event.type)
-		) as MonoTypeOperatorFunction<ReceivedEvent>,
-		map((m) => m.event)
-	) as UnaryFunction<Observable<SocketEvent>, Observable<UserEvent>>
+			(e) => e.type === SocketEventType.RECEIVED && e.message.payload.$case === 'event'
+		) as OperatorFunction<ReceivedEvent, ReceivedEventAccount>,
+		map((e) => e.message.payload.event)
+	)
 }
 
 export type SocketCommuter = Commuter<SocketCommand, SocketEvent>

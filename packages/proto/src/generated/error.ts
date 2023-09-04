@@ -2,27 +2,27 @@
 import _m0 from "protobufjs/minimal";
 
 export enum ErrorType {
-  NOT_IMPLEMENTED = 0,
-  UNAUTHORIZED = 1,
-  INVALID_STATE = 2,
-  INVALID_INPUT = 3,
+  INVALID_INPUT = 0,
+  INVALID_STATE = 1,
+  UNAUTHORIZED = 2,
+  NOT_IMPLEMENTED = 3,
   UNRECOGNIZED = -1,
 }
 
 export function errorTypeFromJSON(object: any): ErrorType {
   switch (object) {
     case 0:
-    case "NOT_IMPLEMENTED":
-      return ErrorType.NOT_IMPLEMENTED;
-    case 1:
-    case "UNAUTHORIZED":
-      return ErrorType.UNAUTHORIZED;
-    case 2:
-    case "INVALID_STATE":
-      return ErrorType.INVALID_STATE;
-    case 3:
     case "INVALID_INPUT":
       return ErrorType.INVALID_INPUT;
+    case 1:
+    case "INVALID_STATE":
+      return ErrorType.INVALID_STATE;
+    case 2:
+    case "UNAUTHORIZED":
+      return ErrorType.UNAUTHORIZED;
+    case 3:
+    case "NOT_IMPLEMENTED":
+      return ErrorType.NOT_IMPLEMENTED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -32,14 +32,14 @@ export function errorTypeFromJSON(object: any): ErrorType {
 
 export function errorTypeToJSON(object: ErrorType): string {
   switch (object) {
-    case ErrorType.NOT_IMPLEMENTED:
-      return "NOT_IMPLEMENTED";
-    case ErrorType.UNAUTHORIZED:
-      return "UNAUTHORIZED";
-    case ErrorType.INVALID_STATE:
-      return "INVALID_STATE";
     case ErrorType.INVALID_INPUT:
       return "INVALID_INPUT";
+    case ErrorType.INVALID_STATE:
+      return "INVALID_STATE";
+    case ErrorType.UNAUTHORIZED:
+      return "UNAUTHORIZED";
+    case ErrorType.NOT_IMPLEMENTED:
+      return "NOT_IMPLEMENTED";
     case ErrorType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

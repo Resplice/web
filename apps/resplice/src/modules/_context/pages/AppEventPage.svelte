@@ -2,19 +2,12 @@
 	import proto from '@resplice/proto'
 	import db from '$services/db'
 	import { AppLoading, CodeBlock } from '@resplice/components'
-	type AppEvent = {
-		type: number
-		data: any
-	}
 
-	let events: AppEvent[] = []
+	let events: proto.Event[] = []
 	async function loadEvents() {
-		const result = await db.read<AppEvent>('events')
+		const result = await db.read<proto.Event>('events')
 		events = result.events
 		return true
-	}
-	function eventTypeToText(type: number) {
-		return proto.eventTypeToJSON(type).replaceAll('_', ' ')
 	}
 
 	const isLoading = loadEvents()
@@ -28,10 +21,10 @@
 			{#each events as event}
 				<div class="shadow rounded p-4 bg-white">
 					<h2 class="text-lg font-semibold mb-4">
-						{eventTypeToText(event.type)}
+						{event.payload.$case}
 					</h2>
 					<CodeBlock>
-						{JSON.stringify(event.data, null, 2)}
+						{JSON.stringify(event, null, 2)}
 					</CodeBlock>
 				</div>
 			{/each}

@@ -11,6 +11,7 @@ import {
 
 export interface Protocol {
 	isBot(token: string): Promise<boolean>
+	getIpAddress(): Promise<string>
 	startAuth(payload: proto.auth.StartAuth): Result
 	verifyEmail(payload: proto.auth.VerifyEmail): Result
 	verifyPhone(payload: proto.auth.VerifyPhone): Result
@@ -49,7 +50,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 	async function startAuth(payload: proto.auth.StartAuth): Result {
 		try {
 			const [publicKeyEncoded, clientAesKey, serverAesKey] = await Promise.all([
-				fetch.get<string>({ endpoint: '/reset', content: 'text' }),
+				fetch.get<string>({ endpoint: '/public-key', content: 'text' }),
 				generateAesKey(),
 				generateAesKey()
 			])
@@ -63,8 +64,8 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			}
 
 			const command: proto.Command['payload'] = { $case: 'startAuth', startAuth: payload }
-			const headers = { 'X-Crypto-Keys': serializedKeys }
-			return await executeAuthStep(command, headers)
+			const headers = { 'X-Access-Key': serializedKeys }
+			return await executeAuthStep(command, headers, '/start')
 		} catch (err) {
 			console.error(err)
 			const error = {
@@ -78,7 +79,8 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 
 	async function executeAuthStep(
 		payload: proto.Command['payload'],
-		headers?: Record<string, string>
+		headers?: Record<string, string>,
+		endpoint = '/run'
 	): Result {
 		try {
 			if (!cryptoKeys) throw new Error('Crypto keys not initialized')
@@ -91,11 +93,13 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			const serializedCommand = await serializeCommand(command, cryptoKeys.client)
 
 			const messageBytes = await fetch.post<ArrayBuffer>({
-				endpoint: '/auth',
+				endpoint,
 				data: serializedCommand,
 				headers
 			})
+
 			const message = await deserializeMessage(new Uint8Array(messageBytes), cryptoKeys.server)
+
 			if (!message.payload) throw new Error(`Unable to decode message payload: ${message}`)
 
 			if (message.payload.$case === 'error') {
@@ -148,12 +152,15 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 	}
 
 	return {
-		async isBot(token) {
+		isBot(token) {
 			return localFetch.post<boolean>({
 				endpoint: '/recaptcha',
 				data: JSON.stringify({ token }),
 				content: 'json'
 			})
+		},
+		getIpAddress() {
+			return fetch.get<string>({ endpoint: '/ip-address', content: 'text' })
 		},
 		startAuth,
 		verifyEmail: (verifyEmail) => executeAuthStep({ $case: 'verifyEmail', verifyEmail }),

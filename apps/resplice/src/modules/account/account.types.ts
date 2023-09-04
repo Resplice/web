@@ -1,11 +1,10 @@
-import type { Attribute as BaseAttribute } from '$modules/attribute/attribute.types'
+import type { Attribute as BaseAttribute } from '@resplice/utils'
 
 export type Account = {
 	id: number
 	name: string
 	handle: string | null
 	avatarUrl: string | null
-	accountCreatedAt: number
 }
 
 export type Attribute = BaseAttribute & {

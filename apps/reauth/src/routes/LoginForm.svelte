@@ -77,7 +77,7 @@
 		}
 
 		store.set({
-			status: event.status,
+			status: event.authStatus,
 			email,
 			phone: phoneNumber.number,
 			persistSession

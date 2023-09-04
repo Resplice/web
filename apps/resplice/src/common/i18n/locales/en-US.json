@@ -1,4 +1,12 @@
 {
+	"account": {
+		"settings": {
+			"title": "Settings",
+			"general": "General",
+			"darkMode": "Dark Mode",
+			"appNotifications": "App Notifications"
+		}
+	},
 	"attributes": {},
 	"chat": {
 		"message": "Message"

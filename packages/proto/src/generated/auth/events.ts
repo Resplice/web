@@ -1,32 +1,37 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { Coordinate } from "../attribute/types";
 
 export enum AuthStatus {
-  SESSION_AUTHORIZED = 0,
-  PENDING_EMAIL_VERIFICATION = 1,
-  PENDING_PHONE_VERIFICATION = 2,
-  PENDING_ACCOUNT_CREATION = 3,
-  PENDING_SESSION_START = 4,
+  UNAUTHORIZED = 0,
+  PENDING_VERIFY_EMAIL = 1,
+  PENDING_VERIFY_PHONE = 2,
+  PENDING_CREATE_ACCOUNT = 3,
+  PENDING_START_SESSION = 4,
+  AUTHORIZED = 5,
   UNRECOGNIZED = -1,
 }
 
 export function authStatusFromJSON(object: any): AuthStatus {
   switch (object) {
     case 0:
-    case "SESSION_AUTHORIZED":
-      return AuthStatus.SESSION_AUTHORIZED;
+    case "UNAUTHORIZED":
+      return AuthStatus.UNAUTHORIZED;
     case 1:
-    case "PENDING_EMAIL_VERIFICATION":
-      return AuthStatus.PENDING_EMAIL_VERIFICATION;
+    case "PENDING_VERIFY_EMAIL":
+      return AuthStatus.PENDING_VERIFY_EMAIL;
     case 2:
-    case "PENDING_PHONE_VERIFICATION":
-      return AuthStatus.PENDING_PHONE_VERIFICATION;
+    case "PENDING_VERIFY_PHONE":
+      return AuthStatus.PENDING_VERIFY_PHONE;
     case 3:
-    case "PENDING_ACCOUNT_CREATION":
-      return AuthStatus.PENDING_ACCOUNT_CREATION;
+    case "PENDING_CREATE_ACCOUNT":
+      return AuthStatus.PENDING_CREATE_ACCOUNT;
     case 4:
-    case "PENDING_SESSION_START":
-      return AuthStatus.PENDING_SESSION_START;
+    case "PENDING_START_SESSION":
+      return AuthStatus.PENDING_START_SESSION;
+    case 5:
+    case "AUTHORIZED":
+      return AuthStatus.AUTHORIZED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -36,16 +41,18 @@ export function authStatusFromJSON(object: any): AuthStatus {
 
 export function authStatusToJSON(object: AuthStatus): string {
   switch (object) {
-    case AuthStatus.SESSION_AUTHORIZED:
-      return "SESSION_AUTHORIZED";
-    case AuthStatus.PENDING_EMAIL_VERIFICATION:
-      return "PENDING_EMAIL_VERIFICATION";
-    case AuthStatus.PENDING_PHONE_VERIFICATION:
-      return "PENDING_PHONE_VERIFICATION";
-    case AuthStatus.PENDING_ACCOUNT_CREATION:
-      return "PENDING_ACCOUNT_CREATION";
-    case AuthStatus.PENDING_SESSION_START:
-      return "PENDING_SESSION_START";
+    case AuthStatus.UNAUTHORIZED:
+      return "UNAUTHORIZED";
+    case AuthStatus.PENDING_VERIFY_EMAIL:
+      return "PENDING_VERIFY_EMAIL";
+    case AuthStatus.PENDING_VERIFY_PHONE:
+      return "PENDING_VERIFY_PHONE";
+    case AuthStatus.PENDING_CREATE_ACCOUNT:
+      return "PENDING_CREATE_ACCOUNT";
+    case AuthStatus.PENDING_START_SESSION:
+      return "PENDING_START_SESSION";
+    case AuthStatus.AUTHORIZED:
+      return "AUTHORIZED";
     case AuthStatus.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -53,25 +60,30 @@ export function authStatusToJSON(object: AuthStatus): string {
 }
 
 export interface AuthChanged {
-  status: AuthStatus;
-  expiry: number;
+  authStatus: AuthStatus;
+}
+
+export interface SessionStarted {
+  sessionId: number;
+  email: string;
+  phone: string;
+  userAgent: string;
+  ipAddress: string;
+  location: Coordinate | undefined;
+}
+
+export interface SessionEnded {
   sessionId: number;
 }
 
 function createBaseAuthChanged(): AuthChanged {
-  return { status: 0, expiry: 0, sessionId: 0 };
+  return { authStatus: 0 };
 }
 
 export const AuthChanged = {
   encode(message: AuthChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.status !== 0) {
-      writer.uint32(8).int32(message.status);
-    }
-    if (message.expiry !== 0) {
-      writer.uint32(16).uint32(message.expiry);
-    }
-    if (message.sessionId !== 0) {
-      writer.uint32(24).uint32(message.sessionId);
+    if (message.authStatus !== 0) {
+      writer.uint32(8).int32(message.authStatus);
     }
     return writer;
   },
@@ -88,17 +100,185 @@ export const AuthChanged = {
             break;
           }
 
-          message.status = reader.int32() as any;
+          message.authStatus = reader.int32() as any;
           continue;
-        case 2:
-          if (tag !== 16) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuthChanged {
+    return { authStatus: isSet(object.authStatus) ? authStatusFromJSON(object.authStatus) : 0 };
+  },
+
+  toJSON(message: AuthChanged): unknown {
+    const obj: any = {};
+    message.authStatus !== undefined && (obj.authStatus = authStatusToJSON(message.authStatus));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AuthChanged>, I>>(base?: I): AuthChanged {
+    return AuthChanged.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
+    const message = createBaseAuthChanged();
+    message.authStatus = object.authStatus ?? 0;
+    return message;
+  },
+};
+
+function createBaseSessionStarted(): SessionStarted {
+  return { sessionId: 0, email: "", phone: "", userAgent: "", ipAddress: "", location: undefined };
+}
+
+export const SessionStarted = {
+  encode(message: SessionStarted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sessionId !== 0) {
+      writer.uint32(8).uint32(message.sessionId);
+    }
+    if (message.email !== "") {
+      writer.uint32(18).string(message.email);
+    }
+    if (message.phone !== "") {
+      writer.uint32(26).string(message.phone);
+    }
+    if (message.userAgent !== "") {
+      writer.uint32(34).string(message.userAgent);
+    }
+    if (message.ipAddress !== "") {
+      writer.uint32(42).string(message.ipAddress);
+    }
+    if (message.location !== undefined) {
+      Coordinate.encode(message.location, writer.uint32(50).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SessionStarted {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSessionStarted();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
-          message.expiry = reader.uint32();
+          message.sessionId = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.email = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.phone = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.userAgent = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.ipAddress = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.location = Coordinate.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SessionStarted {
+    return {
+      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
+      email: isSet(object.email) ? String(object.email) : "",
+      phone: isSet(object.phone) ? String(object.phone) : "",
+      userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
+      ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
+      location: isSet(object.location) ? Coordinate.fromJSON(object.location) : undefined,
+    };
+  },
+
+  toJSON(message: SessionStarted): unknown {
+    const obj: any = {};
+    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
+    message.email !== undefined && (obj.email = message.email);
+    message.phone !== undefined && (obj.phone = message.phone);
+    message.userAgent !== undefined && (obj.userAgent = message.userAgent);
+    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
+    message.location !== undefined &&
+      (obj.location = message.location ? Coordinate.toJSON(message.location) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SessionStarted>, I>>(base?: I): SessionStarted {
+    return SessionStarted.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SessionStarted>, I>>(object: I): SessionStarted {
+    const message = createBaseSessionStarted();
+    message.sessionId = object.sessionId ?? 0;
+    message.email = object.email ?? "";
+    message.phone = object.phone ?? "";
+    message.userAgent = object.userAgent ?? "";
+    message.ipAddress = object.ipAddress ?? "";
+    message.location = (object.location !== undefined && object.location !== null)
+      ? Coordinate.fromPartial(object.location)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseSessionEnded(): SessionEnded {
+  return { sessionId: 0 };
+}
+
+export const SessionEnded = {
+  encode(message: SessionEnded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sessionId !== 0) {
+      writer.uint32(8).uint32(message.sessionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SessionEnded {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSessionEnded();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
@@ -113,30 +293,22 @@ export const AuthChanged = {
     return message;
   },
 
-  fromJSON(object: any): AuthChanged {
-    return {
-      status: isSet(object.status) ? authStatusFromJSON(object.status) : 0,
-      expiry: isSet(object.expiry) ? Number(object.expiry) : 0,
-      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
-    };
+  fromJSON(object: any): SessionEnded {
+    return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
   },
 
-  toJSON(message: AuthChanged): unknown {
+  toJSON(message: SessionEnded): unknown {
     const obj: any = {};
-    message.status !== undefined && (obj.status = authStatusToJSON(message.status));
-    message.expiry !== undefined && (obj.expiry = Math.round(message.expiry));
     message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AuthChanged>, I>>(base?: I): AuthChanged {
-    return AuthChanged.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SessionEnded>, I>>(base?: I): SessionEnded {
+    return SessionEnded.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
-    const message = createBaseAuthChanged();
-    message.status = object.status ?? 0;
-    message.expiry = object.expiry ?? 0;
+  fromPartial<I extends Exact<DeepPartial<SessionEnded>, I>>(object: I): SessionEnded {
+    const message = createBaseSessionEnded();
     message.sessionId = object.sessionId ?? 0;
     return message;
   },

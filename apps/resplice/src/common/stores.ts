@@ -1,4 +1,4 @@
-import appEvent from '$modules/app-event/app-event.store'
+import context from '$modules/_context/context.store'
 import account from '$modules/account/account.store'
 import attribute from '$modules/attribute/attribute.store'
 import session from '$modules/session/session.store'
@@ -9,7 +9,7 @@ import session from '$modules/session/session.store'
 // import search from '$modules/search/search.store'
 
 const stores = {
-	appEvent,
+	context,
 	account,
 	attribute,
 	session

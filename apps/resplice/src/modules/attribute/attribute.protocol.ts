@@ -1,7 +1,7 @@
 import proto from '@resplice/proto'
 import { getRespliceNow } from '@resplice/utils'
 import type { DB } from '$services/db'
-import { type SocketCommuter, onlyUserEvents } from '$common/workers/socketCommuter'
+import { type SocketCommuter, onlyAccountEvents } from '$common/workers/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import {
 	applyAttributeEvent,
@@ -12,13 +12,13 @@ import type { AttributeStore } from '$modules/attribute/attribute.store'
 import type { Attribute } from '$modules/account/account.types'
 
 export interface AttributeProtocol {
-	add(payload: proto.attributes.AddAttribute): Promise<void>
-	editName(payload: proto.attributes.EditAttributeName): Promise<void>
-	editValue(payload: proto.attributes.EditAttributeValue): Promise<void>
-	sort(payload: proto.attributes.SortAttribute): Promise<void>
-	sendVerification(payload: proto.attributes.SendAttributeVerification): Promise<void>
-	verify(payload: proto.attributes.VerifyAttribute): Promise<void>
-	delete(payload: proto.attributes.DeleteAttribute): Promise<void>
+	add(payload: proto.attribute.AddAttribute): Promise<void>
+	changeName(payload: proto.attribute.ChangeAttributeName): Promise<void>
+	changeValue(payload: proto.attribute.ChangeAttributeValue): Promise<void>
+	sort(payload: proto.attribute.SortAttribute): Promise<void>
+	sendVerification(payload: proto.attribute.SendAttributeVerification): Promise<void>
+	verify(payload: proto.attribute.VerifyAttribute): Promise<void>
+	remove(payload: proto.attribute.RemoveAttribute): Promise<void>
 }
 
 type Dependencies = {
@@ -27,19 +27,21 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function attributeProtocolFactory({ cache, store, commuter }: Dependencies): AttributeProtocol {
-	commuter.messages$.pipe(onlyUserEvents()).subscribe((event) => {
+	commuter.messages$.pipe(onlyAccountEvents()).subscribe((event) => {
 		store.update((state) => applyAttributeEvent(state, event))
 	})
 
 	return {
 		async add(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.ADD_ATTRIBUTE,
-				payload
+				payload: {
+					$case: 'addAttribute',
+					addAttribute: payload
+				}
 			})
 			const placeholderAttribute = {
 				id: new Date().getTime(),
-				type: mapProtoAttributeType(payload.type),
+				type: mapProtoAttributeType(payload.value.$case),
 				name: payload.name,
 				value: mapProtoAttributeValue(payload.value),
 				sortOrder: 0,
@@ -52,31 +54,36 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				return state
 			})
 		},
-		async editName(payload) {
+		async changeName(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.EDIT_ATTRIBUTE_NAME,
-				payload
+				payload: {
+					$case: 'changeAttributeName',
+					changeAttributeName: payload
+				}
 			})
 			store.update((state) => {
 				state.get(payload.id).name = payload.name
 				return state
 			})
 		},
-		async editValue(payload) {
+		async changeValue(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.EDIT_ATTRIBUTE_VALUE,
-				payload
+				payload: {
+					$case: 'changeAttributeValue',
+					changeAttributeValue: payload
+				}
 			})
 			store.update((state) => {
-				state.get(payload.id).type = mapProtoAttributeType(payload.type)
 				state.get(payload.id).value = mapProtoAttributeValue(payload.value)
 				return state
 			})
 		},
 		async sort(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.SORT_ATTRIBUTE,
-				payload
+				payload: {
+					$case: 'sortAttribute',
+					sortAttribute: payload
+				}
 			})
 			store.update((state) => {
 				state.get(payload.id).sortOrder = payload.sortIndex
@@ -85,24 +92,30 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		sendVerification(payload) {
 			return sendCommand(cache, commuter, {
-				type: proto.CommandType.SEND_ATTRIBUTE_VERIFICATION,
-				payload
+				payload: {
+					$case: 'sendAttributeVerification',
+					sendAttributeVerification: payload
+				}
 			})
 		},
 		async verify(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.VERIFY_ATTRIBUTE,
-				payload
+				payload: {
+					$case: 'verifyAttribute',
+					verifyAttribute: payload
+				}
 			})
 			store.update((state) => {
 				state.get(payload.id).verifiedAt = getRespliceNow()
 				return state
 			})
 		},
-		async delete(payload) {
+		async remove(payload) {
 			await sendCommand(cache, commuter, {
-				type: proto.CommandType.DELETE_ATTRIBUTE,
-				payload
+				payload: {
+					$case: 'removeAttribute',
+					removeAttribute: payload
+				}
 			})
 			store.update((state) => {
 				state.delete(payload.id)

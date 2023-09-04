@@ -12,23 +12,29 @@
 	$: {
 		if (browser)
 			switch ($store.status) {
-				case AuthStatus.UNRECOGNIZED:
-					goto('/')
+				case AuthStatus.PENDING_START_SESSION:
 					break
-				case AuthStatus.SESSION_AUTHORIZED:
+				case AuthStatus.AUTHORIZED:
 					protocol.redirectToApp(config.respliceAppUrl, {
 						email: $store.email,
 						phone: $store.phone
 					})
 					break
+				default:
+					goto('/')
 			}
 	}
 
 	onMount(async () => {
+		if ($store.status !== AuthStatus.PENDING_START_SESSION) return
+
+		const ipAddress = await protocol.getIpAddress()
+
 		const { event, error } = await protocol.startSession({
 			email: $store.email,
 			phone: $store.phone,
-			persist: $store.persistSession,
+			// persist: $store.persistSession,
+			ipAddress,
 			userAgent: navigator.userAgent,
 			location: undefined
 		})
@@ -40,7 +46,7 @@
 
 		store.update((state) => ({
 			...state,
-			status: event.status
+			status: event.authStatus
 		}))
 	})
 </script>

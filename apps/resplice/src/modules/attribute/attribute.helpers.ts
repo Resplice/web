@@ -1,6 +1,6 @@
 import { determineSmsCapability } from '@resplice/utils'
 import { parsePhoneNumber, type PhoneNumber } from 'libphonenumber-js'
-import type { PhoneValue } from '$modules/attribute/attribute.types'
+import type { PhoneValue } from '@resplice/utils'
 import type { Attribute } from '$modules/account/account.types'
 
 export function sortUserAttributes(attributes: Map<number, Attribute>) {

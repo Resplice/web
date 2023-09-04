@@ -4,7 +4,7 @@ type Feature =
 	| 'Crypto'
 	| 'geolocation'
 	| 'indexedDB'
-	| 'PushNotification'
+	| 'pushNotifications'
 	| 'WebSocket'
 	| 'Worker'
 type FeatureMap = Record<Feature, boolean>
@@ -18,7 +18,7 @@ export function isSupported(feature: Feature | Feature[]) {
 		Crypto: 'Crypto' in window,
 		geolocation: 'geolocation' in navigator,
 		indexedDB: 'indexedDB' in window,
-		PushNotification: 'Notification' in window && 'PushManager' in window,
+		pushNotifications: 'Notification' in window && 'PushManager' in window,
 		WebSocket: 'WebSocket' in window,
 		Worker: 'Worker' in window
 	}

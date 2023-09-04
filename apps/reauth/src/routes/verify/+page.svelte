@@ -6,23 +6,20 @@
 	import { RespliceWideIcon } from '@resplice/components'
 	import VerifyForm from './VerifyForm.svelte'
 
-	const currentStatus = [
-		AuthStatus.PENDING_EMAIL_VERIFICATION,
-		AuthStatus.PENDING_PHONE_VERIFICATION
-	]
-
 	$: {
 		if (browser)
 			switch ($store.status) {
-				case AuthStatus.UNRECOGNIZED:
-					goto('/')
+				case AuthStatus.PENDING_VERIFY_EMAIL:
+				case AuthStatus.PENDING_VERIFY_PHONE:
 					break
-				case AuthStatus.PENDING_ACCOUNT_CREATION:
+				case AuthStatus.PENDING_CREATE_ACCOUNT:
 					goto('/create-account')
 					break
-				case AuthStatus.PENDING_SESSION_START:
+				case AuthStatus.PENDING_START_SESSION:
 					goto('/start-session')
 					break
+				default:
+					goto('/')
 			}
 	}
 </script>
@@ -35,7 +32,7 @@
 		</p>
 	</header>
 
-	{#if currentStatus.includes($store.status)}
+	{#if [AuthStatus.PENDING_VERIFY_EMAIL, AuthStatus.PENDING_VERIFY_PHONE].includes($store.status)}
 		<VerifyForm />
 	{/if}
 </main>
