@@ -148,21 +148,36 @@ export const AccountCreated = {
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
-    message.fullName !== undefined && (obj.fullName = message.fullName);
-    message.accountUuid !== undefined && (obj.accountUuid = message.accountUuid);
-    message.handle !== undefined && (obj.handle = message.handle);
-    message.avatarUrl !== undefined && (obj.avatarUrl = message.avatarUrl);
-    message.emailId !== undefined && (obj.emailId = Math.round(message.emailId));
-    message.email !== undefined && (obj.email = message.email);
-    message.phoneId !== undefined && (obj.phoneId = Math.round(message.phoneId));
-    message.phone !== undefined && (obj.phone = message.phone);
+    if (message.fullName !== "") {
+      obj.fullName = message.fullName;
+    }
+    if (message.accountUuid !== "") {
+      obj.accountUuid = message.accountUuid;
+    }
+    if (message.handle !== "") {
+      obj.handle = message.handle;
+    }
+    if (message.avatarUrl !== "") {
+      obj.avatarUrl = message.avatarUrl;
+    }
+    if (message.emailId !== 0) {
+      obj.emailId = Math.round(message.emailId);
+    }
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phoneId !== 0) {
+      obj.phoneId = Math.round(message.phoneId);
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountCreated>, I>>(base?: I): AccountCreated {
-    return AccountCreated.fromPartial(base ?? {});
+    return AccountCreated.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
     message.fullName = object.fullName ?? "";
@@ -218,14 +233,15 @@ export const AccountNameChanged = {
 
   toJSON(message: AccountNameChanged): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountNameChanged>, I>>(base?: I): AccountNameChanged {
-    return AccountNameChanged.fromPartial(base ?? {});
+    return AccountNameChanged.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountNameChanged>, I>>(object: I): AccountNameChanged {
     const message = createBaseAccountNameChanged();
     message.name = object.name ?? "";
@@ -274,14 +290,15 @@ export const AccountHandleChanged = {
 
   toJSON(message: AccountHandleChanged): unknown {
     const obj: any = {};
-    message.handle !== undefined && (obj.handle = message.handle);
+    if (message.handle !== "") {
+      obj.handle = message.handle;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(base?: I): AccountHandleChanged {
-    return AccountHandleChanged.fromPartial(base ?? {});
+    return AccountHandleChanged.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(object: I): AccountHandleChanged {
     const message = createBaseAccountHandleChanged();
     message.handle = object.handle ?? "";
@@ -330,14 +347,15 @@ export const AccountAvatarChanged = {
 
   toJSON(message: AccountAvatarChanged): unknown {
     const obj: any = {};
-    message.avatarUrl !== undefined && (obj.avatarUrl = message.avatarUrl);
+    if (message.avatarUrl !== "") {
+      obj.avatarUrl = message.avatarUrl;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountAvatarChanged>, I>>(base?: I): AccountAvatarChanged {
-    return AccountAvatarChanged.fromPartial(base ?? {});
+    return AccountAvatarChanged.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountAvatarChanged>, I>>(object: I): AccountAvatarChanged {
     const message = createBaseAccountAvatarChanged();
     message.avatarUrl = object.avatarUrl ?? "";
@@ -386,14 +404,15 @@ export const AccountDeleted = {
 
   toJSON(message: AccountDeleted): unknown {
     const obj: any = {};
-    message.deletedAt !== undefined && (obj.deletedAt = Math.round(message.deletedAt));
+    if (message.deletedAt !== 0) {
+      obj.deletedAt = Math.round(message.deletedAt);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountDeleted>, I>>(base?: I): AccountDeleted {
-    return AccountDeleted.fromPartial(base ?? {});
+    return AccountDeleted.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountDeleted>, I>>(object: I): AccountDeleted {
     const message = createBaseAccountDeleted();
     message.deletedAt = object.deletedAt ?? 0;

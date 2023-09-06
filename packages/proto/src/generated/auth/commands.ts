@@ -106,15 +106,18 @@ export const StartAuth = {
 
   toJSON(message: StartAuth): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StartAuth>, I>>(base?: I): StartAuth {
-    return StartAuth.fromPartial(base ?? {});
+    return StartAuth.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StartAuth>, I>>(object: I): StartAuth {
     const message = createBaseStartAuth();
     message.email = object.email ?? "";
@@ -188,16 +191,21 @@ export const VerifyEmail = {
 
   toJSON(message: VerifyEmail): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.verifyCode !== undefined && (obj.verifyCode = Math.round(message.verifyCode));
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.verifyCode !== 0) {
+      obj.verifyCode = Math.round(message.verifyCode);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<VerifyEmail>, I>>(base?: I): VerifyEmail {
-    return VerifyEmail.fromPartial(base ?? {});
+    return VerifyEmail.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<VerifyEmail>, I>>(object: I): VerifyEmail {
     const message = createBaseVerifyEmail();
     message.email = object.email ?? "";
@@ -272,16 +280,21 @@ export const VerifyPhone = {
 
   toJSON(message: VerifyPhone): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.verifyCode !== undefined && (obj.verifyCode = Math.round(message.verifyCode));
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.verifyCode !== 0) {
+      obj.verifyCode = Math.round(message.verifyCode);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<VerifyPhone>, I>>(base?: I): VerifyPhone {
-    return VerifyPhone.fromPartial(base ?? {});
+    return VerifyPhone.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<VerifyPhone>, I>>(object: I): VerifyPhone {
     const message = createBaseVerifyPhone();
     message.email = object.email ?? "";
@@ -367,17 +380,24 @@ export const CreateAccount = {
 
   toJSON(message: CreateAccount): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.fullName !== undefined && (obj.fullName = message.fullName);
-    message.avatar !== undefined && (obj.avatar = message.avatar);
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.fullName !== "") {
+      obj.fullName = message.fullName;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateAccount>, I>>(base?: I): CreateAccount {
-    return CreateAccount.fromPartial(base ?? {});
+    return CreateAccount.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateAccount>, I>>(object: I): CreateAccount {
     const message = createBaseCreateAccount();
     message.email = object.email ?? "";
@@ -442,15 +462,18 @@ export const DeleteAccount = {
 
   toJSON(message: DeleteAccount): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteAccount>, I>>(base?: I): DeleteAccount {
-    return DeleteAccount.fromPartial(base ?? {});
+    return DeleteAccount.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteAccount>, I>>(object: I): DeleteAccount {
     const message = createBaseDeleteAccount();
     message.email = object.email ?? "";
@@ -557,20 +580,30 @@ export const StartSession = {
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.userAgent !== undefined && (obj.userAgent = message.userAgent);
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
-    message.location !== undefined &&
-      (obj.location = message.location ? Coordinate.toJSON(message.location) : undefined);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.userAgent !== "") {
+      obj.userAgent = message.userAgent;
+    }
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
+    if (message.location !== undefined) {
+      obj.location = Coordinate.toJSON(message.location);
+    }
+    if (message.persist === true) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StartSession>, I>>(base?: I): StartSession {
-    return StartSession.fromPartial(base ?? {});
+    return StartSession.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
     message.email = object.email ?? "";
@@ -650,16 +683,21 @@ export const AuthorizeSocket = {
 
   toJSON(message: AuthorizeSocket): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.lastEventId !== undefined && (obj.lastEventId = Math.round(message.lastEventId));
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.lastEventId !== 0) {
+      obj.lastEventId = Math.round(message.lastEventId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(base?: I): AuthorizeSocket {
-    return AuthorizeSocket.fromPartial(base ?? {});
+    return AuthorizeSocket.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
     const message = createBaseAuthorizeSocket();
     message.email = object.email ?? "";
@@ -734,16 +772,21 @@ export const EndSession = {
 
   toJSON(message: EndSession): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.sessionId !== 0) {
+      obj.sessionId = Math.round(message.sessionId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<EndSession>, I>>(base?: I): EndSession {
-    return EndSession.fromPartial(base ?? {});
+    return EndSession.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<EndSession>, I>>(object: I): EndSession {
     const message = createBaseEndSession();
     message.email = object.email ?? "";

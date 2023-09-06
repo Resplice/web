@@ -152,19 +152,30 @@ export const Address = {
 
   toJSON(message: Address): unknown {
     const obj: any = {};
-    message.streetAddress1 !== undefined && (obj.streetAddress1 = message.streetAddress1);
-    message.streetAddress2 !== undefined && (obj.streetAddress2 = message.streetAddress2);
-    message.locality !== undefined && (obj.locality = message.locality);
-    message.region !== undefined && (obj.region = message.region);
-    message.postalCode !== undefined && (obj.postalCode = message.postalCode);
-    message.country !== undefined && (obj.country = message.country);
+    if (message.streetAddress1 !== "") {
+      obj.streetAddress1 = message.streetAddress1;
+    }
+    if (message.streetAddress2 !== "") {
+      obj.streetAddress2 = message.streetAddress2;
+    }
+    if (message.locality !== "") {
+      obj.locality = message.locality;
+    }
+    if (message.region !== "") {
+      obj.region = message.region;
+    }
+    if (message.postalCode !== "") {
+      obj.postalCode = message.postalCode;
+    }
+    if (message.country !== "") {
+      obj.country = message.country;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Address>, I>>(base?: I): Address {
-    return Address.fromPartial(base ?? {});
+    return Address.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Address>, I>>(object: I): Address {
     const message = createBaseAddress();
     message.streetAddress1 = object.streetAddress1 ?? "";
@@ -231,15 +242,18 @@ export const Coordinate = {
 
   toJSON(message: Coordinate): unknown {
     const obj: any = {};
-    message.latitude !== undefined && (obj.latitude = message.latitude);
-    message.longitude !== undefined && (obj.longitude = message.longitude);
+    if (message.latitude !== 0) {
+      obj.latitude = message.latitude;
+    }
+    if (message.longitude !== 0) {
+      obj.longitude = message.longitude;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Coordinate>, I>>(base?: I): Coordinate {
-    return Coordinate.fromPartial(base ?? {});
+    return Coordinate.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Coordinate>, I>>(object: I): Coordinate {
     const message = createBaseCoordinate();
     message.latitude = object.latitude ?? 0;
@@ -302,15 +316,18 @@ export const Credential = {
 
   toJSON(message: Credential): unknown {
     const obj: any = {};
-    message.identity !== undefined && (obj.identity = message.identity);
-    message.passcode !== undefined && (obj.passcode = message.passcode);
+    if (message.identity !== "") {
+      obj.identity = message.identity;
+    }
+    if (message.passcode !== "") {
+      obj.passcode = message.passcode;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Credential>, I>>(base?: I): Credential {
-    return Credential.fromPartial(base ?? {});
+    return Credential.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Credential>, I>>(object: I): Credential {
     const message = createBaseCredential();
     message.identity = object.identity ?? "";
@@ -384,16 +401,21 @@ export const DateMessage = {
 
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
-    message.year !== undefined && (obj.year = Math.round(message.year));
-    message.month !== undefined && (obj.month = Math.round(message.month));
-    message.day !== undefined && (obj.day = Math.round(message.day));
+    if (message.year !== 0) {
+      obj.year = Math.round(message.year);
+    }
+    if (message.month !== 0) {
+      obj.month = Math.round(message.month);
+    }
+    if (message.day !== 0) {
+      obj.day = Math.round(message.day);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DateMessage>, I>>(base?: I): DateMessage {
-    return DateMessage.fromPartial(base ?? {});
+    return DateMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DateMessage>, I>>(object: I): DateMessage {
     const message = createBaseDateMessage();
     message.year = object.year ?? 0;
@@ -444,14 +466,15 @@ export const Email = {
 
   toJSON(message: Email): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Email>, I>>(base?: I): Email {
-    return Email.fromPartial(base ?? {});
+    return Email.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Email>, I>>(object: I): Email {
     const message = createBaseEmail();
     message.email = object.email ?? "";
@@ -500,14 +523,15 @@ export const Link = {
 
   toJSON(message: Link): unknown {
     const obj: any = {};
-    message.url !== undefined && (obj.url = message.url);
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Link>, I>>(base?: I): Link {
-    return Link.fromPartial(base ?? {});
+    return Link.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Link>, I>>(object: I): Link {
     const message = createBaseLink();
     message.url = object.url ?? "";
@@ -569,15 +593,18 @@ export const Phone = {
 
   toJSON(message: Phone): unknown {
     const obj: any = {};
-    message.number !== undefined && (obj.number = message.number);
-    message.smsEnabled !== undefined && (obj.smsEnabled = message.smsEnabled);
+    if (message.number !== "") {
+      obj.number = message.number;
+    }
+    if (message.smsEnabled === true) {
+      obj.smsEnabled = message.smsEnabled;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Phone>, I>>(base?: I): Phone {
-    return Phone.fromPartial(base ?? {});
+    return Phone.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Phone>, I>>(object: I): Phone {
     const message = createBasePhone();
     message.number = object.number ?? "";
@@ -640,15 +667,18 @@ export const Social = {
 
   toJSON(message: Social): unknown {
     const obj: any = {};
-    message.url !== undefined && (obj.url = message.url);
-    message.handle !== undefined && (obj.handle = message.handle);
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.handle !== "") {
+      obj.handle = message.handle;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Social>, I>>(base?: I): Social {
-    return Social.fromPartial(base ?? {});
+    return Social.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Social>, I>>(object: I): Social {
     const message = createBaseSocial();
     message.url = object.url ?? "";
@@ -698,14 +728,15 @@ export const Text = {
 
   toJSON(message: Text): unknown {
     const obj: any = {};
-    message.text !== undefined && (obj.text = message.text);
+    if (message.text !== "") {
+      obj.text = message.text;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Text>, I>>(base?: I): Text {
-    return Text.fromPartial(base ?? {});
+    return Text.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Text>, I>>(object: I): Text {
     const message = createBaseText();
     message.text = object.text ?? "";

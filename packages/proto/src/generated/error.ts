@@ -192,20 +192,21 @@ export const Error = {
 
   toJSON(message: Error): unknown {
     const obj: any = {};
-    message.type !== undefined && (obj.type = errorTypeToJSON(message.type));
-    if (message.fields) {
-      obj.fields = message.fields.map((e) => inputFieldToJSON(e));
-    } else {
-      obj.fields = [];
+    if (message.type !== 0) {
+      obj.type = errorTypeToJSON(message.type);
     }
-    message.attemptsRemaining !== undefined && (obj.attemptsRemaining = Math.round(message.attemptsRemaining));
+    if (message.fields?.length) {
+      obj.fields = message.fields.map((e) => inputFieldToJSON(e));
+    }
+    if (message.attemptsRemaining !== 0) {
+      obj.attemptsRemaining = Math.round(message.attemptsRemaining);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Error>, I>>(base?: I): Error {
-    return Error.fromPartial(base ?? {});
+    return Error.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Error>, I>>(object: I): Error {
     const message = createBaseError();
     message.type = object.type ?? 0;

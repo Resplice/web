@@ -7,7 +7,6 @@ export type RespliceConfig = {
 	respliceApiUrl: string
 	respliceWsUrl: string
 	telemetryUrl: string
-	recaptchaToken: string
 	googleOAuthClientId: string
 }
 
@@ -19,7 +18,6 @@ function getConfig(): RespliceConfig {
 		respliceApiUrl: import.meta.env.VITE_RESPLICE_API_ENDPOINT,
 		respliceWsUrl: import.meta.env.VITE_RESPLICE_WS_ENDPOINT,
 		telemetryUrl: import.meta.env.VITE_TELEMETRY_ENDPOINT,
-		recaptchaToken: import.meta.env.VITE_RECAPTCHA_TOKEN,
 		googleOAuthClientId: import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID
 	}
 	if (Object.values(config).includes(undefined))

@@ -13,7 +13,8 @@ export interface AddAttribute {
     | { $case: "link"; link: Link }
     | { $case: "phone"; phone: Phone }
     | { $case: "social"; social: Social }
-    | { $case: "text"; text: Text };
+    | { $case: "text"; text: Text }
+    | undefined;
 }
 
 export interface ChangeAttributeName {
@@ -32,7 +33,8 @@ export interface ChangeAttributeValue {
     | { $case: "link"; link: Link }
     | { $case: "phone"; phone: Phone }
     | { $case: "social"; social: Social }
-    | { $case: "text"; text: Text };
+    | { $case: "text"; text: Text }
+    | undefined;
 }
 
 export interface SortAttribute {
@@ -207,30 +209,42 @@ export const AddAttribute = {
 
   toJSON(message: AddAttribute): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.value?.$case === "address" &&
-      (obj.address = message.value?.address ? Address.toJSON(message.value?.address) : undefined);
-    message.value?.$case === "coordinate" &&
-      (obj.coordinate = message.value?.coordinate ? Coordinate.toJSON(message.value?.coordinate) : undefined);
-    message.value?.$case === "credential" &&
-      (obj.credential = message.value?.credential ? Credential.toJSON(message.value?.credential) : undefined);
-    message.value?.$case === "date" &&
-      (obj.date = message.value?.date ? DateMessage.toJSON(message.value?.date) : undefined);
-    message.value?.$case === "email" &&
-      (obj.email = message.value?.email ? Email.toJSON(message.value?.email) : undefined);
-    message.value?.$case === "link" && (obj.link = message.value?.link ? Link.toJSON(message.value?.link) : undefined);
-    message.value?.$case === "phone" &&
-      (obj.phone = message.value?.phone ? Phone.toJSON(message.value?.phone) : undefined);
-    message.value?.$case === "social" &&
-      (obj.social = message.value?.social ? Social.toJSON(message.value?.social) : undefined);
-    message.value?.$case === "text" && (obj.text = message.value?.text ? Text.toJSON(message.value?.text) : undefined);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.value?.$case === "address") {
+      obj.address = Address.toJSON(message.value.address);
+    }
+    if (message.value?.$case === "coordinate") {
+      obj.coordinate = Coordinate.toJSON(message.value.coordinate);
+    }
+    if (message.value?.$case === "credential") {
+      obj.credential = Credential.toJSON(message.value.credential);
+    }
+    if (message.value?.$case === "date") {
+      obj.date = DateMessage.toJSON(message.value.date);
+    }
+    if (message.value?.$case === "email") {
+      obj.email = Email.toJSON(message.value.email);
+    }
+    if (message.value?.$case === "link") {
+      obj.link = Link.toJSON(message.value.link);
+    }
+    if (message.value?.$case === "phone") {
+      obj.phone = Phone.toJSON(message.value.phone);
+    }
+    if (message.value?.$case === "social") {
+      obj.social = Social.toJSON(message.value.social);
+    }
+    if (message.value?.$case === "text") {
+      obj.text = Text.toJSON(message.value.text);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AddAttribute>, I>>(base?: I): AddAttribute {
-    return AddAttribute.fromPartial(base ?? {});
+    return AddAttribute.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AddAttribute>, I>>(object: I): AddAttribute {
     const message = createBaseAddAttribute();
     message.name = object.name ?? "";
@@ -324,15 +338,18 @@ export const ChangeAttributeName = {
 
   toJSON(message: ChangeAttributeName): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.name !== undefined && (obj.name = message.name);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChangeAttributeName>, I>>(base?: I): ChangeAttributeName {
-    return ChangeAttributeName.fromPartial(base ?? {});
+    return ChangeAttributeName.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChangeAttributeName>, I>>(object: I): ChangeAttributeName {
     const message = createBaseChangeAttributeName();
     message.id = object.id ?? 0;
@@ -495,30 +512,42 @@ export const ChangeAttributeValue = {
 
   toJSON(message: ChangeAttributeValue): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.value?.$case === "address" &&
-      (obj.address = message.value?.address ? Address.toJSON(message.value?.address) : undefined);
-    message.value?.$case === "coordinate" &&
-      (obj.coordinate = message.value?.coordinate ? Coordinate.toJSON(message.value?.coordinate) : undefined);
-    message.value?.$case === "credential" &&
-      (obj.credential = message.value?.credential ? Credential.toJSON(message.value?.credential) : undefined);
-    message.value?.$case === "date" &&
-      (obj.date = message.value?.date ? DateMessage.toJSON(message.value?.date) : undefined);
-    message.value?.$case === "email" &&
-      (obj.email = message.value?.email ? Email.toJSON(message.value?.email) : undefined);
-    message.value?.$case === "link" && (obj.link = message.value?.link ? Link.toJSON(message.value?.link) : undefined);
-    message.value?.$case === "phone" &&
-      (obj.phone = message.value?.phone ? Phone.toJSON(message.value?.phone) : undefined);
-    message.value?.$case === "social" &&
-      (obj.social = message.value?.social ? Social.toJSON(message.value?.social) : undefined);
-    message.value?.$case === "text" && (obj.text = message.value?.text ? Text.toJSON(message.value?.text) : undefined);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.value?.$case === "address") {
+      obj.address = Address.toJSON(message.value.address);
+    }
+    if (message.value?.$case === "coordinate") {
+      obj.coordinate = Coordinate.toJSON(message.value.coordinate);
+    }
+    if (message.value?.$case === "credential") {
+      obj.credential = Credential.toJSON(message.value.credential);
+    }
+    if (message.value?.$case === "date") {
+      obj.date = DateMessage.toJSON(message.value.date);
+    }
+    if (message.value?.$case === "email") {
+      obj.email = Email.toJSON(message.value.email);
+    }
+    if (message.value?.$case === "link") {
+      obj.link = Link.toJSON(message.value.link);
+    }
+    if (message.value?.$case === "phone") {
+      obj.phone = Phone.toJSON(message.value.phone);
+    }
+    if (message.value?.$case === "social") {
+      obj.social = Social.toJSON(message.value.social);
+    }
+    if (message.value?.$case === "text") {
+      obj.text = Text.toJSON(message.value.text);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChangeAttributeValue>, I>>(base?: I): ChangeAttributeValue {
-    return ChangeAttributeValue.fromPartial(base ?? {});
+    return ChangeAttributeValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChangeAttributeValue>, I>>(object: I): ChangeAttributeValue {
     const message = createBaseChangeAttributeValue();
     message.id = object.id ?? 0;
@@ -615,15 +644,18 @@ export const SortAttribute = {
 
   toJSON(message: SortAttribute): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.sortIndex !== undefined && (obj.sortIndex = Math.round(message.sortIndex));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.sortIndex !== 0) {
+      obj.sortIndex = Math.round(message.sortIndex);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SortAttribute>, I>>(base?: I): SortAttribute {
-    return SortAttribute.fromPartial(base ?? {});
+    return SortAttribute.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SortAttribute>, I>>(object: I): SortAttribute {
     const message = createBaseSortAttribute();
     message.id = object.id ?? 0;
@@ -673,14 +705,15 @@ export const SendAttributeVerification = {
 
   toJSON(message: SendAttributeVerification): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SendAttributeVerification>, I>>(base?: I): SendAttributeVerification {
-    return SendAttributeVerification.fromPartial(base ?? {});
+    return SendAttributeVerification.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SendAttributeVerification>, I>>(object: I): SendAttributeVerification {
     const message = createBaseSendAttributeVerification();
     message.id = object.id ?? 0;
@@ -742,15 +775,18 @@ export const VerifyAttribute = {
 
   toJSON(message: VerifyAttribute): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.verifyCode !== undefined && (obj.verifyCode = Math.round(message.verifyCode));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.verifyCode !== 0) {
+      obj.verifyCode = Math.round(message.verifyCode);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<VerifyAttribute>, I>>(base?: I): VerifyAttribute {
-    return VerifyAttribute.fromPartial(base ?? {});
+    return VerifyAttribute.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<VerifyAttribute>, I>>(object: I): VerifyAttribute {
     const message = createBaseVerifyAttribute();
     message.id = object.id ?? 0;
@@ -800,14 +836,15 @@ export const RemoveAttribute = {
 
   toJSON(message: RemoveAttribute): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<RemoveAttribute>, I>>(base?: I): RemoveAttribute {
-    return RemoveAttribute.fromPartial(base ?? {});
+    return RemoveAttribute.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<RemoveAttribute>, I>>(object: I): RemoveAttribute {
     const message = createBaseRemoveAttribute();
     message.id = object.id ?? 0;

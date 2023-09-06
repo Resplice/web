@@ -117,14 +117,15 @@ export const AuthChanged = {
 
   toJSON(message: AuthChanged): unknown {
     const obj: any = {};
-    message.authStatus !== undefined && (obj.authStatus = authStatusToJSON(message.authStatus));
+    if (message.authStatus !== 0) {
+      obj.authStatus = authStatusToJSON(message.authStatus);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthChanged>, I>>(base?: I): AuthChanged {
-    return AuthChanged.fromPartial(base ?? {});
+    return AuthChanged.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
     const message = createBaseAuthChanged();
     message.authStatus = object.authStatus ?? 0;
@@ -230,20 +231,30 @@ export const SessionStarted = {
 
   toJSON(message: SessionStarted): unknown {
     const obj: any = {};
-    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
-    message.email !== undefined && (obj.email = message.email);
-    message.phone !== undefined && (obj.phone = message.phone);
-    message.userAgent !== undefined && (obj.userAgent = message.userAgent);
-    message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
-    message.location !== undefined &&
-      (obj.location = message.location ? Coordinate.toJSON(message.location) : undefined);
+    if (message.sessionId !== 0) {
+      obj.sessionId = Math.round(message.sessionId);
+    }
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.phone !== "") {
+      obj.phone = message.phone;
+    }
+    if (message.userAgent !== "") {
+      obj.userAgent = message.userAgent;
+    }
+    if (message.ipAddress !== "") {
+      obj.ipAddress = message.ipAddress;
+    }
+    if (message.location !== undefined) {
+      obj.location = Coordinate.toJSON(message.location);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SessionStarted>, I>>(base?: I): SessionStarted {
-    return SessionStarted.fromPartial(base ?? {});
+    return SessionStarted.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SessionStarted>, I>>(object: I): SessionStarted {
     const message = createBaseSessionStarted();
     message.sessionId = object.sessionId ?? 0;
@@ -299,14 +310,15 @@ export const SessionEnded = {
 
   toJSON(message: SessionEnded): unknown {
     const obj: any = {};
-    message.sessionId !== undefined && (obj.sessionId = Math.round(message.sessionId));
+    if (message.sessionId !== 0) {
+      obj.sessionId = Math.round(message.sessionId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SessionEnded>, I>>(base?: I): SessionEnded {
-    return SessionEnded.fromPartial(base ?? {});
+    return SessionEnded.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SessionEnded>, I>>(object: I): SessionEnded {
     const message = createBaseSessionEnded();
     message.sessionId = object.sessionId ?? 0;

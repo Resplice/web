@@ -41,7 +41,8 @@ export interface Command {
     | { $case: "sortAttribute"; sortAttribute: SortAttribute }
     | { $case: "sendAttributeVerification"; sendAttributeVerification: SendAttributeVerification }
     | { $case: "verifyAttribute"; verifyAttribute: VerifyAttribute }
-    | { $case: "removeAttribute"; removeAttribute: RemoveAttribute };
+    | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
+    | undefined;
 }
 
 function createBaseCommand(): Command {
@@ -348,68 +349,69 @@ export const Command = {
 
   toJSON(message: Command): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.payload?.$case === "startAuth" &&
-      (obj.startAuth = message.payload?.startAuth ? StartAuth.toJSON(message.payload?.startAuth) : undefined);
-    message.payload?.$case === "verifyEmail" &&
-      (obj.verifyEmail = message.payload?.verifyEmail ? VerifyEmail.toJSON(message.payload?.verifyEmail) : undefined);
-    message.payload?.$case === "verifyPhone" &&
-      (obj.verifyPhone = message.payload?.verifyPhone ? VerifyPhone.toJSON(message.payload?.verifyPhone) : undefined);
-    message.payload?.$case === "createAccount" && (obj.createAccount = message.payload?.createAccount
-      ? CreateAccount.toJSON(message.payload?.createAccount)
-      : undefined);
-    message.payload?.$case === "deleteAccount" && (obj.deleteAccount = message.payload?.deleteAccount
-      ? DeleteAccount.toJSON(message.payload?.deleteAccount)
-      : undefined);
-    message.payload?.$case === "startSession" &&
-      (obj.startSession = message.payload?.startSession
-        ? StartSession.toJSON(message.payload?.startSession)
-        : undefined);
-    message.payload?.$case === "authorizeSocket" && (obj.authorizeSocket = message.payload?.authorizeSocket
-      ? AuthorizeSocket.toJSON(message.payload?.authorizeSocket)
-      : undefined);
-    message.payload?.$case === "endSession" &&
-      (obj.endSession = message.payload?.endSession ? EndSession.toJSON(message.payload?.endSession) : undefined);
-    message.payload?.$case === "changeAccountName" && (obj.changeAccountName = message.payload?.changeAccountName
-      ? ChangeAccountName.toJSON(message.payload?.changeAccountName)
-      : undefined);
-    message.payload?.$case === "changeAccountHandle" && (obj.changeAccountHandle = message.payload?.changeAccountHandle
-      ? ChangeAccountHandle.toJSON(message.payload?.changeAccountHandle)
-      : undefined);
-    message.payload?.$case === "changeAccountAvatar" && (obj.changeAccountAvatar = message.payload?.changeAccountAvatar
-      ? ChangeAccountAvatar.toJSON(message.payload?.changeAccountAvatar)
-      : undefined);
-    message.payload?.$case === "addAttribute" &&
-      (obj.addAttribute = message.payload?.addAttribute
-        ? AddAttribute.toJSON(message.payload?.addAttribute)
-        : undefined);
-    message.payload?.$case === "changeAttributeName" && (obj.changeAttributeName = message.payload?.changeAttributeName
-      ? ChangeAttributeName.toJSON(message.payload?.changeAttributeName)
-      : undefined);
-    message.payload?.$case === "changeAttributeValue" &&
-      (obj.changeAttributeValue = message.payload?.changeAttributeValue
-        ? ChangeAttributeValue.toJSON(message.payload?.changeAttributeValue)
-        : undefined);
-    message.payload?.$case === "sortAttribute" && (obj.sortAttribute = message.payload?.sortAttribute
-      ? SortAttribute.toJSON(message.payload?.sortAttribute)
-      : undefined);
-    message.payload?.$case === "sendAttributeVerification" &&
-      (obj.sendAttributeVerification = message.payload?.sendAttributeVerification
-        ? SendAttributeVerification.toJSON(message.payload?.sendAttributeVerification)
-        : undefined);
-    message.payload?.$case === "verifyAttribute" && (obj.verifyAttribute = message.payload?.verifyAttribute
-      ? VerifyAttribute.toJSON(message.payload?.verifyAttribute)
-      : undefined);
-    message.payload?.$case === "removeAttribute" && (obj.removeAttribute = message.payload?.removeAttribute
-      ? RemoveAttribute.toJSON(message.payload?.removeAttribute)
-      : undefined);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.payload?.$case === "startAuth") {
+      obj.startAuth = StartAuth.toJSON(message.payload.startAuth);
+    }
+    if (message.payload?.$case === "verifyEmail") {
+      obj.verifyEmail = VerifyEmail.toJSON(message.payload.verifyEmail);
+    }
+    if (message.payload?.$case === "verifyPhone") {
+      obj.verifyPhone = VerifyPhone.toJSON(message.payload.verifyPhone);
+    }
+    if (message.payload?.$case === "createAccount") {
+      obj.createAccount = CreateAccount.toJSON(message.payload.createAccount);
+    }
+    if (message.payload?.$case === "deleteAccount") {
+      obj.deleteAccount = DeleteAccount.toJSON(message.payload.deleteAccount);
+    }
+    if (message.payload?.$case === "startSession") {
+      obj.startSession = StartSession.toJSON(message.payload.startSession);
+    }
+    if (message.payload?.$case === "authorizeSocket") {
+      obj.authorizeSocket = AuthorizeSocket.toJSON(message.payload.authorizeSocket);
+    }
+    if (message.payload?.$case === "endSession") {
+      obj.endSession = EndSession.toJSON(message.payload.endSession);
+    }
+    if (message.payload?.$case === "changeAccountName") {
+      obj.changeAccountName = ChangeAccountName.toJSON(message.payload.changeAccountName);
+    }
+    if (message.payload?.$case === "changeAccountHandle") {
+      obj.changeAccountHandle = ChangeAccountHandle.toJSON(message.payload.changeAccountHandle);
+    }
+    if (message.payload?.$case === "changeAccountAvatar") {
+      obj.changeAccountAvatar = ChangeAccountAvatar.toJSON(message.payload.changeAccountAvatar);
+    }
+    if (message.payload?.$case === "addAttribute") {
+      obj.addAttribute = AddAttribute.toJSON(message.payload.addAttribute);
+    }
+    if (message.payload?.$case === "changeAttributeName") {
+      obj.changeAttributeName = ChangeAttributeName.toJSON(message.payload.changeAttributeName);
+    }
+    if (message.payload?.$case === "changeAttributeValue") {
+      obj.changeAttributeValue = ChangeAttributeValue.toJSON(message.payload.changeAttributeValue);
+    }
+    if (message.payload?.$case === "sortAttribute") {
+      obj.sortAttribute = SortAttribute.toJSON(message.payload.sortAttribute);
+    }
+    if (message.payload?.$case === "sendAttributeVerification") {
+      obj.sendAttributeVerification = SendAttributeVerification.toJSON(message.payload.sendAttributeVerification);
+    }
+    if (message.payload?.$case === "verifyAttribute") {
+      obj.verifyAttribute = VerifyAttribute.toJSON(message.payload.verifyAttribute);
+    }
+    if (message.payload?.$case === "removeAttribute") {
+      obj.removeAttribute = RemoveAttribute.toJSON(message.payload.removeAttribute);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Command>, I>>(base?: I): Command {
-    return Command.fromPartial(base ?? {});
+    return Command.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Command>, I>>(object: I): Command {
     const message = createBaseCommand();
     message.id = object.id ?? 0;

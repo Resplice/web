@@ -35,7 +35,8 @@ export interface Event {
     | { $case: "attributeValueChanged"; attributeValueChanged: AttributeValueChanged }
     | { $case: "attributeSorted"; attributeSorted: AttributeSorted }
     | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
-    | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved };
+    | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
+    | undefined;
 }
 
 function createBaseEventStream(): EventStream {
@@ -79,18 +80,15 @@ export const EventStream = {
 
   toJSON(message: EventStream): unknown {
     const obj: any = {};
-    if (message.events) {
-      obj.events = message.events.map((e) => e ? Event.toJSON(e) : undefined);
-    } else {
-      obj.events = [];
+    if (message.events?.length) {
+      obj.events = message.events.map((e) => Event.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<EventStream>, I>>(base?: I): EventStream {
-    return EventStream.fromPartial(base ?? {});
+    return EventStream.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<EventStream>, I>>(object: I): EventStream {
     const message = createBaseEventStream();
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
@@ -139,14 +137,15 @@ export const EventInfo = {
 
   toJSON(message: EventInfo): unknown {
     const obj: any = {};
-    message.occurredAt !== undefined && (obj.occurredAt = Math.round(message.occurredAt));
+    if (message.occurredAt !== 0) {
+      obj.occurredAt = Math.round(message.occurredAt);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<EventInfo>, I>>(base?: I): EventInfo {
-    return EventInfo.fromPartial(base ?? {});
+    return EventInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<EventInfo>, I>>(object: I): EventInfo {
     const message = createBaseEventInfo();
     message.occurredAt = object.occurredAt ?? 0;
@@ -403,59 +402,57 @@ export const Event = {
 
   toJSON(message: Event): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.eventInfo !== undefined &&
-      (obj.eventInfo = message.eventInfo ? EventInfo.toJSON(message.eventInfo) : undefined);
-    message.payload?.$case === "authChanged" &&
-      (obj.authChanged = message.payload?.authChanged ? AuthChanged.toJSON(message.payload?.authChanged) : undefined);
-    message.payload?.$case === "sessionStarted" && (obj.sessionStarted = message.payload?.sessionStarted
-      ? SessionStarted.toJSON(message.payload?.sessionStarted)
-      : undefined);
-    message.payload?.$case === "sessionEnded" &&
-      (obj.sessionEnded = message.payload?.sessionEnded
-        ? SessionEnded.toJSON(message.payload?.sessionEnded)
-        : undefined);
-    message.payload?.$case === "accountCreated" && (obj.accountCreated = message.payload?.accountCreated
-      ? AccountCreated.toJSON(message.payload?.accountCreated)
-      : undefined);
-    message.payload?.$case === "accountNameChanged" && (obj.accountNameChanged = message.payload?.accountNameChanged
-      ? AccountNameChanged.toJSON(message.payload?.accountNameChanged)
-      : undefined);
-    message.payload?.$case === "accountHandleChanged" &&
-      (obj.accountHandleChanged = message.payload?.accountHandleChanged
-        ? AccountHandleChanged.toJSON(message.payload?.accountHandleChanged)
-        : undefined);
-    message.payload?.$case === "accountAvatarChanged" &&
-      (obj.accountAvatarChanged = message.payload?.accountAvatarChanged
-        ? AccountAvatarChanged.toJSON(message.payload?.accountAvatarChanged)
-        : undefined);
-    message.payload?.$case === "attributeAdded" && (obj.attributeAdded = message.payload?.attributeAdded
-      ? AttributeAdded.toJSON(message.payload?.attributeAdded)
-      : undefined);
-    message.payload?.$case === "attributeNameChanged" &&
-      (obj.attributeNameChanged = message.payload?.attributeNameChanged
-        ? AttributeNameChanged.toJSON(message.payload?.attributeNameChanged)
-        : undefined);
-    message.payload?.$case === "attributeValueChanged" &&
-      (obj.attributeValueChanged = message.payload?.attributeValueChanged
-        ? AttributeValueChanged.toJSON(message.payload?.attributeValueChanged)
-        : undefined);
-    message.payload?.$case === "attributeSorted" && (obj.attributeSorted = message.payload?.attributeSorted
-      ? AttributeSorted.toJSON(message.payload?.attributeSorted)
-      : undefined);
-    message.payload?.$case === "attributeVerified" && (obj.attributeVerified = message.payload?.attributeVerified
-      ? AttributeVerified.toJSON(message.payload?.attributeVerified)
-      : undefined);
-    message.payload?.$case === "attributeRemoved" && (obj.attributeRemoved = message.payload?.attributeRemoved
-      ? AttributeRemoved.toJSON(message.payload?.attributeRemoved)
-      : undefined);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.eventInfo !== undefined) {
+      obj.eventInfo = EventInfo.toJSON(message.eventInfo);
+    }
+    if (message.payload?.$case === "authChanged") {
+      obj.authChanged = AuthChanged.toJSON(message.payload.authChanged);
+    }
+    if (message.payload?.$case === "sessionStarted") {
+      obj.sessionStarted = SessionStarted.toJSON(message.payload.sessionStarted);
+    }
+    if (message.payload?.$case === "sessionEnded") {
+      obj.sessionEnded = SessionEnded.toJSON(message.payload.sessionEnded);
+    }
+    if (message.payload?.$case === "accountCreated") {
+      obj.accountCreated = AccountCreated.toJSON(message.payload.accountCreated);
+    }
+    if (message.payload?.$case === "accountNameChanged") {
+      obj.accountNameChanged = AccountNameChanged.toJSON(message.payload.accountNameChanged);
+    }
+    if (message.payload?.$case === "accountHandleChanged") {
+      obj.accountHandleChanged = AccountHandleChanged.toJSON(message.payload.accountHandleChanged);
+    }
+    if (message.payload?.$case === "accountAvatarChanged") {
+      obj.accountAvatarChanged = AccountAvatarChanged.toJSON(message.payload.accountAvatarChanged);
+    }
+    if (message.payload?.$case === "attributeAdded") {
+      obj.attributeAdded = AttributeAdded.toJSON(message.payload.attributeAdded);
+    }
+    if (message.payload?.$case === "attributeNameChanged") {
+      obj.attributeNameChanged = AttributeNameChanged.toJSON(message.payload.attributeNameChanged);
+    }
+    if (message.payload?.$case === "attributeValueChanged") {
+      obj.attributeValueChanged = AttributeValueChanged.toJSON(message.payload.attributeValueChanged);
+    }
+    if (message.payload?.$case === "attributeSorted") {
+      obj.attributeSorted = AttributeSorted.toJSON(message.payload.attributeSorted);
+    }
+    if (message.payload?.$case === "attributeVerified") {
+      obj.attributeVerified = AttributeVerified.toJSON(message.payload.attributeVerified);
+    }
+    if (message.payload?.$case === "attributeRemoved") {
+      obj.attributeRemoved = AttributeRemoved.toJSON(message.payload.attributeRemoved);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Event>, I>>(base?: I): Event {
-    return Event.fromPartial(base ?? {});
+    return Event.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
     message.id = object.id ?? 0;

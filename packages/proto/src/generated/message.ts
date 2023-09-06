@@ -9,7 +9,7 @@ export interface Message {
   payload?: { $case: "event"; event: Event } | { $case: "stream"; stream: EventStream } | {
     $case: "error";
     error: Error;
-  };
+  } | undefined;
 }
 
 function createBaseMessage(): Message {
@@ -105,21 +105,27 @@ export const Message = {
 
   toJSON(message: Message): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.commandId !== undefined && (obj.commandId = Math.round(message.commandId));
-    message.payload?.$case === "event" &&
-      (obj.event = message.payload?.event ? Event.toJSON(message.payload?.event) : undefined);
-    message.payload?.$case === "stream" &&
-      (obj.stream = message.payload?.stream ? EventStream.toJSON(message.payload?.stream) : undefined);
-    message.payload?.$case === "error" &&
-      (obj.error = message.payload?.error ? Error.toJSON(message.payload?.error) : undefined);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.commandId !== 0) {
+      obj.commandId = Math.round(message.commandId);
+    }
+    if (message.payload?.$case === "event") {
+      obj.event = Event.toJSON(message.payload.event);
+    }
+    if (message.payload?.$case === "stream") {
+      obj.stream = EventStream.toJSON(message.payload.stream);
+    }
+    if (message.payload?.$case === "error") {
+      obj.error = Error.toJSON(message.payload.error);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Message>, I>>(base?: I): Message {
-    return Message.fromPartial(base ?? {});
+    return Message.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
     const message = createBaseMessage();
     message.id = object.id ?? 0;

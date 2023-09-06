@@ -54,14 +54,15 @@ export const ChangeAccountName = {
 
   toJSON(message: ChangeAccountName): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChangeAccountName>, I>>(base?: I): ChangeAccountName {
-    return ChangeAccountName.fromPartial(base ?? {});
+    return ChangeAccountName.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChangeAccountName>, I>>(object: I): ChangeAccountName {
     const message = createBaseChangeAccountName();
     message.name = object.name ?? "";
@@ -110,14 +111,15 @@ export const ChangeAccountHandle = {
 
   toJSON(message: ChangeAccountHandle): unknown {
     const obj: any = {};
-    message.handle !== undefined && (obj.handle = message.handle);
+    if (message.handle !== "") {
+      obj.handle = message.handle;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChangeAccountHandle>, I>>(base?: I): ChangeAccountHandle {
-    return ChangeAccountHandle.fromPartial(base ?? {});
+    return ChangeAccountHandle.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChangeAccountHandle>, I>>(object: I): ChangeAccountHandle {
     const message = createBaseChangeAccountHandle();
     message.handle = object.handle ?? "";
@@ -166,14 +168,15 @@ export const ChangeAccountAvatar = {
 
   toJSON(message: ChangeAccountAvatar): unknown {
     const obj: any = {};
-    message.avatar !== undefined && (obj.avatar = message.avatar);
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChangeAccountAvatar>, I>>(base?: I): ChangeAccountAvatar {
-    return ChangeAccountAvatar.fromPartial(base ?? {});
+    return ChangeAccountAvatar.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChangeAccountAvatar>, I>>(object: I): ChangeAccountAvatar {
     const message = createBaseChangeAccountAvatar();
     message.avatar = object.avatar ?? "";
