@@ -1,6 +1,7 @@
 import { fromEvent, map } from 'rxjs'
 import { webSocket, type WebSocketSubject } from 'rxjs/webSocket'
 import { serializeCommand, deserializeMessage } from '@resplice/proto'
+import { btob64 } from '@resplice/utils'
 import {
 	SocketCommandType,
 	type SocketCommand,
@@ -24,13 +25,13 @@ declare const self: ConnWorker
 
 fromEvent<MessageEvent<SocketCommand>>(self, 'message')
 	.pipe(map((e) => e.data))
-	.subscribe((cmd) => {
+	.subscribe(async (cmd) => {
 		switch (cmd.type) {
 			case SocketCommandType.OPEN:
-				openSocket(cmd)
+				await openSocket(cmd)
 				break
 			case SocketCommandType.SEND:
-				send(cmd.payload)
+				await send(cmd.payload)
 				break
 		}
 	})
@@ -52,15 +53,18 @@ async function send(command: SendCommand['payload']) {
 	self.socket$.next(await serializeCommand(command, self.cryptoKeys.client))
 }
 
-function openSocket(cmd: OpenCommand) {
+async function openSocket(cmd: OpenCommand) {
 	if (self.socket$) {
 		self.socket$.complete()
 	}
 
+	const handshake = btob64(await serializeCommand(cmd.handshake, cmd.cryptoKeys.client))
+
 	self.cryptoKeys = cmd.cryptoKeys
-	// TODO: Mock websocket
+	// TODO: Mock websocket based on url
 	self.socket$ = webSocket({
 		url: cmd.respliceWsUrl,
+		protocol: handshake,
 		serializer: (m) => m,
 		deserializer: (m) => m.data,
 		binaryType: 'arraybuffer'

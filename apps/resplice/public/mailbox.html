@@ -6,27 +6,43 @@
 		<meta name="robots" content="noindex" />
 	</head>
 	<script>
-		window.addEventListener('message', (event) => {
+		async function deleteDatabase() {
+			return new Promise((resolve, reject) => {
+				const request = indexedDB.deleteDatabase('RESPLICE_CACHE')
+				request.onsuccess = () => {
+					resolve()
+				}
+				request.onerror = (e) => {
+					reject(e)
+				}
+			})
+		}
+		async function createDatabase(contextData) {
+			return new Promise((resolve, reject) => {
+				const request = indexedDB.open('RESPLICE_CACHE')
+				request.onsuccess = () => {
+					const txn = request.result.transaction('context', 'readwrite')
+					txn.objectStore('context').put(contextData, 1)
+					resolve()
+				}
+				request.onerror = (e) => {
+					reject(e)
+				}
+				request.onupgradeneeded = () => {
+					const db = request.result
+					db.createObjectStore('context')
+				}
+			})
+		}
+		window.addEventListener('message', async (event) => {
 			console.log(event)
 			// TODO: Check event.origin
 			// if (event.origin !== 'https://auth.resplice.com') {
 			// 	return
 			// }
 
-			const request = indexedDB.open('RESPLICE_CACHE')
-
-			request.onsuccess = () => {
-				const txn = request.result.transaction('context', 'readwrite')
-				txn.objectStore('context').put(event.data, 1)
-			}
-			request.onerror = (e) => {
-				console.error(e)
-			}
-			request.onupgradeneeded = () => {
-				const db = request.result
-				db.deleteObjectStore('context')
-				db.createObjectStore('context', { autoIncrement: true })
-			}
+			await deleteDatabase()
+			await createDatabase(event.data)
 		})
 	</script>
 </html>

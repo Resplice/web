@@ -34,10 +34,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 	return {
 		async add(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'addAttribute',
-					addAttribute: payload
-				}
+				$case: 'addAttribute',
+				addAttribute: payload
 			})
 			const placeholderAttribute = {
 				id: new Date().getTime(),
@@ -56,10 +54,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		async changeName(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'changeAttributeName',
-					changeAttributeName: payload
-				}
+				$case: 'changeAttributeName',
+				changeAttributeName: payload
 			})
 			store.update((state) => {
 				state.get(payload.id).name = payload.name
@@ -68,10 +64,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		async changeValue(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'changeAttributeValue',
-					changeAttributeValue: payload
-				}
+				$case: 'changeAttributeValue',
+				changeAttributeValue: payload
 			})
 			store.update((state) => {
 				state.get(payload.id).value = mapProtoAttributeValue(payload.value)
@@ -80,10 +74,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		async sort(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'sortAttribute',
-					sortAttribute: payload
-				}
+				$case: 'sortAttribute',
+				sortAttribute: payload
 			})
 			store.update((state) => {
 				state.get(payload.id).sortOrder = payload.sortIndex
@@ -92,18 +84,14 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		sendVerification(payload) {
 			return sendCommand(cache, commuter, {
-				payload: {
-					$case: 'sendAttributeVerification',
-					sendAttributeVerification: payload
-				}
+				$case: 'sendAttributeVerification',
+				sendAttributeVerification: payload
 			})
 		},
 		async verify(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'verifyAttribute',
-					verifyAttribute: payload
-				}
+				$case: 'verifyAttribute',
+				verifyAttribute: payload
 			})
 			store.update((state) => {
 				state.get(payload.id).verifiedAt = getRespliceNow()
@@ -112,10 +100,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 		},
 		async remove(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'removeAttribute',
-					removeAttribute: payload
-				}
+				$case: 'removeAttribute',
+				removeAttribute: payload
 			})
 			store.update((state) => {
 				state.delete(payload.id)

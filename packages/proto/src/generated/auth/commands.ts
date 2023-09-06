@@ -37,6 +37,13 @@ export interface StartSession {
   userAgent: string;
   ipAddress: string;
   location: Coordinate | undefined;
+  persist: boolean;
+}
+
+export interface AuthorizeSocket {
+  email: string;
+  phone: string;
+  lastEventId: number;
 }
 
 export interface EndSession {
@@ -453,7 +460,7 @@ export const DeleteAccount = {
 };
 
 function createBaseStartSession(): StartSession {
-  return { email: "", phone: "", userAgent: "", ipAddress: "", location: undefined };
+  return { email: "", phone: "", userAgent: "", ipAddress: "", location: undefined, persist: false };
 }
 
 export const StartSession = {
@@ -472,6 +479,9 @@ export const StartSession = {
     }
     if (message.location !== undefined) {
       Coordinate.encode(message.location, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.persist === true) {
+      writer.uint32(48).bool(message.persist);
     }
     return writer;
   },
@@ -518,6 +528,13 @@ export const StartSession = {
 
           message.location = Coordinate.decode(reader, reader.uint32());
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.persist = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -534,6 +551,7 @@ export const StartSession = {
       userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
       ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
       location: isSet(object.location) ? Coordinate.fromJSON(object.location) : undefined,
+      persist: isSet(object.persist) ? Boolean(object.persist) : false,
     };
   },
 
@@ -545,6 +563,7 @@ export const StartSession = {
     message.ipAddress !== undefined && (obj.ipAddress = message.ipAddress);
     message.location !== undefined &&
       (obj.location = message.location ? Coordinate.toJSON(message.location) : undefined);
+    message.persist !== undefined && (obj.persist = message.persist);
     return obj;
   },
 
@@ -561,6 +580,91 @@ export const StartSession = {
     message.location = (object.location !== undefined && object.location !== null)
       ? Coordinate.fromPartial(object.location)
       : undefined;
+    message.persist = object.persist ?? false;
+    return message;
+  },
+};
+
+function createBaseAuthorizeSocket(): AuthorizeSocket {
+  return { email: "", phone: "", lastEventId: 0 };
+}
+
+export const AuthorizeSocket = {
+  encode(message: AuthorizeSocket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.email !== "") {
+      writer.uint32(10).string(message.email);
+    }
+    if (message.phone !== "") {
+      writer.uint32(18).string(message.phone);
+    }
+    if (message.lastEventId !== 0) {
+      writer.uint32(24).uint32(message.lastEventId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthorizeSocket {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthorizeSocket();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.phone = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.lastEventId = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuthorizeSocket {
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      phone: isSet(object.phone) ? String(object.phone) : "",
+      lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0,
+    };
+  },
+
+  toJSON(message: AuthorizeSocket): unknown {
+    const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.phone !== undefined && (obj.phone = message.phone);
+    message.lastEventId !== undefined && (obj.lastEventId = Math.round(message.lastEventId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(base?: I): AuthorizeSocket {
+    return AuthorizeSocket.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
+    const message = createBaseAuthorizeSocket();
+    message.email = object.email ?? "";
+    message.phone = object.phone ?? "";
+    message.lastEventId = object.lastEventId ?? 0;
     return message;
   },
 };

@@ -13,7 +13,7 @@ export type RespliceConfig = {
 
 function getConfig(): RespliceConfig {
 	const config: RespliceConfig = {
-		env: import.meta.env.DEV ? 'local' : 'production',
+		env: import.meta.env.DEV ? 'local' : import.meta.env.VITE_ENV,
 		appUrl: import.meta.env.VITE_APP_URL,
 		authUrl: import.meta.env.VITE_AUTH_URL,
 		respliceApiUrl: import.meta.env.VITE_RESPLICE_API_ENDPOINT,

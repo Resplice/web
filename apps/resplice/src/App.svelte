@@ -45,11 +45,9 @@
 	function getUrlData() {
 		const params = new URLSearchParams(window.location.search)
 		return {
-			googleOAuthAccessToken: params.get('google-access-token'),
-			respliceAccessToken: params.get('resplice-access-token')
+			googleOAuthAccessToken: params.get('google-access-token')
 		} as {
 			googleOAuthAccessToken?: string
-			respliceAccessToken?: string
 		}
 	}
 

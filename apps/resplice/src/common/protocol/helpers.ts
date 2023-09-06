@@ -5,10 +5,10 @@ import { SocketCommandType, type SocketCommuter } from '$common/workers/socketCo
 export async function sendCommand(
 	cache: DB,
 	commuter: SocketCommuter,
-	params: Omit<proto.Command, 'id'>
+	payload: proto.Command['payload']
 ) {
-	const [id] = await cache.insert('commands', params)
-	const command = { id, ...params } satisfies proto.Command
+	const [id] = await cache.insert('commands', payload)
+	const command: proto.Command = { id, payload }
 	commuter.postMessage({
 		type: SocketCommandType.SEND,
 		payload: command

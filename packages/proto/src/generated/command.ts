@@ -11,6 +11,7 @@ import {
   VerifyAttribute,
 } from "./attribute/commands";
 import {
+  AuthorizeSocket,
   CreateAccount,
   DeleteAccount,
   EndSession,
@@ -29,6 +30,7 @@ export interface Command {
     | { $case: "createAccount"; createAccount: CreateAccount }
     | { $case: "deleteAccount"; deleteAccount: DeleteAccount }
     | { $case: "startSession"; startSession: StartSession }
+    | { $case: "authorizeSocket"; authorizeSocket: AuthorizeSocket }
     | { $case: "endSession"; endSession: EndSession }
     | { $case: "changeAccountName"; changeAccountName: ChangeAccountName }
     | { $case: "changeAccountHandle"; changeAccountHandle: ChangeAccountHandle }
@@ -70,38 +72,41 @@ export const Command = {
       case "startSession":
         StartSession.encode(message.payload.startSession, writer.uint32(58).fork()).ldelim();
         break;
+      case "authorizeSocket":
+        AuthorizeSocket.encode(message.payload.authorizeSocket, writer.uint32(66).fork()).ldelim();
+        break;
       case "endSession":
-        EndSession.encode(message.payload.endSession, writer.uint32(66).fork()).ldelim();
+        EndSession.encode(message.payload.endSession, writer.uint32(74).fork()).ldelim();
         break;
       case "changeAccountName":
-        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(74).fork()).ldelim();
+        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(82).fork()).ldelim();
         break;
       case "changeAccountHandle":
-        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(82).fork()).ldelim();
+        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(90).fork()).ldelim();
         break;
       case "changeAccountAvatar":
-        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(90).fork()).ldelim();
+        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(98).fork()).ldelim();
         break;
       case "addAttribute":
-        AddAttribute.encode(message.payload.addAttribute, writer.uint32(98).fork()).ldelim();
+        AddAttribute.encode(message.payload.addAttribute, writer.uint32(106).fork()).ldelim();
         break;
       case "changeAttributeName":
-        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(106).fork()).ldelim();
+        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(114).fork()).ldelim();
         break;
       case "changeAttributeValue":
-        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(114).fork()).ldelim();
+        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(122).fork()).ldelim();
         break;
       case "sortAttribute":
-        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(122).fork()).ldelim();
+        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(130).fork()).ldelim();
         break;
       case "sendAttributeVerification":
-        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(130).fork()).ldelim();
+        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(138).fork()).ldelim();
         break;
       case "verifyAttribute":
-        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(138).fork()).ldelim();
+        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(146).fork()).ldelim();
         break;
       case "removeAttribute":
-        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(146).fork()).ldelim();
+        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(154).fork()).ldelim();
         break;
     }
     return writer;
@@ -168,10 +173,20 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "endSession", endSession: EndSession.decode(reader, reader.uint32()) };
+          message.payload = {
+            $case: "authorizeSocket",
+            authorizeSocket: AuthorizeSocket.decode(reader, reader.uint32()),
+          };
           continue;
         case 9:
           if (tag !== 74) {
+            break;
+          }
+
+          message.payload = { $case: "endSession", endSession: EndSession.decode(reader, reader.uint32()) };
+          continue;
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -180,8 +195,8 @@ export const Command = {
             changeAccountName: ChangeAccountName.decode(reader, reader.uint32()),
           };
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -190,8 +205,8 @@ export const Command = {
             changeAccountHandle: ChangeAccountHandle.decode(reader, reader.uint32()),
           };
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
@@ -200,15 +215,15 @@ export const Command = {
             changeAccountAvatar: ChangeAccountAvatar.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
           message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 13:
-          if (tag !== 106) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -217,8 +232,8 @@ export const Command = {
             changeAttributeName: ChangeAttributeName.decode(reader, reader.uint32()),
           };
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
@@ -227,15 +242,15 @@ export const Command = {
             changeAttributeValue: ChangeAttributeValue.decode(reader, reader.uint32()),
           };
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 16:
+          if (tag !== 130) {
             break;
           }
 
           message.payload = { $case: "sortAttribute", sortAttribute: SortAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 16:
-          if (tag !== 130) {
+        case 17:
+          if (tag !== 138) {
             break;
           }
 
@@ -244,8 +259,8 @@ export const Command = {
             sendAttributeVerification: SendAttributeVerification.decode(reader, reader.uint32()),
           };
           continue;
-        case 17:
-          if (tag !== 138) {
+        case 18:
+          if (tag !== 146) {
             break;
           }
 
@@ -254,8 +269,8 @@ export const Command = {
             verifyAttribute: VerifyAttribute.decode(reader, reader.uint32()),
           };
           continue;
-        case 18:
-          if (tag !== 146) {
+        case 19:
+          if (tag !== 154) {
             break;
           }
 
@@ -288,6 +303,8 @@ export const Command = {
         ? { $case: "deleteAccount", deleteAccount: DeleteAccount.fromJSON(object.deleteAccount) }
         : isSet(object.startSession)
         ? { $case: "startSession", startSession: StartSession.fromJSON(object.startSession) }
+        : isSet(object.authorizeSocket)
+        ? { $case: "authorizeSocket", authorizeSocket: AuthorizeSocket.fromJSON(object.authorizeSocket) }
         : isSet(object.endSession)
         ? { $case: "endSession", endSession: EndSession.fromJSON(object.endSession) }
         : isSet(object.changeAccountName)
@@ -348,6 +365,9 @@ export const Command = {
       (obj.startSession = message.payload?.startSession
         ? StartSession.toJSON(message.payload?.startSession)
         : undefined);
+    message.payload?.$case === "authorizeSocket" && (obj.authorizeSocket = message.payload?.authorizeSocket
+      ? AuthorizeSocket.toJSON(message.payload?.authorizeSocket)
+      : undefined);
     message.payload?.$case === "endSession" &&
       (obj.endSession = message.payload?.endSession ? EndSession.toJSON(message.payload?.endSession) : undefined);
     message.payload?.$case === "changeAccountName" && (obj.changeAccountName = message.payload?.changeAccountName
@@ -440,6 +460,16 @@ export const Command = {
       object.payload?.startSession !== null
     ) {
       message.payload = { $case: "startSession", startSession: StartSession.fromPartial(object.payload.startSession) };
+    }
+    if (
+      object.payload?.$case === "authorizeSocket" &&
+      object.payload?.authorizeSocket !== undefined &&
+      object.payload?.authorizeSocket !== null
+    ) {
+      message.payload = {
+        $case: "authorizeSocket",
+        authorizeSocket: AuthorizeSocket.fromPartial(object.payload.authorizeSocket),
+      };
     }
     if (
       object.payload?.$case === "endSession" &&

@@ -17,6 +17,7 @@ export type OpenCommand = {
 	type: SocketCommandType.OPEN
 	respliceWsUrl: string
 	cryptoKeys: CryptoKeys
+	handshake: proto.Command
 }
 export type SendCommand = {
 	type: SocketCommandType.SEND

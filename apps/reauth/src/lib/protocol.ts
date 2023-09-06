@@ -145,7 +145,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		const message = {
 			...msg,
 			nextCommandId: ++cmdCount,
-			cryptoKeys: cryptoKeys
+			cryptoKeys
 		}
 		appIframe.contentWindow?.postMessage(message, src)
 		location.replace(respliceAppUrl)

@@ -33,7 +33,7 @@
 		const { event, error } = await protocol.startSession({
 			email: $store.email,
 			phone: $store.phone,
-			// persist: $store.persistSession,
+			persist: $store.persistSession,
 			ipAddress,
 			userAgent: navigator.userAgent,
 			location: undefined

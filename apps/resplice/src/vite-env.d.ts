@@ -3,6 +3,7 @@
 /// <reference types="vite-plugin-pwa/svelte" />
 
 interface ImportMetaEnv {
+	readonly VITE_ENV?: 'preview' | 'production'
 	readonly VITE_APP_URL?: string
 	readonly VITE_AUTH_URL?: string
 	readonly VITE_RESPLICE_API_ENDPOINT?: string

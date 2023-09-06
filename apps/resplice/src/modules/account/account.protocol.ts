@@ -25,28 +25,22 @@ function accountProtocolFactory({ cache, store, commuter }: Dependencies): Accou
 	return {
 		async changeName(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'changeAccountName',
-					changeAccountName: payload
-				}
+				$case: 'changeAccountName',
+				changeAccountName: payload
 			})
 			store.update((state) => ({ ...state, name: payload.name }))
 		},
 		async changeHandle(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'changeAccountHandle',
-					changeAccountHandle: payload
-				}
+				$case: 'changeAccountHandle',
+				changeAccountHandle: payload
 			})
 			store.update((state) => ({ ...state, handle: payload.handle }))
 		},
 		async uploadAvatar(payload) {
 			await sendCommand(cache, commuter, {
-				payload: {
-					$case: 'changeAccountAvatar',
-					changeAccountAvatar: payload
-				}
+				$case: 'changeAccountAvatar',
+				changeAccountAvatar: payload
 			})
 			const avatarUrl = URL.createObjectURL(new File([payload.avatar], 'avatar'))
 			store.update((state) => ({ ...state, avatarUrl }))
