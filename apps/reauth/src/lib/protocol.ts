@@ -5,7 +5,6 @@ import {
 	importPublicKey,
 	generateAesKey,
 	exportKey,
-	btob64,
 	joinBuffers
 } from '@resplice/utils'
 
@@ -34,6 +33,7 @@ type Result = Promise<
 type CryptoKeys = {
 	client: CryptoKey
 	server: CryptoKey
+	accessKey: Uint8Array
 }
 type AppMessage = {
 	phone: string
@@ -56,16 +56,16 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			])
 			const publicKey = await importPublicKey(publicKeyEncoded.trim())
 			const exportedKeys = joinBuffers(await exportKey(clientAesKey), await exportKey(serverAesKey))
-			const serializedKeys = btob64(await publicKeyEncrypt(publicKey, exportedKeys))
+			const accessKey = await publicKeyEncrypt(publicKey, exportedKeys)
 
 			cryptoKeys = {
 				client: clientAesKey,
-				server: serverAesKey
+				server: serverAesKey,
+				accessKey
 			}
 
 			const command: proto.Command['payload'] = { $case: 'startAuth', startAuth: payload }
-			const headers = { 'X-Access-Key': serializedKeys }
-			return await executeAuthStep(command, headers, '/start')
+			return await executeAuthStep(command)
 		} catch (err) {
 			console.error(err)
 			const error = {
@@ -79,38 +79,34 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 
 	async function executeAuthStep(
 		payload: proto.Command['payload'],
-		headers?: Record<string, string>,
-		endpoint = '/run'
+		headers?: Record<string, string>
 	): Result {
 		try {
 			if (!cryptoKeys) throw new Error('Crypto keys not initialized')
 
-			const commandId = ++cmdCount
-			const command: proto.Command = {
-				id: commandId,
+			const command: proto.Command & { id: number } = {
+				id: ++cmdCount,
 				payload: payload
 			}
-			const serializedCommand = await serializeCommand(command, cryptoKeys.client)
+			const serializedCommand = await serializeCommand(
+				command,
+				cryptoKeys.client,
+				cryptoKeys.accessKey
+			)
 
 			const messageBytes = await fetch.post<ArrayBuffer>({
-				endpoint,
+				endpoint: '/run',
 				data: serializedCommand,
 				headers
 			})
 
 			const message = await deserializeMessage(new Uint8Array(messageBytes), cryptoKeys.server)
 
-			if (!message.payload) throw new Error(`Unable to decode message payload: ${message}`)
-
-			if (message.payload.$case === 'error') {
-				return { event: null, error: message.payload.error }
+			if (message.error) {
+				return { event: null, error: message.error }
 			}
 
-			if (message.payload.$case === 'stream') {
-				throw new Error('Event Stream not supported.')
-			}
-
-			const event = message.payload.event
+			const event = message.event
 
 			if (event.payload?.$case !== 'authChanged') {
 				throw new Error(`Message payload: ${event.payload?.$case} not supported.`)
@@ -147,8 +143,13 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			nextCommandId: ++cmdCount,
 			cryptoKeys
 		}
-		appIframe.contentWindow?.postMessage(message, src)
-		location.replace(respliceAppUrl)
+		appIframe.onload = () => {
+			window.addEventListener('message', (e) => {
+				console.log(e.origin)
+				if (e.origin === respliceAppUrl) location.replace(respliceAppUrl)
+			})
+			appIframe.contentWindow?.postMessage(message, src)
+		}
 	}
 
 	return {

@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte'
 	import { spring } from 'svelte/motion'
 	import cx from 'clsx'
-
-	const dispatch = createEventDispatcher()
 
 	export let float: 'left' | 'right' = 'right'
 	export let name: string
@@ -31,6 +28,7 @@
 		'w-full': !!label,
 		'flex-row-reverse': float === 'left'
 	})}
+	type="button"
 	on:click={() => toggleElement.click()}
 >
 	{#if label}
@@ -46,13 +44,13 @@
 	{/if}
 
 	<input
+		bind:this={toggleElement}
 		type="checkbox"
 		id={name}
 		class="hidden"
-		bind:this={toggleElement}
 		{name}
 		checked={isActive}
-		on:change={() => dispatch('toggle')}
+		on:change={() => (isActive = !isActive)}
 	/>
 	<div
 		class={cx('rounded-full cursor-pointer p-1 w-12', {

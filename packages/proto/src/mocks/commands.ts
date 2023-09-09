@@ -33,6 +33,7 @@ const startSession: proto.auth.StartSession = {
 	phone: PHONE,
 	persist: true,
 	userAgent: '',
+	ipAddress: '127.0.0.1',
 	location: undefined
 }
 

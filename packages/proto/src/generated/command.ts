@@ -21,8 +21,13 @@ import {
   VerifyPhone,
 } from "./auth/commands";
 
-export interface Command {
+export interface SecCommand {
   id: number;
+  accessKey: Uint8Array;
+  command: Uint8Array;
+}
+
+export interface Command {
   payload?:
     | { $case: "startAuth"; startAuth: StartAuth }
     | { $case: "verifyEmail"; verifyEmail: VerifyEmail }
@@ -45,78 +50,28 @@ export interface Command {
     | undefined;
 }
 
-function createBaseCommand(): Command {
-  return { id: 0, payload: undefined };
+function createBaseSecCommand(): SecCommand {
+  return { id: 0, accessKey: new Uint8Array(0), command: new Uint8Array(0) };
 }
 
-export const Command = {
-  encode(message: Command, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SecCommand = {
+  encode(message: SecCommand, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
-    switch (message.payload?.$case) {
-      case "startAuth":
-        StartAuth.encode(message.payload.startAuth, writer.uint32(18).fork()).ldelim();
-        break;
-      case "verifyEmail":
-        VerifyEmail.encode(message.payload.verifyEmail, writer.uint32(26).fork()).ldelim();
-        break;
-      case "verifyPhone":
-        VerifyPhone.encode(message.payload.verifyPhone, writer.uint32(34).fork()).ldelim();
-        break;
-      case "createAccount":
-        CreateAccount.encode(message.payload.createAccount, writer.uint32(42).fork()).ldelim();
-        break;
-      case "deleteAccount":
-        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(50).fork()).ldelim();
-        break;
-      case "startSession":
-        StartSession.encode(message.payload.startSession, writer.uint32(58).fork()).ldelim();
-        break;
-      case "authorizeSocket":
-        AuthorizeSocket.encode(message.payload.authorizeSocket, writer.uint32(66).fork()).ldelim();
-        break;
-      case "endSession":
-        EndSession.encode(message.payload.endSession, writer.uint32(74).fork()).ldelim();
-        break;
-      case "changeAccountName":
-        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(82).fork()).ldelim();
-        break;
-      case "changeAccountHandle":
-        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(90).fork()).ldelim();
-        break;
-      case "changeAccountAvatar":
-        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(98).fork()).ldelim();
-        break;
-      case "addAttribute":
-        AddAttribute.encode(message.payload.addAttribute, writer.uint32(106).fork()).ldelim();
-        break;
-      case "changeAttributeName":
-        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(114).fork()).ldelim();
-        break;
-      case "changeAttributeValue":
-        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(122).fork()).ldelim();
-        break;
-      case "sortAttribute":
-        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(130).fork()).ldelim();
-        break;
-      case "sendAttributeVerification":
-        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(138).fork()).ldelim();
-        break;
-      case "verifyAttribute":
-        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(146).fork()).ldelim();
-        break;
-      case "removeAttribute":
-        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(154).fork()).ldelim();
-        break;
+    if (message.accessKey.length !== 0) {
+      writer.uint32(18).bytes(message.accessKey);
+    }
+    if (message.command.length !== 0) {
+      writer.uint32(26).bytes(message.command);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Command {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SecCommand {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommand();
+    const message = createBaseSecCommand();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -132,45 +87,174 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "startAuth", startAuth: StartAuth.decode(reader, reader.uint32()) };
+          message.accessKey = reader.bytes();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
+          message.command = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SecCommand {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      accessKey: isSet(object.accessKey) ? bytesFromBase64(object.accessKey) : new Uint8Array(0),
+      command: isSet(object.command) ? bytesFromBase64(object.command) : new Uint8Array(0),
+    };
+  },
+
+  toJSON(message: SecCommand): unknown {
+    const obj: any = {};
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.accessKey.length !== 0) {
+      obj.accessKey = base64FromBytes(message.accessKey);
+    }
+    if (message.command.length !== 0) {
+      obj.command = base64FromBytes(message.command);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SecCommand>, I>>(base?: I): SecCommand {
+    return SecCommand.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SecCommand>, I>>(object: I): SecCommand {
+    const message = createBaseSecCommand();
+    message.id = object.id ?? 0;
+    message.accessKey = object.accessKey ?? new Uint8Array(0);
+    message.command = object.command ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseCommand(): Command {
+  return { payload: undefined };
+}
+
+export const Command = {
+  encode(message: Command, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    switch (message.payload?.$case) {
+      case "startAuth":
+        StartAuth.encode(message.payload.startAuth, writer.uint32(10).fork()).ldelim();
+        break;
+      case "verifyEmail":
+        VerifyEmail.encode(message.payload.verifyEmail, writer.uint32(18).fork()).ldelim();
+        break;
+      case "verifyPhone":
+        VerifyPhone.encode(message.payload.verifyPhone, writer.uint32(26).fork()).ldelim();
+        break;
+      case "createAccount":
+        CreateAccount.encode(message.payload.createAccount, writer.uint32(34).fork()).ldelim();
+        break;
+      case "deleteAccount":
+        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(42).fork()).ldelim();
+        break;
+      case "startSession":
+        StartSession.encode(message.payload.startSession, writer.uint32(50).fork()).ldelim();
+        break;
+      case "authorizeSocket":
+        AuthorizeSocket.encode(message.payload.authorizeSocket, writer.uint32(58).fork()).ldelim();
+        break;
+      case "endSession":
+        EndSession.encode(message.payload.endSession, writer.uint32(66).fork()).ldelim();
+        break;
+      case "changeAccountName":
+        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(74).fork()).ldelim();
+        break;
+      case "changeAccountHandle":
+        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(82).fork()).ldelim();
+        break;
+      case "changeAccountAvatar":
+        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(90).fork()).ldelim();
+        break;
+      case "addAttribute":
+        AddAttribute.encode(message.payload.addAttribute, writer.uint32(98).fork()).ldelim();
+        break;
+      case "changeAttributeName":
+        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(106).fork()).ldelim();
+        break;
+      case "changeAttributeValue":
+        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(114).fork()).ldelim();
+        break;
+      case "sortAttribute":
+        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(122).fork()).ldelim();
+        break;
+      case "sendAttributeVerification":
+        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(130).fork()).ldelim();
+        break;
+      case "verifyAttribute":
+        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(138).fork()).ldelim();
+        break;
+      case "removeAttribute":
+        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(146).fork()).ldelim();
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Command {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommand();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.payload = { $case: "startAuth", startAuth: StartAuth.decode(reader, reader.uint32()) };
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.payload = { $case: "verifyEmail", verifyEmail: VerifyEmail.decode(reader, reader.uint32()) };
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.payload = { $case: "verifyPhone", verifyPhone: VerifyPhone.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.payload = { $case: "verifyPhone", verifyPhone: VerifyPhone.decode(reader, reader.uint32()) };
+          message.payload = { $case: "createAccount", createAccount: CreateAccount.decode(reader, reader.uint32()) };
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.payload = { $case: "createAccount", createAccount: CreateAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
           continue;
         case 7:
           if (tag !== 58) {
-            break;
-          }
-
-          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
-          continue;
-        case 8:
-          if (tag !== 66) {
             break;
           }
 
@@ -179,15 +263,15 @@ export const Command = {
             authorizeSocket: AuthorizeSocket.decode(reader, reader.uint32()),
           };
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
           message.payload = { $case: "endSession", endSession: EndSession.decode(reader, reader.uint32()) };
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -196,8 +280,8 @@ export const Command = {
             changeAccountName: ChangeAccountName.decode(reader, reader.uint32()),
           };
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -206,8 +290,8 @@ export const Command = {
             changeAccountHandle: ChangeAccountHandle.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -216,15 +300,15 @@ export const Command = {
             changeAccountAvatar: ChangeAccountAvatar.decode(reader, reader.uint32()),
           };
           continue;
-        case 13:
-          if (tag !== 106) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
           message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
@@ -233,8 +317,8 @@ export const Command = {
             changeAttributeName: ChangeAttributeName.decode(reader, reader.uint32()),
           };
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -243,15 +327,15 @@ export const Command = {
             changeAttributeValue: ChangeAttributeValue.decode(reader, reader.uint32()),
           };
           continue;
-        case 16:
-          if (tag !== 130) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
           message.payload = { $case: "sortAttribute", sortAttribute: SortAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 17:
-          if (tag !== 138) {
+        case 16:
+          if (tag !== 130) {
             break;
           }
 
@@ -260,8 +344,8 @@ export const Command = {
             sendAttributeVerification: SendAttributeVerification.decode(reader, reader.uint32()),
           };
           continue;
-        case 18:
-          if (tag !== 146) {
+        case 17:
+          if (tag !== 138) {
             break;
           }
 
@@ -270,8 +354,8 @@ export const Command = {
             verifyAttribute: VerifyAttribute.decode(reader, reader.uint32()),
           };
           continue;
-        case 19:
-          if (tag !== 154) {
+        case 18:
+          if (tag !== 146) {
             break;
           }
 
@@ -291,7 +375,6 @@ export const Command = {
 
   fromJSON(object: any): Command {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
       payload: isSet(object.startAuth)
         ? { $case: "startAuth", startAuth: StartAuth.fromJSON(object.startAuth) }
         : isSet(object.verifyEmail)
@@ -349,9 +432,6 @@ export const Command = {
 
   toJSON(message: Command): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
-    }
     if (message.payload?.$case === "startAuth") {
       obj.startAuth = StartAuth.toJSON(message.payload.startAuth);
     }
@@ -414,7 +494,6 @@ export const Command = {
   },
   fromPartial<I extends Exact<DeepPartial<Command>, I>>(object: I): Command {
     const message = createBaseCommand();
-    message.id = object.id ?? 0;
     if (
       object.payload?.$case === "startAuth" &&
       object.payload?.startAuth !== undefined &&
@@ -580,6 +659,50 @@ export const Command = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = tsProtoGlobalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(String.fromCharCode(byte));
+    });
+    return tsProtoGlobalThis.btoa(bin.join(""));
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

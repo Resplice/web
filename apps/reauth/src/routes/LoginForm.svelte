@@ -6,7 +6,7 @@
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
 	import store from '$lib/store'
-	import { Button, PhoneField, TextField, MailIcon } from '@resplice/components'
+	import { Button, PhoneField, TextField, MailIcon, Toggle } from '@resplice/components'
 	import { errorTypeToString } from '$lib/protocol'
 
 	const config = useConfig()
@@ -128,6 +128,11 @@
 			bind:value={email}
 			Icon={MailIcon}
 			error={formErrs.email}
+		/>
+		<Toggle
+			name="persistSession"
+			label="This is a personal device"
+			bind:isActive={persistSession}
 		/>
 	</div>
 

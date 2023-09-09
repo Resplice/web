@@ -48,19 +48,14 @@ export async function encrypt(key: CryptoKey, iv: number, data: Uint8Array): Pro
 	return new Uint8Array(encryptedBuffer)
 }
 
-export async function decrypt(
-	key: CryptoKey,
-	iv: Uint8Array,
-	cipherText: Uint8Array
-): Promise<Uint8Array> {
+export async function decrypt(key: CryptoKey, iv: number, data: Uint8Array): Promise<Uint8Array> {
 	const decryptedBuffer = await crypto.subtle.decrypt(
 		{
 			name: 'AES-GCM',
-			iv // The initialization vector you used to encrypt
-			// additionalData: ArrayBuffer, // The additionalData you used to encrypt (if any)
+			iv: buildIV(iv, 12)
 		},
 		key,
-		cipherText
+		data
 	)
 	return new Uint8Array(decryptedBuffer)
 }

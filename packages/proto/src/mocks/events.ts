@@ -5,33 +5,23 @@ const PHONE = '+16198745121'
 
 // Auth Events
 const authStarted: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_EMAIL_VERIFICATION,
-	expiry: 0,
-	sessionId: 0
+	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_EMAIL
 }
 
 const authEmailVerified: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_PHONE_VERIFICATION,
-	expiry: 0,
-	sessionId: 0
+	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_PHONE
 }
 
 const authPhoneVerified: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_ACCOUNT_CREATION,
-	expiry: 0,
-	sessionId: 0
+	authStatus: proto.auth.AuthStatus.PENDING_CREATE_ACCOUNT
 }
 
 const accountCreatedAuth: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.PENDING_SESSION_START,
-	expiry: 0,
-	sessionId: 0
+	authStatus: proto.auth.AuthStatus.PENDING_START_SESSION
 }
 
 const sessionStarted: proto.auth.AuthChanged = {
-	status: proto.auth.AuthStatus.SESSION_AUTHORIZED,
-	expiry: 0,
-	sessionId: 1
+	authStatus: proto.auth.AuthStatus.AUTHORIZED
 }
 
 const authEvents = {
@@ -44,7 +34,7 @@ const authEvents = {
 
 // Account Events
 const accountCreated: proto.account.AccountCreated = {
-	accountId: 1,
+	accountUuid: 'uuid',
 	fullName: 'Han Solo',
 	handle: 'han.solo.1',
 	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
