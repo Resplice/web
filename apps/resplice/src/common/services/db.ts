@@ -2,7 +2,7 @@ const DB_NAME = 'RESPLICE_CACHE'
 const DB_VERSION = 1
 
 type Store =
-	| 'context'
+	| 'session'
 	| 'commands'
 	| 'events'
 	| 'account'

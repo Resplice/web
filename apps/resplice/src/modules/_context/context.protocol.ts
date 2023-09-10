@@ -11,9 +11,10 @@ import {
 } from '$common/workers/socketCommuter'
 import { SocketStatus } from '$modules/_context/context.types'
 import type { ContextStore } from '$modules/_context/context.store'
+import type { Session } from '$modules/session/session.types'
 
 export interface ContextProtocol {
-	openSocket: () => Promise<void>
+	openSocket: (session: Session) => Promise<void>
 }
 
 type Dependencies = {
@@ -32,7 +33,7 @@ function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies)
 		}))
 	}
 
-	function onSocketMessage(message: proto.Message) {
+	function onSocketMessage(message: proto.SecMessage) {
 		if (message.payload.$case === 'event') {
 			const event = message.payload.event
 			store.update((state) => ({
@@ -95,31 +96,28 @@ function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies)
 	})
 
 	return {
-		async openSocket() {
-			const [ctx, { events }] = await Promise.all([
-				cache.getById<{ email: string; phone: string; cryptoKeys: CryptoKeys }>('context', 1),
-				cache.read<proto.Event>('events')
-			])
+		async openSocket(session) {
+			const { events } = await cache.read<proto.Event>('events')
 			const lastEventId = events.at(-1)?.id || 0
 
 			const payload: Extract<proto.Command['payload'], { $case: 'authorizeSocket' }> = {
 				$case: 'authorizeSocket',
 				authorizeSocket: {
-					email: ctx.email,
-					phone: ctx.phone,
+					email: session.email,
+					phone: session.phone,
 					lastEventId
 				}
 			}
 
 			const [id] = await cache.insert('commands', payload)
-			const handshake: proto.Command = { id, payload }
+			const handshake: proto.Command = { payload }
 
 			await fetch.get({ endpoint: '/refresh-auth' })
 
 			commuter.postMessage({
 				type: SocketCommandType.OPEN,
 				respliceWsUrl: config.respliceWsUrl,
-				cryptoKeys: ctx.cryptoKeys,
+				cryptoKeys: session.cryptoKeys,
 				handshake
 			})
 		}

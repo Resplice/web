@@ -17,12 +17,12 @@
 				}
 			})
 		}
-		async function createDatabase(contextData) {
+		async function createDatabase(sessionData) {
 			return new Promise((resolve, reject) => {
 				const request = indexedDB.open('RESPLICE_CACHE')
 				request.onsuccess = () => {
-					const txn = request.result.transaction('context', 'readwrite')
-					txn.objectStore('context').put(contextData, 1)
+					const txn = request.result.transaction('session', 'readwrite')
+					txn.objectStore('session').put(sessionData, 1)
 					resolve()
 				}
 				request.onerror = (e) => {
@@ -30,7 +30,7 @@
 				}
 				request.onupgradeneeded = () => {
 					const db = request.result
-					db.createObjectStore('context')
+					db.createObjectStore('session')
 				}
 			})
 		}

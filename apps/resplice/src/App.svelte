@@ -21,10 +21,10 @@
 			const urlData = getUrlData()
 			const protocol = await protocolFactory()
 
-			const sessionIsValid = await protocol.session.isValid()
+			const session = await protocol.session.load()
 
-			if (!sessionIsValid) {
-				// If session cannot be stored or started, redirect to auth flow
+			if (!session) {
+				// If session cannot be retrieved, redirect to auth flow
 				location.replace(config.authUrl)
 				return false
 			}

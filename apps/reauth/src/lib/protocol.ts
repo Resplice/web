@@ -140,12 +140,11 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		document.body.appendChild(appIframe)
 		const message = {
 			...msg,
-			nextCommandId: ++cmdCount,
-			cryptoKeys
+			cryptoKeys,
+			initialCommandId: ++cmdCount
 		}
 		appIframe.onload = () => {
 			window.addEventListener('message', (e) => {
-				console.log(e.origin)
 				if (e.origin === respliceAppUrl) location.replace(respliceAppUrl)
 			})
 			appIframe.contentWindow?.postMessage(message, src)

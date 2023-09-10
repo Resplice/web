@@ -42,7 +42,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.attribute,
 			commuter: socketCommuter
 		}),
-		session: sessionProtocolFactory()
+		session: sessionProtocolFactory({ cache: db, store: stores.session})
 	}
 
 	socketCommuter.messages$.connect()
