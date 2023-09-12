@@ -17,28 +17,28 @@ type Dependencies = {
 	store: AccountStore
 	commuter: SocketCommuter
 }
-function accountProtocolFactory({ cache, store, commuter }: Dependencies): AccountProtocol {
+function accountProtocolFactory({ store, commuter }: Dependencies): AccountProtocol {
 	commuter.messages$.pipe(onlyAccountEvents()).subscribe((event) => {
 		store.update((state) => applyAccountEvent(state, event))
 	})
 
 	return {
 		async changeName(payload) {
-			await sendCommand(cache, commuter, {
+			sendCommand(commuter, {
 				$case: 'changeAccountName',
 				changeAccountName: payload
 			})
 			store.update((state) => ({ ...state, name: payload.name }))
 		},
 		async changeHandle(payload) {
-			await sendCommand(cache, commuter, {
+			sendCommand(commuter, {
 				$case: 'changeAccountHandle',
 				changeAccountHandle: payload
 			})
 			store.update((state) => ({ ...state, handle: payload.handle }))
 		},
 		async uploadAvatar(payload) {
-			await sendCommand(cache, commuter, {
+			sendCommand(commuter, {
 				$case: 'changeAccountAvatar',
 				changeAccountAvatar: payload
 			})

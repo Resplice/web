@@ -1,19 +1,23 @@
 import { fromEvent, map } from 'rxjs'
 import { webSocket, type WebSocketSubject } from 'rxjs/webSocket'
 import { serializeCommand, deserializeMessage } from '@resplice/proto'
-import { btob64 } from '@resplice/utils'
+import { b64tob64u, btob64 } from '@resplice/utils'
 import {
 	SocketCommandType,
 	type SocketCommand,
-	type CryptoKeys,
 	type OpenCommand,
 	SocketEventType,
 	type SocketEvent,
 	type SendCommand
 } from '$common/workers/socketCommuter'
+import db, { type DB } from '$services/db'
+import type { CryptoKeys } from '$modules/session/session.types'
 
 interface ConnWorker extends Worker {
+	cache: DB
 	cryptoKeys: CryptoKeys
+	// If persist is set, command and event payloads are stored in indexeddb for offline caching
+	persist: boolean
 	socket$: WebSocketSubject<Uint8Array> | null
 	postMessage: {
 		(message: SocketEvent, transfer: Transferable[]): void
@@ -31,26 +35,31 @@ fromEvent<MessageEvent<SocketCommand>>(self, 'message')
 				await openSocket(cmd)
 				break
 			case SocketCommandType.SEND:
-				await send(cmd.payload)
+				await send(cmd)
 				break
 		}
 	})
 
+async function send(cmd: SendCommand) {
+	const protoCmd = cmd.payload
+	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
+	const cmdBytes = await serializeCommand({ id, payload: protoCmd }, self.cryptoKeys.client)
+	self.socket$.next(cmdBytes)
+}
+
 async function handleMessage(bytes: Uint8Array) {
 	const message = await deserializeMessage(bytes, self.cryptoKeys.server)
+	if (self.persist && message.event) await self.cache.upsert('events', message.event)
 	self.postMessage({ type: SocketEventType.RECEIVED, message })
 }
 
 function handleError(error: Error) {
-	self.postMessage({ type: SocketEventType.ERRORED, error })
+	console.error(error)
+	self.postMessage({ type: SocketEventType.ERRORED, error: 'Socket Error' })
 }
 
 function handleClose() {
 	self.postMessage({ type: SocketEventType.CLOSED })
-}
-
-async function send(command: SendCommand['payload']) {
-	self.socket$.next(await serializeCommand(command, self.cryptoKeys.client))
 }
 
 async function openSocket(cmd: OpenCommand) {
@@ -58,9 +67,20 @@ async function openSocket(cmd: OpenCommand) {
 		self.socket$.complete()
 	}
 
-	const handshake = btob64(await serializeCommand(cmd.handshake, cmd.cryptoKeys.client))
-
 	self.cryptoKeys = cmd.cryptoKeys
+	self.persist = cmd.persist
+	await db.open()
+	self.cache = db
+
+	const protoCmd = cmd.handshake
+	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
+	const cmdBytes = await serializeCommand(
+		{ id, payload: protoCmd },
+		cmd.cryptoKeys.client,
+		cmd.cryptoKeys.accessKey
+	)
+	const handshake = b64tob64u(btob64(cmdBytes))
+
 	// TODO: Mock websocket based on url
 	self.socket$ = webSocket({
 		url: cmd.respliceWsUrl,

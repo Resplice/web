@@ -34,10 +34,12 @@
 			if (urlData.googleOAuthAccessToken)
 				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
 
+			await protocol.ctx.openSocket(session)
+
 			return true
 		} catch (err) {
 			console.error(err)
-			location.replace(config.authUrl)
+			// location.replace(config.authUrl)
 			return false
 		}
 	}

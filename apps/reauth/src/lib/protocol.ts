@@ -38,6 +38,7 @@ type CryptoKeys = {
 type AppMessage = {
 	phone: string
 	email: string
+	persist: boolean
 }
 
 export function protocolFactory(respliceEndpoint: string): Protocol {

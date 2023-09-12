@@ -1,10 +1,8 @@
-import proto from '@resplice/proto'
-import type { Fetch } from '@resplice/utils'
+import proto, { type ProtoMessage } from '@resplice/proto'
 import config from '$services/config'
 import type { DB } from '$services/db'
 import {
 	SocketCommandType,
-	type CryptoKeys,
 	type SocketCommuter,
 	SocketEventType,
 	type SocketEvent
@@ -21,9 +19,8 @@ type Dependencies = {
 	cache: DB
 	store: ContextStore
 	commuter: SocketCommuter
-	fetch: Fetch
 }
-function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies): ContextProtocol {
+function contextProtocolFactory({ cache, store, commuter }: Dependencies): ContextProtocol {
 	function onSocketOpen() {
 		store.update((state) => ({
 			socketStatus: SocketStatus.CONNECTED,
@@ -33,48 +30,34 @@ function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies)
 		}))
 	}
 
-	function onSocketMessage(message: proto.SecMessage) {
-		if (message.payload.$case === 'event') {
-			const event = message.payload.event
-			store.update((state) => ({
-				...state,
-				events: [event, ...state.events]
-			}))
-			return
-		}
-
-		if (message.payload.$case === 'stream') {
-			const stream = message.payload.stream
-			store.update((state) => ({
-				...state,
-				events: [...stream.events, ...state.events]
-			}))
-			return
-		}
-
-		if (message.payload.$case === 'error') {
+	function onSocketMessage(msg: ProtoMessage) {
+		if (msg.error) {
 			// TODO: trigger toast
-			console.error(message.payload.error)
+			console.error(msg.error)
 			return
 		}
+
+		const event = msg.event
+		store.update((state) => ({
+			...state,
+			events: [event, ...state.events]
+		}))
 	}
 
 	function onSocketError(e: Extract<SocketEvent, { type: SocketEventType.ERRORED }>) {
 		// TODO: trigger toast
+		console.log(e.error)
 		store.update((state) => ({
+			...state,
 			socketStatus: SocketStatus.DISCONNECTED,
-			error: e.error,
-			events: state.events,
-			settings: state.settings
+			error: e.error
 		}))
 	}
 
 	function onSocketClose() {
 		store.update((state) => ({
-			socketStatus: SocketStatus.DISCONNECTED,
-			error: state.error,
-			events: state.events,
-			settings: state.settings
+			...state,
+			socketStatus: SocketStatus.DISCONNECTED
 		}))
 	}
 
@@ -98,9 +81,10 @@ function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies)
 	return {
 		async openSocket(session) {
 			const { events } = await cache.read<proto.Event>('events')
+			console.log('Events on openSocket:', events)
 			const lastEventId = events.at(-1)?.id || 0
 
-			const payload: Extract<proto.Command['payload'], { $case: 'authorizeSocket' }> = {
+			const handshake: proto.Command['payload'] = {
 				$case: 'authorizeSocket',
 				authorizeSocket: {
 					email: session.email,
@@ -109,15 +93,11 @@ function contextProtocolFactory({ cache, store, commuter, fetch }: Dependencies)
 				}
 			}
 
-			const [id] = await cache.insert('commands', payload)
-			const handshake: proto.Command = { payload }
-
-			await fetch.get({ endpoint: '/refresh-auth' })
-
 			commuter.postMessage({
 				type: SocketCommandType.OPEN,
 				respliceWsUrl: config.respliceWsUrl,
 				cryptoKeys: session.cryptoKeys,
+				persist: session.persist,
 				handshake
 			})
 		}

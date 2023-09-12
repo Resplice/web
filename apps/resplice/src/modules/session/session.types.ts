@@ -3,6 +3,7 @@ export type Session = {
 	email: string
 	phone: string
 	cryptoKeys: CryptoKeys
+	persist: boolean
 	initialCommandId: number
 }
 

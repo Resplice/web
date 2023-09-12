@@ -29,9 +29,8 @@
 	function validate(): boolean {
 		formErrs = {}
 		const errs: Record<string, string> = {}
-		if (!isValidPhoneNumber(phone.value, phone.countryCode))
-			errs.phone = $t('auth.errors.INVALID_PHONE')
-		if (!validateEmail(email)) errs.email = $t('auth.errors.INVALID_EMAIL')
+		if (!isValidPhoneNumber(phone.value, phone.countryCode)) errs.phone = $t('auth.errors.PHONE')
+		if (!validateEmail(email)) errs.email = $t('auth.errors.EMAIL')
 		if (Object.keys(errs).length) {
 			formErrs = errs
 			return false

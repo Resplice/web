@@ -1,27 +1,25 @@
 import { filter, map, pipe, type OperatorFunction } from 'rxjs'
-import proto from '@resplice/proto'
+import proto, { type ProtoMessage } from '@resplice/proto'
 import socketWorkerUrl from '$common/workers/socket?url'
 import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
+import type { CryptoKeys } from '$modules/session/session.types'
 
 export enum SocketCommandType {
 	OPEN = 'OPEN',
 	SEND = 'SEND',
 	CLOSE = 'CLOSE'
 }
-export type CryptoKeys = {
-	client: CryptoKey
-	server: CryptoKey
-}
 
 export type OpenCommand = {
 	type: SocketCommandType.OPEN
 	respliceWsUrl: string
 	cryptoKeys: CryptoKeys
-	handshake: proto.Command
+	persist: boolean
+	handshake: Extract<proto.Command['payload'], { $case: 'authorizeSocket' }>
 }
 export type SendCommand = {
 	type: SocketCommandType.SEND
-	payload: proto.Command
+	payload: proto.Command['payload']
 }
 type CloseCommand = {
 	type: SocketCommandType.CLOSE
@@ -42,7 +40,7 @@ type OpenedEvent = {
 }
 type ReceivedEvent = {
 	type: SocketEventType.RECEIVED
-	message: proto.Message
+	message: ProtoMessage
 }
 type SentEvent = {
 	type: SocketEventType.SENT
@@ -50,7 +48,7 @@ type SentEvent = {
 }
 type ErroredEvent = {
 	type: SocketEventType.ERRORED
-	error: Error
+	error: string
 }
 type ClosedEvent = {
 	type: SocketEventType.CLOSED
@@ -58,15 +56,12 @@ type ClosedEvent = {
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
 
-type ReceivedEventAccount = ReceivedEvent & {
-	message: proto.Message & { payload: { $case: 'event'; event: proto.Event } }
-}
 export function onlyAccountEvents() {
 	return pipe(
 		filter<SocketEvent>(
-			(e) => e.type === SocketEventType.RECEIVED && e.message.payload.$case === 'event'
-		) as OperatorFunction<ReceivedEvent, ReceivedEventAccount>,
-		map((e) => e.message.payload.event)
+			(e) => e.type === SocketEventType.RECEIVED && !e.message.error
+		) as OperatorFunction<ReceivedEvent, ReceivedEvent>,
+		map((e) => e.message.event)
 	)
 }
 
