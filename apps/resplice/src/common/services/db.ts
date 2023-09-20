@@ -1,17 +1,7 @@
 const DB_NAME = 'RESPLICE_CACHE'
 const DB_VERSION = 2
 
-type Store =
-	| 'session'
-	| 'commands'
-	| 'events'
-	| 'account'
-	| 'attributes'
-	| 'chats'
-	| 'contacts'
-	| 'invites'
-	| 'profile'
-	| 'sessions'
+type Store = 'session' | 'commands' | 'events' | 'connections' | 'invites'
 
 let db: IDBDatabase | null = null
 

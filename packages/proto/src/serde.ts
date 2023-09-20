@@ -22,33 +22,33 @@ function encodeCommand(command: proto.Command) {
 export type ProtoMessage =
 	| {
 			commandId: number
-			event: null
+			message: null
 			error: proto.Error
 	  }
 	| {
 			commandId: number
-			event: proto.Event
+			message: proto.Message
 			error: null
 	  }
 export async function deserializeMessage(
 	messageBytes: Uint8Array,
 	decryptionKey: CryptoKey
 ): Promise<ProtoMessage> {
-	const { id: iv, commandId, event, error } = proto.SecMessage.decode(messageBytes)
+	const { id: iv, commandId, message, error } = proto.SecMessage.decode(messageBytes)
 
 	if (error) {
 		return {
 			commandId,
-			event: null,
+			message: null,
 			error
 		}
 	}
 
-	const decryptedMessage = await decrypt(decryptionKey, iv, event)
+	const decryptedMessage = await decrypt(decryptionKey, iv, message)
 
-	return { commandId, event: decodeEvent(decryptedMessage), error: null }
+	return { commandId, message: decodeMessage(decryptedMessage), error: null }
 }
 
-function decodeEvent(messageBytes: Uint8Array): proto.Event {
-	return proto.Event.decode(messageBytes)
+function decodeMessage(messageBytes: Uint8Array): proto.Message {
+	return proto.Message.decode(messageBytes)
 }

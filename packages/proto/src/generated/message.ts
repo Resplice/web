@@ -1,25 +1,20 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
-import {
-  AttributeAdded,
-  AttributeNameChanged,
-  AttributeRemoved,
-  AttributeSorted,
-  AttributeValueChanged,
-  AttributeVerified,
-} from "./attribute/events";
+import { AttributeAdded, AttributeNameChanged, AttributeRemoved, AttributeValueChanged } from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 import { Error } from "./error";
+import { InviteCreated, InviteDeleted, InviteShareAdded, InviteShareRemoved } from "./invite/events";
+import { PendingConnection } from "./invite/state";
 
 export interface SecMessage {
   id: number;
   commandId: number;
-  event: Uint8Array;
+  message: Uint8Array;
   error: Error | undefined;
 }
 
-export interface Event {
+export interface Message {
   id: number;
   payload?:
     | { $case: "authChanged"; authChanged: AuthChanged }
@@ -32,14 +27,17 @@ export interface Event {
     | { $case: "attributeAdded"; attributeAdded: AttributeAdded }
     | { $case: "attributeNameChanged"; attributeNameChanged: AttributeNameChanged }
     | { $case: "attributeValueChanged"; attributeValueChanged: AttributeValueChanged }
-    | { $case: "attributeSorted"; attributeSorted: AttributeSorted }
-    | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
     | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
+    | { $case: "inviteCreated"; inviteCreated: InviteCreated }
+    | { $case: "inviteShareAdded"; inviteShareAdded: InviteShareAdded }
+    | { $case: "inviteShareRemoved"; inviteShareRemoved: InviteShareRemoved }
+    | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
+    | { $case: "pendingConnection"; pendingConnection: PendingConnection }
     | undefined;
 }
 
 function createBaseSecMessage(): SecMessage {
-  return { id: 0, commandId: 0, event: new Uint8Array(0), error: undefined };
+  return { id: 0, commandId: 0, message: new Uint8Array(0), error: undefined };
 }
 
 export const SecMessage = {
@@ -50,8 +48,8 @@ export const SecMessage = {
     if (message.commandId !== 0) {
       writer.uint32(16).uint32(message.commandId);
     }
-    if (message.event.length !== 0) {
-      writer.uint32(26).bytes(message.event);
+    if (message.message.length !== 0) {
+      writer.uint32(26).bytes(message.message);
     }
     if (message.error !== undefined) {
       Error.encode(message.error, writer.uint32(34).fork()).ldelim();
@@ -85,7 +83,7 @@ export const SecMessage = {
             break;
           }
 
-          message.event = reader.bytes();
+          message.message = reader.bytes();
           continue;
         case 4:
           if (tag !== 34) {
@@ -107,7 +105,7 @@ export const SecMessage = {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
       commandId: isSet(object.commandId) ? Number(object.commandId) : 0,
-      event: isSet(object.event) ? bytesFromBase64(object.event) : new Uint8Array(0),
+      message: isSet(object.message) ? bytesFromBase64(object.message) : new Uint8Array(0),
       error: isSet(object.error) ? Error.fromJSON(object.error) : undefined,
     };
   },
@@ -120,8 +118,8 @@ export const SecMessage = {
     if (message.commandId !== 0) {
       obj.commandId = Math.round(message.commandId);
     }
-    if (message.event.length !== 0) {
-      obj.event = base64FromBytes(message.event);
+    if (message.message.length !== 0) {
+      obj.message = base64FromBytes(message.message);
     }
     if (message.error !== undefined) {
       obj.error = Error.toJSON(message.error);
@@ -136,18 +134,18 @@ export const SecMessage = {
     const message = createBaseSecMessage();
     message.id = object.id ?? 0;
     message.commandId = object.commandId ?? 0;
-    message.event = object.event ?? new Uint8Array(0);
+    message.message = object.message ?? new Uint8Array(0);
     message.error = (object.error !== undefined && object.error !== null) ? Error.fromPartial(object.error) : undefined;
     return message;
   },
 };
 
-function createBaseEvent(): Event {
+function createBaseMessage(): Message {
   return { id: 0, payload: undefined };
 }
 
-export const Event = {
-  encode(message: Event, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Message = {
+  encode(message: Message, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -182,23 +180,32 @@ export const Event = {
       case "attributeValueChanged":
         AttributeValueChanged.encode(message.payload.attributeValueChanged, writer.uint32(90).fork()).ldelim();
         break;
-      case "attributeSorted":
-        AttributeSorted.encode(message.payload.attributeSorted, writer.uint32(98).fork()).ldelim();
-        break;
-      case "attributeVerified":
-        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(106).fork()).ldelim();
-        break;
       case "attributeRemoved":
         AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(114).fork()).ldelim();
+        break;
+      case "inviteCreated":
+        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(122).fork()).ldelim();
+        break;
+      case "inviteShareAdded":
+        InviteShareAdded.encode(message.payload.inviteShareAdded, writer.uint32(130).fork()).ldelim();
+        break;
+      case "inviteShareRemoved":
+        InviteShareRemoved.encode(message.payload.inviteShareRemoved, writer.uint32(138).fork()).ldelim();
+        break;
+      case "inviteDeleted":
+        InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(146).fork()).ldelim();
+        break;
+      case "pendingConnection":
+        PendingConnection.encode(message.payload.pendingConnection, writer.uint32(154).fork()).ldelim();
         break;
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Event {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Message {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEvent();
+    const message = createBaseMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -294,26 +301,6 @@ export const Event = {
             attributeValueChanged: AttributeValueChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.payload = {
-            $case: "attributeSorted",
-            attributeSorted: AttributeSorted.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
-          message.payload = {
-            $case: "attributeVerified",
-            attributeVerified: AttributeVerified.decode(reader, reader.uint32()),
-          };
-          continue;
         case 14:
           if (tag !== 114) {
             break;
@@ -322,6 +309,50 @@ export const Event = {
           message.payload = {
             $case: "attributeRemoved",
             attributeRemoved: AttributeRemoved.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.payload = {
+            $case: "inviteShareAdded",
+            inviteShareAdded: InviteShareAdded.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.payload = {
+            $case: "inviteShareRemoved",
+            inviteShareRemoved: InviteShareRemoved.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.payload = { $case: "inviteDeleted", inviteDeleted: InviteDeleted.decode(reader, reader.uint32()) };
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.payload = {
+            $case: "pendingConnection",
+            pendingConnection: PendingConnection.decode(reader, reader.uint32()),
           };
           continue;
       }
@@ -333,7 +364,7 @@ export const Event = {
     return message;
   },
 
-  fromJSON(object: any): Event {
+  fromJSON(object: any): Message {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
       payload: isSet(object.authChanged)
@@ -368,17 +399,23 @@ export const Event = {
           $case: "attributeValueChanged",
           attributeValueChanged: AttributeValueChanged.fromJSON(object.attributeValueChanged),
         }
-        : isSet(object.attributeSorted)
-        ? { $case: "attributeSorted", attributeSorted: AttributeSorted.fromJSON(object.attributeSorted) }
-        : isSet(object.attributeVerified)
-        ? { $case: "attributeVerified", attributeVerified: AttributeVerified.fromJSON(object.attributeVerified) }
         : isSet(object.attributeRemoved)
         ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
+        : isSet(object.inviteCreated)
+        ? { $case: "inviteCreated", inviteCreated: InviteCreated.fromJSON(object.inviteCreated) }
+        : isSet(object.inviteShareAdded)
+        ? { $case: "inviteShareAdded", inviteShareAdded: InviteShareAdded.fromJSON(object.inviteShareAdded) }
+        : isSet(object.inviteShareRemoved)
+        ? { $case: "inviteShareRemoved", inviteShareRemoved: InviteShareRemoved.fromJSON(object.inviteShareRemoved) }
+        : isSet(object.inviteDeleted)
+        ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
+        : isSet(object.pendingConnection)
+        ? { $case: "pendingConnection", pendingConnection: PendingConnection.fromJSON(object.pendingConnection) }
         : undefined,
     };
   },
 
-  toJSON(message: Event): unknown {
+  toJSON(message: Message): unknown {
     const obj: any = {};
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
@@ -413,23 +450,32 @@ export const Event = {
     if (message.payload?.$case === "attributeValueChanged") {
       obj.attributeValueChanged = AttributeValueChanged.toJSON(message.payload.attributeValueChanged);
     }
-    if (message.payload?.$case === "attributeSorted") {
-      obj.attributeSorted = AttributeSorted.toJSON(message.payload.attributeSorted);
-    }
-    if (message.payload?.$case === "attributeVerified") {
-      obj.attributeVerified = AttributeVerified.toJSON(message.payload.attributeVerified);
-    }
     if (message.payload?.$case === "attributeRemoved") {
       obj.attributeRemoved = AttributeRemoved.toJSON(message.payload.attributeRemoved);
+    }
+    if (message.payload?.$case === "inviteCreated") {
+      obj.inviteCreated = InviteCreated.toJSON(message.payload.inviteCreated);
+    }
+    if (message.payload?.$case === "inviteShareAdded") {
+      obj.inviteShareAdded = InviteShareAdded.toJSON(message.payload.inviteShareAdded);
+    }
+    if (message.payload?.$case === "inviteShareRemoved") {
+      obj.inviteShareRemoved = InviteShareRemoved.toJSON(message.payload.inviteShareRemoved);
+    }
+    if (message.payload?.$case === "inviteDeleted") {
+      obj.inviteDeleted = InviteDeleted.toJSON(message.payload.inviteDeleted);
+    }
+    if (message.payload?.$case === "pendingConnection") {
+      obj.pendingConnection = PendingConnection.toJSON(message.payload.pendingConnection);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Event>, I>>(base?: I): Event {
-    return Event.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<Message>, I>>(base?: I): Message {
+    return Message.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
-    const message = createBaseEvent();
+  fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
+    const message = createBaseMessage();
     message.id = object.id ?? 0;
     if (
       object.payload?.$case === "authChanged" &&
@@ -526,26 +572,6 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeSorted" &&
-      object.payload?.attributeSorted !== undefined &&
-      object.payload?.attributeSorted !== null
-    ) {
-      message.payload = {
-        $case: "attributeSorted",
-        attributeSorted: AttributeSorted.fromPartial(object.payload.attributeSorted),
-      };
-    }
-    if (
-      object.payload?.$case === "attributeVerified" &&
-      object.payload?.attributeVerified !== undefined &&
-      object.payload?.attributeVerified !== null
-    ) {
-      message.payload = {
-        $case: "attributeVerified",
-        attributeVerified: AttributeVerified.fromPartial(object.payload.attributeVerified),
-      };
-    }
-    if (
       object.payload?.$case === "attributeRemoved" &&
       object.payload?.attributeRemoved !== undefined &&
       object.payload?.attributeRemoved !== null
@@ -553,6 +579,56 @@ export const Event = {
       message.payload = {
         $case: "attributeRemoved",
         attributeRemoved: AttributeRemoved.fromPartial(object.payload.attributeRemoved),
+      };
+    }
+    if (
+      object.payload?.$case === "inviteCreated" &&
+      object.payload?.inviteCreated !== undefined &&
+      object.payload?.inviteCreated !== null
+    ) {
+      message.payload = {
+        $case: "inviteCreated",
+        inviteCreated: InviteCreated.fromPartial(object.payload.inviteCreated),
+      };
+    }
+    if (
+      object.payload?.$case === "inviteShareAdded" &&
+      object.payload?.inviteShareAdded !== undefined &&
+      object.payload?.inviteShareAdded !== null
+    ) {
+      message.payload = {
+        $case: "inviteShareAdded",
+        inviteShareAdded: InviteShareAdded.fromPartial(object.payload.inviteShareAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "inviteShareRemoved" &&
+      object.payload?.inviteShareRemoved !== undefined &&
+      object.payload?.inviteShareRemoved !== null
+    ) {
+      message.payload = {
+        $case: "inviteShareRemoved",
+        inviteShareRemoved: InviteShareRemoved.fromPartial(object.payload.inviteShareRemoved),
+      };
+    }
+    if (
+      object.payload?.$case === "inviteDeleted" &&
+      object.payload?.inviteDeleted !== undefined &&
+      object.payload?.inviteDeleted !== null
+    ) {
+      message.payload = {
+        $case: "inviteDeleted",
+        inviteDeleted: InviteDeleted.fromPartial(object.payload.inviteDeleted),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnection" &&
+      object.payload?.pendingConnection !== undefined &&
+      object.payload?.pendingConnection !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnection",
+        pendingConnection: PendingConnection.fromPartial(object.payload.pendingConnection),
       };
     }
     return message;

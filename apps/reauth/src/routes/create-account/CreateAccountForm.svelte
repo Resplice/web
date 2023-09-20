@@ -36,7 +36,6 @@
 		const avatarDataUri = await avatarImageToDataUri(avatar)
 
 		const { event, error } = await protocol.createAccount({
-			email: $store.email,
 			phone: $store.phone,
 			fullName,
 			avatar: avatarDataUri
@@ -70,7 +69,7 @@
 <div class="flex-1 space-y-6 flex flex-col justify-between overflow-auto">
 	<div>
 		<UserAvatar
-			id={Math.random()}
+			uuid={Math.random().toString(36).substring(2, 5)}
 			avatarUrl={avatar ? URL.createObjectURL(avatar) : null}
 			on:crop={(e) => (avatar = e.detail)}
 		/>

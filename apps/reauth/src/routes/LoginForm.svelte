@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { isValidPhoneNumber, parsePhoneNumber, type CountryCode } from 'libphonenumber-js'
-	import { getNavigatorCountry, validateEmail } from '@resplice/utils'
+	import { getNavigatorCountry } from '@resplice/utils'
 	import { t } from '$lib/i18n'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
 	import store from '$lib/store'
-	import { Button, PhoneField, TextField, MailIcon, Toggle } from '@resplice/components'
+	import { Button, PhoneField, Toggle } from '@resplice/components'
 	import { errorTypeToString } from '$lib/protocol'
 
 	const config = useConfig()
@@ -16,7 +16,6 @@
 		value: '',
 		countryCode: 'US' as CountryCode
 	}
-	let email = ''
 	let persistSession = false
 	let formErrs: Record<string, string> = {}
 	let systemError: string
@@ -30,7 +29,6 @@
 		formErrs = {}
 		const errs: Record<string, string> = {}
 		if (!isValidPhoneNumber(phone.value, phone.countryCode)) errs.phone = $t('auth.errors.PHONE')
-		if (!validateEmail(email)) errs.email = $t('auth.errors.EMAIL')
 		if (Object.keys(errs).length) {
 			formErrs = errs
 			return false
@@ -64,7 +62,6 @@
 	async function startAuth() {
 		const phoneNumber = parsePhoneNumber(phone.value, phone.countryCode)
 		const { event, error } = await protocol.startAuth({
-			email,
 			phone: phoneNumber.number
 		})
 
@@ -77,7 +74,6 @@
 
 		store.set({
 			status: event.authStatus,
-			email,
 			phone: phoneNumber.number,
 			persistSession
 		})
@@ -120,14 +116,6 @@
 >
 	<div class="w-full flex flex-col space-y-6">
 		<PhoneField name="phone" label={$t('auth.enterPhone')} bind:phone error={formErrs.phone} />
-		<TextField
-			name="email"
-			label={$t('auth.enterEmail')}
-			autocomplete="email"
-			bind:value={email}
-			Icon={MailIcon}
-			error={formErrs.email}
-		/>
 		<Toggle
 			name="persistSession"
 			label="This is a personal device"

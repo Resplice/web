@@ -12,13 +12,13 @@ import type { AttributeStore } from '$modules/attribute/attribute.store'
 import type { Attribute } from '$modules/account/account.types'
 
 export interface AttributeProtocol {
-	add(payload: proto.attribute.AddAttribute): Promise<void>
-	changeName(payload: proto.attribute.ChangeAttributeName): Promise<void>
-	changeValue(payload: proto.attribute.ChangeAttributeValue): Promise<void>
-	sort(payload: proto.attribute.SortAttribute): Promise<void>
-	sendVerification(payload: proto.attribute.SendAttributeVerification): Promise<void>
-	verify(payload: proto.attribute.VerifyAttribute): Promise<void>
-	remove(payload: proto.attribute.RemoveAttribute): Promise<void>
+	add(payload: proto.attribute.AddAttribute): void
+	changeName(payload: proto.attribute.ChangeAttributeName): void
+	changeValue(payload: proto.attribute.ChangeAttributeValue): void
+	sort(payload: proto.attribute.SortAttribute): void
+	sendVerification(payload: proto.attribute.SendAttributeVerification): void
+	verify(payload: proto.attribute.VerifyAttribute): void
+	remove(payload: proto.attribute.RemoveAttribute): void
 }
 
 type Dependencies = {
@@ -26,14 +26,14 @@ type Dependencies = {
 	store: AttributeStore
 	commuter: SocketCommuter
 }
-function attributeProtocolFactory({ cache, store, commuter }: Dependencies): AttributeProtocol {
+function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeProtocol {
 	commuter.messages$.pipe(onlyAccountEvents()).subscribe((event) => {
 		store.update((state) => applyAttributeEvent(state, event))
 	})
 
 	return {
-		async add(payload) {
-			await sendCommand(cache, commuter, {
+		add(payload) {
+			sendCommand(commuter, {
 				$case: 'addAttribute',
 				addAttribute: payload
 			})
@@ -52,8 +52,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				return state
 			})
 		},
-		async changeName(payload) {
-			await sendCommand(cache, commuter, {
+		changeName(payload) {
+			sendCommand(commuter, {
 				$case: 'changeAttributeName',
 				changeAttributeName: payload
 			})
@@ -62,8 +62,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				return state
 			})
 		},
-		async changeValue(payload) {
-			await sendCommand(cache, commuter, {
+		changeValue(payload) {
+			sendCommand(commuter, {
 				$case: 'changeAttributeValue',
 				changeAttributeValue: payload
 			})
@@ -72,8 +72,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				return state
 			})
 		},
-		async sort(payload) {
-			await sendCommand(cache, commuter, {
+		sort(payload) {
+			sendCommand(commuter, {
 				$case: 'sortAttribute',
 				sortAttribute: payload
 			})
@@ -83,13 +83,13 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 			})
 		},
 		sendVerification(payload) {
-			return sendCommand(cache, commuter, {
+			return sendCommand(commuter, {
 				$case: 'sendAttributeVerification',
 				sendAttributeVerification: payload
 			})
 		},
-		async verify(payload) {
-			await sendCommand(cache, commuter, {
+		verify(payload) {
+			sendCommand(commuter, {
 				$case: 'verifyAttribute',
 				verifyAttribute: payload
 			})
@@ -98,8 +98,8 @@ function attributeProtocolFactory({ cache, store, commuter }: Dependencies): Att
 				return state
 			})
 		},
-		async remove(payload) {
-			await sendCommand(cache, commuter, {
+		remove(payload) {
+			sendCommand(commuter, {
 				$case: 'removeAttribute',
 				removeAttribute: payload
 			})

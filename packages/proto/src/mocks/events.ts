@@ -1,14 +1,9 @@
 import proto from '../index'
 
-const EMAIL = 'han@falcon.com'
 const PHONE = '+16198745121'
 
 // Auth Events
 const authStarted: proto.auth.AuthChanged = {
-	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_EMAIL
-}
-
-const authEmailVerified: proto.auth.AuthChanged = {
 	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_PHONE
 }
 
@@ -26,7 +21,6 @@ const sessionStarted: proto.auth.AuthChanged = {
 
 const authEvents = {
 	authStarted,
-	authEmailVerified,
 	authPhoneVerified,
 	accountCreatedAuth,
 	sessionStarted
@@ -38,8 +32,6 @@ const accountCreated: proto.account.AccountCreated = {
 	fullName: 'Han Solo',
 	handle: 'han.solo.1',
 	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
-	emailId: 1,
-	email: EMAIL,
 	phoneId: 2,
 	phone: PHONE
 }
@@ -100,16 +92,6 @@ const attributeValueChanged: proto.attribute.AttributeValueChanged = {
 	}
 }
 
-const attributeSorted: proto.attribute.AttributeSorted = {
-	id: 3,
-	sortIndex: 1
-}
-
-const attributeVerified: proto.attribute.AttributeVerified = {
-	id: 3,
-	verifiedAt: 3454563
-}
-
 const attributeRemoved: proto.attribute.AttributeRemoved = {
 	id: 3
 }
@@ -118,8 +100,6 @@ const attributeEvents = {
 	attributeAdded,
 	attributeNameChanged,
 	attributeValueChanged,
-	attributeSorted,
-	attributeVerified,
 	attributeRemoved
 }
 

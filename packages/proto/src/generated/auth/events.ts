@@ -1,14 +1,12 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { Coordinate } from "../attribute/types";
 
 export enum AuthStatus {
   UNAUTHORIZED = 0,
-  PENDING_VERIFY_EMAIL = 1,
-  PENDING_VERIFY_PHONE = 2,
-  PENDING_CREATE_ACCOUNT = 3,
-  PENDING_START_SESSION = 4,
-  AUTHORIZED = 5,
+  PENDING_VERIFY_PHONE = 1,
+  PENDING_CREATE_ACCOUNT = 2,
+  PENDING_START_SESSION = 3,
+  AUTHORIZED = 4,
   UNRECOGNIZED = -1,
 }
 
@@ -18,18 +16,15 @@ export function authStatusFromJSON(object: any): AuthStatus {
     case "UNAUTHORIZED":
       return AuthStatus.UNAUTHORIZED;
     case 1:
-    case "PENDING_VERIFY_EMAIL":
-      return AuthStatus.PENDING_VERIFY_EMAIL;
-    case 2:
     case "PENDING_VERIFY_PHONE":
       return AuthStatus.PENDING_VERIFY_PHONE;
-    case 3:
+    case 2:
     case "PENDING_CREATE_ACCOUNT":
       return AuthStatus.PENDING_CREATE_ACCOUNT;
-    case 4:
+    case 3:
     case "PENDING_START_SESSION":
       return AuthStatus.PENDING_START_SESSION;
-    case 5:
+    case 4:
     case "AUTHORIZED":
       return AuthStatus.AUTHORIZED;
     case -1:
@@ -43,8 +38,6 @@ export function authStatusToJSON(object: AuthStatus): string {
   switch (object) {
     case AuthStatus.UNAUTHORIZED:
       return "UNAUTHORIZED";
-    case AuthStatus.PENDING_VERIFY_EMAIL:
-      return "PENDING_VERIFY_EMAIL";
     case AuthStatus.PENDING_VERIFY_PHONE:
       return "PENDING_VERIFY_PHONE";
     case AuthStatus.PENDING_CREATE_ACCOUNT:
@@ -65,11 +58,8 @@ export interface AuthChanged {
 
 export interface SessionStarted {
   sessionId: number;
-  email: string;
-  phone: string;
   userAgent: string;
   ipAddress: string;
-  location: Coordinate | undefined;
 }
 
 export interface SessionEnded {
@@ -134,7 +124,7 @@ export const AuthChanged = {
 };
 
 function createBaseSessionStarted(): SessionStarted {
-  return { sessionId: 0, email: "", phone: "", userAgent: "", ipAddress: "", location: undefined };
+  return { sessionId: 0, userAgent: "", ipAddress: "" };
 }
 
 export const SessionStarted = {
@@ -142,20 +132,11 @@ export const SessionStarted = {
     if (message.sessionId !== 0) {
       writer.uint32(8).uint32(message.sessionId);
     }
-    if (message.email !== "") {
-      writer.uint32(18).string(message.email);
-    }
-    if (message.phone !== "") {
-      writer.uint32(26).string(message.phone);
-    }
     if (message.userAgent !== "") {
-      writer.uint32(34).string(message.userAgent);
+      writer.uint32(18).string(message.userAgent);
     }
     if (message.ipAddress !== "") {
-      writer.uint32(42).string(message.ipAddress);
-    }
-    if (message.location !== undefined) {
-      Coordinate.encode(message.location, writer.uint32(50).fork()).ldelim();
+      writer.uint32(26).string(message.ipAddress);
     }
     return writer;
   },
@@ -179,35 +160,14 @@ export const SessionStarted = {
             break;
           }
 
-          message.email = reader.string();
+          message.userAgent = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.phone = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.userAgent = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.ipAddress = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.location = Coordinate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -221,11 +181,8 @@ export const SessionStarted = {
   fromJSON(object: any): SessionStarted {
     return {
       sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
       userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
       ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
-      location: isSet(object.location) ? Coordinate.fromJSON(object.location) : undefined,
     };
   },
 
@@ -234,20 +191,11 @@ export const SessionStarted = {
     if (message.sessionId !== 0) {
       obj.sessionId = Math.round(message.sessionId);
     }
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
-    if (message.phone !== "") {
-      obj.phone = message.phone;
-    }
     if (message.userAgent !== "") {
       obj.userAgent = message.userAgent;
     }
     if (message.ipAddress !== "") {
       obj.ipAddress = message.ipAddress;
-    }
-    if (message.location !== undefined) {
-      obj.location = Coordinate.toJSON(message.location);
     }
     return obj;
   },
@@ -258,13 +206,8 @@ export const SessionStarted = {
   fromPartial<I extends Exact<DeepPartial<SessionStarted>, I>>(object: I): SessionStarted {
     const message = createBaseSessionStarted();
     message.sessionId = object.sessionId ?? 0;
-    message.email = object.email ?? "";
-    message.phone = object.phone ?? "";
     message.userAgent = object.userAgent ?? "";
     message.ipAddress = object.ipAddress ?? "";
-    message.location = (object.location !== undefined && object.location !== null)
-      ? Coordinate.fromPartial(object.location)
-      : undefined;
     return message;
   },
 };

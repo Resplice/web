@@ -76,6 +76,8 @@ export function applyAttributeEvent(
 		case 'attributeRemoved':
 			aggregate.delete(event.payload.attributeRemoved.id)
 			break
+		default:
+			return aggregate
 	}
 
 	return aggregate

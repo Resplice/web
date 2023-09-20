@@ -81,7 +81,6 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 	return {
 		async openSocket(session) {
 			const { events } = await cache.read<proto.Event>('events')
-			console.log('Events on openSocket:', events)
 			const lastEventId = events.at(-1)?.id || 0
 
 			const handshake: proto.Command['payload'] = {

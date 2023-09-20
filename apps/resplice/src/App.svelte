@@ -20,6 +20,7 @@
 		try {
 			const urlData = getUrlData()
 			const protocol = await protocolFactory()
+			protocolContext.protocol = protocol
 
 			const session = await protocol.session.load()
 
@@ -29,8 +30,9 @@
 				return false
 			}
 
-			protocolContext.protocol = protocol
 			await initializeIntl()
+			await protocol.loadCache()
+
 			if (urlData.googleOAuthAccessToken)
 				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
 
@@ -61,8 +63,8 @@
 
 {#await loading}
 	<AppLoading />
-{:then isValidSession}
-	{#if isValidSession && accountLoaded}
+{:then loaded}
+	{#if loaded && accountLoaded}
 		<Router {initialUrl} />
 		<!-- <ToastProvider /> -->
 	{/if}

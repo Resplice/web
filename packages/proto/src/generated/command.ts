@@ -1,15 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { ChangeAccountAvatar, ChangeAccountHandle, ChangeAccountName } from "./account/commands";
-import {
-  AddAttribute,
-  ChangeAttributeName,
-  ChangeAttributeValue,
-  RemoveAttribute,
-  SendAttributeVerification,
-  SortAttribute,
-  VerifyAttribute,
-} from "./attribute/commands";
+import { AddAttribute, ChangeAttributeName, ChangeAttributeValue, RemoveAttribute } from "./attribute/commands";
 import {
   AuthorizeSocket,
   CreateAccount,
@@ -17,9 +9,16 @@ import {
   EndSession,
   StartAuth,
   StartSession,
-  VerifyEmail,
   VerifyPhone,
 } from "./auth/commands";
+import {
+  AcceptInvite,
+  AddInviteShare,
+  CreateInvite,
+  DeclineInvite,
+  DeleteInvite,
+  RemoveInviteShare,
+} from "./invite/commands";
 
 export interface SecCommand {
   id: number;
@@ -30,7 +29,6 @@ export interface SecCommand {
 export interface Command {
   payload?:
     | { $case: "startAuth"; startAuth: StartAuth }
-    | { $case: "verifyEmail"; verifyEmail: VerifyEmail }
     | { $case: "verifyPhone"; verifyPhone: VerifyPhone }
     | { $case: "createAccount"; createAccount: CreateAccount }
     | { $case: "deleteAccount"; deleteAccount: DeleteAccount }
@@ -43,10 +41,13 @@ export interface Command {
     | { $case: "addAttribute"; addAttribute: AddAttribute }
     | { $case: "changeAttributeName"; changeAttributeName: ChangeAttributeName }
     | { $case: "changeAttributeValue"; changeAttributeValue: ChangeAttributeValue }
-    | { $case: "sortAttribute"; sortAttribute: SortAttribute }
-    | { $case: "sendAttributeVerification"; sendAttributeVerification: SendAttributeVerification }
-    | { $case: "verifyAttribute"; verifyAttribute: VerifyAttribute }
     | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
+    | { $case: "createInvite"; createInvite: CreateInvite }
+    | { $case: "addInviteShare"; addInviteShare: AddInviteShare }
+    | { $case: "removeInviteShare"; removeInviteShare: RemoveInviteShare }
+    | { $case: "deleteInvite"; deleteInvite: DeleteInvite }
+    | { $case: "acceptInvite"; acceptInvite: AcceptInvite }
+    | { $case: "declineInvite"; declineInvite: DeclineInvite }
     | undefined;
 }
 
@@ -149,56 +150,62 @@ export const Command = {
       case "startAuth":
         StartAuth.encode(message.payload.startAuth, writer.uint32(10).fork()).ldelim();
         break;
-      case "verifyEmail":
-        VerifyEmail.encode(message.payload.verifyEmail, writer.uint32(18).fork()).ldelim();
-        break;
       case "verifyPhone":
-        VerifyPhone.encode(message.payload.verifyPhone, writer.uint32(26).fork()).ldelim();
+        VerifyPhone.encode(message.payload.verifyPhone, writer.uint32(18).fork()).ldelim();
         break;
       case "createAccount":
-        CreateAccount.encode(message.payload.createAccount, writer.uint32(34).fork()).ldelim();
+        CreateAccount.encode(message.payload.createAccount, writer.uint32(26).fork()).ldelim();
         break;
       case "deleteAccount":
-        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(42).fork()).ldelim();
+        DeleteAccount.encode(message.payload.deleteAccount, writer.uint32(34).fork()).ldelim();
         break;
       case "startSession":
-        StartSession.encode(message.payload.startSession, writer.uint32(50).fork()).ldelim();
+        StartSession.encode(message.payload.startSession, writer.uint32(42).fork()).ldelim();
         break;
       case "authorizeSocket":
-        AuthorizeSocket.encode(message.payload.authorizeSocket, writer.uint32(58).fork()).ldelim();
+        AuthorizeSocket.encode(message.payload.authorizeSocket, writer.uint32(50).fork()).ldelim();
         break;
       case "endSession":
-        EndSession.encode(message.payload.endSession, writer.uint32(66).fork()).ldelim();
+        EndSession.encode(message.payload.endSession, writer.uint32(58).fork()).ldelim();
         break;
       case "changeAccountName":
-        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(74).fork()).ldelim();
+        ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(66).fork()).ldelim();
         break;
       case "changeAccountHandle":
-        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(82).fork()).ldelim();
+        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(74).fork()).ldelim();
         break;
       case "changeAccountAvatar":
-        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(90).fork()).ldelim();
+        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(82).fork()).ldelim();
         break;
       case "addAttribute":
-        AddAttribute.encode(message.payload.addAttribute, writer.uint32(98).fork()).ldelim();
+        AddAttribute.encode(message.payload.addAttribute, writer.uint32(90).fork()).ldelim();
         break;
       case "changeAttributeName":
-        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(106).fork()).ldelim();
+        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(98).fork()).ldelim();
         break;
       case "changeAttributeValue":
-        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(114).fork()).ldelim();
-        break;
-      case "sortAttribute":
-        SortAttribute.encode(message.payload.sortAttribute, writer.uint32(122).fork()).ldelim();
-        break;
-      case "sendAttributeVerification":
-        SendAttributeVerification.encode(message.payload.sendAttributeVerification, writer.uint32(130).fork()).ldelim();
-        break;
-      case "verifyAttribute":
-        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(138).fork()).ldelim();
+        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(106).fork()).ldelim();
         break;
       case "removeAttribute":
-        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(146).fork()).ldelim();
+        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(114).fork()).ldelim();
+        break;
+      case "createInvite":
+        CreateInvite.encode(message.payload.createInvite, writer.uint32(122).fork()).ldelim();
+        break;
+      case "addInviteShare":
+        AddInviteShare.encode(message.payload.addInviteShare, writer.uint32(130).fork()).ldelim();
+        break;
+      case "removeInviteShare":
+        RemoveInviteShare.encode(message.payload.removeInviteShare, writer.uint32(138).fork()).ldelim();
+        break;
+      case "deleteInvite":
+        DeleteInvite.encode(message.payload.deleteInvite, writer.uint32(146).fork()).ldelim();
+        break;
+      case "acceptInvite":
+        AcceptInvite.encode(message.payload.acceptInvite, writer.uint32(154).fork()).ldelim();
+        break;
+      case "declineInvite":
+        DeclineInvite.encode(message.payload.declineInvite, writer.uint32(162).fork()).ldelim();
         break;
     }
     return writer;
@@ -223,38 +230,31 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "verifyEmail", verifyEmail: VerifyEmail.decode(reader, reader.uint32()) };
+          message.payload = { $case: "verifyPhone", verifyPhone: VerifyPhone.decode(reader, reader.uint32()) };
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.payload = { $case: "verifyPhone", verifyPhone: VerifyPhone.decode(reader, reader.uint32()) };
+          message.payload = { $case: "createAccount", createAccount: CreateAccount.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.payload = { $case: "createAccount", createAccount: CreateAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.payload = { $case: "deleteAccount", deleteAccount: DeleteAccount.decode(reader, reader.uint32()) };
+          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
-            break;
-          }
-
-          message.payload = { $case: "startSession", startSession: StartSession.decode(reader, reader.uint32()) };
-          continue;
-        case 7:
-          if (tag !== 58) {
             break;
           }
 
@@ -263,15 +263,15 @@ export const Command = {
             authorizeSocket: AuthorizeSocket.decode(reader, reader.uint32()),
           };
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
           message.payload = { $case: "endSession", endSession: EndSession.decode(reader, reader.uint32()) };
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -280,8 +280,8 @@ export const Command = {
             changeAccountName: ChangeAccountName.decode(reader, reader.uint32()),
           };
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -290,8 +290,8 @@ export const Command = {
             changeAccountHandle: ChangeAccountHandle.decode(reader, reader.uint32()),
           };
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -300,15 +300,15 @@ export const Command = {
             changeAccountAvatar: ChangeAccountAvatar.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
           message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
           continue;
-        case 13:
-          if (tag !== 106) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
@@ -317,8 +317,8 @@ export const Command = {
             changeAttributeName: ChangeAttributeName.decode(reader, reader.uint32()),
           };
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
@@ -327,35 +327,8 @@ export const Command = {
             changeAttributeValue: ChangeAttributeValue.decode(reader, reader.uint32()),
           };
           continue;
-        case 15:
-          if (tag !== 122) {
-            break;
-          }
-
-          message.payload = { $case: "sortAttribute", sortAttribute: SortAttribute.decode(reader, reader.uint32()) };
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
-          message.payload = {
-            $case: "sendAttributeVerification",
-            sendAttributeVerification: SendAttributeVerification.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 17:
-          if (tag !== 138) {
-            break;
-          }
-
-          message.payload = {
-            $case: "verifyAttribute",
-            verifyAttribute: VerifyAttribute.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 18:
-          if (tag !== 146) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -363,6 +336,51 @@ export const Command = {
             $case: "removeAttribute",
             removeAttribute: RemoveAttribute.decode(reader, reader.uint32()),
           };
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.payload = { $case: "addInviteShare", addInviteShare: AddInviteShare.decode(reader, reader.uint32()) };
+          continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.payload = {
+            $case: "removeInviteShare",
+            removeInviteShare: RemoveInviteShare.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.payload = { $case: "deleteInvite", deleteInvite: DeleteInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.payload = { $case: "declineInvite", declineInvite: DeclineInvite.decode(reader, reader.uint32()) };
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -377,8 +395,6 @@ export const Command = {
     return {
       payload: isSet(object.startAuth)
         ? { $case: "startAuth", startAuth: StartAuth.fromJSON(object.startAuth) }
-        : isSet(object.verifyEmail)
-        ? { $case: "verifyEmail", verifyEmail: VerifyEmail.fromJSON(object.verifyEmail) }
         : isSet(object.verifyPhone)
         ? { $case: "verifyPhone", verifyPhone: VerifyPhone.fromJSON(object.verifyPhone) }
         : isSet(object.createAccount)
@@ -415,17 +431,20 @@ export const Command = {
           $case: "changeAttributeValue",
           changeAttributeValue: ChangeAttributeValue.fromJSON(object.changeAttributeValue),
         }
-        : isSet(object.sortAttribute)
-        ? { $case: "sortAttribute", sortAttribute: SortAttribute.fromJSON(object.sortAttribute) }
-        : isSet(object.sendAttributeVerification)
-        ? {
-          $case: "sendAttributeVerification",
-          sendAttributeVerification: SendAttributeVerification.fromJSON(object.sendAttributeVerification),
-        }
-        : isSet(object.verifyAttribute)
-        ? { $case: "verifyAttribute", verifyAttribute: VerifyAttribute.fromJSON(object.verifyAttribute) }
         : isSet(object.removeAttribute)
         ? { $case: "removeAttribute", removeAttribute: RemoveAttribute.fromJSON(object.removeAttribute) }
+        : isSet(object.createInvite)
+        ? { $case: "createInvite", createInvite: CreateInvite.fromJSON(object.createInvite) }
+        : isSet(object.addInviteShare)
+        ? { $case: "addInviteShare", addInviteShare: AddInviteShare.fromJSON(object.addInviteShare) }
+        : isSet(object.removeInviteShare)
+        ? { $case: "removeInviteShare", removeInviteShare: RemoveInviteShare.fromJSON(object.removeInviteShare) }
+        : isSet(object.deleteInvite)
+        ? { $case: "deleteInvite", deleteInvite: DeleteInvite.fromJSON(object.deleteInvite) }
+        : isSet(object.acceptInvite)
+        ? { $case: "acceptInvite", acceptInvite: AcceptInvite.fromJSON(object.acceptInvite) }
+        : isSet(object.declineInvite)
+        ? { $case: "declineInvite", declineInvite: DeclineInvite.fromJSON(object.declineInvite) }
         : undefined,
     };
   },
@@ -434,9 +453,6 @@ export const Command = {
     const obj: any = {};
     if (message.payload?.$case === "startAuth") {
       obj.startAuth = StartAuth.toJSON(message.payload.startAuth);
-    }
-    if (message.payload?.$case === "verifyEmail") {
-      obj.verifyEmail = VerifyEmail.toJSON(message.payload.verifyEmail);
     }
     if (message.payload?.$case === "verifyPhone") {
       obj.verifyPhone = VerifyPhone.toJSON(message.payload.verifyPhone);
@@ -474,17 +490,26 @@ export const Command = {
     if (message.payload?.$case === "changeAttributeValue") {
       obj.changeAttributeValue = ChangeAttributeValue.toJSON(message.payload.changeAttributeValue);
     }
-    if (message.payload?.$case === "sortAttribute") {
-      obj.sortAttribute = SortAttribute.toJSON(message.payload.sortAttribute);
-    }
-    if (message.payload?.$case === "sendAttributeVerification") {
-      obj.sendAttributeVerification = SendAttributeVerification.toJSON(message.payload.sendAttributeVerification);
-    }
-    if (message.payload?.$case === "verifyAttribute") {
-      obj.verifyAttribute = VerifyAttribute.toJSON(message.payload.verifyAttribute);
-    }
     if (message.payload?.$case === "removeAttribute") {
       obj.removeAttribute = RemoveAttribute.toJSON(message.payload.removeAttribute);
+    }
+    if (message.payload?.$case === "createInvite") {
+      obj.createInvite = CreateInvite.toJSON(message.payload.createInvite);
+    }
+    if (message.payload?.$case === "addInviteShare") {
+      obj.addInviteShare = AddInviteShare.toJSON(message.payload.addInviteShare);
+    }
+    if (message.payload?.$case === "removeInviteShare") {
+      obj.removeInviteShare = RemoveInviteShare.toJSON(message.payload.removeInviteShare);
+    }
+    if (message.payload?.$case === "deleteInvite") {
+      obj.deleteInvite = DeleteInvite.toJSON(message.payload.deleteInvite);
+    }
+    if (message.payload?.$case === "acceptInvite") {
+      obj.acceptInvite = AcceptInvite.toJSON(message.payload.acceptInvite);
+    }
+    if (message.payload?.$case === "declineInvite") {
+      obj.declineInvite = DeclineInvite.toJSON(message.payload.declineInvite);
     }
     return obj;
   },
@@ -500,13 +525,6 @@ export const Command = {
       object.payload?.startAuth !== null
     ) {
       message.payload = { $case: "startAuth", startAuth: StartAuth.fromPartial(object.payload.startAuth) };
-    }
-    if (
-      object.payload?.$case === "verifyEmail" &&
-      object.payload?.verifyEmail !== undefined &&
-      object.payload?.verifyEmail !== null
-    ) {
-      message.payload = { $case: "verifyEmail", verifyEmail: VerifyEmail.fromPartial(object.payload.verifyEmail) };
     }
     if (
       object.payload?.$case === "verifyPhone" &&
@@ -617,36 +635,6 @@ export const Command = {
       };
     }
     if (
-      object.payload?.$case === "sortAttribute" &&
-      object.payload?.sortAttribute !== undefined &&
-      object.payload?.sortAttribute !== null
-    ) {
-      message.payload = {
-        $case: "sortAttribute",
-        sortAttribute: SortAttribute.fromPartial(object.payload.sortAttribute),
-      };
-    }
-    if (
-      object.payload?.$case === "sendAttributeVerification" &&
-      object.payload?.sendAttributeVerification !== undefined &&
-      object.payload?.sendAttributeVerification !== null
-    ) {
-      message.payload = {
-        $case: "sendAttributeVerification",
-        sendAttributeVerification: SendAttributeVerification.fromPartial(object.payload.sendAttributeVerification),
-      };
-    }
-    if (
-      object.payload?.$case === "verifyAttribute" &&
-      object.payload?.verifyAttribute !== undefined &&
-      object.payload?.verifyAttribute !== null
-    ) {
-      message.payload = {
-        $case: "verifyAttribute",
-        verifyAttribute: VerifyAttribute.fromPartial(object.payload.verifyAttribute),
-      };
-    }
-    if (
       object.payload?.$case === "removeAttribute" &&
       object.payload?.removeAttribute !== undefined &&
       object.payload?.removeAttribute !== null
@@ -654,6 +642,57 @@ export const Command = {
       message.payload = {
         $case: "removeAttribute",
         removeAttribute: RemoveAttribute.fromPartial(object.payload.removeAttribute),
+      };
+    }
+    if (
+      object.payload?.$case === "createInvite" &&
+      object.payload?.createInvite !== undefined &&
+      object.payload?.createInvite !== null
+    ) {
+      message.payload = { $case: "createInvite", createInvite: CreateInvite.fromPartial(object.payload.createInvite) };
+    }
+    if (
+      object.payload?.$case === "addInviteShare" &&
+      object.payload?.addInviteShare !== undefined &&
+      object.payload?.addInviteShare !== null
+    ) {
+      message.payload = {
+        $case: "addInviteShare",
+        addInviteShare: AddInviteShare.fromPartial(object.payload.addInviteShare),
+      };
+    }
+    if (
+      object.payload?.$case === "removeInviteShare" &&
+      object.payload?.removeInviteShare !== undefined &&
+      object.payload?.removeInviteShare !== null
+    ) {
+      message.payload = {
+        $case: "removeInviteShare",
+        removeInviteShare: RemoveInviteShare.fromPartial(object.payload.removeInviteShare),
+      };
+    }
+    if (
+      object.payload?.$case === "deleteInvite" &&
+      object.payload?.deleteInvite !== undefined &&
+      object.payload?.deleteInvite !== null
+    ) {
+      message.payload = { $case: "deleteInvite", deleteInvite: DeleteInvite.fromPartial(object.payload.deleteInvite) };
+    }
+    if (
+      object.payload?.$case === "acceptInvite" &&
+      object.payload?.acceptInvite !== undefined &&
+      object.payload?.acceptInvite !== null
+    ) {
+      message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.fromPartial(object.payload.acceptInvite) };
+    }
+    if (
+      object.payload?.$case === "declineInvite" &&
+      object.payload?.declineInvite !== undefined &&
+      object.payload?.declineInvite !== null
+    ) {
+      message.payload = {
+        $case: "declineInvite",
+        declineInvite: DeclineInvite.fromPartial(object.payload.declineInvite),
       };
     }
     return message;

@@ -1,3 +1,4 @@
+import proto from '@resplice/proto'
 import stores from '$common/stores'
 import db from '$services/db'
 import startSocketCommuter from '$common/workers/socketCommuter'
@@ -9,6 +10,8 @@ import attributeProtocolFactory, {
 // import contactProtocolFactory, { type ContactProtocol } from '$modules/contact/contact.protocol'
 // import inviteProtocolFactory, { type InviteProtocol } from '$modules/invite/invite.protocol'
 import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/session.protocol'
+import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
+import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
 
 export interface RespliceProtocol {
 	ctx: ContextProtocol
@@ -17,6 +20,7 @@ export interface RespliceProtocol {
 	// contact: ContactProtocol
 	// invite: InviteProtocol
 	session: SessionProtocol
+	loadCache: () => Promise<void>
 }
 
 async function respliceProtocolFactory(): Promise<RespliceProtocol> {
@@ -36,7 +40,23 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.attribute,
 			commuter: socketCommuter
 		}),
-		session: sessionProtocolFactory({ cache: db, store: stores.session })
+		session: sessionProtocolFactory({ cache: db, store: stores.session }),
+		async loadCache() {
+			const { events } = await db.read<proto.Event>('events')
+
+			let accountAggregate: AccountAggregate | null = null
+			let attributeAggregate: AttributeAggregate = new Map()
+
+			events.forEach((event) => {
+				accountAggregate = applyAccountEvent(accountAggregate, event)
+				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
+			})
+
+			console.log(accountAggregate, attributeAggregate)
+
+			stores.account.set(accountAggregate)
+			stores.attribute.set(attributeAggregate)
+		}
 	}
 
 	socketCommuter.messages$.connect()

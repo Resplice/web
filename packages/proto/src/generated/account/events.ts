@@ -6,8 +6,6 @@ export interface AccountCreated {
   accountUuid: string;
   handle: string;
   avatarUrl: string;
-  emailId: number;
-  email: string;
   phoneId: number;
   phone: string;
 }
@@ -29,7 +27,7 @@ export interface AccountDeleted {
 }
 
 function createBaseAccountCreated(): AccountCreated {
-  return { fullName: "", accountUuid: "", handle: "", avatarUrl: "", emailId: 0, email: "", phoneId: 0, phone: "" };
+  return { fullName: "", accountUuid: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
 }
 
 export const AccountCreated = {
@@ -46,17 +44,11 @@ export const AccountCreated = {
     if (message.avatarUrl !== "") {
       writer.uint32(42).string(message.avatarUrl);
     }
-    if (message.emailId !== 0) {
-      writer.uint32(48).uint32(message.emailId);
-    }
-    if (message.email !== "") {
-      writer.uint32(58).string(message.email);
-    }
     if (message.phoneId !== 0) {
-      writer.uint32(64).uint32(message.phoneId);
+      writer.uint32(48).uint32(message.phoneId);
     }
     if (message.phone !== "") {
-      writer.uint32(74).string(message.phone);
+      writer.uint32(58).string(message.phone);
     }
     return writer;
   },
@@ -101,24 +93,10 @@ export const AccountCreated = {
             break;
           }
 
-          message.emailId = reader.uint32();
+          message.phoneId = reader.uint32();
           continue;
         case 7:
           if (tag !== 58) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.phoneId = reader.uint32();
-          continue;
-        case 9:
-          if (tag !== 74) {
             break;
           }
 
@@ -139,8 +117,6 @@ export const AccountCreated = {
       accountUuid: isSet(object.accountUuid) ? String(object.accountUuid) : "",
       handle: isSet(object.handle) ? String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
-      emailId: isSet(object.emailId) ? Number(object.emailId) : 0,
-      email: isSet(object.email) ? String(object.email) : "",
       phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
       phone: isSet(object.phone) ? String(object.phone) : "",
     };
@@ -160,12 +136,6 @@ export const AccountCreated = {
     if (message.avatarUrl !== "") {
       obj.avatarUrl = message.avatarUrl;
     }
-    if (message.emailId !== 0) {
-      obj.emailId = Math.round(message.emailId);
-    }
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phoneId !== 0) {
       obj.phoneId = Math.round(message.phoneId);
     }
@@ -184,8 +154,6 @@ export const AccountCreated = {
     message.accountUuid = object.accountUuid ?? "";
     message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
-    message.emailId = object.emailId ?? 0;
-    message.email = object.email ?? "";
     message.phoneId = object.phoneId ?? 0;
     message.phone = object.phone ?? "";
     return message;

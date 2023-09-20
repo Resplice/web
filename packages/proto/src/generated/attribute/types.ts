@@ -1,6 +1,73 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 
+export enum AttributeType {
+  NO_TYPE = 0,
+  PHONE = 1,
+  EMAIL = 2,
+  ADDRESS = 3,
+  SOCIAL = 4,
+  CREDENTIAL = 5,
+  UNRECOGNIZED = -1,
+}
+
+export function attributeTypeFromJSON(object: any): AttributeType {
+  switch (object) {
+    case 0:
+    case "NO_TYPE":
+      return AttributeType.NO_TYPE;
+    case 1:
+    case "PHONE":
+      return AttributeType.PHONE;
+    case 2:
+    case "EMAIL":
+      return AttributeType.EMAIL;
+    case 3:
+    case "ADDRESS":
+      return AttributeType.ADDRESS;
+    case 4:
+    case "SOCIAL":
+      return AttributeType.SOCIAL;
+    case 5:
+    case "CREDENTIAL":
+      return AttributeType.CREDENTIAL;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return AttributeType.UNRECOGNIZED;
+  }
+}
+
+export function attributeTypeToJSON(object: AttributeType): string {
+  switch (object) {
+    case AttributeType.NO_TYPE:
+      return "NO_TYPE";
+    case AttributeType.PHONE:
+      return "PHONE";
+    case AttributeType.EMAIL:
+      return "EMAIL";
+    case AttributeType.ADDRESS:
+      return "ADDRESS";
+    case AttributeType.SOCIAL:
+      return "SOCIAL";
+    case AttributeType.CREDENTIAL:
+      return "CREDENTIAL";
+    case AttributeType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export interface Phone {
+  /** E.164 formatted number */
+  number: string;
+  smsEnabled: boolean;
+}
+
+export interface Email {
+  email: string;
+}
+
 export interface Address {
   streetAddress1: string;
   streetAddress2: string;
@@ -10,14 +77,20 @@ export interface Address {
   country: string;
 }
 
-export interface Coordinate {
-  latitude: number;
-  longitude: number;
+export interface Social {
+  url: string;
+  handle: string;
 }
 
 export interface Credential {
   identity: string;
   passcode: string;
+}
+
+/** coming soon! */
+export interface Coordinate {
+  latitude: number;
+  longitude: number;
 }
 
 /**
@@ -31,28 +104,144 @@ export interface DateMessage {
   day: number;
 }
 
-export interface Email {
-  email: string;
-}
-
 export interface Link {
   url: string;
-}
-
-export interface Phone {
-  /** E.164 formatted number */
-  number: string;
-  smsEnabled: boolean;
-}
-
-export interface Social {
-  url: string;
-  handle: string;
 }
 
 export interface Text {
   text: string;
 }
+
+function createBasePhone(): Phone {
+  return { number: "", smsEnabled: false };
+}
+
+export const Phone = {
+  encode(message: Phone, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.number !== "") {
+      writer.uint32(10).string(message.number);
+    }
+    if (message.smsEnabled === true) {
+      writer.uint32(16).bool(message.smsEnabled);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Phone {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePhone();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.number = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.smsEnabled = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Phone {
+    return {
+      number: isSet(object.number) ? String(object.number) : "",
+      smsEnabled: isSet(object.smsEnabled) ? Boolean(object.smsEnabled) : false,
+    };
+  },
+
+  toJSON(message: Phone): unknown {
+    const obj: any = {};
+    if (message.number !== "") {
+      obj.number = message.number;
+    }
+    if (message.smsEnabled === true) {
+      obj.smsEnabled = message.smsEnabled;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Phone>, I>>(base?: I): Phone {
+    return Phone.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Phone>, I>>(object: I): Phone {
+    const message = createBasePhone();
+    message.number = object.number ?? "";
+    message.smsEnabled = object.smsEnabled ?? false;
+    return message;
+  },
+};
+
+function createBaseEmail(): Email {
+  return { email: "" };
+}
+
+export const Email = {
+  encode(message: Email, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.email !== "") {
+      writer.uint32(10).string(message.email);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Email {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmail();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Email {
+    return { email: isSet(object.email) ? String(object.email) : "" };
+  },
+
+  toJSON(message: Email): unknown {
+    const obj: any = {};
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Email>, I>>(base?: I): Email {
+    return Email.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Email>, I>>(object: I): Email {
+    const message = createBaseEmail();
+    message.email = object.email ?? "";
+    return message;
+  },
+};
 
 function createBaseAddress(): Address {
   return { streetAddress1: "", streetAddress2: "", locality: "", region: "", postalCode: "", country: "" };
@@ -188,41 +377,41 @@ export const Address = {
   },
 };
 
-function createBaseCoordinate(): Coordinate {
-  return { latitude: 0, longitude: 0 };
+function createBaseSocial(): Social {
+  return { url: "", handle: "" };
 }
 
-export const Coordinate = {
-  encode(message: Coordinate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.latitude !== 0) {
-      writer.uint32(13).float(message.latitude);
+export const Social = {
+  encode(message: Social, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
     }
-    if (message.longitude !== 0) {
-      writer.uint32(21).float(message.longitude);
+    if (message.handle !== "") {
+      writer.uint32(18).string(message.handle);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Coordinate {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Social {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCoordinate();
+    const message = createBaseSocial();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 13) {
+          if (tag !== 10) {
             break;
           }
 
-          message.latitude = reader.float();
+          message.url = reader.string();
           continue;
         case 2:
-          if (tag !== 21) {
+          if (tag !== 18) {
             break;
           }
 
-          message.longitude = reader.float();
+          message.handle = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -233,31 +422,31 @@ export const Coordinate = {
     return message;
   },
 
-  fromJSON(object: any): Coordinate {
+  fromJSON(object: any): Social {
     return {
-      latitude: isSet(object.latitude) ? Number(object.latitude) : 0,
-      longitude: isSet(object.longitude) ? Number(object.longitude) : 0,
+      url: isSet(object.url) ? String(object.url) : "",
+      handle: isSet(object.handle) ? String(object.handle) : "",
     };
   },
 
-  toJSON(message: Coordinate): unknown {
+  toJSON(message: Social): unknown {
     const obj: any = {};
-    if (message.latitude !== 0) {
-      obj.latitude = message.latitude;
+    if (message.url !== "") {
+      obj.url = message.url;
     }
-    if (message.longitude !== 0) {
-      obj.longitude = message.longitude;
+    if (message.handle !== "") {
+      obj.handle = message.handle;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Coordinate>, I>>(base?: I): Coordinate {
-    return Coordinate.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<Social>, I>>(base?: I): Social {
+    return Social.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Coordinate>, I>>(object: I): Coordinate {
-    const message = createBaseCoordinate();
-    message.latitude = object.latitude ?? 0;
-    message.longitude = object.longitude ?? 0;
+  fromPartial<I extends Exact<DeepPartial<Social>, I>>(object: I): Social {
+    const message = createBaseSocial();
+    message.url = object.url ?? "";
+    message.handle = object.handle ?? "";
     return message;
   },
 };
@@ -332,6 +521,80 @@ export const Credential = {
     const message = createBaseCredential();
     message.identity = object.identity ?? "";
     message.passcode = object.passcode ?? "";
+    return message;
+  },
+};
+
+function createBaseCoordinate(): Coordinate {
+  return { latitude: 0, longitude: 0 };
+}
+
+export const Coordinate = {
+  encode(message: Coordinate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.latitude !== 0) {
+      writer.uint32(13).float(message.latitude);
+    }
+    if (message.longitude !== 0) {
+      writer.uint32(21).float(message.longitude);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Coordinate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCoordinate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 13) {
+            break;
+          }
+
+          message.latitude = reader.float();
+          continue;
+        case 2:
+          if (tag !== 21) {
+            break;
+          }
+
+          message.longitude = reader.float();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Coordinate {
+    return {
+      latitude: isSet(object.latitude) ? Number(object.latitude) : 0,
+      longitude: isSet(object.longitude) ? Number(object.longitude) : 0,
+    };
+  },
+
+  toJSON(message: Coordinate): unknown {
+    const obj: any = {};
+    if (message.latitude !== 0) {
+      obj.latitude = message.latitude;
+    }
+    if (message.longitude !== 0) {
+      obj.longitude = message.longitude;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Coordinate>, I>>(base?: I): Coordinate {
+    return Coordinate.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Coordinate>, I>>(object: I): Coordinate {
+    const message = createBaseCoordinate();
+    message.latitude = object.latitude ?? 0;
+    message.longitude = object.longitude ?? 0;
     return message;
   },
 };
@@ -425,63 +688,6 @@ export const DateMessage = {
   },
 };
 
-function createBaseEmail(): Email {
-  return { email: "" };
-}
-
-export const Email = {
-  encode(message: Email, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Email {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEmail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Email {
-    return { email: isSet(object.email) ? String(object.email) : "" };
-  },
-
-  toJSON(message: Email): unknown {
-    const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Email>, I>>(base?: I): Email {
-    return Email.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Email>, I>>(object: I): Email {
-    const message = createBaseEmail();
-    message.email = object.email ?? "";
-    return message;
-  },
-};
-
 function createBaseLink(): Link {
   return { url: "" };
 }
@@ -535,154 +741,6 @@ export const Link = {
   fromPartial<I extends Exact<DeepPartial<Link>, I>>(object: I): Link {
     const message = createBaseLink();
     message.url = object.url ?? "";
-    return message;
-  },
-};
-
-function createBasePhone(): Phone {
-  return { number: "", smsEnabled: false };
-}
-
-export const Phone = {
-  encode(message: Phone, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.number !== "") {
-      writer.uint32(10).string(message.number);
-    }
-    if (message.smsEnabled === true) {
-      writer.uint32(16).bool(message.smsEnabled);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Phone {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePhone();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.number = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.smsEnabled = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Phone {
-    return {
-      number: isSet(object.number) ? String(object.number) : "",
-      smsEnabled: isSet(object.smsEnabled) ? Boolean(object.smsEnabled) : false,
-    };
-  },
-
-  toJSON(message: Phone): unknown {
-    const obj: any = {};
-    if (message.number !== "") {
-      obj.number = message.number;
-    }
-    if (message.smsEnabled === true) {
-      obj.smsEnabled = message.smsEnabled;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Phone>, I>>(base?: I): Phone {
-    return Phone.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Phone>, I>>(object: I): Phone {
-    const message = createBasePhone();
-    message.number = object.number ?? "";
-    message.smsEnabled = object.smsEnabled ?? false;
-    return message;
-  },
-};
-
-function createBaseSocial(): Social {
-  return { url: "", handle: "" };
-}
-
-export const Social = {
-  encode(message: Social, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.url !== "") {
-      writer.uint32(10).string(message.url);
-    }
-    if (message.handle !== "") {
-      writer.uint32(18).string(message.handle);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Social {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSocial();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.url = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.handle = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Social {
-    return {
-      url: isSet(object.url) ? String(object.url) : "",
-      handle: isSet(object.handle) ? String(object.handle) : "",
-    };
-  },
-
-  toJSON(message: Social): unknown {
-    const obj: any = {};
-    if (message.url !== "") {
-      obj.url = message.url;
-    }
-    if (message.handle !== "") {
-      obj.handle = message.handle;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Social>, I>>(base?: I): Social {
-    return Social.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Social>, I>>(object: I): Social {
-    const message = createBaseSocial();
-    message.url = object.url ?? "";
-    message.handle = object.handle ?? "";
     return message;
   },
 };

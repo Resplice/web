@@ -7,12 +7,10 @@
 	import { RespliceWideIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
 
-	const nextStatus = [AuthStatus.PENDING_VERIFY_EMAIL, AuthStatus.PENDING_VERIFY_EMAIL]
-
 	onMount(() => store.set(INITIAL_STORE))
 
 	$: {
-		if (browser && nextStatus.includes($store.status)) goto('/verify')
+		if (browser && $store.status === AuthStatus.PENDING_VERIFY_PHONE) goto('/verify')
 	}
 </script>
 

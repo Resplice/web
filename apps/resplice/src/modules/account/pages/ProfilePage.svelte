@@ -28,7 +28,7 @@
 <div class="flex flex-col w-full h-full bg-gray-100">
 	<Header {account} showUser={showUserOnHeader} on:back={() => push('/home/contacts')} />
 	<main class="flex-1 overflow-auto relative w-full max-w-xl m-auto py-4 rounded-t-3xl bg-white">
-		<UserAvatar id={account.id} avatarUrl={account.avatarUrl} />
+		<UserAvatar uuid={account.uuid} avatarUrl={account.avatarUrl} />
 		<div class="w-full mb-4 text-center">
 			<h1 class="w-full truncate text-4xl font-bold mt-2 text-center">
 				{account.name}

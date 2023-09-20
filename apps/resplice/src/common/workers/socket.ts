@@ -47,8 +47,8 @@ async function send(cmd: SendCommand) {
 	self.socket$.next(cmdBytes)
 }
 
-async function handleMessage(bytes: Uint8Array) {
-	const message = await deserializeMessage(bytes, self.cryptoKeys.server)
+async function handleMessage(bytes: ArrayBuffer) {
+	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys.server)
 	if (self.persist && message.event) await self.cache.upsert('events', message.event)
 	self.postMessage({ type: SocketEventType.RECEIVED, message })
 }
@@ -67,9 +67,10 @@ async function openSocket(cmd: OpenCommand) {
 		self.socket$.complete()
 	}
 
+	await db.open()
+
 	self.cryptoKeys = cmd.cryptoKeys
 	self.persist = cmd.persist
-	await db.open()
 	self.cache = db
 
 	const protoCmd = cmd.handshake
