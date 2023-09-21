@@ -34,7 +34,7 @@ function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeP
 				addAttribute: payload
 			})
 			const placeholderAttribute = {
-				id: new Date().getTime(),
+				id: 0,
 				type: mapProtoAttributeType(payload.value.$case),
 				name: payload.name,
 				value: mapProtoAttributeValue(payload.value),

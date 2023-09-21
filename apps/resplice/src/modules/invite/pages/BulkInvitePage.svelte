@@ -35,7 +35,7 @@
 
 <div class="flex flex-col w-full h-full bg-gray-100">
 	<nav class="flex-none flex items-center justify-start p-4">
-		<IconButton Icon={BackIcon} on:click={() => push('/profile')} />
+		<IconButton Icon={BackIcon} on:click={() => push('/home/connections')} />
 	</nav>
 	{#if !!contacts}
 		<main class="bg-white rounded-t-3xl rounded-b-3xl flex-1 flex flex-col p-8 overflow-auto">

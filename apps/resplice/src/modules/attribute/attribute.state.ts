@@ -31,6 +31,8 @@ export function applyAttributeEvent(
 			})
 			break
 		case 'attributeAdded':
+			// Delete placeholder
+			aggregate.delete(0)
 			aggregate.set(event.payload.attributeAdded.id, {
 				id: event.payload.attributeAdded.id,
 				type: mapProtoAttributeType(event.payload.attributeAdded.value.$case),

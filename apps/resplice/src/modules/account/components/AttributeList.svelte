@@ -15,18 +15,22 @@
 		{#each sortUserAttributes(attributes) as attribute}
 			<AttributeItem {attribute} itemType="user" on:click={() => (selectedAttribute = attribute)} />
 		{/each}
+		<button
+			type="button"
+			class="outline-none border-none flex space-x-4 items-center"
+			on:click={() => push('/attribute/add')}
+		>
+			<div
+				class="p-3 rounded-lg focus:outline-none bg-brand-primary text-brand-primary-dark bg-opacity-20"
+			>
+				<AddIcon height={24} width={24} />
+			</div>
+
+			<p>New Attribute</p>
+		</button>
 	{:else}
 		<SkeletonList count={5} width="100%" height="100%" />
 	{/if}
-
-	<div class="w-full flex items-center justify-center my-4">
-		<Button color="brand-light" on:click={() => push('/attribute/create')}>
-			<div class="flex items-center justify-center w-full">
-				<AddIcon width={36} height={36} />
-				<p class="ml-2">Add Attribute</p>
-			</div>
-		</Button>
-	</div>
 </div>
 
 {#if selectedAttribute}

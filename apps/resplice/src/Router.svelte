@@ -2,6 +2,7 @@
 	import Router, { replace } from 'svelte-spa-router'
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
+	import HomePage from '$common/pages/HomePage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
 	// Account Pages
@@ -27,7 +28,7 @@
 		// '/contact/:id/chat': ContactChatPage,
 		// '/contact/:id/edit': EditContactPage,
 		// '/contact/:id/shares': ContactSharesPage,
-		// '/home/*': HomePage,
+		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
 		'/invite/bulk': BulkInvitePage,
 		// '/invite/create/*': CreateInvitePage,
