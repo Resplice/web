@@ -4,7 +4,9 @@
 
 	export let attributeTypeConfig: AttributeTypeConfig
 
-	const emptyAttributeValue = {} as any
+	const emptyAttributeValue = {
+		type: attributeTypeConfig.type
+	} as any
 </script>
 
 <button
@@ -14,7 +16,8 @@
 	<AttributeAction
 		itemType="disabled"
 		attribute={emptyAttributeValue}
-		attributeAction={attributeTypeConfig.actions[0]}
+		actionIdx={0}
+		disableAction
 	/>
 	<span class="font-semibold text-gray-800 overflow-hidden text-ellipsis">
 		{attributeTypeConfig.name}

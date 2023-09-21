@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 
 export interface AccountCreated {
-  fullName: string;
+  name: string;
   accountUuid: string;
   handle: string;
   avatarUrl: string;
@@ -27,28 +27,28 @@ export interface AccountDeleted {
 }
 
 function createBaseAccountCreated(): AccountCreated {
-  return { fullName: "", accountUuid: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
+  return { name: "", accountUuid: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
 }
 
 export const AccountCreated = {
   encode(message: AccountCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.fullName !== "") {
-      writer.uint32(18).string(message.fullName);
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
     }
     if (message.accountUuid !== "") {
-      writer.uint32(26).string(message.accountUuid);
+      writer.uint32(18).string(message.accountUuid);
     }
     if (message.handle !== "") {
-      writer.uint32(34).string(message.handle);
+      writer.uint32(26).string(message.handle);
     }
     if (message.avatarUrl !== "") {
-      writer.uint32(42).string(message.avatarUrl);
+      writer.uint32(34).string(message.avatarUrl);
     }
     if (message.phoneId !== 0) {
-      writer.uint32(48).uint32(message.phoneId);
+      writer.uint32(40).uint32(message.phoneId);
     }
     if (message.phone !== "") {
-      writer.uint32(58).string(message.phone);
+      writer.uint32(50).string(message.phone);
     }
     return writer;
   },
@@ -60,43 +60,43 @@ export const AccountCreated = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.fullName = reader.string();
+          message.accountUuid = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.accountUuid = reader.string();
+          message.handle = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.handle = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.avatarUrl = reader.string();
           continue;
-        case 6:
-          if (tag !== 48) {
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.phoneId = reader.uint32();
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -113,7 +113,7 @@ export const AccountCreated = {
 
   fromJSON(object: any): AccountCreated {
     return {
-      fullName: isSet(object.fullName) ? String(object.fullName) : "",
+      name: isSet(object.name) ? String(object.name) : "",
       accountUuid: isSet(object.accountUuid) ? String(object.accountUuid) : "",
       handle: isSet(object.handle) ? String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
@@ -124,8 +124,8 @@ export const AccountCreated = {
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
-    if (message.fullName !== "") {
-      obj.fullName = message.fullName;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.accountUuid !== "") {
       obj.accountUuid = message.accountUuid;
@@ -150,7 +150,7 @@ export const AccountCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
-    message.fullName = object.fullName ?? "";
+    message.name = object.name ?? "";
     message.accountUuid = object.accountUuid ?? "";
     message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";

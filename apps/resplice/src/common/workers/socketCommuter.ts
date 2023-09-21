@@ -56,12 +56,12 @@ type ClosedEvent = {
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
 
-export function onlyAccountEvents() {
+export function onlyEvents() {
 	return pipe(
 		filter<SocketEvent>(
 			(e) => e.type === SocketEventType.RECEIVED && !e.message.error
 		) as OperatorFunction<ReceivedEvent, ReceivedEvent>,
-		map((e) => e.message.event)
+		map((e) => e.message.message)
 	)
 }
 

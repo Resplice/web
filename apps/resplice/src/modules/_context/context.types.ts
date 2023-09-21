@@ -15,6 +15,6 @@ type Settings = {
 export type ContextState = {
 	socketStatus: SocketStatus
 	error: string | null
-	events: proto.Event[]
+	events: proto.Message[]
 	settings: Settings
 }

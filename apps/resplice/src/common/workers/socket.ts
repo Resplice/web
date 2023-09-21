@@ -1,6 +1,6 @@
 import { fromEvent, map } from 'rxjs'
 import { webSocket, type WebSocketSubject } from 'rxjs/webSocket'
-import { serializeCommand, deserializeMessage } from '@resplice/proto'
+import { serializeCommand, deserializeMessage, type ProtoMessage } from '@resplice/proto'
 import { b64tob64u, btob64 } from '@resplice/utils'
 import {
 	SocketCommandType,
@@ -49,7 +49,7 @@ async function send(cmd: SendCommand) {
 
 async function handleMessage(bytes: ArrayBuffer) {
 	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys.server)
-	if (self.persist && message.event) await self.cache.upsert('events', message.event)
+	await cacheEvent(message)
 	self.postMessage({ type: SocketEventType.RECEIVED, message })
 }
 
@@ -95,4 +95,13 @@ async function openSocket(cmd: OpenCommand) {
 		error: handleError,
 		complete: handleClose
 	})
+}
+
+function cacheEvent({ message: event }: ProtoMessage) {
+	if (!self.persist || !event) return
+
+	// We don't want to store state messages in the cache
+	if (['pendingConnection'].includes(event.payload.$case)) return
+
+	return self.cache.upsert('events', event)
 }

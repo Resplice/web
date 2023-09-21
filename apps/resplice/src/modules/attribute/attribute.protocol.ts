@@ -1,7 +1,6 @@
 import proto from '@resplice/proto'
-import { getRespliceNow } from '@resplice/utils'
 import type { DB } from '$services/db'
-import { type SocketCommuter, onlyAccountEvents } from '$common/workers/socketCommuter'
+import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import {
 	applyAttributeEvent,
@@ -15,9 +14,6 @@ export interface AttributeProtocol {
 	add(payload: proto.attribute.AddAttribute): void
 	changeName(payload: proto.attribute.ChangeAttributeName): void
 	changeValue(payload: proto.attribute.ChangeAttributeValue): void
-	sort(payload: proto.attribute.SortAttribute): void
-	sendVerification(payload: proto.attribute.SendAttributeVerification): void
-	verify(payload: proto.attribute.VerifyAttribute): void
 	remove(payload: proto.attribute.RemoveAttribute): void
 }
 
@@ -27,7 +23,7 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeProtocol {
-	commuter.messages$.pipe(onlyAccountEvents()).subscribe((event) => {
+	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
 		store.update((state) => applyAttributeEvent(state, event))
 	})
 
@@ -69,32 +65,6 @@ function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeP
 			})
 			store.update((state) => {
 				state.get(payload.id).value = mapProtoAttributeValue(payload.value)
-				return state
-			})
-		},
-		sort(payload) {
-			sendCommand(commuter, {
-				$case: 'sortAttribute',
-				sortAttribute: payload
-			})
-			store.update((state) => {
-				state.get(payload.id).sortOrder = payload.sortIndex
-				return state
-			})
-		},
-		sendVerification(payload) {
-			return sendCommand(commuter, {
-				$case: 'sendAttributeVerification',
-				sendAttributeVerification: payload
-			})
-		},
-		verify(payload) {
-			sendCommand(commuter, {
-				$case: 'verifyAttribute',
-				verifyAttribute: payload
-			})
-			store.update((state) => {
-				state.get(payload.id).verifiedAt = getRespliceNow()
 				return state
 			})
 		},

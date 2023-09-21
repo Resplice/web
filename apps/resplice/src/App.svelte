@@ -9,8 +9,6 @@
 	import Router from './Router.svelte'
 	import './app.css'
 
-	let initialUrl = '/profile'
-
 	const protocolContext = { protocol: null }
 	setContext(contextKey, protocolContext)
 
@@ -18,7 +16,6 @@
 		if (!isRespliceSupported()) throw new Error('Resplice is not supported on this device.')
 
 		try {
-			const urlData = getUrlData()
 			const protocol = await protocolFactory()
 			protocolContext.protocol = protocol
 
@@ -32,10 +29,6 @@
 
 			await initializeIntl()
 			await protocol.loadCache()
-
-			if (urlData.googleOAuthAccessToken)
-				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
-
 			await protocol.ctx.openSocket(session)
 
 			return true
@@ -43,15 +36,6 @@
 			console.error(err)
 			// location.replace(config.authUrl)
 			return false
-		}
-	}
-
-	function getUrlData() {
-		const params = new URLSearchParams(window.location.search)
-		return {
-			googleOAuthAccessToken: params.get('google-access-token')
-		} as {
-			googleOAuthAccessToken?: string
 		}
 	}
 
@@ -65,7 +49,7 @@
 	<AppLoading />
 {:then loaded}
 	{#if loaded && accountLoaded}
-		<Router {initialUrl} />
+		<Router />
 		<!-- <ToastProvider /> -->
 	{/if}
 {:catch error}

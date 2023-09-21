@@ -14,7 +14,7 @@ function sessionProtocolFactory({ cache, store }: Dependencies): SessionProtocol
 	return {
 		async load() {
 			const session = await cache.getById<Session>('session', 1)
-			store.set({ currentSession: session, sessions: [] })
+			store.set({ currentSession: { id: 0, ...session }, sessions: [] })
 			return session
 		}
 	}

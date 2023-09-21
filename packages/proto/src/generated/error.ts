@@ -47,39 +47,63 @@ export function errorTypeToJSON(object: ErrorType): string {
 }
 
 export enum InputField {
-  EMAIL = 0,
-  PHONE = 1,
-  VERIFY_CODE = 2,
-  FULL_NAME = 3,
-  AVATAR = 4,
-  USER_AGENT = 5,
+  UNKNOWN = 0,
+  ADDRESS = 1,
+  AVATAR = 2,
+  CREDENTIAL = 3,
+  EMAIL = 4,
+  HANDLE = 5,
   LOCATION = 6,
+  NAME = 7,
+  PHONE = 8,
+  SOCIAL = 9,
+  URL = 10,
+  USER_AGENT = 11,
+  VERIFY_CODE = 12,
   UNRECOGNIZED = -1,
 }
 
 export function inputFieldFromJSON(object: any): InputField {
   switch (object) {
     case 0:
-    case "EMAIL":
-      return InputField.EMAIL;
+    case "UNKNOWN":
+      return InputField.UNKNOWN;
     case 1:
-    case "PHONE":
-      return InputField.PHONE;
+    case "ADDRESS":
+      return InputField.ADDRESS;
     case 2:
-    case "VERIFY_CODE":
-      return InputField.VERIFY_CODE;
-    case 3:
-    case "FULL_NAME":
-      return InputField.FULL_NAME;
-    case 4:
     case "AVATAR":
       return InputField.AVATAR;
+    case 3:
+    case "CREDENTIAL":
+      return InputField.CREDENTIAL;
+    case 4:
+    case "EMAIL":
+      return InputField.EMAIL;
     case 5:
-    case "USER_AGENT":
-      return InputField.USER_AGENT;
+    case "HANDLE":
+      return InputField.HANDLE;
     case 6:
     case "LOCATION":
       return InputField.LOCATION;
+    case 7:
+    case "NAME":
+      return InputField.NAME;
+    case 8:
+    case "PHONE":
+      return InputField.PHONE;
+    case 9:
+    case "SOCIAL":
+      return InputField.SOCIAL;
+    case 10:
+    case "URL":
+      return InputField.URL;
+    case 11:
+    case "USER_AGENT":
+      return InputField.USER_AGENT;
+    case 12:
+    case "VERIFY_CODE":
+      return InputField.VERIFY_CODE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -89,20 +113,32 @@ export function inputFieldFromJSON(object: any): InputField {
 
 export function inputFieldToJSON(object: InputField): string {
   switch (object) {
-    case InputField.EMAIL:
-      return "EMAIL";
-    case InputField.PHONE:
-      return "PHONE";
-    case InputField.VERIFY_CODE:
-      return "VERIFY_CODE";
-    case InputField.FULL_NAME:
-      return "FULL_NAME";
+    case InputField.UNKNOWN:
+      return "UNKNOWN";
+    case InputField.ADDRESS:
+      return "ADDRESS";
     case InputField.AVATAR:
       return "AVATAR";
-    case InputField.USER_AGENT:
-      return "USER_AGENT";
+    case InputField.CREDENTIAL:
+      return "CREDENTIAL";
+    case InputField.EMAIL:
+      return "EMAIL";
+    case InputField.HANDLE:
+      return "HANDLE";
     case InputField.LOCATION:
       return "LOCATION";
+    case InputField.NAME:
+      return "NAME";
+    case InputField.PHONE:
+      return "PHONE";
+    case InputField.SOCIAL:
+      return "SOCIAL";
+    case InputField.URL:
+      return "URL";
+    case InputField.USER_AGENT:
+      return "USER_AGENT";
+    case InputField.VERIFY_CODE:
+      return "VERIFY_CODE";
     case InputField.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

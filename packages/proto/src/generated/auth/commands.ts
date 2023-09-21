@@ -12,7 +12,7 @@ export interface VerifyPhone {
 
 export interface CreateAccount {
   phone: string;
-  fullName: string;
+  name: string;
   avatar: string;
 }
 
@@ -169,7 +169,7 @@ export const VerifyPhone = {
 };
 
 function createBaseCreateAccount(): CreateAccount {
-  return { phone: "", fullName: "", avatar: "" };
+  return { phone: "", name: "", avatar: "" };
 }
 
 export const CreateAccount = {
@@ -177,8 +177,8 @@ export const CreateAccount = {
     if (message.phone !== "") {
       writer.uint32(10).string(message.phone);
     }
-    if (message.fullName !== "") {
-      writer.uint32(18).string(message.fullName);
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
     }
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
@@ -205,7 +205,7 @@ export const CreateAccount = {
             break;
           }
 
-          message.fullName = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -226,7 +226,7 @@ export const CreateAccount = {
   fromJSON(object: any): CreateAccount {
     return {
       phone: isSet(object.phone) ? String(object.phone) : "",
-      fullName: isSet(object.fullName) ? String(object.fullName) : "",
+      name: isSet(object.name) ? String(object.name) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
@@ -236,8 +236,8 @@ export const CreateAccount = {
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
-    if (message.fullName !== "") {
-      obj.fullName = message.fullName;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
@@ -251,7 +251,7 @@ export const CreateAccount = {
   fromPartial<I extends Exact<DeepPartial<CreateAccount>, I>>(object: I): CreateAccount {
     const message = createBaseCreateAccount();
     message.phone = object.phone ?? "";
-    message.fullName = object.fullName ?? "";
+    message.name = object.name ?? "";
     message.avatar = object.avatar ?? "";
     return message;
   },

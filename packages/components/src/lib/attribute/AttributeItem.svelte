@@ -23,12 +23,7 @@
 </script>
 
 <div class="w-full overflow-hidden flex items-start justify-between">
-	<AttributeAction
-		{itemType}
-		{attribute}
-		attributeAction={attributeType.actions[0]}
-		disableAction={disableActions}
-	/>
+	<AttributeAction {itemType} {attribute} actionIdx={0} disableAction={disableActions} />
 	<button
 		class="flex flex-col items-start justify-start text-left mx-4 flex-1 overflow-hidden no-highlight"
 		on:click={onAttributeClick}
@@ -42,11 +37,6 @@
 		{/if}
 	</button>
 	{#if itemType !== 'user' && showSecondAction && !!attributeType.actions[1]}
-		<AttributeAction
-			{itemType}
-			{attribute}
-			attributeAction={attributeType.actions[1]}
-			disableAction={disableActions}
-		/>
+		<AttributeAction {itemType} {attribute} actionIdx={1} disableAction={disableActions} />
 	{/if}
 </div>

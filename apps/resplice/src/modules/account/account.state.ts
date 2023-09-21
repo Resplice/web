@@ -5,7 +5,7 @@ export type AccountAggregate = Account
 
 export function applyAccountEvent(
 	aggregate: AccountAggregate,
-	event: proto.Event
+	event: proto.Message
 ): AccountAggregate {
 	switch (event.payload.$case) {
 		case 'accountCreated':

@@ -2,7 +2,6 @@ import type { Session, SessionItem } from '$modules/session/session.types'
 
 export const currentSession: Session = {
 	id: 1,
-	email: 'han@falcon.com',
 	phone: '+16452135555',
 	persist: true,
 	cryptoKeys: {

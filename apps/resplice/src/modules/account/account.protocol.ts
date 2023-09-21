@@ -1,6 +1,6 @@
 import proto from '@resplice/proto'
 import type { DB } from '$services/db'
-import { type SocketCommuter, onlyAccountEvents } from '$common/workers/socketCommuter'
+import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import { applyAccountEvent } from '$modules/account/account.state'
 import type { AccountStore } from '$modules/account/account.store'
@@ -18,7 +18,7 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function accountProtocolFactory({ store, commuter }: Dependencies): AccountProtocol {
-	commuter.messages$.pipe(onlyAccountEvents()).subscribe((event) => {
+	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
 		store.update((state) => applyAccountEvent(state, event))
 	})
 
