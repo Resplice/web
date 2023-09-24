@@ -97,11 +97,8 @@ async function openSocket(cmd: OpenCommand) {
 	})
 }
 
-function cacheEvent({ message: event }: ProtoMessage) {
-	if (!self.persist || !event) return
-
-	// We don't want to store state messages in the cache
-	if (['pendingConnection'].includes(event.payload.$case)) return
+function cacheEvent({ event }: ProtoMessage) {
+	if (!self.persist || !event) return Promise.resolve()
 
 	return self.cache.upsert('events', event)
 }

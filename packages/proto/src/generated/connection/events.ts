@@ -1,14 +1,11 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { Coordinate } from "../attribute/types";
 import { InviteType, inviteTypeFromJSON, inviteTypeToJSON } from "../invite/types";
 
 export interface ConnectionAdded {
-  connectionId: number;
+  accountId: number;
   alias: string;
   sharedAttributeIds: number[];
-  /** uint32 invite_timestamp = 6; */
-  inviteLocation: Coordinate | undefined;
 }
 
 export interface DeclineInvite {
@@ -17,13 +14,13 @@ export interface DeclineInvite {
 }
 
 function createBaseConnectionAdded(): ConnectionAdded {
-  return { connectionId: 0, alias: "", sharedAttributeIds: [], inviteLocation: undefined };
+  return { accountId: 0, alias: "", sharedAttributeIds: [] };
 }
 
 export const ConnectionAdded = {
   encode(message: ConnectionAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.connectionId !== 0) {
-      writer.uint32(8).uint32(message.connectionId);
+    if (message.accountId !== 0) {
+      writer.uint32(8).uint32(message.accountId);
     }
     if (message.alias !== "") {
       writer.uint32(18).string(message.alias);
@@ -33,9 +30,6 @@ export const ConnectionAdded = {
       writer.uint32(v);
     }
     writer.ldelim();
-    if (message.inviteLocation !== undefined) {
-      Coordinate.encode(message.inviteLocation, writer.uint32(34).fork()).ldelim();
-    }
     return writer;
   },
 
@@ -51,7 +45,7 @@ export const ConnectionAdded = {
             break;
           }
 
-          message.connectionId = reader.uint32();
+          message.accountId = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -77,13 +71,6 @@ export const ConnectionAdded = {
           }
 
           break;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.inviteLocation = Coordinate.decode(reader, reader.uint32());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -95,28 +82,24 @@ export const ConnectionAdded = {
 
   fromJSON(object: any): ConnectionAdded {
     return {
-      connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0,
+      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
       alias: isSet(object.alias) ? String(object.alias) : "",
       sharedAttributeIds: Array.isArray(object?.sharedAttributeIds)
         ? object.sharedAttributeIds.map((e: any) => Number(e))
         : [],
-      inviteLocation: isSet(object.inviteLocation) ? Coordinate.fromJSON(object.inviteLocation) : undefined,
     };
   },
 
   toJSON(message: ConnectionAdded): unknown {
     const obj: any = {};
-    if (message.connectionId !== 0) {
-      obj.connectionId = Math.round(message.connectionId);
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
     }
     if (message.alias !== "") {
       obj.alias = message.alias;
     }
     if (message.sharedAttributeIds?.length) {
       obj.sharedAttributeIds = message.sharedAttributeIds.map((e) => Math.round(e));
-    }
-    if (message.inviteLocation !== undefined) {
-      obj.inviteLocation = Coordinate.toJSON(message.inviteLocation);
     }
     return obj;
   },
@@ -126,12 +109,9 @@ export const ConnectionAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionAdded>, I>>(object: I): ConnectionAdded {
     const message = createBaseConnectionAdded();
-    message.connectionId = object.connectionId ?? 0;
+    message.accountId = object.accountId ?? 0;
     message.alias = object.alias ?? "";
     message.sharedAttributeIds = object.sharedAttributeIds?.map((e) => e) || [];
-    message.inviteLocation = (object.inviteLocation !== undefined && object.inviteLocation !== null)
-      ? Coordinate.fromPartial(object.inviteLocation)
-      : undefined;
     return message;
   },
 };

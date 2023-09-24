@@ -1,13 +1,16 @@
 export enum InviteType {
 	HANDLE = 'HANDLE',
 	PHONE = 'PHONE',
+	EMAIL = 'EMAIL',
 	DIRECT = 'DIRECT'
 }
 
 type BaseInvite = {
+	id: number
 	type: InviteType
-	value: string
 	name: string
+	value: string
+	shares: number[]
 }
 
 type HandleInvite = BaseInvite & {

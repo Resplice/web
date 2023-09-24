@@ -13,6 +13,11 @@ export interface AddAttribute {
     | undefined;
 }
 
+export interface VerifyAttribute {
+  id: number;
+  verifyCode: number;
+}
+
 export interface ChangeAttributeName {
   id: number;
   name: string;
@@ -185,6 +190,80 @@ export const AddAttribute = {
     ) {
       message.value = { $case: "credential", credential: Credential.fromPartial(object.value.credential) };
     }
+    return message;
+  },
+};
+
+function createBaseVerifyAttribute(): VerifyAttribute {
+  return { id: 0, verifyCode: 0 };
+}
+
+export const VerifyAttribute = {
+  encode(message: VerifyAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint32(message.id);
+    }
+    if (message.verifyCode !== 0) {
+      writer.uint32(16).uint32(message.verifyCode);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VerifyAttribute {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyAttribute();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.verifyCode = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VerifyAttribute {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      verifyCode: isSet(object.verifyCode) ? Number(object.verifyCode) : 0,
+    };
+  },
+
+  toJSON(message: VerifyAttribute): unknown {
+    const obj: any = {};
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.verifyCode !== 0) {
+      obj.verifyCode = Math.round(message.verifyCode);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VerifyAttribute>, I>>(base?: I): VerifyAttribute {
+    return VerifyAttribute.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VerifyAttribute>, I>>(object: I): VerifyAttribute {
+    const message = createBaseVerifyAttribute();
+    message.id = object.id ?? 0;
+    message.verifyCode = object.verifyCode ?? 0;
     return message;
   },
 };

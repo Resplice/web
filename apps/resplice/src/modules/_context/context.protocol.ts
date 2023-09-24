@@ -30,20 +30,23 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 		}))
 	}
 
-	function onSocketMessage({ error, message }: ProtoMessage) {
+	function onSocketMessage({ event, error, state }: ProtoMessage) {
 		if (error) {
 			// TODO: trigger toast
 			console.error(error)
 			return
 		}
 
-		// We don't want to store state messages
-		if (['pendingConnection'].includes(message.payload.$case)) return
+		if (event) {
+			store.update((state) => ({
+				...state,
+				events: [event, ...state.events]
+			}))
+		}
 
-		store.update((state) => ({
-			...state,
-			events: [message, ...state.events]
-		}))
+		if (state) {
+			// TODO
+		}
 	}
 
 	function onSocketError(e: Extract<SocketEvent, { type: SocketEventType.ERRORED }>) {
@@ -82,7 +85,7 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 
 	return {
 		async openSocket(session) {
-			const { events } = await cache.read<proto.Message>('events')
+			const { events } = await cache.read<proto.Event>('events')
 			const lastEventId = events.at(-1)?.id || 0
 
 			const handshake: proto.Command['payload'] = {

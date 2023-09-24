@@ -5,13 +5,13 @@ export type AccountAggregate = Account
 
 export function applyAccountEvent(
 	aggregate: AccountAggregate,
-	event: proto.Message
+	event: proto.Event
 ): AccountAggregate {
 	switch (event.payload.$case) {
 		case 'accountCreated':
 			return {
-				uuid: event.payload.accountCreated.accountUuid,
-				name: event.payload.accountCreated.fullName,
+				uuid: event.payload.accountCreated.uuid,
+				name: event.payload.accountCreated.name,
 				handle: event.payload.accountCreated.handle,
 				avatarUrl: event.payload.accountCreated.avatarUrl
 			}
@@ -30,7 +30,7 @@ export function applyAccountEvent(
 				...aggregate,
 				avatarUrl: event.payload.accountAvatarChanged.avatarUrl
 			}
-		default:
-			return aggregate
 	}
+
+	return aggregate
 }

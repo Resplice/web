@@ -11,6 +11,7 @@ export type ProviderContact = {
 	name: string
 	avatar: string
 	attributes: ProviderContactAttribute[]
+	inviteState?: 'invited' | 'ignored'
 }
 
 type GoogleToken = {

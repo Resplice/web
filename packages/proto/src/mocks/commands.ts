@@ -14,7 +14,7 @@ const verifyPhone: proto.auth.VerifyPhone = {
 
 const createAccount: proto.auth.CreateAccount = {
 	phone: PHONE,
-	fullName: 'Han Solo',
+	name: 'Han Solo',
 	avatar: ''
 }
 

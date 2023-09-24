@@ -8,7 +8,7 @@
 	const protocol = useProtocol()
 
 	let avatar: Blob | null = null
-	let fullName = ''
+	let name = ''
 	let formErrs: Record<string, string> = {}
 	let systemError: string
 	let isLoading = false
@@ -23,7 +23,7 @@
 	function validate(): boolean {
 		formErrs = {}
 		const errs: Record<string, string> = {}
-		if (!fullName) errs.fullName = 'Full name is required'
+		if (!name) errs.name = 'Your full name is required'
 		if (Object.keys(errs).length) {
 			formErrs = errs
 			return false
@@ -37,7 +37,7 @@
 
 		const { event, error } = await protocol.createAccount({
 			phone: $store.phone,
-			fullName,
+			name,
 			avatar: avatarDataUri
 		})
 
@@ -78,9 +78,9 @@
 				name="full-name"
 				label="Full Name"
 				autocomplete="name"
-				bind:value={fullName}
+				bind:value={name}
 				Icon={PeopleIcon}
-				error={formErrs.fullName}
+				error={formErrs.name}
 			/>
 		</form>
 	</div>

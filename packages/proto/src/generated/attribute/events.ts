@@ -14,6 +14,11 @@ export interface AttributeAdded {
     | undefined;
 }
 
+export interface AttributeVerified {
+  id: number;
+  verifiedAt: number;
+}
+
 export interface AttributeNameChanged {
   id: number;
   name: string;
@@ -201,6 +206,80 @@ export const AttributeAdded = {
     ) {
       message.value = { $case: "credential", credential: Credential.fromPartial(object.value.credential) };
     }
+    return message;
+  },
+};
+
+function createBaseAttributeVerified(): AttributeVerified {
+  return { id: 0, verifiedAt: 0 };
+}
+
+export const AttributeVerified = {
+  encode(message: AttributeVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint32(message.id);
+    }
+    if (message.verifiedAt !== 0) {
+      writer.uint32(16).uint32(message.verifiedAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeVerified {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAttributeVerified();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.id = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.verifiedAt = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AttributeVerified {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      verifiedAt: isSet(object.verifiedAt) ? Number(object.verifiedAt) : 0,
+    };
+  },
+
+  toJSON(message: AttributeVerified): unknown {
+    const obj: any = {};
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.verifiedAt !== 0) {
+      obj.verifiedAt = Math.round(message.verifiedAt);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AttributeVerified>, I>>(base?: I): AttributeVerified {
+    return AttributeVerified.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AttributeVerified>, I>>(object: I): AttributeVerified {
+    const message = createBaseAttributeVerified();
+    message.id = object.id ?? 0;
+    message.verifiedAt = object.verifiedAt ?? 0;
     return message;
   },
 };

@@ -7,6 +7,7 @@ import accountProtocolFactory, { type AccountProtocol } from '$modules/account/a
 import attributeProtocolFactory, {
 	type AttributeProtocol
 } from '$modules/attribute/attribute.protocol'
+import inviteProtocolFactory, { type InviteProtocol } from '$modules/invite/invite.protocol'
 import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/session.protocol'
 import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
 import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
@@ -15,6 +16,7 @@ export interface RespliceProtocol {
 	ctx: ContextProtocol
 	account: AccountProtocol
 	attribute: AttributeProtocol
+	invite: InviteProtocol
 	session: SessionProtocol
 	loadCache: () => Promise<void>
 }
@@ -36,6 +38,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.attribute,
 			commuter: socketCommuter
 		}),
+		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
 		session: sessionProtocolFactory({ cache: db, store: stores.session }),
 		async loadCache() {
 			const { events } = await db.read<proto.Message>('events')

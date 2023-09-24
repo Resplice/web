@@ -19,14 +19,7 @@ export interface Protocol {
 }
 
 type Result = Promise<
-	| {
-			event: proto.auth.AuthChanged
-			error: null
-	  }
-	| {
-			event: null
-			error: proto.Error
-	  }
+	{ event: proto.auth.AuthChanged; error: null } | { event: null; error: proto.Error }
 >
 
 type CryptoKeys = {
@@ -99,13 +92,17 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 				headers
 			})
 
-			const { error, message: event } = await deserializeMessage(
+			const { event, state, error } = await deserializeMessage(
 				new Uint8Array(messageBytes),
 				cryptoKeys.server
 			)
 
 			if (error) {
 				return { event: null, error: error }
+			}
+
+			if (state) {
+				throw new Error('State not supported.')
 			}
 
 			if (event.payload?.$case !== 'authChanged') {

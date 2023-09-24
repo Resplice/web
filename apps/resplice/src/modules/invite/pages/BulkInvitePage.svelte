@@ -41,7 +41,7 @@
 		<main class="bg-white rounded-t-3xl rounded-b-3xl flex-1 flex flex-col p-8 overflow-auto">
 			<h1 class="text-2xl font-semibold mb-4">Import Contacts</h1>
 			<p class="mb-4">Select an attribute from each contact to invite or ignore them:</p>
-			<BulkImportList {contacts} />
+			<BulkImportList {contacts} attributeIds={selectedAttributes} />
 		</main>
 		<footer class="bg-white rounded-t-3xl mt-4 px-8 py-4">
 			<AttributeShareContext bind:selected={selectedAttributes} initializeDefault />

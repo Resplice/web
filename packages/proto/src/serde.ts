@@ -22,33 +22,63 @@ function encodeCommand(command: proto.Command) {
 export type ProtoMessage =
 	| {
 			commandId: number
-			message: null
-			error: proto.Error
+			event: proto.Event
+			state: null
+			error: null
 	  }
 	| {
 			commandId: number
-			message: proto.Message
+			event: null
+			state: proto.State
 			error: null
 	  }
+	| {
+			commandId: number
+			event: null
+			state: null
+			error: proto.Error
+	  }
+
 export async function deserializeMessage(
 	messageBytes: Uint8Array,
 	decryptionKey: CryptoKey
 ): Promise<ProtoMessage> {
-	const { id: iv, commandId, message, error } = proto.SecMessage.decode(messageBytes)
+	const { id, commandId, message } = proto.SecMessage.decode(messageBytes)
 
-	if (error) {
-		return {
-			commandId,
-			message: null,
-			error
-		}
+	switch (message.$case) {
+		case 'event':
+			return {
+				commandId,
+				event: await deserializeEvent(id, message.event, decryptionKey),
+				state: null,
+				error: null
+			}
+		case 'state':
+			return {
+				commandId,
+				event: null,
+				state: await deserializeState(id, message.state, decryptionKey),
+				error: null
+			}
+		case 'error':
+			return { commandId, event: null, state: null, error: message.error }
 	}
-
-	const decryptedMessage = await decrypt(decryptionKey, iv, message)
-
-	return { commandId, message: decodeMessage(decryptedMessage), error: null }
 }
 
-function decodeMessage(messageBytes: Uint8Array): proto.Message {
-	return proto.Message.decode(messageBytes)
+async function deserializeEvent(
+	message_id: number,
+	eventBytes: Uint8Array,
+	decryptionKey: CryptoKey
+): Promise<proto.Event> {
+	const decryptedEvent = await decrypt(decryptionKey, message_id, eventBytes)
+	return proto.Event.decode(decryptedEvent)
+}
+
+async function deserializeState(
+	message_id: number,
+	stateBytes: Uint8Array,
+	decryptionKey: CryptoKey
+): Promise<proto.State> {
+	const decryptedEvent = await decrypt(decryptionKey, message_id, stateBytes)
+	return proto.State.decode(decryptedEvent)
 }

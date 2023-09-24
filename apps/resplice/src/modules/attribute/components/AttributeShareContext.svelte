@@ -6,7 +6,6 @@
 		Button,
 		Toggle,
 		Modal,
-		Skeleton,
 		AttributeAction,
 		AddIcon
 	} from '@resplice/components'
@@ -42,16 +41,21 @@
 		</Button>
 	</div>
 
-	{#if attributes}
-		<div class="w-full flex-1 flex space-x-4 overflow-scroll">
-			{#each [...selected] as id}
+	<div class="w-full flex-1 flex flex-nowrap space-x-4 overflow-scroll">
+		{#each [...selected] as id}
+			<div class="text-center w-12">
 				<AttributeAction
 					itemType="user"
 					attribute={attributes.get(id)}
 					actionIdx={0}
 					disableAction
 				/>
-			{/each}
+				<p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
+					{attributes.get(id).name}
+				</p>
+			</div>
+		{/each}
+		<div class="text-center">
 			<button
 				type="button"
 				class="outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none bg-brand-primary text-brand-primary-dark"
@@ -59,11 +63,9 @@
 			>
 				<AddIcon height={24} width={24} />
 			</button>
+			<p>Add</p>
 		</div>
-	{:else}
-		<Skeleton variant="rect" width="100%" height="2.5em" />
-		<Skeleton variant="rect" width="100%" height="2.5em" />
-	{/if}
+	</div>
 </section>
 
 {#if isEditing}

@@ -2,8 +2,8 @@
 import _m0 from "protobufjs/minimal";
 
 export interface AccountCreated {
+  uuid: string;
   name: string;
-  accountUuid: string;
   handle: string;
   avatarUrl: string;
   phoneId: number;
@@ -27,16 +27,16 @@ export interface AccountDeleted {
 }
 
 function createBaseAccountCreated(): AccountCreated {
-  return { name: "", accountUuid: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
+  return { uuid: "", name: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
 }
 
 export const AccountCreated = {
   encode(message: AccountCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.uuid !== "") {
+      writer.uint32(10).string(message.uuid);
     }
-    if (message.accountUuid !== "") {
-      writer.uint32(18).string(message.accountUuid);
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
     }
     if (message.handle !== "") {
       writer.uint32(26).string(message.handle);
@@ -65,14 +65,14 @@ export const AccountCreated = {
             break;
           }
 
-          message.name = reader.string();
+          message.uuid = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.accountUuid = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -113,8 +113,8 @@ export const AccountCreated = {
 
   fromJSON(object: any): AccountCreated {
     return {
+      uuid: isSet(object.uuid) ? String(object.uuid) : "",
       name: isSet(object.name) ? String(object.name) : "",
-      accountUuid: isSet(object.accountUuid) ? String(object.accountUuid) : "",
       handle: isSet(object.handle) ? String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
       phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
@@ -124,11 +124,11 @@ export const AccountCreated = {
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
+    if (message.uuid !== "") {
+      obj.uuid = message.uuid;
+    }
     if (message.name !== "") {
       obj.name = message.name;
-    }
-    if (message.accountUuid !== "") {
-      obj.accountUuid = message.accountUuid;
     }
     if (message.handle !== "") {
       obj.handle = message.handle;
@@ -150,8 +150,8 @@ export const AccountCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
+    message.uuid = object.uuid ?? "";
     message.name = object.name ?? "";
-    message.accountUuid = object.accountUuid ?? "";
     message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.phoneId = object.phoneId ?? 0;

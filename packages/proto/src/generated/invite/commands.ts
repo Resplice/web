@@ -10,33 +10,28 @@ export interface CreateInvite {
 }
 
 export interface AddInviteShare {
-  type: InviteType;
-  value: string;
+  inviteId: number;
   attributeId: number;
 }
 
 export interface RemoveInviteShare {
-  type: InviteType;
-  value: string;
+  inviteId: number;
   attributeId: number;
 }
 
 export interface DeleteInvite {
-  type: InviteType;
-  value: string;
+  inviteId: number;
 }
 
 export interface AcceptInvite {
-  type: InviteType;
-  value: string;
   accountId: number;
+  inviteId: number;
   attributeIds: number[];
 }
 
 export interface DeclineInvite {
-  type: InviteType;
-  value: string;
   accountId: number;
+  inviteId: number;
 }
 
 function createBaseCreateInvite(): CreateInvite {
@@ -156,19 +151,16 @@ export const CreateInvite = {
 };
 
 function createBaseAddInviteShare(): AddInviteShare {
-  return { type: 0, value: "", attributeId: 0 };
+  return { inviteId: 0, attributeId: 0 };
 }
 
 export const AddInviteShare = {
   encode(message: AddInviteShare, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
+    if (message.inviteId !== 0) {
+      writer.uint32(8).uint32(message.inviteId);
     }
     if (message.attributeId !== 0) {
-      writer.uint32(24).uint32(message.attributeId);
+      writer.uint32(16).uint32(message.attributeId);
     }
     return writer;
   },
@@ -185,17 +177,10 @@ export const AddInviteShare = {
             break;
           }
 
-          message.type = reader.int32() as any;
+          message.inviteId = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
+          if (tag !== 16) {
             break;
           }
 
@@ -212,19 +197,15 @@ export const AddInviteShare = {
 
   fromJSON(object: any): AddInviteShare {
     return {
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
       attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
     };
   },
 
   toJSON(message: AddInviteShare): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
+    if (message.inviteId !== 0) {
+      obj.inviteId = Math.round(message.inviteId);
     }
     if (message.attributeId !== 0) {
       obj.attributeId = Math.round(message.attributeId);
@@ -237,27 +218,23 @@ export const AddInviteShare = {
   },
   fromPartial<I extends Exact<DeepPartial<AddInviteShare>, I>>(object: I): AddInviteShare {
     const message = createBaseAddInviteShare();
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
+    message.inviteId = object.inviteId ?? 0;
     message.attributeId = object.attributeId ?? 0;
     return message;
   },
 };
 
 function createBaseRemoveInviteShare(): RemoveInviteShare {
-  return { type: 0, value: "", attributeId: 0 };
+  return { inviteId: 0, attributeId: 0 };
 }
 
 export const RemoveInviteShare = {
   encode(message: RemoveInviteShare, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
+    if (message.inviteId !== 0) {
+      writer.uint32(8).uint32(message.inviteId);
     }
     if (message.attributeId !== 0) {
-      writer.uint32(24).uint32(message.attributeId);
+      writer.uint32(16).uint32(message.attributeId);
     }
     return writer;
   },
@@ -274,17 +251,10 @@ export const RemoveInviteShare = {
             break;
           }
 
-          message.type = reader.int32() as any;
+          message.inviteId = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
+          if (tag !== 16) {
             break;
           }
 
@@ -301,19 +271,15 @@ export const RemoveInviteShare = {
 
   fromJSON(object: any): RemoveInviteShare {
     return {
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
       attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
     };
   },
 
   toJSON(message: RemoveInviteShare): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
+    if (message.inviteId !== 0) {
+      obj.inviteId = Math.round(message.inviteId);
     }
     if (message.attributeId !== 0) {
       obj.attributeId = Math.round(message.attributeId);
@@ -326,24 +292,20 @@ export const RemoveInviteShare = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveInviteShare>, I>>(object: I): RemoveInviteShare {
     const message = createBaseRemoveInviteShare();
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
+    message.inviteId = object.inviteId ?? 0;
     message.attributeId = object.attributeId ?? 0;
     return message;
   },
 };
 
 function createBaseDeleteInvite(): DeleteInvite {
-  return { type: 0, value: "" };
+  return { inviteId: 0 };
 }
 
 export const DeleteInvite = {
   encode(message: DeleteInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
+    if (message.inviteId !== 0) {
+      writer.uint32(8).uint32(message.inviteId);
     }
     return writer;
   },
@@ -360,14 +322,7 @@ export const DeleteInvite = {
             break;
           }
 
-          message.type = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
+          message.inviteId = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -379,19 +334,13 @@ export const DeleteInvite = {
   },
 
   fromJSON(object: any): DeleteInvite {
-    return {
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0 };
   },
 
   toJSON(message: DeleteInvite): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
+    if (message.inviteId !== 0) {
+      obj.inviteId = Math.round(message.inviteId);
     }
     return obj;
   },
@@ -401,28 +350,24 @@ export const DeleteInvite = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteInvite>, I>>(object: I): DeleteInvite {
     const message = createBaseDeleteInvite();
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
+    message.inviteId = object.inviteId ?? 0;
     return message;
   },
 };
 
 function createBaseAcceptInvite(): AcceptInvite {
-  return { type: 0, value: "", accountId: 0, attributeIds: [] };
+  return { accountId: 0, inviteId: 0, attributeIds: [] };
 }
 
 export const AcceptInvite = {
   encode(message: AcceptInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
     if (message.accountId !== 0) {
-      writer.uint32(24).uint32(message.accountId);
+      writer.uint32(8).uint32(message.accountId);
     }
-    writer.uint32(34).fork();
+    if (message.inviteId !== 0) {
+      writer.uint32(16).uint32(message.inviteId);
+    }
+    writer.uint32(26).fork();
     for (const v of message.attributeIds) {
       writer.uint32(v);
     }
@@ -442,30 +387,23 @@ export const AcceptInvite = {
             break;
           }
 
-          message.type = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.accountId = reader.uint32();
           continue;
-        case 4:
-          if (tag === 32) {
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.inviteId = reader.uint32();
+          continue;
+        case 3:
+          if (tag === 24) {
             message.attributeIds.push(reader.uint32());
 
             continue;
           }
 
-          if (tag === 34) {
+          if (tag === 26) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.attributeIds.push(reader.uint32());
@@ -486,23 +424,19 @@ export const AcceptInvite = {
 
   fromJSON(object: any): AcceptInvite {
     return {
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
       attributeIds: Array.isArray(object?.attributeIds) ? object.attributeIds.map((e: any) => Number(e)) : [],
     };
   },
 
   toJSON(message: AcceptInvite): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
     if (message.accountId !== 0) {
       obj.accountId = Math.round(message.accountId);
+    }
+    if (message.inviteId !== 0) {
+      obj.inviteId = Math.round(message.inviteId);
     }
     if (message.attributeIds?.length) {
       obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
@@ -515,28 +449,24 @@ export const AcceptInvite = {
   },
   fromPartial<I extends Exact<DeepPartial<AcceptInvite>, I>>(object: I): AcceptInvite {
     const message = createBaseAcceptInvite();
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
     message.accountId = object.accountId ?? 0;
+    message.inviteId = object.inviteId ?? 0;
     message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseDeclineInvite(): DeclineInvite {
-  return { type: 0, value: "", accountId: 0 };
+  return { accountId: 0, inviteId: 0 };
 }
 
 export const DeclineInvite = {
   encode(message: DeclineInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
     if (message.accountId !== 0) {
-      writer.uint32(24).uint32(message.accountId);
+      writer.uint32(8).uint32(message.accountId);
+    }
+    if (message.inviteId !== 0) {
+      writer.uint32(16).uint32(message.inviteId);
     }
     return writer;
   },
@@ -553,21 +483,14 @@ export const DeclineInvite = {
             break;
           }
 
-          message.type = reader.int32() as any;
+          message.accountId = reader.uint32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.value = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.accountId = reader.uint32();
+          message.inviteId = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -580,22 +503,18 @@ export const DeclineInvite = {
 
   fromJSON(object: any): DeclineInvite {
     return {
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
       accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
+      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
     };
   },
 
   toJSON(message: DeclineInvite): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
     if (message.accountId !== 0) {
       obj.accountId = Math.round(message.accountId);
+    }
+    if (message.inviteId !== 0) {
+      obj.inviteId = Math.round(message.inviteId);
     }
     return obj;
   },
@@ -605,9 +524,8 @@ export const DeclineInvite = {
   },
   fromPartial<I extends Exact<DeepPartial<DeclineInvite>, I>>(object: I): DeclineInvite {
     const message = createBaseDeclineInvite();
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
     message.accountId = object.accountId ?? 0;
+    message.inviteId = object.inviteId ?? 0;
     return message;
   },
 };

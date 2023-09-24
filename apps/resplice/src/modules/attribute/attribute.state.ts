@@ -15,7 +15,7 @@ export type AttributeAggregate = AttributeState
 
 export function applyAttributeEvent(
 	aggregate: AttributeAggregate,
-	event: proto.Message
+	event: proto.Event
 ): AttributeAggregate {
 	switch (event.payload.$case) {
 		case 'accountCreated':
@@ -56,8 +56,6 @@ export function applyAttributeEvent(
 		case 'attributeRemoved':
 			aggregate.delete(event.payload.attributeRemoved.id)
 			break
-		default:
-			return aggregate
 	}
 
 	return aggregate

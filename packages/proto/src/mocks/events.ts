@@ -29,7 +29,7 @@ const authEvents = {
 // Account Events
 const accountCreated: proto.account.AccountCreated = {
 	accountUuid: 'uuid',
-	fullName: 'Han Solo',
+	name: 'Han Solo',
 	handle: 'han.solo.1',
 	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
 	phoneId: 2,
