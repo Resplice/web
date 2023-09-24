@@ -5,14 +5,10 @@ import {
 	AttributeType,
 	type AttributeValue,
 	type AddressValue,
-	type CoordinateValue,
 	type CredentialValue,
-	type DateValue,
 	type EmailValue,
-	type LinkValue,
 	type PhoneValue,
-	type SocialValue,
-	type TextValue
+	type SocialValue
 } from '@resplice/utils'
 
 export type AttributeAggregate = AttributeState
@@ -23,28 +19,20 @@ export function applyAttributeEvent(
 ): AttributeAggregate {
 	switch (event.payload.$case) {
 		case 'accountCreated':
-			aggregate.set(event.payload.accountCreated.emailId, {
-				id: event.payload.accountCreated.emailId,
-				type: AttributeType.EMAIL,
-				name: 'Primary Email',
-				value: { email: event.payload.accountCreated.email },
-				sortOrder: 1,
-				groupId: null,
-				verifiedAt: null,
-				verifyExpiry: null
-			})
 			aggregate.set(event.payload.accountCreated.phoneId, {
 				id: event.payload.accountCreated.phoneId,
 				type: AttributeType.PHONE,
 				name: 'Primary Phone',
 				value: { number: event.payload.accountCreated.phone, smsEnabled: true },
-				sortOrder: 1,
+				sortOrder: 0,
 				groupId: null,
 				verifiedAt: null,
 				verifyExpiry: null
 			})
 			break
 		case 'attributeAdded':
+			// Delete placeholder
+			aggregate.delete(0)
 			aggregate.set(event.payload.attributeAdded.id, {
 				id: event.payload.attributeAdded.id,
 				type: mapProtoAttributeType(event.payload.attributeAdded.value.$case),
@@ -64,14 +52,6 @@ export function applyAttributeEvent(
 			aggregate.get(event.payload.attributeValueChanged.id).value = mapProtoAttributeValue(
 				event.payload.attributeValueChanged.value
 			)
-			break
-		case 'attributeSorted':
-			aggregate.get(event.payload.attributeSorted.id).sortOrder =
-				event.payload.attributeSorted.sortIndex
-			break
-		case 'attributeVerified':
-			aggregate.get(event.payload.attributeVerified.id).verifiedAt =
-				event.payload.attributeVerified.verifiedAt
 			break
 		case 'attributeRemoved':
 			aggregate.delete(event.payload.attributeRemoved.id)
@@ -93,22 +73,14 @@ export function mapProtoAttributeValue(
 	switch (value.$case) {
 		case 'address':
 			return value.address
-		case 'coordinate':
-			return value.coordinate
 		case 'credential':
 			return value.credential
-		case 'date':
-			return value.date
 		case 'email':
 			return value.email
-		case 'link':
-			return value.link
 		case 'phone':
 			return value.phone
 		case 'social':
 			return value.social
-		case 'text':
-			return value.text
 	}
 }
 
@@ -116,24 +88,18 @@ export function mapAttributeValue(
 	type: AttributeType,
 	value: AttributeValue
 ): proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeValueChanged['value'] {
+	console.log(type)
+	console.log(value)
 	switch (type) {
 		case AttributeType.ADDRESS:
 			return { $case: 'address', address: value as AddressValue }
-		case AttributeType.COORDINATE:
-			return { $case: 'coordinate', coordinate: value as CoordinateValue }
 		case AttributeType.CREDENTIAL:
 			return { $case: 'credential', credential: value as CredentialValue }
-		case AttributeType.DATE:
-			return { $case: 'date', date: value as DateValue }
 		case AttributeType.EMAIL:
 			return { $case: 'email', email: value as EmailValue }
-		case AttributeType.LINK:
-			return { $case: 'link', link: value as LinkValue }
 		case AttributeType.PHONE:
 			return { $case: 'phone', phone: value as PhoneValue }
 		case AttributeType.SOCIAL:
 			return { $case: 'social', social: value as SocialValue }
-		case AttributeType.TEXT:
-			return { $case: 'text', text: value as TextValue }
 	}
 }

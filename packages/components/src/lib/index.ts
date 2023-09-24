@@ -1,6 +1,7 @@
 // Base
 export { default as Avatar } from './Avatar.svelte'
 export { default as Button } from './Button.svelte'
+export { default as ButtonAlt } from './ButtonAlt.svelte'
 export { default as Camera } from './Camera.svelte'
 export { default as Code } from './Code.svelte'
 export { default as CodeBlock } from './CodeBlock.svelte'

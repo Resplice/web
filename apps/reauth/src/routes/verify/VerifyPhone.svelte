@@ -3,7 +3,7 @@
 	import { t } from '$lib/i18n'
 	import { ErrorType, errorFieldToString } from '$lib/protocol'
 	import useProtocol from '$lib/hooks/useProtocol'
-	import store, { AuthStatus } from '$lib/store'
+	import store from '$lib/store'
 	import {
 		AttributeItem,
 		TextField,
@@ -26,7 +26,6 @@
 	let phoneCode = ''
 	let phonePromise: Promise<boolean>
 	let phoneCodeError = ''
-	$: emailVerified = $store.status === AuthStatus.PENDING_VERIFY_PHONE
 
 	$: {
 		if (phoneCode.length >= CODE_LENGTH) {
@@ -36,7 +35,6 @@
 
 	async function submitPhoneCode(verifyCode: number): Promise<boolean> {
 		const { event, error } = await protocol.verifyPhone({
-			email: $store.email,
 			phone: $store.phone,
 			verifyCode
 		})
@@ -67,11 +65,12 @@
 		<div class="w-full mr-4">
 			<TextField
 				name="phone-code"
-				label={emailVerified ? $t('auth.enterCode') : $t('auth.verifyEmail')}
+				label={$t('auth.enterCode')}
 				autocomplete="one-time-code"
 				inputmode="numeric"
+				autofocus
 				bind:value={phoneCode}
-				disabled={(!emailVerified || phoneCode.length >= CODE_LENGTH) && !phoneCodeError}
+				disabled={phoneCode.length >= CODE_LENGTH && !phoneCodeError}
 				Icon={LockClosedIcon}
 				bind:error={phoneCodeError}
 			/>

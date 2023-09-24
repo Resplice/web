@@ -9,7 +9,6 @@
 	$: {
 		if (browser)
 			switch ($store.status) {
-				case AuthStatus.PENDING_VERIFY_EMAIL:
 				case AuthStatus.PENDING_VERIFY_PHONE:
 					break
 				case AuthStatus.PENDING_CREATE_ACCOUNT:
@@ -32,7 +31,7 @@
 		</p>
 	</header>
 
-	{#if [AuthStatus.PENDING_VERIFY_EMAIL, AuthStatus.PENDING_VERIFY_PHONE].includes($store.status)}
+	{#if [AuthStatus.PENDING_VERIFY_PHONE].includes($store.status)}
 		<VerifyForm />
 	{/if}
 </main>

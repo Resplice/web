@@ -1,30 +1,20 @@
 const DB_NAME = 'RESPLICE_CACHE'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
-type Store =
-	| 'context'
-	| 'commands'
-	| 'events'
-	| 'account'
-	| 'attributes'
-	| 'chats'
-	| 'contacts'
-	| 'invites'
-	| 'profile'
-	| 'sessions'
+type Store = 'session' | 'commands' | 'events' | 'connections' | 'invites'
 
 let db: IDBDatabase | null = null
 
 function createDatabase(newDB: IDBDatabase) {
-	// Remove existing stores except for context
+	// Remove existing stores except for session & commands
 	const DOMStringStores = newDB.objectStoreNames
 	for (let i = 0; i < DOMStringStores.length; i++) {
-		if (DOMStringStores[i] === 'context') continue
+		if (DOMStringStores[i] === 'session' || DOMStringStores[i] === 'commands') continue
 		newDB.deleteObjectStore(DOMStringStores[i])
 	}
 
 	// Create new stores
-	newDB.createObjectStore('commands', { autoIncrement: true })
+	// newDB.createObjectStore('commands', { autoIncrement: true })
 	newDB.createObjectStore('events', { keyPath: 'id' })
 	newDB.createObjectStore('account', { autoIncrement: true })
 	newDB.createObjectStore('attributes', { keyPath: 'id' })

@@ -8,10 +8,11 @@
 	export let value: string
 	export let autocomplete = 'on'
 	export let inputmode: HTMLAttributes<HTMLInputElement>['inputmode'] = 'text' as const
+	export let autofocus = false
 	export let disabled = false
 	export let error = ''
 	export let Icon: IconComponent | null = null
-	let isTouched = false
+	let isTouched = autofocus
 
 	$: {
 		if (value) isTouched = true
@@ -45,6 +46,7 @@
 		>
 			{label}
 		</label>
+		<!-- svelte-ignore a11y-autofocus -->
 		<input
 			type="text"
 			id={name}
@@ -57,6 +59,7 @@
 			{name}
 			{autocomplete}
 			{inputmode}
+			{autofocus}
 			{disabled}
 			bind:value
 			on:input={resetError}

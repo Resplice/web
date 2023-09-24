@@ -17,20 +17,27 @@
 				}
 			})
 		}
-		async function createDatabase(contextData) {
+		async function createDatabase(sessionData) {
 			return new Promise((resolve, reject) => {
-				const request = indexedDB.open('RESPLICE_CACHE')
-				request.onsuccess = () => {
-					const txn = request.result.transaction('context', 'readwrite')
-					txn.objectStore('context').put(contextData, 1)
-					resolve()
-				}
-				request.onerror = (e) => {
-					reject(e)
-				}
+				const request = indexedDB.open('RESPLICE_CACHE', 1)
+
 				request.onupgradeneeded = () => {
 					const db = request.result
-					db.createObjectStore('context')
+					db.createObjectStore('session')
+					db.createObjectStore('commands', { autoIncrement: true })
+				}
+
+				request.onsuccess = () => {
+					const txn = request.result.transaction(['session', 'commands'], 'readwrite')
+					txn.objectStore('session').put(sessionData, 1)
+					for (let i = 1; i < sessionData.initialCommandId; i++) {
+						txn.objectStore('commands').add(`authCommand: ${i}`)
+					}
+					resolve()
+				}
+
+				request.onerror = (e) => {
+					reject(e)
 				}
 			})
 		}

@@ -2,12 +2,14 @@
 	import cx from 'clsx'
 	import ActionIcon from '$lib/attribute/AttributeActionIcon.svelte'
 	import { attributeTypes } from '@resplice/utils'
-	import type { Attribute, AttributeAction } from '@resplice/utils'
+	import type { Attribute } from '@resplice/utils'
 
 	export let itemType: 'contact' | 'user' | 'disabled'
 	export let disableAction = false
-	export let attributeAction: AttributeAction
+	export let actionIdx: number
 	export let attribute: Attribute
+
+	const attributeAction = attributeTypes[attribute.type].actions[actionIdx]
 
 	function onActionClick() {
 		if (disableAction) return

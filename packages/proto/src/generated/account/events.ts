@@ -2,12 +2,10 @@
 import _m0 from "protobufjs/minimal";
 
 export interface AccountCreated {
-  fullName: string;
-  accountUuid: string;
+  uuid: string;
+  name: string;
   handle: string;
   avatarUrl: string;
-  emailId: number;
-  email: string;
   phoneId: number;
   phone: string;
 }
@@ -29,34 +27,28 @@ export interface AccountDeleted {
 }
 
 function createBaseAccountCreated(): AccountCreated {
-  return { fullName: "", accountUuid: "", handle: "", avatarUrl: "", emailId: 0, email: "", phoneId: 0, phone: "" };
+  return { uuid: "", name: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
 }
 
 export const AccountCreated = {
   encode(message: AccountCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.fullName !== "") {
-      writer.uint32(18).string(message.fullName);
+    if (message.uuid !== "") {
+      writer.uint32(10).string(message.uuid);
     }
-    if (message.accountUuid !== "") {
-      writer.uint32(26).string(message.accountUuid);
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
     }
     if (message.handle !== "") {
-      writer.uint32(34).string(message.handle);
+      writer.uint32(26).string(message.handle);
     }
     if (message.avatarUrl !== "") {
-      writer.uint32(42).string(message.avatarUrl);
-    }
-    if (message.emailId !== 0) {
-      writer.uint32(48).uint32(message.emailId);
-    }
-    if (message.email !== "") {
-      writer.uint32(58).string(message.email);
+      writer.uint32(34).string(message.avatarUrl);
     }
     if (message.phoneId !== 0) {
-      writer.uint32(64).uint32(message.phoneId);
+      writer.uint32(40).uint32(message.phoneId);
     }
     if (message.phone !== "") {
-      writer.uint32(74).string(message.phone);
+      writer.uint32(50).string(message.phone);
     }
     return writer;
   },
@@ -68,57 +60,43 @@ export const AccountCreated = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.uuid = reader.string();
+          continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.fullName = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.accountUuid = reader.string();
+          message.handle = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.handle = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.avatarUrl = reader.string();
           continue;
-        case 6:
-          if (tag !== 48) {
-            break;
-          }
-
-          message.emailId = reader.uint32();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 8:
-          if (tag !== 64) {
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.phoneId = reader.uint32();
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -135,12 +113,10 @@ export const AccountCreated = {
 
   fromJSON(object: any): AccountCreated {
     return {
-      fullName: isSet(object.fullName) ? String(object.fullName) : "",
-      accountUuid: isSet(object.accountUuid) ? String(object.accountUuid) : "",
+      uuid: isSet(object.uuid) ? String(object.uuid) : "",
+      name: isSet(object.name) ? String(object.name) : "",
       handle: isSet(object.handle) ? String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
-      emailId: isSet(object.emailId) ? Number(object.emailId) : 0,
-      email: isSet(object.email) ? String(object.email) : "",
       phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
       phone: isSet(object.phone) ? String(object.phone) : "",
     };
@@ -148,23 +124,17 @@ export const AccountCreated = {
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
-    if (message.fullName !== "") {
-      obj.fullName = message.fullName;
+    if (message.uuid !== "") {
+      obj.uuid = message.uuid;
     }
-    if (message.accountUuid !== "") {
-      obj.accountUuid = message.accountUuid;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.handle !== "") {
       obj.handle = message.handle;
     }
     if (message.avatarUrl !== "") {
       obj.avatarUrl = message.avatarUrl;
-    }
-    if (message.emailId !== 0) {
-      obj.emailId = Math.round(message.emailId);
-    }
-    if (message.email !== "") {
-      obj.email = message.email;
     }
     if (message.phoneId !== 0) {
       obj.phoneId = Math.round(message.phoneId);
@@ -180,12 +150,10 @@ export const AccountCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
-    message.fullName = object.fullName ?? "";
-    message.accountUuid = object.accountUuid ?? "";
+    message.uuid = object.uuid ?? "";
+    message.name = object.name ?? "";
     message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
-    message.emailId = object.emailId ?? 0;
-    message.email = object.email ?? "";
     message.phoneId = object.phoneId ?? 0;
     message.phone = object.phone ?? "";
     return message;

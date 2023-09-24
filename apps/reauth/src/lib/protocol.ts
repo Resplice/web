@@ -12,7 +12,6 @@ export interface Protocol {
 	isBot(token: string): Promise<boolean>
 	getIpAddress(): Promise<string>
 	startAuth(payload: proto.auth.StartAuth): Result
-	verifyEmail(payload: proto.auth.VerifyEmail): Result
 	verifyPhone(payload: proto.auth.VerifyPhone): Result
 	createAccount(payload: proto.auth.CreateAccount): Result
 	startSession(payload: proto.auth.StartSession): Result
@@ -20,14 +19,7 @@ export interface Protocol {
 }
 
 type Result = Promise<
-	| {
-			event: proto.auth.AuthChanged
-			error: null
-	  }
-	| {
-			event: null
-			error: proto.Error
-	  }
+	{ event: proto.auth.AuthChanged; error: null } | { event: null; error: proto.Error }
 >
 
 type CryptoKeys = {
@@ -37,7 +29,7 @@ type CryptoKeys = {
 }
 type AppMessage = {
 	phone: string
-	email: string
+	persist: boolean
 }
 
 export function protocolFactory(respliceEndpoint: string): Protocol {
@@ -100,16 +92,21 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 				headers
 			})
 
-			const message = await deserializeMessage(new Uint8Array(messageBytes), cryptoKeys.server)
+			const { event, state, error } = await deserializeMessage(
+				new Uint8Array(messageBytes),
+				cryptoKeys.server
+			)
 
-			if (message.error) {
-				return { event: null, error: message.error }
+			if (error) {
+				return { event: null, error: error }
 			}
 
-			const event = message.event
+			if (state) {
+				throw new Error('State not supported.')
+			}
 
 			if (event.payload?.$case !== 'authChanged') {
-				throw new Error(`Message payload: ${event.payload?.$case} not supported.`)
+				throw new Error(`Event: ${event.payload?.$case} not supported.`)
 			}
 
 			return { event: event.payload.authChanged, error: null }
@@ -140,12 +137,11 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		document.body.appendChild(appIframe)
 		const message = {
 			...msg,
-			nextCommandId: ++cmdCount,
-			cryptoKeys
+			cryptoKeys,
+			initialCommandId: ++cmdCount
 		}
 		appIframe.onload = () => {
 			window.addEventListener('message', (e) => {
-				console.log(e.origin)
 				if (e.origin === respliceAppUrl) location.replace(respliceAppUrl)
 			})
 			appIframe.contentWindow?.postMessage(message, src)
@@ -164,7 +160,6 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			return fetch.get<string>({ endpoint: '/ip-address', content: 'text' })
 		},
 		startAuth,
-		verifyEmail: (verifyEmail) => executeAuthStep({ $case: 'verifyEmail', verifyEmail }),
 		verifyPhone: (verifyPhone) => executeAuthStep({ $case: 'verifyPhone', verifyPhone }),
 		createAccount: (createAccount) => executeAuthStep({ $case: 'createAccount', createAccount }),
 		startSession: (startSession) => executeAuthStep({ $case: 'startSession', startSession }),

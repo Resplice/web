@@ -21,7 +21,7 @@
 	}
 
 	async function saveAttribute(attribute: Attribute) {
-		await protocol.attribute.add({
+		protocol.attribute.add({
 			name: attribute.name,
 			value: mapAttributeValue(attribute.type, attribute.value)
 		})

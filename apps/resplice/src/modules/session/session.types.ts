@@ -1,7 +1,15 @@
 export type Session = {
 	id: number
-	expiry: number
-	accessToken: Uint8Array
+	phone: string
+	cryptoKeys: CryptoKeys
+	persist: boolean
+	initialCommandId: number
+}
+
+export type CryptoKeys = {
+	client: CryptoKey
+	server: CryptoKey
+	accessKey: Uint8Array
 }
 
 export type SessionItem = {

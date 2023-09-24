@@ -16,8 +16,8 @@
 					break
 				case AuthStatus.AUTHORIZED:
 					protocol.redirectToApp(config.respliceAppUrl, {
-						email: $store.email,
-						phone: $store.phone
+						phone: $store.phone,
+						persist: $store.persistSession
 					})
 					break
 				default:
@@ -31,12 +31,10 @@
 		const ipAddress = await protocol.getIpAddress()
 
 		const { event, error } = await protocol.startSession({
-			email: $store.email,
 			phone: $store.phone,
 			persist: $store.persistSession,
 			ipAddress,
-			userAgent: navigator.userAgent,
-			location: undefined
+			userAgent: navigator.userAgent
 		})
 
 		if (error) {

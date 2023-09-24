@@ -1,68 +1,50 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { Coordinate } from "../attribute/types";
 
 export interface StartAuth {
-  email: string;
   phone: string;
-}
-
-export interface VerifyEmail {
-  email: string;
-  phone: string;
-  verifyCode: number;
 }
 
 export interface VerifyPhone {
-  email: string;
   phone: string;
   verifyCode: number;
 }
 
 export interface CreateAccount {
-  email: string;
   phone: string;
-  fullName: string;
+  name: string;
   avatar: string;
 }
 
 export interface DeleteAccount {
-  email: string;
   phone: string;
 }
 
 export interface StartSession {
-  email: string;
   phone: string;
   userAgent: string;
   ipAddress: string;
-  location: Coordinate | undefined;
   persist: boolean;
 }
 
 export interface AuthorizeSocket {
-  email: string;
   phone: string;
   lastEventId: number;
 }
 
 export interface EndSession {
-  email: string;
   phone: string;
   sessionId: number;
 }
 
 function createBaseStartAuth(): StartAuth {
-  return { email: "", phone: "" };
+  return { phone: "" };
 }
 
 export const StartAuth = {
   encode(message: StartAuth, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     return writer;
   },
@@ -79,13 +61,6 @@ export const StartAuth = {
             break;
           }
 
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.phone = reader.string();
           continue;
       }
@@ -98,17 +73,11 @@ export const StartAuth = {
   },
 
   fromJSON(object: any): StartAuth {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-    };
+    return { phone: isSet(object.phone) ? String(object.phone) : "" };
   },
 
   toJSON(message: StartAuth): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -120,115 +89,22 @@ export const StartAuth = {
   },
   fromPartial<I extends Exact<DeepPartial<StartAuth>, I>>(object: I): StartAuth {
     const message = createBaseStartAuth();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
-    return message;
-  },
-};
-
-function createBaseVerifyEmail(): VerifyEmail {
-  return { email: "", phone: "", verifyCode: 0 };
-}
-
-export const VerifyEmail = {
-  encode(message: VerifyEmail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
-    if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
-    }
-    if (message.verifyCode !== 0) {
-      writer.uint32(24).uint32(message.verifyCode);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): VerifyEmail {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseVerifyEmail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.phone = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.verifyCode = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): VerifyEmail {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      verifyCode: isSet(object.verifyCode) ? Number(object.verifyCode) : 0,
-    };
-  },
-
-  toJSON(message: VerifyEmail): unknown {
-    const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
-    if (message.phone !== "") {
-      obj.phone = message.phone;
-    }
-    if (message.verifyCode !== 0) {
-      obj.verifyCode = Math.round(message.verifyCode);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<VerifyEmail>, I>>(base?: I): VerifyEmail {
-    return VerifyEmail.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<VerifyEmail>, I>>(object: I): VerifyEmail {
-    const message = createBaseVerifyEmail();
-    message.email = object.email ?? "";
-    message.phone = object.phone ?? "";
-    message.verifyCode = object.verifyCode ?? 0;
     return message;
   },
 };
 
 function createBaseVerifyPhone(): VerifyPhone {
-  return { email: "", phone: "", verifyCode: 0 };
+  return { phone: "", verifyCode: 0 };
 }
 
 export const VerifyPhone = {
   encode(message: VerifyPhone, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     if (message.verifyCode !== 0) {
-      writer.uint32(24).uint32(message.verifyCode);
+      writer.uint32(16).uint32(message.verifyCode);
     }
     return writer;
   },
@@ -245,17 +121,10 @@ export const VerifyPhone = {
             break;
           }
 
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.phone = reader.string();
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 2:
+          if (tag !== 16) {
             break;
           }
 
@@ -272,7 +141,6 @@ export const VerifyPhone = {
 
   fromJSON(object: any): VerifyPhone {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       verifyCode: isSet(object.verifyCode) ? Number(object.verifyCode) : 0,
     };
@@ -280,9 +148,6 @@ export const VerifyPhone = {
 
   toJSON(message: VerifyPhone): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -297,7 +162,6 @@ export const VerifyPhone = {
   },
   fromPartial<I extends Exact<DeepPartial<VerifyPhone>, I>>(object: I): VerifyPhone {
     const message = createBaseVerifyPhone();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.verifyCode = object.verifyCode ?? 0;
     return message;
@@ -305,22 +169,19 @@ export const VerifyPhone = {
 };
 
 function createBaseCreateAccount(): CreateAccount {
-  return { email: "", phone: "", fullName: "", avatar: "" };
+  return { phone: "", name: "", avatar: "" };
 }
 
 export const CreateAccount = {
   encode(message: CreateAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
-    if (message.fullName !== "") {
-      writer.uint32(26).string(message.fullName);
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
     }
     if (message.avatar !== "") {
-      writer.uint32(34).string(message.avatar);
+      writer.uint32(26).string(message.avatar);
     }
     return writer;
   },
@@ -337,24 +198,17 @@ export const CreateAccount = {
             break;
           }
 
-          message.email = reader.string();
+          message.phone = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.phone = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.fullName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
             break;
           }
 
@@ -371,23 +225,19 @@ export const CreateAccount = {
 
   fromJSON(object: any): CreateAccount {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
-      fullName: isSet(object.fullName) ? String(object.fullName) : "",
+      name: isSet(object.name) ? String(object.name) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
   toJSON(message: CreateAccount): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
-    if (message.fullName !== "") {
-      obj.fullName = message.fullName;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
@@ -400,25 +250,21 @@ export const CreateAccount = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateAccount>, I>>(object: I): CreateAccount {
     const message = createBaseCreateAccount();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
-    message.fullName = object.fullName ?? "";
+    message.name = object.name ?? "";
     message.avatar = object.avatar ?? "";
     return message;
   },
 };
 
 function createBaseDeleteAccount(): DeleteAccount {
-  return { email: "", phone: "" };
+  return { phone: "" };
 }
 
 export const DeleteAccount = {
   encode(message: DeleteAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     return writer;
   },
@@ -435,13 +281,6 @@ export const DeleteAccount = {
             break;
           }
 
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.phone = reader.string();
           continue;
       }
@@ -454,17 +293,11 @@ export const DeleteAccount = {
   },
 
   fromJSON(object: any): DeleteAccount {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      phone: isSet(object.phone) ? String(object.phone) : "",
-    };
+    return { phone: isSet(object.phone) ? String(object.phone) : "" };
   },
 
   toJSON(message: DeleteAccount): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -476,35 +309,28 @@ export const DeleteAccount = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteAccount>, I>>(object: I): DeleteAccount {
     const message = createBaseDeleteAccount();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     return message;
   },
 };
 
 function createBaseStartSession(): StartSession {
-  return { email: "", phone: "", userAgent: "", ipAddress: "", location: undefined, persist: false };
+  return { phone: "", userAgent: "", ipAddress: "", persist: false };
 }
 
 export const StartSession = {
   encode(message: StartSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     if (message.userAgent !== "") {
-      writer.uint32(26).string(message.userAgent);
+      writer.uint32(18).string(message.userAgent);
     }
     if (message.ipAddress !== "") {
-      writer.uint32(34).string(message.ipAddress);
-    }
-    if (message.location !== undefined) {
-      Coordinate.encode(message.location, writer.uint32(42).fork()).ldelim();
+      writer.uint32(26).string(message.ipAddress);
     }
     if (message.persist === true) {
-      writer.uint32(48).bool(message.persist);
+      writer.uint32(32).bool(message.persist);
     }
     return writer;
   },
@@ -521,38 +347,24 @@ export const StartSession = {
             break;
           }
 
-          message.email = reader.string();
+          message.phone = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.phone = reader.string();
+          message.userAgent = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.userAgent = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.ipAddress = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.location = Coordinate.decode(reader, reader.uint32());
-          continue;
-        case 6:
-          if (tag !== 48) {
+        case 4:
+          if (tag !== 32) {
             break;
           }
 
@@ -569,20 +381,15 @@ export const StartSession = {
 
   fromJSON(object: any): StartSession {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
       ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
-      location: isSet(object.location) ? Coordinate.fromJSON(object.location) : undefined,
       persist: isSet(object.persist) ? Boolean(object.persist) : false,
     };
   },
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -591,9 +398,6 @@ export const StartSession = {
     }
     if (message.ipAddress !== "") {
       obj.ipAddress = message.ipAddress;
-    }
-    if (message.location !== undefined) {
-      obj.location = Coordinate.toJSON(message.location);
     }
     if (message.persist === true) {
       obj.persist = message.persist;
@@ -606,32 +410,25 @@ export const StartSession = {
   },
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.userAgent = object.userAgent ?? "";
     message.ipAddress = object.ipAddress ?? "";
-    message.location = (object.location !== undefined && object.location !== null)
-      ? Coordinate.fromPartial(object.location)
-      : undefined;
     message.persist = object.persist ?? false;
     return message;
   },
 };
 
 function createBaseAuthorizeSocket(): AuthorizeSocket {
-  return { email: "", phone: "", lastEventId: 0 };
+  return { phone: "", lastEventId: 0 };
 }
 
 export const AuthorizeSocket = {
   encode(message: AuthorizeSocket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     if (message.lastEventId !== 0) {
-      writer.uint32(24).uint32(message.lastEventId);
+      writer.uint32(16).uint32(message.lastEventId);
     }
     return writer;
   },
@@ -648,17 +445,10 @@ export const AuthorizeSocket = {
             break;
           }
 
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.phone = reader.string();
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 2:
+          if (tag !== 16) {
             break;
           }
 
@@ -675,7 +465,6 @@ export const AuthorizeSocket = {
 
   fromJSON(object: any): AuthorizeSocket {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0,
     };
@@ -683,9 +472,6 @@ export const AuthorizeSocket = {
 
   toJSON(message: AuthorizeSocket): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -700,7 +486,6 @@ export const AuthorizeSocket = {
   },
   fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
     const message = createBaseAuthorizeSocket();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.lastEventId = object.lastEventId ?? 0;
     return message;
@@ -708,19 +493,16 @@ export const AuthorizeSocket = {
 };
 
 function createBaseEndSession(): EndSession {
-  return { email: "", phone: "", sessionId: 0 };
+  return { phone: "", sessionId: 0 };
 }
 
 export const EndSession = {
   encode(message: EndSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
-      writer.uint32(10).string(message.email);
-    }
     if (message.phone !== "") {
-      writer.uint32(18).string(message.phone);
+      writer.uint32(10).string(message.phone);
     }
     if (message.sessionId !== 0) {
-      writer.uint32(24).uint32(message.sessionId);
+      writer.uint32(16).uint32(message.sessionId);
     }
     return writer;
   },
@@ -737,17 +519,10 @@ export const EndSession = {
             break;
           }
 
-          message.email = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.phone = reader.string();
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 2:
+          if (tag !== 16) {
             break;
           }
 
@@ -764,7 +539,6 @@ export const EndSession = {
 
   fromJSON(object: any): EndSession {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
       phone: isSet(object.phone) ? String(object.phone) : "",
       sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
     };
@@ -772,9 +546,6 @@ export const EndSession = {
 
   toJSON(message: EndSession): unknown {
     const obj: any = {};
-    if (message.email !== "") {
-      obj.email = message.email;
-    }
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
@@ -789,7 +560,6 @@ export const EndSession = {
   },
   fromPartial<I extends Exact<DeepPartial<EndSession>, I>>(object: I): EndSession {
     const message = createBaseEndSession();
-    message.email = object.email ?? "";
     message.phone = object.phone ?? "";
     message.sessionId = object.sessionId ?? 0;
     return message;

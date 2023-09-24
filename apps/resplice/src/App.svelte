@@ -9,8 +9,6 @@
 	import Router from './Router.svelte'
 	import './app.css'
 
-	let initialUrl = '/profile'
-
 	const protocolContext = { protocol: null }
 	setContext(contextKey, protocolContext)
 
@@ -18,36 +16,26 @@
 		if (!isRespliceSupported()) throw new Error('Resplice is not supported on this device.')
 
 		try {
-			const urlData = getUrlData()
 			const protocol = await protocolFactory()
+			protocolContext.protocol = protocol
 
-			const sessionIsValid = await protocol.session.isValid()
+			const session = await protocol.session.load()
 
-			if (!sessionIsValid) {
-				// If session cannot be stored or started, redirect to auth flow
+			if (!session) {
+				// If session cannot be retrieved, redirect to auth flow
 				location.replace(config.authUrl)
 				return false
 			}
 
-			protocolContext.protocol = protocol
 			await initializeIntl()
-			if (urlData.googleOAuthAccessToken)
-				initialUrl = `/app/invite/bulk?access-token=${urlData.googleOAuthAccessToken}`
+			await protocol.loadCache()
+			await protocol.ctx.openSocket(session)
 
 			return true
 		} catch (err) {
 			console.error(err)
-			location.replace(config.authUrl)
+			// location.replace(config.authUrl)
 			return false
-		}
-	}
-
-	function getUrlData() {
-		const params = new URLSearchParams(window.location.search)
-		return {
-			googleOAuthAccessToken: params.get('google-access-token')
-		} as {
-			googleOAuthAccessToken?: string
 		}
 	}
 
@@ -59,9 +47,9 @@
 
 {#await loading}
 	<AppLoading />
-{:then isValidSession}
-	{#if isValidSession && accountLoaded}
-		<Router {initialUrl} />
+{:then loaded}
+	{#if loaded && accountLoaded}
+		<Router />
 		<!-- <ToastProvider /> -->
 	{/if}
 {:catch error}

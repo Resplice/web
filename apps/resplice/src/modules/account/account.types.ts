@@ -1,7 +1,7 @@
 import type { Attribute as BaseAttribute } from '@resplice/utils'
 
 export type Account = {
-	id: number
+	uuid: string
 	name: string
 	handle: string | null
 	avatarUrl: string | null

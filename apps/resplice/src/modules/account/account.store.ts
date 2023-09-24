@@ -1,8 +1,7 @@
 import { writable } from 'svelte/store'
 import type { Account } from '$modules/account/account.types'
-import { mockAccount } from '$modules/account/account.mocks'
 
-const accountStore = writable<Account | null>(mockAccount)
+const accountStore = writable<Account | null>()
 
 export type AccountStore = typeof accountStore
 

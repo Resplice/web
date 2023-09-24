@@ -1,10 +1,19 @@
 <script lang="ts">
-	import { push, pop } from 'svelte-spa-router'
-	import { attributeTypes } from '@resplice/utils'
+	import { replace, pop } from 'svelte-spa-router'
+	import { AttributeType, attributeTypes } from '@resplice/utils'
 	import { IconButton, BackIcon } from '@resplice/components'
 	import TypeItem from '$modules/attribute/components/TypeItem.svelte'
 
-	$: typeConfigs = Object.entries(attributeTypes)
+	// Filter types to only supported types for now
+	$: typeConfigs = Object.entries(attributeTypes).filter(([type, config]) => {
+		return [
+			AttributeType.ADDRESS,
+			AttributeType.CREDENTIAL,
+			AttributeType.EMAIL,
+			AttributeType.PHONE,
+			AttributeType.SOCIAL
+		].includes(type as AttributeType)
+	})
 </script>
 
 <div class="flex flex-col w-full h-full bg-gray-100">
@@ -18,7 +27,7 @@
 				{#each typeConfigs as [type, config]}
 					<TypeItem
 						attributeTypeConfig={config}
-						on:click={() => push(`/attribute/create/${type.toLowerCase()}`)}
+						on:click={() => replace(`/attribute/add/${type.toLowerCase()}`)}
 					/>
 				{/each}
 			</div>

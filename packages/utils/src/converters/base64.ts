@@ -22,7 +22,8 @@ export function b64tob(b64String: string): ArrayBufferLike {
  * @param b - Base64 encoded data
  * @returns Base64Url encoded data
  */
-export function b64tob64u(b: string): string {
+export function b64tob64u(b: string, padding = false): string {
+	if (padding) return b.replace(/\+/g, '-').replace(/\//g, '_')
 	// eslint-disable-next-line
 	return b.replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
 }

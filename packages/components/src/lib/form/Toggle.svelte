@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte'
 	import { spring } from 'svelte/motion'
 	import cx from 'clsx'
+
+	const dispatch = createEventDispatcher()
 
 	export let float: 'left' | 'right' = 'right'
 	export let name: string
@@ -13,6 +16,11 @@
 		damping: 0.75,
 		stiffness: 0.15
 	})
+
+	function onChange() {
+		isActive = !isActive
+		dispatch('toggle')
+	}
 
 	$: {
 		if (isActive) {
@@ -50,7 +58,7 @@
 		class="hidden"
 		{name}
 		checked={isActive}
-		on:change={() => (isActive = !isActive)}
+		on:change={onChange}
 	/>
 	<div
 		class={cx('rounded-full cursor-pointer p-1 w-12', {

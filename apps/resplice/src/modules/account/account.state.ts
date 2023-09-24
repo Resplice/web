@@ -10,8 +10,8 @@ export function applyAccountEvent(
 	switch (event.payload.$case) {
 		case 'accountCreated':
 			return {
-				id: event.payload.accountCreated.accountId,
-				name: event.payload.accountCreated.fullName,
+				uuid: event.payload.accountCreated.uuid,
+				name: event.payload.accountCreated.name,
 				handle: event.payload.accountCreated.handle,
 				avatarUrl: event.payload.accountCreated.avatarUrl
 			}
@@ -31,4 +31,6 @@ export function applyAccountEvent(
 				avatarUrl: event.payload.accountAvatarChanged.avatarUrl
 			}
 	}
+
+	return aggregate
 }
