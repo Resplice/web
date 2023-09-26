@@ -69,7 +69,7 @@
 
 <svelte:window on:keydown={onKeyDown} />
 
-<div class="fixed top-0 left-0 w-full h-full backdrop z-10" style="margin: 0; padding: 0">
+<div class="fixed top-0 left-0 w-full h-full backdrop z-50" style="margin: 0; padding: 0">
 	<button class="absolute left-0 top-0 w-full h-full bg-gray-700 opacity-30" on:click={close} />
 	<div
 		class="bg-white absolute bottom-0 w-full flex flex-col items-center rounded-t-xl h-full"

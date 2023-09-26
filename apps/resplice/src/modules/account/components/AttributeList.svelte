@@ -3,7 +3,7 @@
 	import { sortUserAttributes } from '$modules/attribute/attribute.helpers'
 	import attributeStore from '$modules/attribute/attribute.store'
 	import AttributeContext from '$modules/attribute/components/AttributeContext.svelte'
-	import { AttributeItem, AddIcon, Button, Modal, SkeletonList } from '@resplice/components'
+	import { AttributeItem, AddIcon, Modal, SkeletonList } from '@resplice/components'
 	import type { Attribute } from '@resplice/utils'
 
 	$: attributes = $attributeStore

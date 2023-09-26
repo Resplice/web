@@ -2,7 +2,7 @@ export enum AttributeType {
 	ADDRESS = 'ADDRESS',
 	COORDINATE = 'COORDINATE',
 	CREDENTIAL = 'CREDENTIAL',
-	DATE = 'DATE',
+	DATE_TIME = 'DATE_TIME',
 	EMAIL = 'EMAIL',
 	LINK = 'LINK',
 	PHONE = 'PHONE',
@@ -49,14 +49,17 @@ export type CredentialValue = {
 	passcode: string
 }
 
-export interface Date extends BaseAttribute {
-	type: AttributeType.DATE
-	value: DateValue
+export interface DateTime extends BaseAttribute {
+	type: AttributeType.DATE_TIME
+	value: DateTimeValue
 }
-export type DateValue = {
+export type DateTimeValue = {
 	year: number
 	month: number
 	day: number
+	hour?: number
+	minute?: number
+	timezone?: string
 }
 
 export interface Email extends BaseAttribute {
@@ -105,7 +108,7 @@ export type AttributeValue =
 	| AddressValue
 	| CoordinateValue
 	| CredentialValue
-	| DateValue
+	| DateTimeValue
 	| EmailValue
 	| LinkValue
 	| PhoneValue
@@ -116,7 +119,7 @@ export type Attribute =
 	| Address
 	| Coordinate
 	| Credential
-	| Date
+	| DateTime
 	| Email
 	| Link
 	| Phone

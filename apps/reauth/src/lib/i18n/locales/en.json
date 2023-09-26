@@ -11,7 +11,7 @@
 	"enterCode": "Enter Code",
 	"verifyPhone": "Verify Phone",
 	"createAccount": "Create Account",
-	"createAccount.header": "Welcome to Resplice! We see you are new here so we just need your full name to get you started. Optionally add a picture of yourself to make it easier for others to recognize you.",
+	"createAccount.header": "Almost there! We just need your full name and an optional avatar image so others can recognize you at the party.",
 	"haveAccount": "I already have an account",
 	"errors": {
 		"PHONE": "Invalid phone number. Please enter a valid phone number.",

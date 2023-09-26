@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { attributeTypes, capitalize, type Attribute } from '@resplice/utils'
-	import { AttributeValue, AttributeActionIcon, Button } from '@resplice/components'
+	import { AttributeValue, AttributeActionIcon, ButtonAlt } from '@resplice/components'
 
 	export let attribute: Attribute
 	export let itemType: 'contact' | 'user' | 'disabled'
@@ -18,12 +18,12 @@
 	{#if itemType === 'user'}
 		<div class="flex space-x-4 mt-4">
 			{#each [{ name: 'Details', value: 'detail' }, { name: 'Edit', value: 'edit' }] as action}
-				<Button
+				<ButtonAlt
 					class="justify-center"
 					on:click={() => push(`/app/attribute/${attribute.id}/${action.value}`)}
 				>
 					{action.name}
-				</Button>
+				</ButtonAlt>
 			{/each}
 		</div>
 	{/if}
