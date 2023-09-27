@@ -39,9 +39,9 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			commuter: socketCommuter
 		}),
 		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
-		session: sessionProtocolFactory({ cache: db, store: stores.session }),
+		session: sessionProtocolFactory({ cache: db, store: stores.session, commuter: socketCommuter }),
 		async loadCache() {
-			const { events } = await db.read<proto.Message>('events')
+			const { events } = await db.read<proto.Event>('events')
 
 			let accountAggregate: AccountAggregate | null = null
 			let attributeAggregate: AttributeAggregate = new Map()

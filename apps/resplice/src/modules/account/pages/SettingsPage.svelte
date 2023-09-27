@@ -3,6 +3,7 @@
 	import { t } from 'svelte-i18n'
 	import { IconButton, BackIcon } from '@resplice/components'
 	import SettingsItem from '$modules/account/components/SettingsItem.svelte'
+	import ChangeName from '$modules/account/components/ChangeName.svelte'
 	import Logout from '$modules/account/components/Logout.svelte'
 	// import ctx from '$modules/_context/context.store'
 	// import { isSupported } from '@resplice/utils'
@@ -45,7 +46,9 @@
 		<IconButton Icon={BackIcon} on:click={() => push('/home/profile')} />
 		<h1 class="ml-4 font-semibold text-xl">{$t('account.settings.title')}</h1>
 	</nav>
-	<main class="bg-white rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto space-y-8">
+	<main
+		class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col p-8 overflow-auto space-y-8"
+	>
 		<!-- <section class="border-b-2 border-gray-200 pb-4">
 			<h2 class="text-lg font-semibold text-gray-700 mb-2">{$t('account.settings.general')}</h2>
 			<div class="flex flex-col space-y-4">
@@ -78,7 +81,12 @@
 			<div class="flex flex-col space-y-4">
 				<SettingsItem url="https://www.replice.com/about">About Resplice</SettingsItem>
 				<SettingsItem url="https://www.replice.com/terms">Terms & Conditions</SettingsItem>
-				<SettingsItem url="https://www.resplice.com/help">Help</SettingsItem>
+			</div>
+		</section>
+		<section class="border-b-2 border-gray-200 pb-4">
+			<h2 class="text-lg font-semibold text-gray-700 mb-2">Account</h2>
+			<div class="flex flex-col space-y-4">
+				<ChangeName />
 			</div>
 		</section>
 		<section class="border-b-2 border-gray-200 pb-4">

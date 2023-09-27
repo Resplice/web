@@ -18,16 +18,15 @@
 
 {#if showLogoutConfirmation}
 	<Modal
+		let:close
 		on:close={() => {
 			showLogoutConfirmation = false
 		}}
 	>
-		<div class="space-y-4 p-4">
-			<p>Are you sure you want to logout?</p>
+		<div class="w-full space-y-4 p-8">
+			<p class="text-lg font-semibold">Are you sure you want to logout?</p>
 			<Button class="w-full" color="danger-light" {isLoading} on:click={logout}>Logout</Button>
-			<Button class="w-full" color="gray" on:click={() => (showLogoutConfirmation = false)}>
-				Cancel
-			</Button>
+			<Button class="w-full" color="gray" on:click={close}>Cancel</Button>
 		</div>
 	</Modal>
 {/if}

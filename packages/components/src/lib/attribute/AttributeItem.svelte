@@ -22,7 +22,7 @@
 	}
 </script>
 
-<div class="w-full overflow-hidden flex items-start justify-between">
+<div class="w-full overflow-hidden flex items-center justify-between">
 	<AttributeAction {itemType} {attribute} actionIdx={0} disableAction={disableActions} />
 	<button
 		class="flex flex-col items-start justify-start text-left mx-4 flex-1 overflow-hidden no-highlight"

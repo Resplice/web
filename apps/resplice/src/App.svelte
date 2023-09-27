@@ -34,7 +34,8 @@
 			return true
 		} catch (err) {
 			console.error(err)
-			// location.replace(config.authUrl)
+			// If error, redirect to auth flow
+			location.replace(config.authUrl)
 			return false
 		}
 	}

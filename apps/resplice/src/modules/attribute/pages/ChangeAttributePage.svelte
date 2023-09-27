@@ -1,57 +1,47 @@
 <script lang="ts">
-	import { push } from 'svelte-spa-router'
-	import { attributeTypes } from '@resplice/utils'
+	import { pop } from 'svelte-spa-router'
+	import { attributeTypes, type AttributeValue } from '@resplice/utils'
 	import useProtocol from '$common/protocol/useProtocol'
 	import Header from '$common/components/Header.svelte'
 	import attributeStore from '$modules/attribute/attribute.store'
-	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
+	import AttributeValueForm from '$modules/attribute/components/forms/AttributeValueForm.svelte'
 	import { mapAttributeValue } from '$modules/attribute/attribute.state'
-	import type { Attribute } from '$modules/account/account.types'
+	import AttributeNameForm from '$modules/attribute/components/forms/AttributeNameForm.svelte'
 
 	const protocol = useProtocol()
 
-	export let params: { id: string }
-	let editingAttribute: Attribute
+	export let params: { id: string; ctx: 'name' | 'value' }
 
 	$: id = parseInt(params.id, 10)
 	$: attribute = $attributeStore.get(id)
-	$: attributeTypeConfig = attribute && attributeTypes[attribute.type]
+	$: attributeTypeConfig = attributeTypes[attribute.type]
 
-	$: {
-		if (attribute) {
-			editingAttribute = {
-				...attribute,
-				value: { ...attribute.value }
-			} as Attribute
-		}
+	function changeName(name: string) {
+		protocol.attribute.changeName({ id, name })
+		pop()
 	}
 
-	async function editAttribute(attribute: Attribute) {
-		// TODO: These should be different forms
-		await Promise.all([
-			protocol.attribute.changeName({ id: attribute.id, name: attribute.name }),
-			protocol.attribute.changeValue({
-				id: attribute.id,
-				value: mapAttributeValue(attribute.type, attribute.value)
-			})
-		])
-		push(`/app/attribute/${id}/detail`)
+	function changeValue(value: AttributeValue) {
+		protocol.attribute.changeValue({ id, value: mapAttributeValue(attribute.type, value) })
+		pop()
 	}
 </script>
 
 <div class="flex flex-col w-full h-full bg-gray-100">
-	<Header title="Edit Attribute" />
-	<main class="bg-white rounded-t-3xl flex-1 flex flex-col overflow-auto">
-		{#if editingAttribute}
-			<AttributeForm
-				attribute={editingAttribute}
+	<Header title="Change Attribute" />
+	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col overflow-auto">
+		{#if params.ctx === 'name'}
+			<AttributeNameForm
 				{attributeTypeConfig}
-				on:save={() => editAttribute(editingAttribute)}
+				{attribute}
+				on:save={(event) => changeName(event.detail)}
 			/>
 		{:else}
-			<div class="flex-1 flex items-center justify-center">
-				<h2 class="font-semibold text-lg">Attribute not found</h2>
-			</div>
+			<AttributeValueForm
+				{attribute}
+				{attributeTypeConfig}
+				on:save={(event) => changeValue(event.detail)}
+			/>
 		{/if}
 	</main>
 </div>

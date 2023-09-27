@@ -17,10 +17,6 @@
 </script>
 
 <div class="flex flex-col">
-	<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
-		{formattedDate}
-	</span>
-	<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
-		{formattedTime}
-	</span>
+	<p class="w-full truncate h-6">{formattedDate}</p>
+	<p class="w-full truncate h-6">{formattedTime}</p>
 </div>

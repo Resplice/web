@@ -15,8 +15,8 @@
 	}
 </script>
 
-<div class="flex flex-col">
-	<p>{value.identity}</p>
+<div class="w-full flex flex-col">
+	<p class="w-full truncate h-6">{value.identity}</p>
 	<div class="bg-gray-100 rounded-lg flex justify-between items-center p-1">
 		{#if showPassword}
 			<p class="flex-1 text-sm p-2 font-semibold text-gray-700 overflow-auto whitespace-nowrap">

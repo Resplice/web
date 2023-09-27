@@ -4,4 +4,4 @@
 	export let value: CoordinateValue
 </script>
 
-<p>{value.latitude},{value.longitude}</p>
+<p class="w-full truncate">{value.latitude},{value.longitude}</p>

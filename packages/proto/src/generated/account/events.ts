@@ -8,6 +8,7 @@ export interface AccountCreated {
   avatarUrl: string;
   phoneId: number;
   phone: string;
+  phoneVerifiedAt: number;
 }
 
 export interface AccountNameChanged {
@@ -27,7 +28,7 @@ export interface AccountDeleted {
 }
 
 function createBaseAccountCreated(): AccountCreated {
-  return { uuid: "", name: "", handle: "", avatarUrl: "", phoneId: 0, phone: "" };
+  return { uuid: "", name: "", handle: "", avatarUrl: "", phoneId: 0, phone: "", phoneVerifiedAt: 0 };
 }
 
 export const AccountCreated = {
@@ -49,6 +50,9 @@ export const AccountCreated = {
     }
     if (message.phone !== "") {
       writer.uint32(50).string(message.phone);
+    }
+    if (message.phoneVerifiedAt !== 0) {
+      writer.uint32(56).uint32(message.phoneVerifiedAt);
     }
     return writer;
   },
@@ -102,6 +106,13 @@ export const AccountCreated = {
 
           message.phone = reader.string();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.phoneVerifiedAt = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -119,6 +130,7 @@ export const AccountCreated = {
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
       phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
       phone: isSet(object.phone) ? String(object.phone) : "",
+      phoneVerifiedAt: isSet(object.phoneVerifiedAt) ? Number(object.phoneVerifiedAt) : 0,
     };
   },
 
@@ -142,6 +154,9 @@ export const AccountCreated = {
     if (message.phone !== "") {
       obj.phone = message.phone;
     }
+    if (message.phoneVerifiedAt !== 0) {
+      obj.phoneVerifiedAt = Math.round(message.phoneVerifiedAt);
+    }
     return obj;
   },
 
@@ -156,6 +171,7 @@ export const AccountCreated = {
     message.avatarUrl = object.avatarUrl ?? "";
     message.phoneId = object.phoneId ?? 0;
     message.phone = object.phone ?? "";
+    message.phoneVerifiedAt = object.phoneVerifiedAt ?? 0;
     return message;
   },
 };

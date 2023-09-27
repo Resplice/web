@@ -37,9 +37,9 @@ body {
 	overscroll-behavior-y: none;
 }
 
-/* body {
-	position: fixed;
-} */
+body {
+	background-color: rgb(241 245 249);
+}
 
 html,
 body,

@@ -2,7 +2,16 @@
 	import { AttributeType, type Attribute } from '@resplice/utils'
 	import { PartyBannerIcon, AttributeItem } from '@resplice/components'
 
-	const dateTimeAttribute: Attribute = {
+	const link: Attribute = {
+		id: 3,
+		type: AttributeType.LINK,
+		name: 'The Burrow',
+		value: {
+			url: 'https://www.theburrowmn.com'
+		},
+		sortOrder: 0
+	}
+	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
 		name: 'Date & Time',
@@ -16,28 +25,31 @@
 		},
 		sortOrder: 0
 	}
-	const locationAttribute: Attribute = {
+	const location: Attribute = {
 		id: 2,
 		type: AttributeType.ADDRESS,
 		name: 'Location',
 		value: {
-			streetAddress1: 'Venue TBD',
+			streetAddress1: '7053 10th St N',
 			streetAddress2: '',
-			locality: 'Minneapolis',
+			locality: 'Oakdale',
 			region: 'MN',
-			postalCode: '',
-			country: 'USA'
+			postalCode: '55128',
+			country: ''
 		},
 		sortOrder: 0
 	}
 </script>
 
-<header class="flex-none w-full h-56 mb-2 bg-[#5E6FC5] rounded-b-3xl">
-	<PartyBannerIcon width="100%" />
-</header>
+<div class="w-full h-full max-w-xl m-auto bg-white">
+	<header class="w-full mb-2 p-2 bg-[#5E6FC5] rounded-b-3xl">
+		<PartyBannerIcon width="100%" />
+	</header>
 
-<div class="flex-none w-full px-8 space-y-4">
-	<h2 class="text-2xl font-semibold mt-4">Resplice Launch Party Invite</h2>
-	<AttributeItem attribute={dateTimeAttribute} itemType="contact" />
-	<AttributeItem attribute={locationAttribute} itemType="disabled" disableActions />
+	<div class="flex-none w-full px-8 space-y-4">
+		<h2 class="text-2xl font-semibold mt-4">Launch Party</h2>
+		<AttributeItem attribute={link} itemType="contact" />
+		<AttributeItem attribute={dateTime} itemType="contact" />
+		<AttributeItem attribute={location} itemType="contact" />
+	</div>
 </div>

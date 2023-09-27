@@ -7,10 +7,11 @@
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
 	// Account Pages
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
+	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
 	// Attribute Pages
 	import SelectAttributeTypePage from '$modules/attribute/pages/SelectAttributeTypePage.svelte'
 	import AddAttributePage from '$modules/attribute/pages/AddAttributePage.svelte'
-	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
+	import ChangeAttributePage from '$modules/attribute/pages/ChangeAttributePage.svelte'
 	// Invite Pages
 	import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
 
@@ -21,8 +22,7 @@
 		'/app-events': AppEventPage,
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
-		// '/attribute/:id/detail': AttributeDetailPage,
-		// '/attribute/:id/change': ChangeAttributePage,
+		'/attribute/:id/change/:ctx': ChangeAttributePage,
 		// '/contact/pending/:id': PendingContactDetailPage,
 		// '/contact/:id/attributes': ContactAttributesPage,
 		// '/contact/:id/chat': ContactChatPage,

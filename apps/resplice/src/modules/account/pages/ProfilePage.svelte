@@ -4,7 +4,7 @@
 	import accountStore from '$modules/account/account.store'
 	import { UserAvatar } from '@resplice/components'
 	import Header from '$modules/account/components/Header.svelte'
-	import Handle from '$modules/account/components/Handle.svelte'
+	// import Handle from '$modules/account/components/Handle.svelte'
 	import AttributeList from '$modules/account/components/AttributeList.svelte'
 
 	$: account = $accountStore
@@ -33,7 +33,7 @@
 			<h1 class="w-full truncate text-4xl text-gray-700 font-bold mt-2 text-center">
 				{account.name}
 			</h1>
-			<Handle handle={account.handle} />
+			<!-- <Handle handle={account.handle} /> -->
 		</div>
 		<div bind:this={scrollEl} id="scrollIntersection" class="absolute top-1/4" />
 		<AttributeList />

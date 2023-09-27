@@ -26,7 +26,7 @@ export function applyAttributeEvent(
 				value: { number: event.payload.accountCreated.phone, smsEnabled: true },
 				sortOrder: 0,
 				groupId: null,
-				verifiedAt: null,
+				verifiedAt: event.payload.accountCreated.phoneVerifiedAt,
 				verifyExpiry: null
 			})
 			break

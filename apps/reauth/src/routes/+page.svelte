@@ -9,6 +9,15 @@
 
 	onMount(() => store.set(INITIAL_STORE))
 
+	const link: Attribute = {
+		id: 3,
+		type: AttributeType.LINK,
+		name: 'The Burrow',
+		value: {
+			url: 'https://www.theburrowmn.com'
+		},
+		sortOrder: 0
+	}
 	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
@@ -28,12 +37,12 @@
 		type: AttributeType.ADDRESS,
 		name: 'Location',
 		value: {
-			streetAddress1: 'Venue TBD',
+			streetAddress1: '7053 10th St N',
 			streetAddress2: '',
-			locality: 'Minneapolis',
+			locality: 'Oakdale',
 			region: 'MN',
-			postalCode: '',
-			country: 'USA'
+			postalCode: '55128',
+			country: ''
 		},
 		sortOrder: 0
 	}
@@ -43,19 +52,20 @@
 	}
 </script>
 
-<main class="w-full h-full flex flex-col">
-	<header class="flex-none w-full h-56 mb-2 bg-[#5E6FC5] rounded-b-3xl">
+<main class="w-full min-h-full max-w-lg m-auto overlow-auto bg-white">
+	<header class="w-full mb-2 p-2 bg-[#5E6FC5] rounded-b-3xl">
 		<PartyBannerIcon width="100%" />
 	</header>
 
-	<div class="flex-none w-full px-8 space-y-4">
-		<h2 class="text-2xl font-semibold mt-4">Resplice Launch Party Invite</h2>
+	<div class="w-full px-8 py-2 space-y-4">
+		<h2 class="text-2xl font-semibold">Launch Party</h2>
+		<AttributeItem attribute={link} itemType="user" />
 		<AttributeItem attribute={dateTime} itemType="user" disableActions />
-		<AttributeItem attribute={location} itemType="user" disableActions />
+		<AttributeItem attribute={location} itemType="user" />
 	</div>
 
-	<div class="flex-1 m-auto p-8 max-w-lg flex flex-col overflow-auto">
-		<p class="font-semibold mb-4">Please enter your phone number to RSVP:</p>
+	<div class="w-full px-8 py-4 flex flex-col">
+		<p class="font-semibold mb-4">RSVP</p>
 		<LoginForm />
 	</div>
 </main>

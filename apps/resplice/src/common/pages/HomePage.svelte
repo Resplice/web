@@ -16,12 +16,12 @@
 	}
 </script>
 
-<main class="flex flex-col w-full h-full overflow-auto">
+<main class="flex flex-col w-full h-full bg-gray-100 overflow-auto">
 	<div class="flex-1 overflow-auto">
 		<Router {routes} />
 	</div>
 	<nav
-		class="relative flex-none flex justify-around items-center p-2 border-t-2 border-gray-200 overflow-hidden"
+		class="relative flex-none flex justify-around items-center p-2 border-t-2 border-gray-200 bg-white overflow-hidden"
 		style="padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem)"
 	>
 		<NavItem isActive={isOnContacts} href="#/home/party">

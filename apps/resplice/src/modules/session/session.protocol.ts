@@ -31,8 +31,9 @@ function sessionProtocolFactory({ cache, store, commuter }: Dependencies): Sessi
 					sessionId: 0
 				}
 			})
-			await cache.delete()
-			window.open(config.authUrl)
+			// Harcode for now
+			indexedDB.deleteDatabase('RESPLICE_CACHE')
+			location.replace(config.authUrl)
 		}
 	}
 }

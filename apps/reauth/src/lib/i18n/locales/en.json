@@ -14,7 +14,7 @@
 	"createAccount.header": "Almost there! We just need your full name and an optional avatar image so others can recognize you at the party.",
 	"haveAccount": "I already have an account",
 	"errors": {
-		"PHONE": "Invalid phone number. Please enter a valid phone number.",
+		"PHONE": "Please enter a valid phone number.",
 		"VERIFY_CODE": "Incorrect verification code, please double check your code and try again.",
 		"FULL_NAME": "Please enter a valid name.",
 		"INVALID_INPUT": "One or many fields are invalid. Please try again.",

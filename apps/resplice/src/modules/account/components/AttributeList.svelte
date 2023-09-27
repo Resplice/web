@@ -2,9 +2,9 @@
 	import { push } from 'svelte-spa-router'
 	import { sortUserAttributes } from '$modules/attribute/attribute.helpers'
 	import attributeStore from '$modules/attribute/attribute.store'
-	import AttributeContext from '$modules/attribute/components/AttributeContext.svelte'
+	import AttributeContext from '$modules/account/components/AttributeContext.svelte'
 	import { AttributeItem, AddIcon, Modal, SkeletonList } from '@resplice/components'
-	import type { Attribute } from '@resplice/utils'
+	import type { Attribute } from '$modules/account/account.types'
 
 	$: attributes = $attributeStore
 	let selectedAttribute: Attribute | null = null
@@ -35,11 +35,12 @@
 
 {#if selectedAttribute}
 	<Modal
+		let:close
 		initialY={window.innerHeight - window.innerHeight / 1.5}
 		on:close={() => {
 			selectedAttribute = null
 		}}
 	>
-		<AttributeContext attribute={selectedAttribute} itemType="user" />
+		<AttributeContext attribute={selectedAttribute} on:close={close} />
 	</Modal>
 {/if}
