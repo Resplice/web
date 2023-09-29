@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
-import { AttributeAdded, AttributeNameChanged, AttributeRemoved, AttributeValueChanged } from "./attribute/events";
+import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeVerified } from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 import { Connection, Connections, PendingConnection } from "./connection/state";
 import { InviteCreated, InviteDeleted, InviteShareAdded, InviteShareRemoved } from "./invite/events";
@@ -170,8 +170,8 @@ export interface Event {
     | { $case: "accountHandleChanged"; accountHandleChanged: AccountHandleChanged }
     | { $case: "accountAvatarChanged"; accountAvatarChanged: AccountAvatarChanged }
     | { $case: "attributeAdded"; attributeAdded: AttributeAdded }
-    | { $case: "attributeNameChanged"; attributeNameChanged: AttributeNameChanged }
-    | { $case: "attributeValueChanged"; attributeValueChanged: AttributeValueChanged }
+    | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
+    | { $case: "attributeChanged"; attributeChanged: AttributeChanged }
     | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
     | { $case: "inviteCreated"; inviteCreated: InviteCreated }
     | { $case: "inviteShareAdded"; inviteShareAdded: InviteShareAdded }
@@ -360,26 +360,26 @@ export const Event = {
       case "attributeAdded":
         AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(74).fork()).ldelim();
         break;
-      case "attributeNameChanged":
-        AttributeNameChanged.encode(message.payload.attributeNameChanged, writer.uint32(82).fork()).ldelim();
+      case "attributeVerified":
+        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(82).fork()).ldelim();
         break;
-      case "attributeValueChanged":
-        AttributeValueChanged.encode(message.payload.attributeValueChanged, writer.uint32(90).fork()).ldelim();
+      case "attributeChanged":
+        AttributeChanged.encode(message.payload.attributeChanged, writer.uint32(90).fork()).ldelim();
         break;
       case "attributeRemoved":
-        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(114).fork()).ldelim();
+        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(98).fork()).ldelim();
         break;
       case "inviteCreated":
-        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(122).fork()).ldelim();
+        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(106).fork()).ldelim();
         break;
       case "inviteShareAdded":
-        InviteShareAdded.encode(message.payload.inviteShareAdded, writer.uint32(130).fork()).ldelim();
+        InviteShareAdded.encode(message.payload.inviteShareAdded, writer.uint32(114).fork()).ldelim();
         break;
       case "inviteShareRemoved":
-        InviteShareRemoved.encode(message.payload.inviteShareRemoved, writer.uint32(138).fork()).ldelim();
+        InviteShareRemoved.encode(message.payload.inviteShareRemoved, writer.uint32(122).fork()).ldelim();
         break;
       case "inviteDeleted":
-        InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(146).fork()).ldelim();
+        InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(130).fork()).ldelim();
         break;
     }
     return writer;
@@ -470,8 +470,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeNameChanged",
-            attributeNameChanged: AttributeNameChanged.decode(reader, reader.uint32()),
+            $case: "attributeVerified",
+            attributeVerified: AttributeVerified.decode(reader, reader.uint32()),
           };
           continue;
         case 11:
@@ -480,12 +480,12 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeValueChanged",
-            attributeValueChanged: AttributeValueChanged.decode(reader, reader.uint32()),
+            $case: "attributeChanged",
+            attributeChanged: AttributeChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
@@ -494,15 +494,15 @@ export const Event = {
             attributeRemoved: AttributeRemoved.decode(reader, reader.uint32()),
           };
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
           message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
           continue;
-        case 16:
-          if (tag !== 130) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
@@ -511,8 +511,8 @@ export const Event = {
             inviteShareAdded: InviteShareAdded.decode(reader, reader.uint32()),
           };
           continue;
-        case 17:
-          if (tag !== 138) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
@@ -521,8 +521,8 @@ export const Event = {
             inviteShareRemoved: InviteShareRemoved.decode(reader, reader.uint32()),
           };
           continue;
-        case 18:
-          if (tag !== 146) {
+        case 16:
+          if (tag !== 130) {
             break;
           }
 
@@ -562,16 +562,10 @@ export const Event = {
         }
         : isSet(object.attributeAdded)
         ? { $case: "attributeAdded", attributeAdded: AttributeAdded.fromJSON(object.attributeAdded) }
-        : isSet(object.attributeNameChanged)
-        ? {
-          $case: "attributeNameChanged",
-          attributeNameChanged: AttributeNameChanged.fromJSON(object.attributeNameChanged),
-        }
-        : isSet(object.attributeValueChanged)
-        ? {
-          $case: "attributeValueChanged",
-          attributeValueChanged: AttributeValueChanged.fromJSON(object.attributeValueChanged),
-        }
+        : isSet(object.attributeVerified)
+        ? { $case: "attributeVerified", attributeVerified: AttributeVerified.fromJSON(object.attributeVerified) }
+        : isSet(object.attributeChanged)
+        ? { $case: "attributeChanged", attributeChanged: AttributeChanged.fromJSON(object.attributeChanged) }
         : isSet(object.attributeRemoved)
         ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
         : isSet(object.inviteCreated)
@@ -615,11 +609,11 @@ export const Event = {
     if (message.payload?.$case === "attributeAdded") {
       obj.attributeAdded = AttributeAdded.toJSON(message.payload.attributeAdded);
     }
-    if (message.payload?.$case === "attributeNameChanged") {
-      obj.attributeNameChanged = AttributeNameChanged.toJSON(message.payload.attributeNameChanged);
+    if (message.payload?.$case === "attributeVerified") {
+      obj.attributeVerified = AttributeVerified.toJSON(message.payload.attributeVerified);
     }
-    if (message.payload?.$case === "attributeValueChanged") {
-      obj.attributeValueChanged = AttributeValueChanged.toJSON(message.payload.attributeValueChanged);
+    if (message.payload?.$case === "attributeChanged") {
+      obj.attributeChanged = AttributeChanged.toJSON(message.payload.attributeChanged);
     }
     if (message.payload?.$case === "attributeRemoved") {
       obj.attributeRemoved = AttributeRemoved.toJSON(message.payload.attributeRemoved);
@@ -720,23 +714,23 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeNameChanged" &&
-      object.payload?.attributeNameChanged !== undefined &&
-      object.payload?.attributeNameChanged !== null
+      object.payload?.$case === "attributeVerified" &&
+      object.payload?.attributeVerified !== undefined &&
+      object.payload?.attributeVerified !== null
     ) {
       message.payload = {
-        $case: "attributeNameChanged",
-        attributeNameChanged: AttributeNameChanged.fromPartial(object.payload.attributeNameChanged),
+        $case: "attributeVerified",
+        attributeVerified: AttributeVerified.fromPartial(object.payload.attributeVerified),
       };
     }
     if (
-      object.payload?.$case === "attributeValueChanged" &&
-      object.payload?.attributeValueChanged !== undefined &&
-      object.payload?.attributeValueChanged !== null
+      object.payload?.$case === "attributeChanged" &&
+      object.payload?.attributeChanged !== undefined &&
+      object.payload?.attributeChanged !== null
     ) {
       message.payload = {
-        $case: "attributeValueChanged",
-        attributeValueChanged: AttributeValueChanged.fromPartial(object.payload.attributeValueChanged),
+        $case: "attributeChanged",
+        attributeChanged: AttributeChanged.fromPartial(object.payload.attributeChanged),
       };
     }
     if (

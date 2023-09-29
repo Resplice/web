@@ -44,13 +44,14 @@ export function applyAttributeEvent(
 				verifyExpiry: null
 			} as Attribute)
 			break
-		case 'attributeNameChanged':
-			aggregate.get(event.payload.attributeNameChanged.id).name =
-				event.payload.attributeNameChanged.name
+		case 'attributeVerified':
+			aggregate.get(event.payload.attributeVerified.id).verifiedAt =
+				event.payload.attributeVerified.verifiedAt
 			break
-		case 'attributeValueChanged':
-			aggregate.get(event.payload.attributeValueChanged.id).value = mapProtoAttributeValue(
-				event.payload.attributeValueChanged.value
+		case 'attributeChanged':
+			aggregate.get(event.payload.attributeChanged.id).name = event.payload.attributeChanged.name
+			aggregate.get(event.payload.attributeChanged.id).value = mapProtoAttributeValue(
+				event.payload.attributeChanged.value
 			)
 			break
 		case 'attributeRemoved':
@@ -68,7 +69,7 @@ export function mapProtoAttributeType(
 }
 
 export function mapProtoAttributeValue(
-	value: proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeValueChanged['value']
+	value: proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeChanged['value']
 ): AttributeValue {
 	switch (value.$case) {
 		case 'address':
@@ -87,9 +88,7 @@ export function mapProtoAttributeValue(
 export function mapAttributeValue(
 	type: AttributeType,
 	value: AttributeValue
-): proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeValueChanged['value'] {
-	console.log(type)
-	console.log(value)
+): proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeChanged['value'] {
 	switch (type) {
 		case AttributeType.ADDRESS:
 			return { $case: 'address', address: value as AddressValue }

@@ -62,13 +62,9 @@ const addAttribute: proto.attribute.AddAttribute = {
 	}
 }
 
-const changeAttributeName: proto.attribute.ChangeAttributeName = {
+const changeAttribute: proto.attribute.ChangeAttribute = {
 	id: 3,
-	name: '1st Earth Address'
-}
-
-const changeAttributeValue: proto.attribute.ChangeAttributeValue = {
-	id: 3,
+	name: '1st Earth Address',
 	value: {
 		$case: 'address',
 		address: {
@@ -88,8 +84,7 @@ const removeAttribute: proto.attribute.RemoveAttribute = {
 
 const attributeCommands = {
 	addAttribute,
-	changeAttributeName,
-	changeAttributeValue,
+	changeAttribute,
 	removeAttribute
 }
 

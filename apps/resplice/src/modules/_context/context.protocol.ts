@@ -8,7 +8,7 @@ import {
 	type SocketEvent
 } from '$common/workers/socketCommuter'
 import { SocketStatus } from '$modules/_context/context.types'
-import type { ContextStore } from '$modules/_context/context.store'
+import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'
 
 export interface ContextProtocol {
@@ -17,12 +17,33 @@ export interface ContextProtocol {
 
 type Dependencies = {
 	cache: DB
-	store: ContextStore
+	stores: Stores
 	commuter: SocketCommuter
 }
-function contextProtocolFactory({ cache, store, commuter }: Dependencies): ContextProtocol {
+function contextProtocolFactory({ cache, stores, commuter }: Dependencies): ContextProtocol {
+	async function openSocket(session: Session) {
+		const { events } = await cache.read<proto.Event>('events')
+		const lastEventId = events.at(-1)?.id || 0
+
+		const handshake: proto.Command['payload'] = {
+			$case: 'authorizeSocket',
+			authorizeSocket: {
+				phone: session.phone,
+				lastEventId
+			}
+		}
+
+		commuter.postMessage({
+			type: SocketCommandType.OPEN,
+			respliceWsUrl: config.respliceWsUrl,
+			cryptoKeys: session.cryptoKeys,
+			persist: session.persist,
+			handshake
+		})
+	}
+
 	function onSocketOpen() {
-		store.update((state) => ({
+		stores.context.update((state) => ({
 			socketStatus: SocketStatus.CONNECTED,
 			error: null,
 			events: [],
@@ -38,7 +59,7 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 		}
 
 		if (event) {
-			store.update((state) => ({
+			stores.context.update((state) => ({
 				...state,
 				events: [event, ...state.events]
 			}))
@@ -50,20 +71,49 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 	}
 
 	function onSocketError(e: Extract<SocketEvent, { type: SocketEventType.ERRORED }>) {
-		// TODO: trigger toast
-		console.log(e.error)
-		store.update((state) => ({
-			...state,
-			socketStatus: SocketStatus.DISCONNECTED,
-			error: e.error
-		}))
+		if (navigator.onLine && document.hasFocus()) {
+			reconnect()
+		} else {
+			stores.context.update((state) => ({
+				...state,
+				socketStatus: SocketStatus.DISCONNECTED,
+				error: e.error
+			}))
+			window.addEventListener('online', function handler() {
+				reconnect()
+				window.removeEventListener('online', handler)
+			})
+			window.addEventListener('focus', function handler() {
+				reconnect()
+				window.removeEventListener('focus', handler)
+			})
+		}
 	}
 
 	function onSocketClose() {
-		store.update((state) => ({
-			...state,
-			socketStatus: SocketStatus.DISCONNECTED
-		}))
+		if (navigator.onLine && document.hasFocus()) {
+			reconnect()
+		} else {
+			stores.context.update((state) => ({
+				...state,
+				socketStatus: SocketStatus.DISCONNECTED
+			}))
+			window.addEventListener('online', function handler() {
+				reconnect()
+				window.removeEventListener('online', handler)
+			})
+			window.addEventListener('focus', function handler() {
+				reconnect()
+				window.removeEventListener('focus', handler)
+			})
+		}
+	}
+
+	function reconnect() {
+		const unsubscribe = stores.session.subscribe(async (state) => {
+			await openSocket(state.currentSession)
+		})
+		unsubscribe()
 	}
 
 	commuter.messages$.subscribe((e) => {
@@ -84,26 +134,7 @@ function contextProtocolFactory({ cache, store, commuter }: Dependencies): Conte
 	})
 
 	return {
-		async openSocket(session) {
-			const { events } = await cache.read<proto.Event>('events')
-			const lastEventId = events.at(-1)?.id || 0
-
-			const handshake: proto.Command['payload'] = {
-				$case: 'authorizeSocket',
-				authorizeSocket: {
-					phone: session.phone,
-					lastEventId
-				}
-			}
-
-			commuter.postMessage({
-				type: SocketCommandType.OPEN,
-				respliceWsUrl: config.respliceWsUrl,
-				cryptoKeys: session.cryptoKeys,
-				persist: session.persist,
-				handshake
-			})
-		}
+		openSocket
 	}
 }
 

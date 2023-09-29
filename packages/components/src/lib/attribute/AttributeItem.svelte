@@ -17,6 +17,7 @@
 
 	function onAttributeClick(e: MouseEvent | KeyboardEvent) {
 		if (itemType === 'disabled' || disableActions) return
+		if ((e.target as HTMLElement).localName && (e.target as HTMLElement).localName === 'a') return
 
 		dispatch('click', e)
 	}

@@ -6,6 +6,7 @@
 	import protocolFactory, { contextKey } from '$common/protocol'
 	import accountStore from '$modules/account/account.store'
 	import { AppLoading, AppError } from '@resplice/components'
+	import ConnectionStatus from '$modules/_context/components/ConnectionStatus.svelte'
 	import Router from './Router.svelte'
 	import './app.css'
 
@@ -50,6 +51,7 @@
 	<AppLoading />
 {:then loaded}
 	{#if loaded && accountLoaded}
+		<ConnectionStatus />
 		<Router />
 		<!-- <ToastProvider /> -->
 	{/if}

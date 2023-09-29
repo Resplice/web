@@ -2,15 +2,6 @@
 	import { AttributeType, type Attribute } from '@resplice/utils'
 	import { PartyBannerIcon, AttributeItem } from '@resplice/components'
 
-	const link: Attribute = {
-		id: 3,
-		type: AttributeType.LINK,
-		name: 'The Burrow',
-		value: {
-			url: 'https://www.theburrowmn.com'
-		},
-		sortOrder: 0
-	}
 	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
@@ -39,6 +30,15 @@
 		},
 		sortOrder: 0
 	}
+	const link: Attribute = {
+		id: 3,
+		type: AttributeType.LINK,
+		name: 'The Burrow',
+		value: {
+			url: 'https://www.theburrowmn.com'
+		},
+		sortOrder: 0
+	}
 </script>
 
 <div class="w-full h-full max-w-xl m-auto bg-white">
@@ -48,8 +48,8 @@
 
 	<div class="flex-none w-full px-8 space-y-4">
 		<h2 class="text-2xl font-semibold mt-4">Launch Party</h2>
-		<AttributeItem attribute={link} itemType="contact" />
 		<AttributeItem attribute={dateTime} itemType="contact" />
 		<AttributeItem attribute={location} itemType="contact" />
+		<AttributeItem attribute={link} itemType="contact" />
 	</div>
 </div>

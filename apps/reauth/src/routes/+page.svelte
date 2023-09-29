@@ -9,15 +9,6 @@
 
 	onMount(() => store.set(INITIAL_STORE))
 
-	const link: Attribute = {
-		id: 3,
-		type: AttributeType.LINK,
-		name: 'The Burrow',
-		value: {
-			url: 'https://www.theburrowmn.com'
-		},
-		sortOrder: 0
-	}
 	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
@@ -46,6 +37,15 @@
 		},
 		sortOrder: 0
 	}
+	const link: Attribute = {
+		id: 3,
+		type: AttributeType.LINK,
+		name: 'The Burrow',
+		value: {
+			url: 'https://www.theburrowmn.com'
+		},
+		sortOrder: 0
+	}
 
 	$: {
 		if (browser && $store.status === AuthStatus.PENDING_VERIFY_PHONE) goto('/verify')
@@ -59,9 +59,9 @@
 
 	<div class="w-full px-8 py-2 space-y-4">
 		<h2 class="text-2xl font-semibold">Launch Party</h2>
-		<AttributeItem attribute={link} itemType="user" />
 		<AttributeItem attribute={dateTime} itemType="user" disableActions />
 		<AttributeItem attribute={location} itemType="user" />
+		<AttributeItem attribute={link} itemType="user" />
 	</div>
 
 	<div class="w-full px-8 py-4 flex flex-col">

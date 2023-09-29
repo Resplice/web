@@ -14,8 +14,8 @@ import db, { type DB } from '$services/db'
 import type { CryptoKeys } from '$modules/session/session.types'
 
 interface ConnWorker extends Worker {
-	cache: DB
-	cryptoKeys: CryptoKeys
+	cache: DB | null
+	cryptoKeys: CryptoKeys | null
 	// If persist is set, command and event payloads are stored in indexeddb for offline caching
 	persist: boolean
 	socket$: WebSocketSubject<Uint8Array> | null
@@ -64,14 +64,19 @@ function handleClose() {
 
 async function openSocket(cmd: OpenCommand) {
 	if (self.socket$) {
-		self.socket$.complete()
+		if (!self.socket$.closed) {
+			self.socket$.complete()
+		}
+		self.socket$ = null
 	}
 
-	await db.open()
+	if (!self.cache) {
+		await db.open()
+		self.cache = db
+	}
 
 	self.cryptoKeys = cmd.cryptoKeys
 	self.persist = cmd.persist
-	self.cache = db
 
 	const protoCmd = cmd.handshake
 	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
@@ -95,6 +100,8 @@ async function openSocket(cmd: OpenCommand) {
 		error: handleError,
 		complete: handleClose
 	})
+
+	self.postMessage({ type: SocketEventType.OPENED })
 }
 
 function cacheEvent({ event }: ProtoMessage) {

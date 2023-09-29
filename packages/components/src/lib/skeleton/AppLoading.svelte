@@ -14,6 +14,6 @@
 	}, 500)
 </script>
 
-<div class="w-full h-full flex items-center justify-center">
+<div class="w-full h-full flex items-center justify-center bg-white">
 	<RespliceRoundIcon style="transform: translateY({$y}px)" />
 </div>

@@ -10,7 +10,7 @@
 	let selectedAttribute: Attribute | null = null
 </script>
 
-<div class="w-full flex flex-col p-4 space-y-4">
+<div class="w-full flex flex-col py-4 px-8 space-y-4">
 	{#if attributes}
 		{#each sortUserAttributes(attributes) as attribute}
 			<AttributeItem {attribute} itemType="user" on:click={() => (selectedAttribute = attribute)} />

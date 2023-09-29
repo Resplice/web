@@ -12,7 +12,7 @@
 	const attributeType = params.type.toUpperCase() as AttributeType
 	const attributeTypeConfig = attributeTypes[attributeType]
 
-	let newAttribute: Attribute = {
+	let placeholderAttribute: Attribute = {
 		id: 0,
 		type: attributeType,
 		name: '',
@@ -35,7 +35,7 @@
 	</nav>
 	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto overflow-auto">
 		<AttributeForm
-			attribute={newAttribute}
+			attribute={placeholderAttribute}
 			{attributeTypeConfig}
 			on:save={(e) => saveAttribute(e.detail)}
 		/>

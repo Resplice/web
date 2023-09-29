@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store'
 import { type ContextState, SocketStatus } from '$modules/_context/context.types'
 
 const contextStore = writable<ContextState>({
-	socketStatus: SocketStatus.DISCONNECTED,
+	socketStatus: SocketStatus.CONNECTING,
 	error: null,
 	events: [],
 	settings: {

@@ -13,7 +13,7 @@
 	import AddAttributePage from '$modules/attribute/pages/AddAttributePage.svelte'
 	import ChangeAttributePage from '$modules/attribute/pages/ChangeAttributePage.svelte'
 	// Invite Pages
-	import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
+	// import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
 
 	export let initialUrl = ''
 
@@ -22,7 +22,7 @@
 		'/app-events': AppEventPage,
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
-		'/attribute/:id/change/:ctx': ChangeAttributePage,
+		'/attribute/:id/change': ChangeAttributePage,
 		// '/contact/pending/:id': PendingContactDetailPage,
 		// '/contact/:id/attributes': ContactAttributesPage,
 		// '/contact/:id/chat': ContactChatPage,
@@ -30,7 +30,7 @@
 		// '/contact/:id/shares': ContactSharesPage,
 		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
-		'/invite/bulk': BulkInvitePage,
+		// '/invite/bulk': BulkInvitePage,
 		// '/invite/create/*': CreateInvitePage,
 		// '/invite/list': InviteListPage,
 		// '/invite/:id': InviteDetailPage,

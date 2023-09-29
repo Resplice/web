@@ -1,14 +1,17 @@
 <script lang="ts">
-	import Router, { location } from 'svelte-spa-router'
+	import Router, { location, push } from 'svelte-spa-router'
+	import cx from 'clsx'
+	import accountStore from '$modules/account/account.store'
 	import NavItem from '$common/components/NavItem.svelte'
-	import { BalloonIcon, PersonIcon } from '@resplice/components'
-	import NavActions from '$common/components/NavActions.svelte'
+	import { Avatar, BalloonIcon } from '@resplice/components'
+	// import NavActions from '$common/components/NavActions.svelte'
+	import PartyShare from '$common/components/PartyShare.svelte'
 	// import ConnectionListPage from '$modules/connection/pages/ConnectionListPage.svelte'
 	import LaunchPartyInvite from '$common/components/LaunchPartyInvite.svelte'
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 
 	$: isOnContacts = $location.includes('/home/party')
-	$: isOnChats = $location.includes('/home/profile')
+	$: isOnProfile = $location.includes('/home/profile')
 
 	const routes = {
 		'/home/party': LaunchPartyInvite,
@@ -27,9 +30,22 @@
 		<NavItem isActive={isOnContacts} href="#/home/party">
 			<BalloonIcon width={32} height={32} />
 		</NavItem>
-		<NavActions />
-		<NavItem isActive={isOnChats} href="#/home/profile">
-			<PersonIcon width={32} height={32} />
-		</NavItem>
+		<PartyShare />
+		<!-- <NavActions /> -->
+		<button
+			class={cx(
+				'w-12 h-12 flex items-center justify-center rounded-full no-highlight transform transition duration-75 ease-in-out active:scale-90',
+				{
+					'bg-brand-primary bg-opacity-20 text-brand-primary': isOnProfile,
+					'bg-transparent text-gray-400': !isOnProfile
+				}
+			)}
+			on:click={() => push('/home/profile')}
+		>
+			<Avatar size="sm" seed={$accountStore.uuid} src={$accountStore.avatarUrl} /></button
+		>
+		<!-- <NavItem isActive={isOnChats} href="#/home/chats">
+			<ChatBubblesIcon width={32} height={32} />
+		</NavItem> -->
 	</nav>
 </main>
