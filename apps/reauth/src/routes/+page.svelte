@@ -2,25 +2,70 @@
 	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
-	import { t } from '$lib/i18n'
 	import store, { AuthStatus, INITIAL_STORE } from '$lib/store'
-	import { RespliceWideIcon } from '@resplice/components'
+	import { AttributeItem, PartyBannerIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
+	import { AttributeType, type Attribute } from '@resplice/utils'
 
 	onMount(() => store.set(INITIAL_STORE))
+
+	const dateTime: Attribute = {
+		id: 1,
+		type: AttributeType.DATE_TIME,
+		name: 'Date & Time',
+		value: {
+			year: 2023,
+			month: 11,
+			day: 16,
+			hour: 15,
+			minute: 0,
+			timezone: 'America/Chicago'
+		},
+		sortOrder: 0
+	}
+	const location: Attribute = {
+		id: 2,
+		type: AttributeType.ADDRESS,
+		name: 'Location',
+		value: {
+			streetAddress1: '7053 10th St N',
+			streetAddress2: '',
+			locality: 'Oakdale',
+			region: 'MN',
+			postalCode: '55128',
+			country: ''
+		},
+		sortOrder: 0
+	}
+	const link: Attribute = {
+		id: 3,
+		type: AttributeType.LINK,
+		name: 'The Burrow',
+		value: {
+			url: 'https://www.theburrowmn.com'
+		},
+		sortOrder: 0
+	}
 
 	$: {
 		if (browser && $store.status === AuthStatus.PENDING_VERIFY_PHONE) goto('/verify')
 	}
 </script>
 
-<main class="w-full h-full p-8 flex flex-col m-auto max-w-lg overflow-auto">
-	<header class="flex-none w-full mb-8">
-		<RespliceWideIcon width="100%" />
-		<p class="text-lg font-semibold mt-4">
-			{$t('auth.welcome')}
-		</p>
+<main class="w-full min-h-full max-w-lg m-auto overlow-auto bg-white">
+	<header class="w-full p-2 bg-[#5E6FC5] rounded-b-3xl">
+		<PartyBannerIcon width="100%" />
 	</header>
 
-	<LoginForm />
+	<div class="w-full p-6 space-y-4">
+		<h2 class="text-2xl font-semibold">Launch Party</h2>
+		<AttributeItem attribute={dateTime} itemType="user" disableActions />
+		<AttributeItem attribute={location} itemType="user" />
+		<AttributeItem attribute={link} itemType="user" />
+	</div>
+
+	<div class="w-full px-8 py-4 flex flex-col">
+		<p class="font-semibold mb-4">RSVP</p>
+		<LoginForm />
+	</div>
 </main>

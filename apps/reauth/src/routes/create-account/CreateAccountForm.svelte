@@ -86,7 +86,7 @@
 	</div>
 
 	<div class="flex-none flex flex-col items-center p-2">
-		<Link class="mb-4" href="/verify-account">I already have an account</Link>
+		<!-- <Link class="mb-4" href="/verify-account">I already have an account</Link> -->
 		<Button {isLoading} on:click={() => handleSubmit()}>Continue</Button>
 		{#if systemError}
 			<p class="mt-4 text-red-600">{systemError}</p>

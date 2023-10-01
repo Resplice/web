@@ -4,15 +4,18 @@ import type { InviteState } from '$modules/invite/invite.store'
 
 export type InviteAggregate = InviteState
 
-export function applyInviteEvent(
-	aggregate: InviteAggregate,
-	event: proto.Message
-): InviteAggregate {
+export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event): InviteAggregate {
 	switch (event.payload.$case) {
 		case 'inviteCreated':
 			// Delete placeholder
 			aggregate.delete(0)
-			// aggregate.set(event.payload.inviteCreated.)
+			aggregate.set(event.payload.inviteCreated.inviteId, {
+				id: event.payload.inviteCreated.inviteId,
+				type: mapProtoInviteType(event.payload.inviteCreated.type),
+				name: event.payload.inviteCreated.name,
+				value: event.payload.inviteCreated.value,
+				shares: event.payload.inviteCreated.attributeIds
+			})
 			break
 	}
 

@@ -5,4 +5,4 @@
 </script>
 
 <!-- TODO: Markdown parsing -->
-<p>{value.text}</p>
+<p class="w-full">{value.text}</p>

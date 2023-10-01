@@ -5,21 +5,17 @@
 </script>
 
 <!-- Can potentially localize this format per country, will use US format for now -->
-<div class="flex flex-col">
-	<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
-		{value.streetAddress1}
-	</span>
+<div class="w-full flex flex-col">
+	<p class="w-full truncate h-6">{value.streetAddress1}</p>
 	{#if !!value.streetAddress2}
-		<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
-			{value.streetAddress2}
-		</span>
+		<p class="w-full truncate h-6">{value.streetAddress2}</p>
 	{/if}
-	<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
+	<p class="w-full truncate h-6">
 		{value.locality
 			? `${value.locality}, ${value.region} ${value.postalCode}`
 			: `${value.region} ${value.postalCode}`}
-	</span>
-	<span class="overflow-hidden text-ellipsis whitespace-pre-line h-6">
-		{value.country}
-	</span>
+	</p>
+	{#if !!value.country}
+		<p class="w-full truncate h-6">{value.country}</p>
+	{/if}
 </div>

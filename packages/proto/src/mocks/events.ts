@@ -28,12 +28,13 @@ const authEvents = {
 
 // Account Events
 const accountCreated: proto.account.AccountCreated = {
-	accountUuid: 'uuid',
+	uuid: 'uuid',
 	name: 'Han Solo',
 	handle: 'han.solo.1',
 	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
 	phoneId: 2,
-	phone: PHONE
+	phone: PHONE,
+	phoneVerifiedAt: 1234567890
 }
 
 const accountNameChanged: proto.account.AccountNameChanged = {
@@ -72,13 +73,9 @@ const attributeAdded: proto.attribute.AttributeAdded = {
 	}
 }
 
-const attributeNameChanged: proto.attribute.AttributeNameChanged = {
+const attributeChanged: proto.attribute.AttributeChanged = {
 	id: 3,
-	name: '1st Earth Address'
-}
-
-const attributeValueChanged: proto.attribute.AttributeValueChanged = {
-	id: 3,
+	name: '1st Earth Address',
 	value: {
 		$case: 'address',
 		address: {
@@ -98,8 +95,7 @@ const attributeRemoved: proto.attribute.AttributeRemoved = {
 
 const attributeEvents = {
 	attributeAdded,
-	attributeNameChanged,
-	attributeValueChanged,
+	attributeChanged,
 	attributeRemoved
 }
 

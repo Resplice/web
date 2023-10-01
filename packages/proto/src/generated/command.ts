@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { ChangeAccountAvatar, ChangeAccountHandle, ChangeAccountName } from "./account/commands";
-import { AddAttribute, ChangeAttributeName, ChangeAttributeValue, RemoveAttribute } from "./attribute/commands";
+import { AddAttribute, ChangeAttribute, RemoveAttribute, VerifyAttribute } from "./attribute/commands";
 import {
   AuthorizeSocket,
   CreateAccount,
@@ -39,8 +39,8 @@ export interface Command {
     | { $case: "changeAccountHandle"; changeAccountHandle: ChangeAccountHandle }
     | { $case: "changeAccountAvatar"; changeAccountAvatar: ChangeAccountAvatar }
     | { $case: "addAttribute"; addAttribute: AddAttribute }
-    | { $case: "changeAttributeName"; changeAttributeName: ChangeAttributeName }
-    | { $case: "changeAttributeValue"; changeAttributeValue: ChangeAttributeValue }
+    | { $case: "verifyAttribute"; verifyAttribute: VerifyAttribute }
+    | { $case: "changeAttribute"; changeAttribute: ChangeAttribute }
     | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
     | { $case: "createInvite"; createInvite: CreateInvite }
     | { $case: "addInviteShare"; addInviteShare: AddInviteShare }
@@ -180,11 +180,11 @@ export const Command = {
       case "addAttribute":
         AddAttribute.encode(message.payload.addAttribute, writer.uint32(90).fork()).ldelim();
         break;
-      case "changeAttributeName":
-        ChangeAttributeName.encode(message.payload.changeAttributeName, writer.uint32(98).fork()).ldelim();
+      case "verifyAttribute":
+        VerifyAttribute.encode(message.payload.verifyAttribute, writer.uint32(98).fork()).ldelim();
         break;
-      case "changeAttributeValue":
-        ChangeAttributeValue.encode(message.payload.changeAttributeValue, writer.uint32(106).fork()).ldelim();
+      case "changeAttribute":
+        ChangeAttribute.encode(message.payload.changeAttribute, writer.uint32(106).fork()).ldelim();
         break;
       case "removeAttribute":
         RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(114).fork()).ldelim();
@@ -313,8 +313,8 @@ export const Command = {
           }
 
           message.payload = {
-            $case: "changeAttributeName",
-            changeAttributeName: ChangeAttributeName.decode(reader, reader.uint32()),
+            $case: "verifyAttribute",
+            verifyAttribute: VerifyAttribute.decode(reader, reader.uint32()),
           };
           continue;
         case 13:
@@ -323,8 +323,8 @@ export const Command = {
           }
 
           message.payload = {
-            $case: "changeAttributeValue",
-            changeAttributeValue: ChangeAttributeValue.decode(reader, reader.uint32()),
+            $case: "changeAttribute",
+            changeAttribute: ChangeAttribute.decode(reader, reader.uint32()),
           };
           continue;
         case 14:
@@ -421,16 +421,10 @@ export const Command = {
         }
         : isSet(object.addAttribute)
         ? { $case: "addAttribute", addAttribute: AddAttribute.fromJSON(object.addAttribute) }
-        : isSet(object.changeAttributeName)
-        ? {
-          $case: "changeAttributeName",
-          changeAttributeName: ChangeAttributeName.fromJSON(object.changeAttributeName),
-        }
-        : isSet(object.changeAttributeValue)
-        ? {
-          $case: "changeAttributeValue",
-          changeAttributeValue: ChangeAttributeValue.fromJSON(object.changeAttributeValue),
-        }
+        : isSet(object.verifyAttribute)
+        ? { $case: "verifyAttribute", verifyAttribute: VerifyAttribute.fromJSON(object.verifyAttribute) }
+        : isSet(object.changeAttribute)
+        ? { $case: "changeAttribute", changeAttribute: ChangeAttribute.fromJSON(object.changeAttribute) }
         : isSet(object.removeAttribute)
         ? { $case: "removeAttribute", removeAttribute: RemoveAttribute.fromJSON(object.removeAttribute) }
         : isSet(object.createInvite)
@@ -484,11 +478,11 @@ export const Command = {
     if (message.payload?.$case === "addAttribute") {
       obj.addAttribute = AddAttribute.toJSON(message.payload.addAttribute);
     }
-    if (message.payload?.$case === "changeAttributeName") {
-      obj.changeAttributeName = ChangeAttributeName.toJSON(message.payload.changeAttributeName);
+    if (message.payload?.$case === "verifyAttribute") {
+      obj.verifyAttribute = VerifyAttribute.toJSON(message.payload.verifyAttribute);
     }
-    if (message.payload?.$case === "changeAttributeValue") {
-      obj.changeAttributeValue = ChangeAttributeValue.toJSON(message.payload.changeAttributeValue);
+    if (message.payload?.$case === "changeAttribute") {
+      obj.changeAttribute = ChangeAttribute.toJSON(message.payload.changeAttribute);
     }
     if (message.payload?.$case === "removeAttribute") {
       obj.removeAttribute = RemoveAttribute.toJSON(message.payload.removeAttribute);
@@ -615,23 +609,23 @@ export const Command = {
       message.payload = { $case: "addAttribute", addAttribute: AddAttribute.fromPartial(object.payload.addAttribute) };
     }
     if (
-      object.payload?.$case === "changeAttributeName" &&
-      object.payload?.changeAttributeName !== undefined &&
-      object.payload?.changeAttributeName !== null
+      object.payload?.$case === "verifyAttribute" &&
+      object.payload?.verifyAttribute !== undefined &&
+      object.payload?.verifyAttribute !== null
     ) {
       message.payload = {
-        $case: "changeAttributeName",
-        changeAttributeName: ChangeAttributeName.fromPartial(object.payload.changeAttributeName),
+        $case: "verifyAttribute",
+        verifyAttribute: VerifyAttribute.fromPartial(object.payload.verifyAttribute),
       };
     }
     if (
-      object.payload?.$case === "changeAttributeValue" &&
-      object.payload?.changeAttributeValue !== undefined &&
-      object.payload?.changeAttributeValue !== null
+      object.payload?.$case === "changeAttribute" &&
+      object.payload?.changeAttribute !== undefined &&
+      object.payload?.changeAttribute !== null
     ) {
       message.payload = {
-        $case: "changeAttributeValue",
-        changeAttributeValue: ChangeAttributeValue.fromPartial(object.payload.changeAttributeValue),
+        $case: "changeAttribute",
+        changeAttribute: ChangeAttribute.fromPartial(object.payload.changeAttribute),
       };
     }
     if (

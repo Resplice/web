@@ -1,57 +1,60 @@
 <script lang="ts">
-	import { push } from 'svelte-spa-router'
+	import { pop } from 'svelte-spa-router'
 	import { attributeTypes } from '@resplice/utils'
 	import useProtocol from '$common/protocol/useProtocol'
 	import Header from '$common/components/Header.svelte'
 	import attributeStore from '$modules/attribute/attribute.store'
-	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
 	import { mapAttributeValue } from '$modules/attribute/attribute.state'
+	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
 	import type { Attribute } from '$modules/account/account.types'
+	import { Modal, Button } from '@resplice/components'
 
 	const protocol = useProtocol()
 
 	export let params: { id: string }
-	let editingAttribute: Attribute
+	let showAttributeContext = false
 
 	$: id = parseInt(params.id, 10)
 	$: attribute = $attributeStore.get(id)
-	$: attributeTypeConfig = attribute && attributeTypes[attribute.type]
+	$: attributeTypeConfig = attribute ? attributeTypes[attribute.type] : null
 
-	$: {
-		if (attribute) {
-			editingAttribute = {
-				...attribute,
-				value: { ...attribute.value }
-			} as Attribute
-		}
+	function changeAttribute(attribute: Attribute) {
+		protocol.attribute.change(
+			{
+				id,
+				name: attribute.name,
+				value: mapAttributeValue(attribute.type, attribute.value)
+			},
+			attribute
+		)
+		pop()
 	}
 
-	async function editAttribute(attribute: Attribute) {
-		// TODO: These should be different forms
-		await Promise.all([
-			protocol.attribute.changeName({ id: attribute.id, name: attribute.name }),
-			protocol.attribute.changeValue({
-				id: attribute.id,
-				value: mapAttributeValue(attribute.type, attribute.value)
-			})
-		])
-		push(`/app/attribute/${id}/detail`)
+	function deleteAttribute() {
+		protocol.attribute.remove({ id })
+		pop()
 	}
 </script>
 
 <div class="flex flex-col w-full h-full bg-gray-100">
-	<Header title="Edit Attribute" />
-	<main class="bg-white rounded-t-3xl flex-1 flex flex-col overflow-auto">
-		{#if editingAttribute}
+	<Header title="Change Attribute" showContext on:context={() => (showAttributeContext = true)} />
+	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col overflow-auto">
+		{#if attribute}
 			<AttributeForm
-				attribute={editingAttribute}
+				{attribute}
 				{attributeTypeConfig}
-				on:save={() => editAttribute(editingAttribute)}
+				on:save={(event) => changeAttribute(event.detail)}
 			/>
-		{:else}
-			<div class="flex-1 flex items-center justify-center">
-				<h2 class="font-semibold text-lg">Attribute not found</h2>
-			</div>
 		{/if}
 	</main>
 </div>
+
+{#if showAttributeContext}
+	<Modal on:close={() => (showAttributeContext = false)}>
+		<div class="w-full space-y-4 p-8">
+			<Button class="w-full" color="danger-light" on:click={deleteAttribute}>
+				Delete Attribute
+			</Button>
+		</div>
+	</Modal>
+{/if}

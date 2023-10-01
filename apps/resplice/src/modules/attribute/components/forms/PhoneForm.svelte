@@ -39,12 +39,7 @@
 	<div class="w-full flex flex-col space-y-6">
 		<TextField name="attribute-name" label="Name" bind:value={name} error={formErrs.name} />
 		<PhoneField name="phone" label="Phone" bind:phone error={formErrs.phone} />
-		<Toggle
-			name="smsEnabled"
-			label="Allow SMS"
-			bind:isActive={smsEnabled}
-			on:toggle={() => (smsEnabled = !smsEnabled)}
-		/>
+		<Toggle name="smsEnabled" label="Allow SMS" bind:isActive={smsEnabled} />
 	</div>
 
 	<FormButtons on:save={onSave} />

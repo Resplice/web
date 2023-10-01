@@ -1,4 +1,5 @@
 import proto from '@resplice/proto'
+import { getRespliceNow } from '@resplice/utils'
 import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
@@ -12,8 +13,8 @@ import type { Attribute } from '$modules/account/account.types'
 
 export interface AttributeProtocol {
 	add(payload: proto.attribute.AddAttribute): void
-	changeName(payload: proto.attribute.ChangeAttributeName): void
-	changeValue(payload: proto.attribute.ChangeAttributeValue): void
+	verify(payload: proto.attribute.VerifyAttribute): void
+	change(payload: proto.attribute.ChangeAttribute, newAttribute: Attribute): void
 	remove(payload: proto.attribute.RemoveAttribute): void
 }
 
@@ -48,23 +49,23 @@ function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeP
 				return state
 			})
 		},
-		changeName(payload) {
+		verify(payload) {
 			sendCommand(commuter, {
-				$case: 'changeAttributeName',
-				changeAttributeName: payload
+				$case: 'verifyAttribute',
+				verifyAttribute: payload
 			})
 			store.update((state) => {
-				state.get(payload.id).name = payload.name
+				state.get(payload.id).verifiedAt = getRespliceNow()
 				return state
 			})
 		},
-		changeValue(payload) {
+		change(payload, newAttribute) {
 			sendCommand(commuter, {
-				$case: 'changeAttributeValue',
-				changeAttributeValue: payload
+				$case: 'changeAttribute',
+				changeAttribute: payload
 			})
 			store.update((state) => {
-				state.get(payload.id).value = mapProtoAttributeValue(payload.value)
+				state.set(newAttribute.id, newAttribute)
 				return state
 			})
 		},

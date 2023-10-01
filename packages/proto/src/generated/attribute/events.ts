@@ -19,13 +19,9 @@ export interface AttributeVerified {
   verifiedAt: number;
 }
 
-export interface AttributeNameChanged {
+export interface AttributeChanged {
   id: number;
   name: string;
-}
-
-export interface AttributeValueChanged {
-  id: number;
   value?:
     | { $case: "phone"; phone: Phone }
     | { $case: "email"; email: Email }
@@ -284,25 +280,42 @@ export const AttributeVerified = {
   },
 };
 
-function createBaseAttributeNameChanged(): AttributeNameChanged {
-  return { id: 0, name: "" };
+function createBaseAttributeChanged(): AttributeChanged {
+  return { id: 0, name: "", value: undefined };
 }
 
-export const AttributeNameChanged = {
-  encode(message: AttributeNameChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AttributeChanged = {
+  encode(message: AttributeChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
+    switch (message.value?.$case) {
+      case "phone":
+        Phone.encode(message.value.phone, writer.uint32(26).fork()).ldelim();
+        break;
+      case "email":
+        Email.encode(message.value.email, writer.uint32(34).fork()).ldelim();
+        break;
+      case "address":
+        Address.encode(message.value.address, writer.uint32(42).fork()).ldelim();
+        break;
+      case "social":
+        Social.encode(message.value.social, writer.uint32(50).fork()).ldelim();
+        break;
+      case "credential":
+        Credential.encode(message.value.credential, writer.uint32(58).fork()).ldelim();
+        break;
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeNameChanged {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAttributeNameChanged();
+    const message = createBaseAttributeChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -320,114 +333,36 @@ export const AttributeNameChanged = {
 
           message.name = reader.string();
           continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AttributeNameChanged {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
-  },
-
-  toJSON(message: AttributeNameChanged): unknown {
-    const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AttributeNameChanged>, I>>(base?: I): AttributeNameChanged {
-    return AttributeNameChanged.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AttributeNameChanged>, I>>(object: I): AttributeNameChanged {
-    const message = createBaseAttributeNameChanged();
-    message.id = object.id ?? 0;
-    message.name = object.name ?? "";
-    return message;
-  },
-};
-
-function createBaseAttributeValueChanged(): AttributeValueChanged {
-  return { id: 0, value: undefined };
-}
-
-export const AttributeValueChanged = {
-  encode(message: AttributeValueChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
-    }
-    switch (message.value?.$case) {
-      case "phone":
-        Phone.encode(message.value.phone, writer.uint32(18).fork()).ldelim();
-        break;
-      case "email":
-        Email.encode(message.value.email, writer.uint32(26).fork()).ldelim();
-        break;
-      case "address":
-        Address.encode(message.value.address, writer.uint32(34).fork()).ldelim();
-        break;
-      case "social":
-        Social.encode(message.value.social, writer.uint32(42).fork()).ldelim();
-        break;
-      case "credential":
-        Credential.encode(message.value.credential, writer.uint32(50).fork()).ldelim();
-        break;
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeValueChanged {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAttributeValueChanged();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.id = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
-          continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
+          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
+          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
+          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
+            break;
+          }
+
+          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -442,9 +377,10 @@ export const AttributeValueChanged = {
     return message;
   },
 
-  fromJSON(object: any): AttributeValueChanged {
+  fromJSON(object: any): AttributeChanged {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
+      name: isSet(object.name) ? String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -459,10 +395,13 @@ export const AttributeValueChanged = {
     };
   },
 
-  toJSON(message: AttributeValueChanged): unknown {
+  toJSON(message: AttributeChanged): unknown {
     const obj: any = {};
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.value?.$case === "phone") {
       obj.phone = Phone.toJSON(message.value.phone);
@@ -482,12 +421,13 @@ export const AttributeValueChanged = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AttributeValueChanged>, I>>(base?: I): AttributeValueChanged {
-    return AttributeValueChanged.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<AttributeChanged>, I>>(base?: I): AttributeChanged {
+    return AttributeChanged.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<AttributeValueChanged>, I>>(object: I): AttributeValueChanged {
-    const message = createBaseAttributeValueChanged();
+  fromPartial<I extends Exact<DeepPartial<AttributeChanged>, I>>(object: I): AttributeChanged {
+    const message = createBaseAttributeChanged();
     message.id = object.id ?? 0;
+    message.name = object.name ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };
     }

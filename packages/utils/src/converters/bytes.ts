@@ -8,9 +8,13 @@ export function uint32ToBytes(int: number): Uint8Array {
 	return bufView
 }
 
-// export function bytesToString(bytes: Uint8Array) {
-//   console.log(bytes)
-// }
+export function bytesToString(bytes: Uint8Array) {
+	return new TextDecoder('utf-8').decode(bytes)
+}
+
+export function stringToBytes(str: string) {
+	return new TextEncoder().encode(str)
+}
 
 if (import.meta.vitest) {
 	const { test, expect } = import.meta.vitest
@@ -39,5 +43,15 @@ if (import.meta.vitest) {
 		expect(uint32ToBytes(fifteen)).toEqual(new Uint8Array([0, 0, 0, 15]))
 		expect(uint32ToBytes(twelve_thousand)).toEqual(new Uint8Array([0, 0, 46, 224]))
 		expect(uint32ToBytes(max)).toEqual(new Uint8Array([255, 255, 255, 255]))
+	})
+
+	test('converts bytes to a string', () => {
+		const bytes = new Uint8Array([104, 101, 108, 108, 111])
+		expect(bytesToString(bytes)).toBe('hello')
+	})
+
+	test('converts a string to bytes', () => {
+		const str = 'hello'
+		expect(stringToBytes(str)).toEqual(new Uint8Array([104, 101, 108, 108, 111]))
 	})
 }

@@ -1,10 +1,13 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte'
 	import UserAvatar from '$lib/UserAvatar.svelte'
+	import CredentialValue from '$lib/attribute/values/CredentialValue.svelte'
 </script>
 
 <main class="p-8 flex flex-col space-y-8">
 	<div><Button>Click me</Button></div>
 
-	<UserAvatar id={1} avatarUrl="https://i.imgur.com/uo1ajTR.jpeg" on:crop={console.log} />
+	<UserAvatar uuid="uuid" avatarUrl="https://i.imgur.com/uo1ajTR.jpeg" on:crop={console.log} />
+
+	<CredentialValue value={{ identity: 'Code', passcode: 'Pass123' }} />
 </main>

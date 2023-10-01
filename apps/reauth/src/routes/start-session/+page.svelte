@@ -5,6 +5,7 @@
 	import store, { AuthStatus } from '$lib/store'
 	import useConfig from '$lib/hooks/useConfig'
 	import useProtocol from '$lib/hooks/useProtocol'
+	import { AppLoading } from '@resplice/components'
 
 	const config = useConfig()
 	const protocol = useProtocol()
@@ -49,4 +50,4 @@
 	})
 </script>
 
-<!-- TODO: Show some splash screen -->
+<AppLoading />

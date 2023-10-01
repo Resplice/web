@@ -93,7 +93,7 @@ export const attributes = new Map<number, Attribute>([
 		6,
 		{
 			id: 6,
-			type: AttributeType.DATE,
+			type: AttributeType.DATE_TIME,
 			name: 'Scoundrel Meeting',
 			value: {
 				year: 2167,

@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte'
 	import { push } from 'svelte-spa-router'
 	import { ChevronRightIcon } from '@resplice/components'
+
+	const dispatch = createEventDispatcher()
 
 	export let linkTo = ''
 	export let url = ''
@@ -10,6 +13,8 @@
 			window.open(url)
 		} else if (linkTo) {
 			push(linkTo)
+		} else {
+			dispatch('click')
 		}
 	}
 </script>

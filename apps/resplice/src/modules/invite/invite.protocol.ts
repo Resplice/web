@@ -3,7 +3,7 @@ import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import type { InviteStore } from '$modules/invite/invite.store'
-import { type Invite } from '$modules/invite/invite.types'
+import type { Invite } from '$modules/invite/invite.types'
 import { applyInviteEvent, mapProtoInviteType } from '$modules/invite/invite.state'
 
 export interface InviteProtocol {
@@ -48,19 +48,31 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				$case: 'addInviteShare',
 				addInviteShare: payload
 			})
-			// store.update((state) => ({ ...state, handle: payload.handle }))
+			store.update((state) => {
+				state.get(payload.inviteId).shares.push(payload.attributeId)
+				return state
+			})
 		},
 		removeShare(payload) {
 			sendCommand(commuter, {
 				$case: 'removeInviteShare',
 				removeInviteShare: payload
 			})
-			// store.update((state) => ({ ...state, avatarUrl }))
+			store.update((state) => {
+				state.get(payload.inviteId).shares = state
+					.get(payload.inviteId)
+					.shares.filter((id) => id !== payload.attributeId)
+				return state
+			})
 		},
 		delete(payload) {
 			sendCommand(commuter, {
 				$case: 'deleteInvite',
 				deleteInvite: payload
+			})
+			store.update((state) => {
+				state.delete(payload.inviteId)
+				return state
 			})
 		},
 		accept(payload) {

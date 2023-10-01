@@ -20,7 +20,7 @@
 	<nav class="flex-none flex items-center justify-start p-4">
 		<IconButton Icon={BackIcon} on:click={() => pop()} />
 	</nav>
-	<main class="bg-white rounded-t-3xl flex-1 overflow-auto">
+	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto overflow-auto">
 		<div class="w-full p-4">
 			<h2 class="text-xl font-semibold mb-4">Select an Attribute Type</h2>
 			<div class="flex flex-col space-y-4">

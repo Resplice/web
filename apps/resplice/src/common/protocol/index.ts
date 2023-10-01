@@ -1,4 +1,6 @@
 import proto from '@resplice/proto'
+import { fetchFactory, stringToBytes } from '@resplice/utils'
+import config from '$services/config'
 import stores from '$common/stores'
 import db from '$services/db'
 import startSocketCommuter from '$common/workers/socketCommuter'
@@ -19,9 +21,12 @@ export interface RespliceProtocol {
 	invite: InviteProtocol
 	session: SessionProtocol
 	loadCache: () => Promise<void>
+	rsvp: (accessKey: Uint8Array, selection: 'yes' | 'no' | 'maybe') => Promise<void>
 }
 
 async function respliceProtocolFactory(): Promise<RespliceProtocol> {
+	const fetch = fetchFactory(config.respliceApiUrl)
+
 	await db.open()
 
 	const socketCommuter = startSocketCommuter()
@@ -29,7 +34,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 	const protocol: RespliceProtocol = {
 		ctx: contextProtocolFactory({
 			cache: db,
-			store: stores.context,
+			stores,
 			commuter: socketCommuter
 		}),
 		account: accountProtocolFactory({ cache: db, store: stores.account, commuter: socketCommuter }),
@@ -39,9 +44,9 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			commuter: socketCommuter
 		}),
 		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
-		session: sessionProtocolFactory({ cache: db, store: stores.session }),
+		session: sessionProtocolFactory({ cache: db, store: stores.session, commuter: socketCommuter }),
 		async loadCache() {
-			const { events } = await db.read<proto.Message>('events')
+			const { events } = await db.read<proto.Event>('events')
 
 			let accountAggregate: AccountAggregate | null = null
 			let attributeAggregate: AttributeAggregate = new Map()
@@ -51,10 +56,16 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
 			})
 
-			console.log(accountAggregate, attributeAggregate)
-
 			stores.account.set(accountAggregate)
 			stores.attribute.set(attributeAggregate)
+		},
+		async rsvp(accessKey, selection) {
+			const data = proto.SecCommand.encode({
+				id: 0,
+				accessKey,
+				command: stringToBytes(selection)
+			}).finish()
+			await fetch.post({ endpoint: '/rsvp', data })
 		}
 	}
 
