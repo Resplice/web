@@ -2,18 +2,16 @@ import proto from '@resplice/proto'
 
 declare const self: ServiceWorkerGlobalScope
 
-export async function onPush(event: PushEvent) {
-	console.log('onPush', event)
+export async function onPush(ev: PushEvent) {
+	console.log('onPush', ev)
 
 	// If any client is focused don't trigger OS notification
 	if (await isClientFocused()) return
 
-	const messageBytes = new Uint8Array(event.data.arrayBuffer())
-	const message = proto.Message.decode(messageBytes)
+	const eventBytes = new Uint8Array(ev.data.arrayBuffer())
+	const event = proto.Event.decode(eventBytes)
 
-	if (message.payload.$case !== 'event') return
-
-	self.registration.showNotification(message.payload.event.payload.$case)
+	self.registration.showNotification(event.payload.$case)
 }
 
 async function isClientFocused() {

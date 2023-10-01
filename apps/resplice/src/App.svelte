@@ -44,7 +44,7 @@
 	const loading = loadApp()
 
 	// Can do additional store checks here
-	$: accountLoaded = !!accountStore
+	$: accountLoaded = !!$accountStore
 </script>
 
 {#await loading}

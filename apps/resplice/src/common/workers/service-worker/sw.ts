@@ -15,13 +15,13 @@ self.addEventListener('message', (event) => {
 	if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting()
 })
 
+// clean old assets
+cleanupOutdatedCaches()
+
 // self.__WB_MANIFEST is default injection point
 const cacheEntries = self.__WB_MANIFEST
 if (import.meta.env.DEV) cacheEntries.push({ url: '/', revision: Math.random().toString() })
 precacheAndRoute(cacheEntries)
-
-// clean old assets
-cleanupOutdatedCaches()
 
 let allowlist: undefined | RegExp[]
 if (import.meta.env.DEV) allowlist = [/^\/$/]

@@ -1,6 +1,7 @@
 import type { Options } from 'vite-plugin-pwa'
 
 export default {
+	injectRegister: null,
 	strategies: 'injectManifest',
 	srcDir: 'src/common/workers/service-worker',
 	filename: 'sw.ts',
