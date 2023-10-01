@@ -81,6 +81,11 @@
 			<div class="flex flex-col space-y-4">
 				<SettingsItem url="https://www.replice.com/about">About Resplice</SettingsItem>
 				<SettingsItem url="https://www.replice.com/terms">Terms & Conditions</SettingsItem>
+				<SettingsItem
+					url="https://docs.google.com/forms/d/e/1FAIpQLSd5B62gNdleYKRP3MCWdFM2qvs-oMNTqerZ4KGY-TYo20-s9A/viewform?usp=sf_link"
+				>
+					Give Feedback
+				</SettingsItem>
 			</div>
 		</section>
 		<section class="border-b-2 border-gray-200 pb-4">

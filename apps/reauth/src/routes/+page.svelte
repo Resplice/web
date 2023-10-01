@@ -53,11 +53,11 @@
 </script>
 
 <main class="w-full min-h-full max-w-lg m-auto overlow-auto bg-white">
-	<header class="w-full mb-2 p-2 bg-[#5E6FC5] rounded-b-3xl">
+	<header class="w-full p-2 bg-[#5E6FC5] rounded-b-3xl">
 		<PartyBannerIcon width="100%" />
 	</header>
 
-	<div class="w-full px-8 py-2 space-y-4">
+	<div class="w-full p-6 space-y-4">
 		<h2 class="text-2xl font-semibold">Launch Party</h2>
 		<AttributeItem attribute={dateTime} itemType="user" disableActions />
 		<AttributeItem attribute={location} itemType="user" />

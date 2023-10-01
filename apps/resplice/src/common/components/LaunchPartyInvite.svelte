@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { AttributeType, type Attribute } from '@resplice/utils'
 	import { PartyBannerIcon, AttributeItem } from '@resplice/components'
+	import Rsvp from '$common/components/Rsvp.svelte'
 
 	const dateTime: Attribute = {
 		id: 1,
@@ -41,15 +42,17 @@
 	}
 </script>
 
-<div class="w-full h-full max-w-xl m-auto bg-white">
-	<header class="w-full mb-2 p-2 bg-[#5E6FC5] rounded-b-3xl">
+<div class="w-full min-h-full max-w-xl m-auto bg-white">
+	<header class="w-full p-2 bg-[#5E6FC5] rounded-b-3xl">
 		<PartyBannerIcon width="100%" />
 	</header>
 
-	<div class="flex-none w-full px-8 space-y-4">
-		<h2 class="text-2xl font-semibold mt-4">Launch Party</h2>
+	<div class="w-full p-6 space-y-4">
+		<h2 class="text-2xl font-semibold">Launch Party</h2>
 		<AttributeItem attribute={dateTime} itemType="contact" />
 		<AttributeItem attribute={location} itemType="contact" />
 		<AttributeItem attribute={link} itemType="contact" />
 	</div>
+
+	<Rsvp />
 </div>
