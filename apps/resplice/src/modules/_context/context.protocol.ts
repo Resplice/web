@@ -1,12 +1,12 @@
 import proto, { type ProtoMessage } from '@resplice/proto'
 import config from '$services/config'
 import type { DB } from '$services/db'
+import { type SocketCommuter } from '$common/workers/socket/socketCommuter'
 import {
 	SocketCommandType,
-	type SocketCommuter,
 	SocketEventType,
 	type SocketEvent
-} from '$common/workers/socketCommuter'
+} from '$common/workers/socket/socket.types'
 import { SocketStatus } from '$modules/_context/context.types'
 import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'

@@ -1,7 +1,4 @@
-import { filter, map, pipe, type OperatorFunction } from 'rxjs'
 import proto, { type ProtoMessage } from '@resplice/proto'
-import socketWorkerUrl from '$common/workers/socket?url'
-import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
 import type { CryptoKeys } from '$modules/session/session.types'
 
 export enum SocketCommandType {
@@ -38,7 +35,7 @@ export enum SocketEventType {
 type OpenedEvent = {
 	type: SocketEventType.OPENED
 }
-type ReceivedEvent = {
+export type ReceivedEvent = {
 	type: SocketEventType.RECEIVED
 	message: ProtoMessage
 }
@@ -55,22 +52,3 @@ type ClosedEvent = {
 	reason?: string
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
-
-export function onlyEvents() {
-	return pipe(
-		filter<SocketEvent>(
-			(e) => e.type === SocketEventType.RECEIVED && !e.message.error && !e.message.state
-		) as OperatorFunction<ReceivedEvent, ReceivedEvent>,
-		map((e) => e.message.event)
-	)
-}
-
-export type SocketCommuter = Commuter<SocketCommand, SocketEvent>
-
-function startCommuter() {
-	const socketWorker = new Worker(socketWorkerUrl, { type: 'module' })
-
-	return workerCommuterFactory<SocketCommand, SocketEvent>(socketWorker)
-}
-
-export default startCommuter

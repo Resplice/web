@@ -1,6 +1,6 @@
 import proto from '@resplice/proto'
 import type { DB } from '$services/db'
-import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
+import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import type { InviteStore } from '$modules/invite/invite.store'
 import type { Invite } from '$modules/invite/invite.types'

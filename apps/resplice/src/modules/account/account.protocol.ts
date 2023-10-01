@@ -1,6 +1,6 @@
 import proto from '@resplice/proto'
 import type { DB } from '$services/db'
-import { type SocketCommuter, onlyEvents } from '$common/workers/socketCommuter'
+import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import { applyAccountEvent } from '$modules/account/account.state'
 import type { AccountStore } from '$modules/account/account.store'

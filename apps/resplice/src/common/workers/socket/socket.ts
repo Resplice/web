@@ -9,9 +9,11 @@ import {
 	SocketEventType,
 	type SocketEvent,
 	type SendCommand
-} from '$common/workers/socketCommuter'
+} from '$common/workers/socket/socket.types'
 import db, { type DB } from '$services/db'
 import type { CryptoKeys } from '$modules/session/session.types'
+
+// NOTE: Don't import from any module that initializes this worker because it will break the production build
 
 interface ConnWorker extends Worker {
 	cache: DB | null

@@ -1,7 +1,7 @@
 import config from '$services/config'
 import type { DB } from '$services/db'
 import { sendCommand } from '$common/protocol/helpers'
-import type { SocketCommuter } from '$common/workers/socketCommuter'
+import type { SocketCommuter } from '$common/workers/socket/socketCommuter'
 import type { Session } from '$modules/session/session.types'
 import type { SessionStore } from '$modules/session/session.store'
 

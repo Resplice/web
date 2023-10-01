@@ -1,7 +1,6 @@
 import type { Options } from 'vite-plugin-pwa'
 
 export default {
-	injectRegister: null,
 	strategies: 'injectManifest',
 	srcDir: 'src/common/workers/service-worker',
 	filename: 'sw.ts',
@@ -46,14 +45,14 @@ export default {
 				short_name: 'Invite',
 				description: 'Invite a contact to join Resplice via email, phone, or handle',
 				url: '/invite',
-				icons: [{ src: '/android-chrome-192x192.png', sizes: '192x192' }]
+				icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
 			},
 			{
 				name: 'Scan QR Code',
 				short_name: 'QR Code',
 				description: 'Scan someones QR code to start sharing with them',
 				url: '/invite/qr/scan',
-				icons: [{ src: '/android-chrome-192x192.png', sizes: '192x192' }]
+				icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
 			}
 		],
 		protocol_handlers: [
