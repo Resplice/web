@@ -54,6 +54,7 @@ export function authStatusToJSON(object: AuthStatus): string {
 
 export interface AuthChanged {
   authStatus: AuthStatus;
+  accessToken: string;
 }
 
 export interface SessionStarted {
@@ -67,13 +68,16 @@ export interface SessionEnded {
 }
 
 function createBaseAuthChanged(): AuthChanged {
-  return { authStatus: 0 };
+  return { authStatus: 0, accessToken: "" };
 }
 
 export const AuthChanged = {
   encode(message: AuthChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.authStatus !== 0) {
       writer.uint32(8).int32(message.authStatus);
+    }
+    if (message.accessToken !== "") {
+      writer.uint32(18).string(message.accessToken);
     }
     return writer;
   },
@@ -92,6 +96,13 @@ export const AuthChanged = {
 
           message.authStatus = reader.int32() as any;
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.accessToken = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -102,13 +113,19 @@ export const AuthChanged = {
   },
 
   fromJSON(object: any): AuthChanged {
-    return { authStatus: isSet(object.authStatus) ? authStatusFromJSON(object.authStatus) : 0 };
+    return {
+      authStatus: isSet(object.authStatus) ? authStatusFromJSON(object.authStatus) : 0,
+      accessToken: isSet(object.accessToken) ? String(object.accessToken) : "",
+    };
   },
 
   toJSON(message: AuthChanged): unknown {
     const obj: any = {};
     if (message.authStatus !== 0) {
       obj.authStatus = authStatusToJSON(message.authStatus);
+    }
+    if (message.accessToken !== "") {
+      obj.accessToken = message.accessToken;
     }
     return obj;
   },
@@ -119,6 +136,7 @@ export const AuthChanged = {
   fromPartial<I extends Exact<DeepPartial<AuthChanged>, I>>(object: I): AuthChanged {
     const message = createBaseAuthChanged();
     message.authStatus = object.authStatus ?? 0;
+    message.accessToken = object.accessToken ?? "";
     return message;
   },
 };

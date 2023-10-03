@@ -44,7 +44,12 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			commuter: socketCommuter
 		}),
 		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
-		session: sessionProtocolFactory({ cache: db, store: stores.session, commuter: socketCommuter }),
+		session: sessionProtocolFactory({
+			fetch,
+			cache: db,
+			store: stores.session,
+			commuter: socketCommuter
+		}),
 		async loadCache() {
 			const { events } = await db.read<proto.Event>('events')
 

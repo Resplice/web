@@ -75,7 +75,8 @@
 		store.set({
 			status: event.authStatus,
 			phone: phoneNumber.number,
-			persistSession
+			persistSession,
+			accessToken: null
 		})
 	}
 

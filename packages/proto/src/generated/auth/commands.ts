@@ -21,19 +21,17 @@ export interface DeleteAccount {
 }
 
 export interface StartSession {
-  phone: string;
+  accessToken: string;
   userAgent: string;
   ipAddress: string;
   persist: boolean;
 }
 
 export interface AuthorizeSocket {
-  phone: string;
   lastEventId: number;
 }
 
 export interface EndSession {
-  phone: string;
   sessionId: number;
 }
 
@@ -315,13 +313,13 @@ export const DeleteAccount = {
 };
 
 function createBaseStartSession(): StartSession {
-  return { phone: "", userAgent: "", ipAddress: "", persist: false };
+  return { accessToken: "", userAgent: "", ipAddress: "", persist: false };
 }
 
 export const StartSession = {
   encode(message: StartSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.phone !== "") {
-      writer.uint32(10).string(message.phone);
+    if (message.accessToken !== "") {
+      writer.uint32(10).string(message.accessToken);
     }
     if (message.userAgent !== "") {
       writer.uint32(18).string(message.userAgent);
@@ -347,7 +345,7 @@ export const StartSession = {
             break;
           }
 
-          message.phone = reader.string();
+          message.accessToken = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -381,7 +379,7 @@ export const StartSession = {
 
   fromJSON(object: any): StartSession {
     return {
-      phone: isSet(object.phone) ? String(object.phone) : "",
+      accessToken: isSet(object.accessToken) ? String(object.accessToken) : "",
       userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
       ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : false,
@@ -390,8 +388,8 @@ export const StartSession = {
 
   toJSON(message: StartSession): unknown {
     const obj: any = {};
-    if (message.phone !== "") {
-      obj.phone = message.phone;
+    if (message.accessToken !== "") {
+      obj.accessToken = message.accessToken;
     }
     if (message.userAgent !== "") {
       obj.userAgent = message.userAgent;
@@ -410,7 +408,7 @@ export const StartSession = {
   },
   fromPartial<I extends Exact<DeepPartial<StartSession>, I>>(object: I): StartSession {
     const message = createBaseStartSession();
-    message.phone = object.phone ?? "";
+    message.accessToken = object.accessToken ?? "";
     message.userAgent = object.userAgent ?? "";
     message.ipAddress = object.ipAddress ?? "";
     message.persist = object.persist ?? false;
@@ -419,16 +417,13 @@ export const StartSession = {
 };
 
 function createBaseAuthorizeSocket(): AuthorizeSocket {
-  return { phone: "", lastEventId: 0 };
+  return { lastEventId: 0 };
 }
 
 export const AuthorizeSocket = {
   encode(message: AuthorizeSocket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.phone !== "") {
-      writer.uint32(10).string(message.phone);
-    }
     if (message.lastEventId !== 0) {
-      writer.uint32(16).uint32(message.lastEventId);
+      writer.uint32(8).uint32(message.lastEventId);
     }
     return writer;
   },
@@ -441,14 +436,7 @@ export const AuthorizeSocket = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.phone = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
+          if (tag !== 8) {
             break;
           }
 
@@ -464,17 +452,11 @@ export const AuthorizeSocket = {
   },
 
   fromJSON(object: any): AuthorizeSocket {
-    return {
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0,
-    };
+    return { lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0 };
   },
 
   toJSON(message: AuthorizeSocket): unknown {
     const obj: any = {};
-    if (message.phone !== "") {
-      obj.phone = message.phone;
-    }
     if (message.lastEventId !== 0) {
       obj.lastEventId = Math.round(message.lastEventId);
     }
@@ -486,23 +468,19 @@ export const AuthorizeSocket = {
   },
   fromPartial<I extends Exact<DeepPartial<AuthorizeSocket>, I>>(object: I): AuthorizeSocket {
     const message = createBaseAuthorizeSocket();
-    message.phone = object.phone ?? "";
     message.lastEventId = object.lastEventId ?? 0;
     return message;
   },
 };
 
 function createBaseEndSession(): EndSession {
-  return { phone: "", sessionId: 0 };
+  return { sessionId: 0 };
 }
 
 export const EndSession = {
   encode(message: EndSession, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.phone !== "") {
-      writer.uint32(10).string(message.phone);
-    }
     if (message.sessionId !== 0) {
-      writer.uint32(16).uint32(message.sessionId);
+      writer.uint32(8).uint32(message.sessionId);
     }
     return writer;
   },
@@ -515,14 +493,7 @@ export const EndSession = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.phone = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
+          if (tag !== 8) {
             break;
           }
 
@@ -538,17 +509,11 @@ export const EndSession = {
   },
 
   fromJSON(object: any): EndSession {
-    return {
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
-    };
+    return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
   },
 
   toJSON(message: EndSession): unknown {
     const obj: any = {};
-    if (message.phone !== "") {
-      obj.phone = message.phone;
-    }
     if (message.sessionId !== 0) {
       obj.sessionId = Math.round(message.sessionId);
     }
@@ -560,7 +525,6 @@ export const EndSession = {
   },
   fromPartial<I extends Exact<DeepPartial<EndSession>, I>>(object: I): EndSession {
     const message = createBaseEndSession();
-    message.phone = object.phone ?? "";
     message.sessionId = object.sessionId ?? 0;
     return message;
   },

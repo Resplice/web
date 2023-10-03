@@ -14,18 +14,20 @@ function createDatabase(newDB: IDBDatabase) {
 	}
 
 	// Create new stores
-	// newDB.createObjectStore('commands', { autoIncrement: true })
+	newDB.createObjectStore('commands', { autoIncrement: true })
 	newDB.createObjectStore('events', { keyPath: 'id' })
 	newDB.createObjectStore('account', { autoIncrement: true })
 	newDB.createObjectStore('attributes', { keyPath: 'id' })
 	newDB.createObjectStore('chats', { keyPath: 'id' })
 	newDB.createObjectStore('contacts', { keyPath: 'id' })
 	newDB.createObjectStore('invites', { keyPath: 'id' })
+	newDB.createObjectStore('session')
 	newDB.createObjectStore('sessions', { keyPath: 'id' })
 }
 
 function deleteDatabase(): Promise<void> {
 	return new Promise((resolve, reject) => {
+		db.close()
 		const request = indexedDB.deleteDatabase(DB_NAME)
 		request.onsuccess = () => {
 			db = null
@@ -209,6 +211,10 @@ function clear(): Promise<void> {
 	})
 }
 
+function close(): void {
+	if (db) db.close()
+}
+
 const DBWrapper = {
 	open,
 	read,
@@ -217,7 +223,8 @@ const DBWrapper = {
 	upsert,
 	remove,
 	clear,
-	delete: deleteDatabase
+	delete: deleteDatabase,
+	close
 }
 
 export type DB = typeof DBWrapper

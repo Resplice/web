@@ -28,7 +28,6 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 		const handshake: proto.Command['payload'] = {
 			$case: 'authorizeSocket',
 			authorizeSocket: {
-				phone: session.phone,
 				lastEventId
 			}
 		}
@@ -37,7 +36,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			type: SocketCommandType.OPEN,
 			respliceWsUrl: config.respliceWsUrl,
 			cryptoKeys: session.cryptoKeys,
-			persist: session.persist,
+			persist: session.persisted,
 			handshake
 		})
 	}
@@ -67,6 +66,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 
 		if (state) {
 			// TODO
+			console.log(state)
 		}
 	}
 

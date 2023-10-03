@@ -39,15 +39,11 @@ fromEvent<MessageEvent<SocketCommand>>(self, 'message')
 			case SocketCommandType.SEND:
 				await send(cmd)
 				break
+			case SocketCommandType.CLOSE:
+				await teardown()
+				break
 		}
 	})
-
-async function send(cmd: SendCommand) {
-	const protoCmd = cmd.payload
-	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
-	const cmdBytes = await serializeCommand({ id, payload: protoCmd }, self.cryptoKeys.client)
-	self.socket$.next(cmdBytes)
-}
 
 async function handleMessage(bytes: ArrayBuffer) {
 	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys.server)
@@ -110,4 +106,17 @@ function cacheEvent({ event }: ProtoMessage) {
 	if (!self.persist || !event) return Promise.resolve()
 
 	return self.cache.upsert('events', event)
+}
+
+async function send(cmd: SendCommand) {
+	const protoCmd = cmd.payload
+	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
+	const cmdBytes = await serializeCommand({ id, payload: protoCmd }, self.cryptoKeys.client)
+	self.socket$.next(cmdBytes)
+}
+
+async function teardown() {
+	self.socket$ = null
+	self.cryptoKeys = null
+	if (self.cache) self.cache.close()
 }

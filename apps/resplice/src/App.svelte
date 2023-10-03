@@ -24,7 +24,7 @@
 
 			if (!session) {
 				// If session cannot be retrieved, redirect to auth flow
-				// location.replace(config.authUrl)
+				location.replace(config.authUrl)
 				return false
 			}
 
@@ -36,7 +36,7 @@
 		} catch (err) {
 			console.error(err)
 			// If error, redirect to auth flow
-			// location.replace(config.authUrl)
+			location.replace(config.authUrl)
 			return false
 		}
 	}

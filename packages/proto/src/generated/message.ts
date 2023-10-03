@@ -181,12 +181,10 @@ export interface Event {
 }
 
 export interface State {
-  id: number;
-  payload?:
-    | { $case: "pendingConnection"; pendingConnection: PendingConnection }
-    | { $case: "connection"; connection: Connection }
-    | { $case: "connections"; connections: Connections }
-    | undefined;
+  events: Event[];
+  pendingConnection: PendingConnection | undefined;
+  connection: Connection | undefined;
+  connections: Connections | undefined;
 }
 
 export interface Error {
@@ -788,24 +786,22 @@ export const Event = {
 };
 
 function createBaseState(): State {
-  return { id: 0, payload: undefined };
+  return { events: [], pendingConnection: undefined, connection: undefined, connections: undefined };
 }
 
 export const State = {
   encode(message: State, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+    for (const v of message.events) {
+      Event.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    switch (message.payload?.$case) {
-      case "pendingConnection":
-        PendingConnection.encode(message.payload.pendingConnection, writer.uint32(18).fork()).ldelim();
-        break;
-      case "connection":
-        Connection.encode(message.payload.connection, writer.uint32(26).fork()).ldelim();
-        break;
-      case "connections":
-        Connections.encode(message.payload.connections, writer.uint32(34).fork()).ldelim();
-        break;
+    if (message.pendingConnection !== undefined) {
+      PendingConnection.encode(message.pendingConnection, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.connection !== undefined) {
+      Connection.encode(message.connection, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.connections !== undefined) {
+      Connections.encode(message.connections, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -818,35 +814,32 @@ export const State = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.id = reader.uint32();
+          message.events.push(Event.decode(reader, reader.uint32()));
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.payload = {
-            $case: "pendingConnection",
-            pendingConnection: PendingConnection.decode(reader, reader.uint32()),
-          };
+          message.pendingConnection = PendingConnection.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.payload = { $case: "connection", connection: Connection.decode(reader, reader.uint32()) };
+          message.connection = Connection.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.payload = { $case: "connections", connections: Connections.decode(reader, reader.uint32()) };
+          message.connections = Connections.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -859,30 +852,28 @@ export const State = {
 
   fromJSON(object: any): State {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      payload: isSet(object.pendingConnection)
-        ? { $case: "pendingConnection", pendingConnection: PendingConnection.fromJSON(object.pendingConnection) }
-        : isSet(object.connection)
-        ? { $case: "connection", connection: Connection.fromJSON(object.connection) }
-        : isSet(object.connections)
-        ? { $case: "connections", connections: Connections.fromJSON(object.connections) }
+      events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
+      pendingConnection: isSet(object.pendingConnection)
+        ? PendingConnection.fromJSON(object.pendingConnection)
         : undefined,
+      connection: isSet(object.connection) ? Connection.fromJSON(object.connection) : undefined,
+      connections: isSet(object.connections) ? Connections.fromJSON(object.connections) : undefined,
     };
   },
 
   toJSON(message: State): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.events?.length) {
+      obj.events = message.events.map((e) => Event.toJSON(e));
     }
-    if (message.payload?.$case === "pendingConnection") {
-      obj.pendingConnection = PendingConnection.toJSON(message.payload.pendingConnection);
+    if (message.pendingConnection !== undefined) {
+      obj.pendingConnection = PendingConnection.toJSON(message.pendingConnection);
     }
-    if (message.payload?.$case === "connection") {
-      obj.connection = Connection.toJSON(message.payload.connection);
+    if (message.connection !== undefined) {
+      obj.connection = Connection.toJSON(message.connection);
     }
-    if (message.payload?.$case === "connections") {
-      obj.connections = Connections.toJSON(message.payload.connections);
+    if (message.connections !== undefined) {
+      obj.connections = Connections.toJSON(message.connections);
     }
     return obj;
   },
@@ -892,31 +883,16 @@ export const State = {
   },
   fromPartial<I extends Exact<DeepPartial<State>, I>>(object: I): State {
     const message = createBaseState();
-    message.id = object.id ?? 0;
-    if (
-      object.payload?.$case === "pendingConnection" &&
-      object.payload?.pendingConnection !== undefined &&
-      object.payload?.pendingConnection !== null
-    ) {
-      message.payload = {
-        $case: "pendingConnection",
-        pendingConnection: PendingConnection.fromPartial(object.payload.pendingConnection),
-      };
-    }
-    if (
-      object.payload?.$case === "connection" &&
-      object.payload?.connection !== undefined &&
-      object.payload?.connection !== null
-    ) {
-      message.payload = { $case: "connection", connection: Connection.fromPartial(object.payload.connection) };
-    }
-    if (
-      object.payload?.$case === "connections" &&
-      object.payload?.connections !== undefined &&
-      object.payload?.connections !== null
-    ) {
-      message.payload = { $case: "connections", connections: Connections.fromPartial(object.payload.connections) };
-    }
+    message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
+    message.pendingConnection = (object.pendingConnection !== undefined && object.pendingConnection !== null)
+      ? PendingConnection.fromPartial(object.pendingConnection)
+      : undefined;
+    message.connection = (object.connection !== undefined && object.connection !== null)
+      ? Connection.fromPartial(object.connection)
+      : undefined;
+    message.connections = (object.connections !== undefined && object.connections !== null)
+      ? Connections.fromPartial(object.connections)
+      : undefined;
     return message;
   },
 };

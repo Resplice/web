@@ -3,8 +3,13 @@
 	import { goto } from '$app/navigation'
 	import { t } from '$lib/i18n'
 	import store, { AuthStatus } from '$lib/store'
+	import useConfig from '$lib/hooks/useConfig'
+	import useProtocol from '$lib/hooks/useProtocol'
 	import { RespliceWideIcon } from '@resplice/components'
 	import VerifyForm from './VerifyForm.svelte'
+
+	const config = useConfig()
+	const protocol = useProtocol()
 
 	$: {
 		if (browser)
@@ -15,7 +20,11 @@
 					goto('/create-account')
 					break
 				case AuthStatus.PENDING_START_SESSION:
-					goto('/start-session')
+					if ($store.accessToken)
+						protocol.redirectToApp(config.respliceAppUrl, {
+							accessToken: $store.accessToken,
+							persist: $store.persistSession
+						})
 					break
 				default:
 					goto('/')

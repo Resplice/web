@@ -4,19 +4,23 @@ const PHONE = '+16198745121'
 
 // Auth Events
 const authStarted: proto.auth.AuthChanged = {
-	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_PHONE
+	authStatus: proto.auth.AuthStatus.PENDING_VERIFY_PHONE,
+	accessToken: ''
 }
 
 const authPhoneVerified: proto.auth.AuthChanged = {
-	authStatus: proto.auth.AuthStatus.PENDING_CREATE_ACCOUNT
+	authStatus: proto.auth.AuthStatus.PENDING_CREATE_ACCOUNT,
+	accessToken: ''
 }
 
 const accountCreatedAuth: proto.auth.AuthChanged = {
-	authStatus: proto.auth.AuthStatus.PENDING_START_SESSION
+	authStatus: proto.auth.AuthStatus.PENDING_START_SESSION,
+	accessToken: '1234567890'
 }
 
 const sessionStarted: proto.auth.AuthChanged = {
-	authStatus: proto.auth.AuthStatus.AUTHORIZED
+	authStatus: proto.auth.AuthStatus.AUTHORIZED,
+	accessToken: ''
 }
 
 const authEvents = {

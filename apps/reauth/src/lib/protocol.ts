@@ -14,7 +14,6 @@ export interface Protocol {
 	startAuth(payload: proto.auth.StartAuth): Result
 	verifyPhone(payload: proto.auth.VerifyPhone): Result
 	createAccount(payload: proto.auth.CreateAccount): Result
-	startSession(payload: proto.auth.StartSession): Result
 	redirectToApp(respliceAppUrl: string, message: AppMessage): void
 }
 
@@ -28,7 +27,7 @@ type CryptoKeys = {
 	accessKey: Uint8Array
 }
 type AppMessage = {
-	phone: string
+	accessToken: string
 	persist: boolean
 }
 
@@ -87,7 +86,7 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 			)
 
 			const messageBytes = await fetch.post<ArrayBuffer>({
-				endpoint: '/run',
+				endpoint: '/auth',
 				data: serializedCommand,
 				headers
 			})
@@ -121,33 +120,6 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		}
 	}
 
-	function redirectToApp(respliceAppUrl: string, msg: AppMessage) {
-		if (!cryptoKeys) throw new Error('Crypto keys not initialized')
-
-		const src = `${respliceAppUrl}/mailbox.html`
-		const appIframe = document.createElement('iframe')
-		appIframe.src = src
-		appIframe.width = '0'
-		appIframe.height = '0'
-		appIframe.style.position = 'absolute'
-		appIframe.style.width = '0'
-		appIframe.style.height = '0'
-		appIframe.style.border = '0'
-		appIframe.style.visibility = 'hidden'
-		document.body.appendChild(appIframe)
-		const message = {
-			...msg,
-			cryptoKeys,
-			initialCommandId: ++cmdCount
-		}
-		appIframe.onload = () => {
-			window.addEventListener('message', (e) => {
-				if (e.origin === respliceAppUrl) location.replace(respliceAppUrl)
-			})
-			appIframe.contentWindow?.postMessage(message, src)
-		}
-	}
-
 	return {
 		isBot(token) {
 			return localFetch.post<boolean>({
@@ -162,8 +134,10 @@ export function protocolFactory(respliceEndpoint: string): Protocol {
 		startAuth,
 		verifyPhone: (verifyPhone) => executeAuthStep({ $case: 'verifyPhone', verifyPhone }),
 		createAccount: (createAccount) => executeAuthStep({ $case: 'createAccount', createAccount }),
-		startSession: (startSession) => executeAuthStep({ $case: 'startSession', startSession }),
-		redirectToApp
+		redirectToApp: (respliceAppUrl, message) =>
+			location.replace(
+				`${respliceAppUrl}?resplice-access-token=${message.accessToken}&persist=${message.persist}`
+			)
 	}
 }
 

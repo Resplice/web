@@ -1,9 +1,9 @@
 export type Session = {
 	id: number
-	phone: string
 	cryptoKeys: CryptoKeys
-	persist: boolean
-	initialCommandId: number
+	persisted: boolean
+	userAgent: string
+	ipAddress: string
 }
 
 export type CryptoKeys = {

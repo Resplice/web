@@ -19,7 +19,7 @@ const createAccount: proto.auth.CreateAccount = {
 }
 
 const startSession: proto.auth.StartSession = {
-	phone: PHONE,
+	accessToken: '1234567890',
 	persist: true,
 	userAgent: '',
 	ipAddress: '127.0.0.1'

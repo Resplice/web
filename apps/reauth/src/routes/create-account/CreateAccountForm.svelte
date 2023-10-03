@@ -52,7 +52,8 @@
 
 		store.update((state) => ({
 			...state,
-			status: event.authStatus
+			status: event.authStatus,
+			accessToken: event.accessToken
 		}))
 	}
 
