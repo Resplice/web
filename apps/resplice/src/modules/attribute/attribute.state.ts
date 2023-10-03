@@ -102,3 +102,7 @@ export function mapAttributeValue(
 			return { $case: 'social', social: value as SocialValue }
 	}
 }
+
+export function verifiableAttributeType(type: AttributeType) {
+	return [AttributeType.EMAIL, AttributeType.PHONE].includes(type)
+}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageToDataUri } from '@resplice/utils'
 	import store from '$lib/store'
 	import { t } from '$lib/i18n'
 	import useProtocol from '$lib/hooks/useProtocol'
@@ -33,7 +34,7 @@
 
 	async function createAccount() {
 		isLoading = true
-		const avatarDataUri = await avatarImageToDataUri(avatar)
+		const avatarDataUri = await imageToDataUri(avatar)
 
 		const { event, error } = await protocol.createAccount({
 			phone: $store.phone,
@@ -55,15 +56,6 @@
 			status: event.authStatus,
 			accessToken: event.accessToken
 		}))
-	}
-
-	function avatarImageToDataUri(image: Blob | null): Promise<string> {
-		return new Promise<string>((resolve) => {
-			if (!image) return resolve('')
-			const reader = new FileReader()
-			reader.onloadend = () => resolve(reader.result as string)
-			reader.readAsDataURL(image)
-		})
 	}
 </script>
 

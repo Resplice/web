@@ -73,13 +73,11 @@
 		<div>
 			<p>We are so glad you can make it and can't wait to see you there!</p>
 			<br />
-			<p>Your Resplice account is your ticket and the full app will launch when you get there.</p>
-			<p>Kids are welcome!</p>
-			<br />
 			<p>
-				This party is open to the public so please feel free to share this invite with anyone using
-				the button below!
+				Your Resplice account is your ticket. An account is needed for each adult, kids are welcome!
 			</p>
+			<br />
+			<p>The full app is launching soon and this invite will become the app.</p>
 			<br />
 			<p>
 				We are excited for you to be part of our journey to becoming the best sharing platform on
@@ -91,10 +89,10 @@
 		<div>
 			<p>
 				We are sorry you couldn't make it to the launch party but we thank you for showing an
-				interest in our app!
+				interest in our app.
 			</p>
 			<br />
-			<p>The full app with sharing features will launch on the day of the party.</p>
+			<p>The full app is launching soon and this invite will become the app.</p>
 			<br />
 			<p>
 				We are excited for you to be part of our journey to becoming the best sharing platform on

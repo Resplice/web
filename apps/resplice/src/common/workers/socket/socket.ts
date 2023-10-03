@@ -40,24 +40,24 @@ fromEvent<MessageEvent<SocketCommand>>(self, 'message')
 				await send(cmd)
 				break
 			case SocketCommandType.CLOSE:
-				await teardown()
+				teardown()
 				break
 		}
 	})
 
 async function handleMessage(bytes: ArrayBuffer) {
 	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys.server)
-	await cacheEvent(message)
+	await cacheMessage(message)
 	self.postMessage({ type: SocketEventType.RECEIVED, message })
 }
 
-function handleError(error: Error) {
-	console.error(error)
-	self.postMessage({ type: SocketEventType.ERRORED, error: 'Socket Error' })
+function handleError(event: CloseEvent) {
+	console.error(event)
+	self.postMessage({ type: SocketEventType.ERRORED, error: event.reason })
 }
 
-function handleClose() {
-	self.postMessage({ type: SocketEventType.CLOSED })
+function handleClose(code: number) {
+	self.postMessage({ type: SocketEventType.CLOSED, code })
 }
 
 async function openSocket(cmd: OpenCommand) {
@@ -91,21 +91,26 @@ async function openSocket(cmd: OpenCommand) {
 		protocol: handshake,
 		serializer: (m) => m,
 		deserializer: (m) => m.data,
+		closeObserver: {
+			next: (e) => handleClose(e.code)
+		},
 		binaryType: 'arraybuffer'
 	})
 	self.socket$.subscribe({
 		next: handleMessage,
 		error: handleError,
-		complete: handleClose
+		complete: teardown
 	})
 
 	self.postMessage({ type: SocketEventType.OPENED })
 }
 
-function cacheEvent({ event }: ProtoMessage) {
-	if (!self.persist || !event) return Promise.resolve()
+async function cacheMessage({ event, state }: ProtoMessage) {
+	if (!self.persist) return
 
-	return self.cache.upsert('events', event)
+	if (event) return self.cache.upsert('events', event)
+	if (state && state.events) return self.cache.upsert('events', state.events)
+	// TODO: Cache other state messages here
 }
 
 async function send(cmd: SendCommand) {
@@ -115,8 +120,15 @@ async function send(cmd: SendCommand) {
 	self.socket$.next(cmdBytes)
 }
 
-async function teardown() {
+function teardown() {
+	if (self.socket$) {
+		if (!self.socket$.closed) {
+			self.socket$.complete()
+		}
+	}
+	if (self.cache) self.cache.close()
+
 	self.socket$ = null
 	self.cryptoKeys = null
-	if (self.cache) self.cache.close()
+	self.cache = null
 }

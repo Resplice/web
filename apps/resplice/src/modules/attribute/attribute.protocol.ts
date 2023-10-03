@@ -1,8 +1,8 @@
-import proto from '@resplice/proto'
-import { getRespliceNow } from '@resplice/utils'
+import proto, { type ProtoMessage } from '@resplice/proto'
+import { type Fetch } from '@resplice/utils'
 import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
-import { sendCommand } from '$common/protocol/helpers'
+import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
 import {
 	applyAttributeEvent,
 	mapProtoAttributeType,
@@ -13,17 +13,23 @@ import type { Attribute } from '$modules/account/account.types'
 
 export interface AttributeProtocol {
 	add(payload: proto.attribute.AddAttribute): void
-	verify(payload: proto.attribute.VerifyAttribute): void
+	verify(payload: proto.attribute.VerifyAttribute): Promise<ProtoMessage>
 	change(payload: proto.attribute.ChangeAttribute, newAttribute: Attribute): void
 	remove(payload: proto.attribute.RemoveAttribute): void
 }
 
 type Dependencies = {
+	fetch: Fetch
 	cache: DB
 	store: AttributeStore
 	commuter: SocketCommuter
 }
-function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeProtocol {
+function attributeProtocolFactory({
+	fetch,
+	store,
+	cache,
+	commuter
+}: Dependencies): AttributeProtocol {
 	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
 		store.update((state) => applyAttributeEvent(state, event))
 	})
@@ -49,15 +55,14 @@ function attributeProtocolFactory({ store, commuter }: Dependencies): AttributeP
 				return state
 			})
 		},
-		verify(payload) {
-			sendCommand(commuter, {
-				$case: 'verifyAttribute',
-				verifyAttribute: payload
-			})
-			store.update((state) => {
-				state.get(payload.id).verifiedAt = getRespliceNow()
-				return state
-			})
+		async verify(payload) {
+			return await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'verifyAttribute',
+					verifyAttribute: payload
+				}
+			)
 		},
 		change(payload, newAttribute) {
 			sendCommand(commuter, {

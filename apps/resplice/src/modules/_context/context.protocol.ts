@@ -10,8 +10,11 @@ import {
 import { SocketStatus } from '$modules/_context/context.types'
 import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'
+import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
+import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
 
 export interface ContextProtocol {
+	loadCache: () => Promise<void>
 	openSocket: (session: Session) => Promise<void>
 }
 
@@ -50,66 +53,71 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 		}))
 	}
 
-	function onSocketMessage({ event, error, state }: ProtoMessage) {
+	function onSocketMessage({ error, state }: ProtoMessage) {
 		if (error) {
 			// TODO: trigger toast
 			console.error(error)
 			return
 		}
 
-		if (event) {
-			stores.context.update((state) => ({
-				...state,
-				events: [event, ...state.events]
-			}))
-		}
+		if (state && state.events) {
+			const events = state.events
 
-		if (state) {
-			// TODO
-			console.log(state)
+			stores.account.update((state) => {
+				let aggregate: AccountAggregate = state
+				events.forEach((event) => {
+					aggregate = applyAccountEvent(aggregate, event)
+				})
+				return aggregate
+			})
+
+			stores.attribute.update((state) => {
+				let aggregate: AttributeAggregate = state
+				events.forEach((event) => {
+					aggregate = applyAttributeEvent(aggregate, event)
+				})
+				return aggregate
+			})
 		}
 	}
 
 	function onSocketError(e: Extract<SocketEvent, { type: SocketEventType.ERRORED }>) {
-		if (navigator.onLine && document.hasFocus()) {
-			reconnect()
-		} else {
-			stores.context.update((state) => ({
-				...state,
-				socketStatus: SocketStatus.DISCONNECTED,
-				error: e.error
-			}))
-			window.addEventListener('online', function handler() {
-				reconnect()
-				window.removeEventListener('online', handler)
-			})
-			window.addEventListener('focus', function handler() {
-				reconnect()
-				window.removeEventListener('focus', handler)
-			})
-		}
+		// TODO: trigger toast
+		console.error(e.error)
 	}
 
-	function onSocketClose() {
+	async function onSocketClose(code: number) {
+		// Code 3000: Unauthorized
+		if (code === 3000) {
+			// TODO: trigger toast
+			await cache.clear()
+			location.replace(config.authUrl)
+			return
+		}
+
+		tryReconnect()
+	}
+
+	function tryReconnect() {
 		if (navigator.onLine && document.hasFocus()) {
-			reconnect()
+			reopen()
 		} else {
 			stores.context.update((state) => ({
 				...state,
 				socketStatus: SocketStatus.DISCONNECTED
 			}))
 			window.addEventListener('online', function handler() {
-				reconnect()
+				reopen()
 				window.removeEventListener('online', handler)
 			})
 			window.addEventListener('focus', function handler() {
-				reconnect()
+				reopen()
 				window.removeEventListener('focus', handler)
 			})
 		}
 	}
 
-	function reconnect() {
+	function reopen() {
 		const unsubscribe = stores.session.subscribe(async (state) => {
 			await openSocket(state.currentSession)
 		})
@@ -128,13 +136,27 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				onSocketError(e)
 				break
 			case SocketEventType.CLOSED:
-				onSocketClose()
+				onSocketClose(e.code)
 				break
 		}
 	})
 
 	return {
-		openSocket
+		openSocket,
+		async loadCache() {
+			const { events } = await cache.read<proto.Event>('events')
+
+			let accountAggregate: AccountAggregate | null = null
+			let attributeAggregate: AttributeAggregate = new Map()
+
+			events.forEach((event) => {
+				accountAggregate = applyAccountEvent(accountAggregate, event)
+				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
+			})
+
+			stores.account.set(accountAggregate)
+			stores.attribute.set(attributeAggregate)
+		}
 	}
 }
 

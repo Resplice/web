@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { AttributeType, type Attribute } from '@resplice/utils'
-	import { PartyBannerIcon, AttributeItem } from '@resplice/components'
+	import { PartyBannerIcon, AttributeItem, Link } from '@resplice/components'
 	import Rsvp from '$common/components/Rsvp.svelte'
 
 	const dateTime: Attribute = {
@@ -52,6 +52,11 @@
 		<AttributeItem attribute={dateTime} itemType="contact" />
 		<AttributeItem attribute={location} itemType="contact" />
 		<AttributeItem attribute={link} itemType="contact" />
+
+		<p class="pt-2">
+			Want to learn more about the app?
+			<Link href="https://www.resplice.com">Check out Resplice.com</Link>
+		</p>
 	</div>
 
 	<Rsvp />

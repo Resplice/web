@@ -24,7 +24,7 @@
 
 <form class="flex flex-col items-center justify-between mt-4 px-2 flex-1">
 	<div class="w-full flex flex-col space-y-6">
-		<TextField name="attribute-name" label="Name" bind:value={name} error={formErrs.name} />
+		<TextField name="attribute-name" label="Label" bind:value={name} error={formErrs.name} />
 		<TextField
 			name="email"
 			label="Email"

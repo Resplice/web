@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import store, { AuthStatus, INITIAL_STORE } from '$lib/store'
-	import { AttributeItem, PartyBannerIcon } from '@resplice/components'
+	import { AttributeItem, PartyBannerIcon, Link } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
 	import { AttributeType, type Attribute } from '@resplice/utils'
 
@@ -62,6 +62,11 @@
 		<AttributeItem attribute={dateTime} itemType="user" disableActions />
 		<AttributeItem attribute={location} itemType="user" />
 		<AttributeItem attribute={link} itemType="user" />
+
+		<p class="pt-2">
+			Want to learn more about the app?
+			<Link href="https://www.resplice.com">Check out Resplice.com</Link>
+		</p>
 	</div>
 
 	<div class="w-full px-8 py-4 flex flex-col">

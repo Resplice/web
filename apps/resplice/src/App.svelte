@@ -29,7 +29,7 @@
 			}
 
 			await initializeIntl()
-			await protocol.loadCache()
+			await protocol.ctx.loadCache()
 			await protocol.ctx.openSocket(session)
 
 			return true
@@ -54,6 +54,8 @@
 		<ConnectionStatus />
 		<Router />
 		<!-- <ToastProvider /> -->
+	{:else}
+		<AppLoading />
 	{/if}
 {:catch error}
 	<AppError {error} />

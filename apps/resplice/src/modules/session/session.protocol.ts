@@ -13,7 +13,6 @@ import { sendCommand } from '$common/protocol/helpers'
 import type { SocketCommuter } from '$common/workers/socket/socketCommuter'
 import type { Session } from '$modules/session/session.types'
 import type { SessionStore } from '$modules/session/session.store'
-import { SocketCommandType } from '$common/workers/socket/socket.types'
 
 export interface SessionProtocol {
 	load(): Promise<Session | null>
@@ -109,14 +108,14 @@ function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies)
 			return currentSession
 		},
 		async logout() {
+			// TODO: Implement with fetch
 			sendCommand(commuter, {
 				$case: 'endSession',
 				endSession: {
 					sessionId: 0
 				}
 			})
-			commuter.postMessage({ type: SocketCommandType.CLOSE })
-			await cache.delete()
+			await cache.clear()
 			location.replace(config.authUrl)
 		}
 	}

@@ -1,4 +1,5 @@
 import proto from '@resplice/proto'
+import { imageToDataUri } from '@resplice/utils'
 import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
@@ -8,7 +9,7 @@ import type { AccountStore } from '$modules/account/account.store'
 export interface AccountProtocol {
 	changeName(payload: proto.account.ChangeAccountName): void
 	changeHandle(payload: proto.account.ChangeAccountHandle): void
-	uploadAvatar(payload: proto.account.ChangeAccountAvatar): void
+	uploadAvatar(payload: Blob): Promise<void>
 	// deleteAccount(payload: proto.account.DeleteAccount): void
 }
 
@@ -37,12 +38,12 @@ function accountProtocolFactory({ store, commuter }: Dependencies): AccountProto
 			})
 			store.update((state) => ({ ...state, handle: payload.handle }))
 		},
-		uploadAvatar(payload) {
+		async uploadAvatar(payload) {
 			sendCommand(commuter, {
 				$case: 'changeAccountAvatar',
-				changeAccountAvatar: payload
+				changeAccountAvatar: { avatar: await imageToDataUri(payload) }
 			})
-			const avatarUrl = URL.createObjectURL(new File([payload.avatar], 'avatar'))
+			const avatarUrl = URL.createObjectURL(payload)
 			store.update((state) => ({ ...state, avatarUrl }))
 		}
 		// deleteAccount(payload) {

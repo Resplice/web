@@ -11,8 +11,6 @@ import attributeProtocolFactory, {
 } from '$modules/attribute/attribute.protocol'
 import inviteProtocolFactory, { type InviteProtocol } from '$modules/invite/invite.protocol'
 import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/session.protocol'
-import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
-import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
 
 export interface RespliceProtocol {
 	ctx: ContextProtocol
@@ -20,7 +18,6 @@ export interface RespliceProtocol {
 	attribute: AttributeProtocol
 	invite: InviteProtocol
 	session: SessionProtocol
-	loadCache: () => Promise<void>
 	rsvp: (accessKey: Uint8Array, selection: 'yes' | 'no' | 'maybe') => Promise<void>
 }
 
@@ -39,6 +36,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 		}),
 		account: accountProtocolFactory({ cache: db, store: stores.account, commuter: socketCommuter }),
 		attribute: attributeProtocolFactory({
+			fetch,
 			cache: db,
 			store: stores.attribute,
 			commuter: socketCommuter
@@ -50,20 +48,6 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.session,
 			commuter: socketCommuter
 		}),
-		async loadCache() {
-			const { events } = await db.read<proto.Event>('events')
-
-			let accountAggregate: AccountAggregate | null = null
-			let attributeAggregate: AttributeAggregate = new Map()
-
-			events.forEach((event) => {
-				accountAggregate = applyAccountEvent(accountAggregate, event)
-				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
-			})
-
-			stores.account.set(accountAggregate)
-			stores.attribute.set(attributeAggregate)
-		},
 		async rsvp(accessKey, selection) {
 			const data = proto.SecCommand.encode({
 				id: 0,

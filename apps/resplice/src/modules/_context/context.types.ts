@@ -1,5 +1,3 @@
-import type proto from '@resplice/proto'
-
 export enum SocketStatus {
 	DISCONNECTED = 'DISCONNECTED',
 	CONNECTING = 'CONNECTING',
@@ -15,6 +13,5 @@ type Settings = {
 export type ContextState = {
 	socketStatus: SocketStatus
 	error: string | null
-	events: proto.Message[]
 	settings: Settings
 }

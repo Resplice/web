@@ -49,6 +49,7 @@ type ErroredEvent = {
 }
 type ClosedEvent = {
 	type: SocketEventType.CLOSED
+	code: number
 	reason?: string
 }
 export type SocketEvent = OpenedEvent | ReceivedEvent | SentEvent | ErroredEvent | ClosedEvent
