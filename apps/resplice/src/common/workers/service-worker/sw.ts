@@ -2,7 +2,8 @@
 // https://github.com/elk-zone/elk/tree/main/service-worker
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
-// import { NavigationRoute, registerRoute } from 'workbox-routing'
+import { registerRoute } from 'workbox-routing'
+import { StaleWhileRevalidate } from 'workbox-strategies'
 // import { onPush } from '$common/workers/service-worker/push-notifications'
 
 declare const self: ServiceWorkerGlobalScope
@@ -29,9 +30,18 @@ precacheAndRoute(cacheEntries)
 // to allow work offline
 // registerRoute(new NavigationRoute(createHandlerBoundToURL('/'), { allowlist }))
 
+// Cache fonts
+registerRoute(
+	/^https:\/\/fonts\.googleapis\.com/,
+	new StaleWhileRevalidate({
+		cacheName: 'google-fonts'
+	})
+)
+
 // self.addEventListener('push', onPush)
 // self.addEventListener('notificationclick', onNotificationClick)
 // self.addEventListener('fetch', onShareTarget)
 
-// self.skipWaiting()
-// clientsClaim()
+// Force update SW for now
+self.skipWaiting()
+clientsClaim()
