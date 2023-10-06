@@ -1,0 +1,83 @@
+---
+import Footer from '../components/Footer.astro'
+
+type Props = {
+	title: string
+}
+
+const { title } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="dark">
+		<div class="w-full h-full flex flex-col max-w-5xl m-auto dark:text-slate-100">
+			<slot />
+			<Footer />
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;600;700&display=swap');
+
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
+
+	:root {
+		--brand-primary: 27, 188, 155;
+		--brand-primary-dark: 27, 188, 155;
+		--brand-primary-light: 27, 188, 155;
+		font-family:
+			'Open Sans',
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			Roboto,
+			Oxygen,
+			Ubuntu,
+			Cantarell,
+			'Helvetica Neue',
+			sans-serif;
+
+		/* color-scheme: light dark; */
+
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-text-size-adjust: 100%;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	html {
+		background-color: #0e0d0d;
+	}
+
+	html,
+	body,
+	#app {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	:where(h1, h2, h3, h4, h5, h6) {
+		font-family: 'Asap', serif;
+	}
+</style>

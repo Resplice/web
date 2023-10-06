@@ -1,0 +1,10 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Conversation from '../components/Conversation.svelte'
+---
+
+<Layout title="Welcome to Astro.">
+	<main class="flex-1 w-full dark:bg-zinc-900 ring-1 dark:ring-zinc-300/20 p-8">
+		<Conversation client:load />
+	</main>
+</Layout>

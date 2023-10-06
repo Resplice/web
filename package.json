@@ -24,19 +24,21 @@
 		"packages:build": "turbo run build --filter './packages/*'",
 		"apps:build": "turbo run build --filter './apps/*'",
 		"apps:preview": "turbo run preview --filter './apps/*'",
+		"landing:dev": "turbo run dev --filter landing",
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^6.3.0",
-		"@typescript-eslint/parser": "^6.3.0",
-		"eslint": "^8.46.0",
+		"@typescript-eslint/eslint-plugin": "^6.7.4",
+		"@typescript-eslint/parser": "^6.7.4",
+		"eslint": "^8.50.0",
 		"eslint-config-custom": "*",
 		"eslint-config-prettier": "^9.0.0",
-		"eslint-plugin-svelte": "^2.32.4",
-		"prettier": "^3.0.1",
+		"eslint-plugin-svelte": "^2.34.0",
+		"prettier": "^3.0.3",
+		"prettier-plugin-astro": "^0.12.0",
 		"prettier-plugin-svelte": "^3.0.3",
-		"turbo": "1.10.12",
-		"typescript": "^5.1.6"
+		"turbo": "1.10.15",
+		"typescript": "^5.2.2"
 	},
 	"packageManager": "npm@9.8.0",
 	"workspaces": [
