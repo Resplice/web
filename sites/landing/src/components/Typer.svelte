@@ -20,6 +20,9 @@
 				case 'type':
 					type.typeString(action.text)
 					break
+				case 'delete':
+					type.deleteChars(action.characters)
+					break
 				case 'pause':
 					type.pauseFor(action.duration)
 					break
@@ -56,5 +59,10 @@
 <style>
 	:global(.hide-cursor .Typewriter__cursor) {
 		display: none;
+	}
+
+	:global(.Typewriter__wrapper a) {
+		color: #1bbc9b;
+		text-decoration: underline;
 	}
 </style>

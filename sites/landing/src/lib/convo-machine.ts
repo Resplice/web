@@ -44,7 +44,7 @@ const convoMachine: ConversationMachine = {
 		GREETING: {
 			id: 'GREETING',
 			instructions: [
-				{ type: 'system', text: 'Resplice & Other Guy have joined the chat.' },
+				{ type: 'system', text: 'You & Resplice have joined the chat.' },
 				{
 					type: 'type',
 					ctx: 'resplice',
@@ -56,9 +56,40 @@ const convoMachine: ConversationMachine = {
 					]
 				},
 				{
+					type: 'prompt',
+					options: [
+						{
+							prompt: 'Yes, tell me more!',
+							path: 'INTRO_2'
+						},
+						{
+							prompt: "Nah I'm good.",
+							path: 'BAD_ENDING'
+						}
+					]
+				}
+			]
+		},
+		INTRO_2: {
+			id: 'INTRO_2',
+			instructions: [
+				{
 					type: 'type',
-					ctx: 'person',
-					actions: [{ type: 'type', text: 'Yes I am ready! Tell me more!' }]
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'Resplice allows you to share'
+						},
+						{
+							type: 'delete',
+							characters: 5
+						},
+						{
+							type: 'type',
+							text: '*securely* share pretty much anything about yourself.'
+						}
+					]
 				},
 				{
 					type: 'type',
@@ -66,34 +97,31 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'Okay let me tell you more! Bla Bla Bla...'
+							text: "But let's not get ahead of ourselves on technical details."
 						}
 					]
 				},
-				{
-					type: 'type',
-					ctx: 'person',
-					actions: [{ type: 'type', text: 'Wow very cool, I will be sure to check it out!' }]
-				},
-				{ type: 'system', text: 'Other Guy has left the chat.' },
-				{ type: 'system', text: 'You have joined chat.' },
 				{
 					type: 'prompt',
 					options: [
 						{
-							prompt: 'Yeah keep going...',
-							path: 'PROBLEM'
+							prompt: 'Why would I use this?',
+							path: 'WHY'
 						},
 						{
-							prompt: "Wait maybe you shouldn't tell me more",
-							path: 'ENDING'
+							prompt: 'Is it ready?',
+							path: 'READY'
+						},
+						{
+							prompt: 'How does it work?',
+							path: 'HOW'
 						}
 					]
 				}
 			]
 		},
-		PROBLEM: {
-			id: 'PROBLEM',
+		WHY: {
+			id: 'WHY',
 			instructions: [
 				{
 					type: 'type',
@@ -101,14 +129,31 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'Problem goes here'
+							text: "You won't need to manage your contacts ever again. They manage themselves in your phone."
+						}
+					]
+				},
+				{
+					type: 'prompt',
+					options: [
+						{
+							prompt: 'Is it ready?',
+							path: 'READY'
+						},
+						{
+							prompt: 'How does it work?',
+							path: 'HOW'
+						},
+						{
+							prompt: 'I like to party.',
+							path: 'PARTY_ENDING'
 						}
 					]
 				}
 			]
 		},
-		ENDING: {
-			id: 'ENDING',
+		READY: {
+			id: 'READY',
 			instructions: [
 				{
 					type: 'type',
@@ -116,7 +161,117 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'Ending goes here'
+							text: "It's almost ready... but while you are waiting, are you interested in a party? 🎉"
+						}
+					]
+				},
+				{
+					type: 'prompt',
+					options: [
+						{
+							prompt: 'But why would I use this?',
+							path: 'WHY'
+						},
+						{
+							prompt: 'But how does it work?',
+							path: 'HOW'
+						},
+						{
+							prompt: 'I like to party.',
+							path: 'PARTY_ENDING'
+						}
+					]
+				}
+			]
+		},
+		HOW: {
+			id: 'HOW',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'You just store all the information about yourself in your profile and choose who gets to see what.'
+						}
+					]
+				},
+				{
+					type: 'prompt',
+					options: [
+						{
+							prompt: 'Why would I use this?',
+							path: 'WHY'
+						},
+						{
+							prompt: 'Is it ready?',
+							path: 'READY'
+						},
+						{
+							prompt: 'I like to party.',
+							path: 'PARTY_ENDING'
+						}
+					]
+				}
+			]
+		},
+		PARTY_ENDING: {
+			id: 'PARTY_ENDING',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'We do too! And that is why we would like to invite you to our <a href="https://app.resplice.com">launch party!</a> 🎉. Come hang out and learn more about what we are building.'
+						},
+						{
+							type: 'type',
+							text: 'See you there!'
+						}
+					]
+				},
+				{ type: 'system', text: 'Resplice has left the chat.' }
+			]
+		},
+		GOOD_ENDING: {
+			id: 'GOOD_ENDING',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'Thanks for chatting with us about the future of information sharing! We are still working on getting the app ready!'
+						}
+					]
+				},
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'In the meantime, we would like to invite you to our <a href="https://app.resplice.com">launch party!</a> 🎉. See you there.'
+						}
+					]
+				},
+				{ type: 'system', text: 'Resplice has left the chat.' }
+			]
+		},
+		BAD_ENDING: {
+			id: 'BAD_ENDING',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'That\'s too bad... if you are ever interested in learning more about Resplice we have a <a href="https://app.resplice.com">launch party</a> coming up! Hope to see you there.'
 						}
 					]
 				},

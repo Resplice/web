@@ -17,10 +17,6 @@
 
 	let convoState: ConverstationState = initializeConversation()
 
-	$: {
-		console.log(convoState)
-	}
-
 	function initializeConversation() {
 		const state = convo.start()
 		return {
