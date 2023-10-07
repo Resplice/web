@@ -113,11 +113,13 @@ export const InviteCreated = {
 
   fromJSON(object: any): InviteCreated {
     return {
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-      attributeIds: Array.isArray(object?.attributeIds) ? object.attributeIds.map((e: any) => Number(e)) : [],
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
@@ -202,8 +204,8 @@ export const InviteShareAdded = {
 
   fromJSON(object: any): InviteShareAdded {
     return {
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
@@ -276,8 +278,8 @@ export const InviteShareRemoved = {
 
   fromJSON(object: any): InviteShareRemoved {
     return {
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
@@ -339,7 +341,7 @@ export const InviteDeleted = {
   },
 
   fromJSON(object: any): InviteDeleted {
-    return { inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0 };
+    return { inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0 };
   },
 
   toJSON(message: InviteDeleted): unknown {
@@ -363,7 +365,8 @@ export const InviteDeleted = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

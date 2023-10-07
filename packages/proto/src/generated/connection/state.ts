@@ -100,7 +100,7 @@ export const PendingAttribute = {
   fromJSON(object: any): PendingAttribute {
     return {
       attributeType: isSet(object.attributeType) ? attributeTypeFromJSON(object.attributeType) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
     };
   },
 
@@ -223,15 +223,15 @@ export const PendingConnection = {
 
   fromJSON(object: any): PendingConnection {
     return {
-      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
       inviteType: isSet(object.inviteType) ? inviteTypeFromJSON(object.inviteType) : 0,
-      inviteValue: isSet(object.inviteValue) ? String(object.inviteValue) : "",
-      pendingAttributes: Array.isArray(object?.pendingAttributes)
+      inviteValue: isSet(object.inviteValue) ? globalThis.String(object.inviteValue) : "",
+      pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
         ? object.pendingAttributes.map((e: any) => PendingAttribute.fromJSON(e))
         : [],
-      name: isSet(object.name) ? String(object.name) : "",
-      avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
     };
   },
 
@@ -376,8 +376,8 @@ export const ConnectionAttribute = {
 
   fromJSON(object: any): ConnectionAttribute {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -525,11 +525,11 @@ export const Connection = {
 
   fromJSON(object: any): Connection {
     return {
-      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
-      handle: isSet(object.handle) ? String(object.handle) : "",
-      attributes: Array.isArray(object?.attributes)
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
+      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
+      attributes: globalThis.Array.isArray(object?.attributes)
         ? object.attributes.map((e: any) => ConnectionAttribute.fromJSON(e))
         : [],
     };
@@ -616,10 +616,12 @@ export const Connections = {
 
   fromJSON(object: any): Connections {
     return {
-      pendingConnections: Array.isArray(object?.pendingConnections)
+      pendingConnections: globalThis.Array.isArray(object?.pendingConnections)
         ? object.pendingConnections.map((e: any) => PendingConnection.fromJSON(e))
         : [],
-      connections: Array.isArray(object?.connections) ? object.connections.map((e: any) => Connection.fromJSON(e)) : [],
+      connections: globalThis.Array.isArray(object?.connections)
+        ? object.connections.map((e: any) => Connection.fromJSON(e))
+        : [],
     };
   },
 
@@ -648,7 +650,8 @@ export const Connections = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

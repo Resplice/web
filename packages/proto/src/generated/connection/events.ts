@@ -82,10 +82,10 @@ export const ConnectionAdded = {
 
   fromJSON(object: any): ConnectionAdded {
     return {
-      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
-      alias: isSet(object.alias) ? String(object.alias) : "",
-      sharedAttributeIds: Array.isArray(object?.sharedAttributeIds)
-        ? object.sharedAttributeIds.map((e: any) => Number(e))
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
+      sharedAttributeIds: globalThis.Array.isArray(object?.sharedAttributeIds)
+        ? object.sharedAttributeIds.map((e: any) => globalThis.Number(e))
         : [],
     };
   },
@@ -164,7 +164,7 @@ export const DeclineInvite = {
   fromJSON(object: any): DeclineInvite {
     return {
       type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
     };
   },
 
@@ -193,7 +193,8 @@ export const DeclineInvite = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
