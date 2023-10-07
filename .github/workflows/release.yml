@@ -6,23 +6,24 @@ on:
   release:
     types: [published]
 
-env:
-  APP_NAME: ${{ (startsWith(github.event.release.name, 'Resplice') && 'resplice') || (startsWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
-  VERCEL_PROJECT_ID: ${{ (startsWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startsWith(github.event.release.name, 'Reauth') && secrets.REAUTH_VERCEL_PROJECT_ID) || '' }}
+# env:
+#   APP_NAME: ${{ (startsWith(github.event.release.name, 'Resplice') && 'resplice') || (startsWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
+#   VERCEL_PROJECT_ID: ${{ (startsWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startsWith(github.event.release.name, 'Reauth') && secrets.REAUTH_VERCEL_PROJECT_ID) || '' }}
 
+# TODO: Make this better
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
     with:
-      app: ${{ env.APP_NAME }}
+      app: ${{ (startsWith(github.event.release.name, 'Resplice') && 'resplice') || (startsWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
 
   cd:
     needs: ci
     uses: ./.github/workflows/cd.yml
     with:
-      app: ${{ env.APP_NAME }}
+      app: ${{ (startsWith(github.event.release.name, 'Resplice') && 'resplice') || (startsWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
       environment: production
     secrets:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+      VERCEL_PROJECT_ID: ${{ (startsWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startsWith(github.event.release.name, 'Reauth') && secrets.REAUTH_VERCEL_PROJECT_ID) || '' }}
       VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
