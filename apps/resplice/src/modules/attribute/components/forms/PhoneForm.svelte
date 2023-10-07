@@ -2,6 +2,7 @@
 	import parsePhoneNumber, { isValidPhoneNumber, type CountryCode } from 'libphonenumber-js'
 	import { createEventDispatcher } from 'svelte'
 	import { TextField, PhoneField, Toggle } from '@resplice/components'
+	import AttributeNameField from '$modules/attribute/components/forms/AttributeNameField.svelte'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
 
 	const dispatch = createEventDispatcher()
@@ -37,7 +38,7 @@
 
 <form class="flex flex-col items-center justify-between mt-4 px-2 flex-1" on:submit|preventDefault>
 	<div class="w-full flex flex-col space-y-6">
-		<TextField name="attribute-name" label="Label" bind:value={name} error={formErrs.name} />
+		<AttributeNameField bind:name error={formErrs.name} />
 		<PhoneField name="phone" label="Phone" bind:phone error={formErrs.phone} />
 		<Toggle name="smsEnabled" label="Allow SMS" bind:isActive={smsEnabled} />
 	</div>
