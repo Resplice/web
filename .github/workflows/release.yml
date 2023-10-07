@@ -14,13 +14,13 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
     with:
-      app: $APP_NAME
+      app: ${{ env.APP_NAME }}
 
   cd:
     needs: ci
     uses: ./.github/workflows/cd.yml
     with:
-      app: $APP_NAME
+      app: ${{ env.APP_NAME }}
       environment: production
     secrets:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
