@@ -159,8 +159,8 @@ export const Phone = {
 
   fromJSON(object: any): Phone {
     return {
-      number: isSet(object.number) ? String(object.number) : "",
-      smsEnabled: isSet(object.smsEnabled) ? Boolean(object.smsEnabled) : false,
+      number: isSet(object.number) ? globalThis.String(object.number) : "",
+      smsEnabled: isSet(object.smsEnabled) ? globalThis.Boolean(object.smsEnabled) : false,
     };
   },
 
@@ -222,7 +222,7 @@ export const Email = {
   },
 
   fromJSON(object: any): Email {
-    return { email: isSet(object.email) ? String(object.email) : "" };
+    return { email: isSet(object.email) ? globalThis.String(object.email) : "" };
   },
 
   toJSON(message: Email): unknown {
@@ -330,12 +330,12 @@ export const Address = {
 
   fromJSON(object: any): Address {
     return {
-      streetAddress1: isSet(object.streetAddress1) ? String(object.streetAddress1) : "",
-      streetAddress2: isSet(object.streetAddress2) ? String(object.streetAddress2) : "",
-      locality: isSet(object.locality) ? String(object.locality) : "",
-      region: isSet(object.region) ? String(object.region) : "",
-      postalCode: isSet(object.postalCode) ? String(object.postalCode) : "",
-      country: isSet(object.country) ? String(object.country) : "",
+      streetAddress1: isSet(object.streetAddress1) ? globalThis.String(object.streetAddress1) : "",
+      streetAddress2: isSet(object.streetAddress2) ? globalThis.String(object.streetAddress2) : "",
+      locality: isSet(object.locality) ? globalThis.String(object.locality) : "",
+      region: isSet(object.region) ? globalThis.String(object.region) : "",
+      postalCode: isSet(object.postalCode) ? globalThis.String(object.postalCode) : "",
+      country: isSet(object.country) ? globalThis.String(object.country) : "",
     };
   },
 
@@ -424,8 +424,8 @@ export const Social = {
 
   fromJSON(object: any): Social {
     return {
-      url: isSet(object.url) ? String(object.url) : "",
-      handle: isSet(object.handle) ? String(object.handle) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
     };
   },
 
@@ -498,8 +498,8 @@ export const Credential = {
 
   fromJSON(object: any): Credential {
     return {
-      identity: isSet(object.identity) ? String(object.identity) : "",
-      passcode: isSet(object.passcode) ? String(object.passcode) : "",
+      identity: isSet(object.identity) ? globalThis.String(object.identity) : "",
+      passcode: isSet(object.passcode) ? globalThis.String(object.passcode) : "",
     };
   },
 
@@ -572,8 +572,8 @@ export const Coordinate = {
 
   fromJSON(object: any): Coordinate {
     return {
-      latitude: isSet(object.latitude) ? Number(object.latitude) : 0,
-      longitude: isSet(object.longitude) ? Number(object.longitude) : 0,
+      latitude: isSet(object.latitude) ? globalThis.Number(object.latitude) : 0,
+      longitude: isSet(object.longitude) ? globalThis.Number(object.longitude) : 0,
     };
   },
 
@@ -656,9 +656,9 @@ export const DateMessage = {
 
   fromJSON(object: any): DateMessage {
     return {
-      year: isSet(object.year) ? Number(object.year) : 0,
-      month: isSet(object.month) ? Number(object.month) : 0,
-      day: isSet(object.day) ? Number(object.day) : 0,
+      year: isSet(object.year) ? globalThis.Number(object.year) : 0,
+      month: isSet(object.month) ? globalThis.Number(object.month) : 0,
+      day: isSet(object.day) ? globalThis.Number(object.day) : 0,
     };
   },
 
@@ -724,7 +724,7 @@ export const Link = {
   },
 
   fromJSON(object: any): Link {
-    return { url: isSet(object.url) ? String(object.url) : "" };
+    return { url: isSet(object.url) ? globalThis.String(object.url) : "" };
   },
 
   toJSON(message: Link): unknown {
@@ -781,7 +781,7 @@ export const Text = {
   },
 
   fromJSON(object: any): Text {
-    return { text: isSet(object.text) ? String(object.text) : "" };
+    return { text: isSet(object.text) ? globalThis.String(object.text) : "" };
   },
 
   toJSON(message: Text): unknown {
@@ -805,7 +805,8 @@ export const Text = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

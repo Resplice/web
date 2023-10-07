@@ -2,7 +2,7 @@ import { writable } from 'svelte/store'
 import type { Attribute } from '$modules/account/account.types'
 
 export type AttributeState = Map<number, Attribute>
-const attributeStore = writable<AttributeState | null>(null)
+const attributeStore = writable<AttributeState>(new Map())
 
 export type AttributeStore = typeof attributeStore
 

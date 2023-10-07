@@ -7,17 +7,11 @@
 	export let value: CredentialValue
 	let showPasscode = false
 
-	function show(e: PointerEvent) {
+	function toggle(e: PointerEvent | MouseEvent) {
 		e.preventDefault()
 		e.stopPropagation()
 		e.stopImmediatePropagation()
-		showPasscode = true
-	}
-	function hide(e: PointerEvent) {
-		e.preventDefault()
-		e.stopPropagation()
-		e.stopImmediatePropagation()
-		showPasscode = false
+		showPasscode = !showPasscode
 	}
 </script>
 
@@ -37,10 +31,7 @@
 			Icon={showPasscode ? EyeOffIcon : EyeIcon}
 			width={18}
 			height={18}
-			on:click={(e) => e.stopPropagation()}
-			on:pointerdown={show}
-			on:pointerup={hide}
-			on:pointerleave={hide}
+			on:click={toggle}
 		/>
 	</div>
 </div>

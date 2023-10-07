@@ -71,7 +71,7 @@ export const StartAuth = {
   },
 
   fromJSON(object: any): StartAuth {
-    return { phone: isSet(object.phone) ? String(object.phone) : "" };
+    return { phone: isSet(object.phone) ? globalThis.String(object.phone) : "" };
   },
 
   toJSON(message: StartAuth): unknown {
@@ -139,8 +139,8 @@ export const VerifyPhone = {
 
   fromJSON(object: any): VerifyPhone {
     return {
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      verifyCode: isSet(object.verifyCode) ? Number(object.verifyCode) : 0,
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
+      verifyCode: isSet(object.verifyCode) ? globalThis.Number(object.verifyCode) : 0,
     };
   },
 
@@ -223,9 +223,9 @@ export const CreateAccount = {
 
   fromJSON(object: any): CreateAccount {
     return {
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      name: isSet(object.name) ? String(object.name) : "",
-      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
     };
   },
 
@@ -291,7 +291,7 @@ export const DeleteAccount = {
   },
 
   fromJSON(object: any): DeleteAccount {
-    return { phone: isSet(object.phone) ? String(object.phone) : "" };
+    return { phone: isSet(object.phone) ? globalThis.String(object.phone) : "" };
   },
 
   toJSON(message: DeleteAccount): unknown {
@@ -379,10 +379,10 @@ export const StartSession = {
 
   fromJSON(object: any): StartSession {
     return {
-      accessToken: isSet(object.accessToken) ? String(object.accessToken) : "",
-      userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
-      ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
-      persist: isSet(object.persist) ? Boolean(object.persist) : false,
+      accessToken: isSet(object.accessToken) ? globalThis.String(object.accessToken) : "",
+      userAgent: isSet(object.userAgent) ? globalThis.String(object.userAgent) : "",
+      ipAddress: isSet(object.ipAddress) ? globalThis.String(object.ipAddress) : "",
+      persist: isSet(object.persist) ? globalThis.Boolean(object.persist) : false,
     };
   },
 
@@ -452,7 +452,7 @@ export const AuthorizeSocket = {
   },
 
   fromJSON(object: any): AuthorizeSocket {
-    return { lastEventId: isSet(object.lastEventId) ? Number(object.lastEventId) : 0 };
+    return { lastEventId: isSet(object.lastEventId) ? globalThis.Number(object.lastEventId) : 0 };
   },
 
   toJSON(message: AuthorizeSocket): unknown {
@@ -509,7 +509,7 @@ export const EndSession = {
   },
 
   fromJSON(object: any): EndSession {
-    return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
+    return { sessionId: isSet(object.sessionId) ? globalThis.Number(object.sessionId) : 0 };
   },
 
   toJSON(message: EndSession): unknown {
@@ -533,7 +533,8 @@ export const EndSession = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

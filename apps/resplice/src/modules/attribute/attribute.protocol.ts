@@ -42,7 +42,7 @@ function attributeProtocolFactory({
 			})
 			const placeholderAttribute = {
 				id: 0,
-				type: mapProtoAttributeType(payload.value.$case),
+				type: mapProtoAttributeType(payload.value?.$case),
 				name: payload.name,
 				value: mapProtoAttributeValue(payload.value),
 				sortOrder: 0,

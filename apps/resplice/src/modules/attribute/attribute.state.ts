@@ -17,6 +17,8 @@ export function applyAttributeEvent(
 	aggregate: AttributeAggregate,
 	event: proto.Event
 ): AttributeAggregate {
+	if (!event.payload) throw new Error('Bad Event Payload')
+
 	switch (event.payload.$case) {
 		case 'accountCreated':
 			aggregate.set(event.payload.accountCreated.phoneId, {
@@ -35,7 +37,7 @@ export function applyAttributeEvent(
 			aggregate.delete(0)
 			aggregate.set(event.payload.attributeAdded.id, {
 				id: event.payload.attributeAdded.id,
-				type: mapProtoAttributeType(event.payload.attributeAdded.value.$case),
+				type: mapProtoAttributeType(event.payload.attributeAdded.value?.$case),
 				name: event.payload.attributeAdded.name,
 				value: mapProtoAttributeValue(event.payload.attributeAdded.value),
 				sortOrder: 0,
@@ -71,6 +73,8 @@ export function mapProtoAttributeType(
 export function mapProtoAttributeValue(
 	value: proto.attribute.AttributeAdded['value'] | proto.attribute.AttributeChanged['value']
 ): AttributeValue {
+	if (!value) throw new Error('Bad Attribute Value')
+
 	switch (value.$case) {
 		case 'address':
 			return value.address

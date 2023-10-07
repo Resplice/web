@@ -115,7 +115,7 @@ export const AuthChanged = {
   fromJSON(object: any): AuthChanged {
     return {
       authStatus: isSet(object.authStatus) ? authStatusFromJSON(object.authStatus) : 0,
-      accessToken: isSet(object.accessToken) ? String(object.accessToken) : "",
+      accessToken: isSet(object.accessToken) ? globalThis.String(object.accessToken) : "",
     };
   },
 
@@ -198,9 +198,9 @@ export const SessionStarted = {
 
   fromJSON(object: any): SessionStarted {
     return {
-      sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0,
-      userAgent: isSet(object.userAgent) ? String(object.userAgent) : "",
-      ipAddress: isSet(object.ipAddress) ? String(object.ipAddress) : "",
+      sessionId: isSet(object.sessionId) ? globalThis.Number(object.sessionId) : 0,
+      userAgent: isSet(object.userAgent) ? globalThis.String(object.userAgent) : "",
+      ipAddress: isSet(object.ipAddress) ? globalThis.String(object.ipAddress) : "",
     };
   },
 
@@ -266,7 +266,7 @@ export const SessionEnded = {
   },
 
   fromJSON(object: any): SessionEnded {
-    return { sessionId: isSet(object.sessionId) ? Number(object.sessionId) : 0 };
+    return { sessionId: isSet(object.sessionId) ? globalThis.Number(object.sessionId) : 0 };
   },
 
   toJSON(message: SessionEnded): unknown {
@@ -290,7 +290,8 @@ export const SessionEnded = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

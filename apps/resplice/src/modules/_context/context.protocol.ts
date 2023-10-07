@@ -1,4 +1,6 @@
-import proto, { type ProtoMessage } from '@resplice/proto'
+import proto, { errorToString, type ProtoMessage } from '@resplice/proto'
+import { capitalize } from '@resplice/utils'
+import { toast } from '@resplice/components'
 import config from '$services/config'
 import type { DB } from '$services/db'
 import { type SocketCommuter } from '$common/workers/socket/socketCommuter'
@@ -57,6 +59,15 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 		if (error) {
 			// TODO: trigger toast
 			console.error(error)
+			toast.new({
+				type: toast.type.DANGER,
+				title: 'Error',
+				message: capitalize(errorToString(error))
+			})
+			stores.attribute.update((state) => {
+				state.delete(0)
+				return state
+			})
 			return
 		}
 
@@ -72,7 +83,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			})
 
 			stores.attribute.update((state) => {
-				let aggregate: AttributeAggregate = state
+				let aggregate: AttributeAggregate = state || new Map()
 				events.forEach((event) => {
 					aggregate = applyAttributeEvent(aggregate, event)
 				})
@@ -119,6 +130,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 
 	function reopen() {
 		const unsubscribe = stores.session.subscribe(async (state) => {
+			if (!state.currentSession) return
 			await openSocket(state.currentSession)
 		})
 		unsubscribe()
@@ -146,7 +158,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 		async loadCache() {
 			const { events } = await cache.read<proto.Event>('events')
 
-			let accountAggregate: AccountAggregate | null = null
+			let accountAggregate: AccountAggregate = {} as AccountAggregate
 			let attributeAggregate: AttributeAggregate = new Map()
 
 			events.forEach((event) => {

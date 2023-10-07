@@ -82,3 +82,17 @@ async function deserializeState(
 	const decryptedEvent = await decrypt(decryptionKey, message_id, stateBytes)
 	return proto.State.decode(decryptedEvent)
 }
+
+export function errorToString(error: proto.Error) {
+	let message = proto.errorTypeToJSON(error.type).split('_').join(' ').toLowerCase()
+	if (error.type === proto.ErrorType.INVALID_INPUT) {
+		message =
+			message +
+			': ' +
+			error.fields
+				.map((f) => proto.inputFieldToJSON(f).split('_').join(' ').toLowerCase())
+				.join(', ')
+	}
+
+	return message
+}
