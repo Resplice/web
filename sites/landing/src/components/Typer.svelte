@@ -1,41 +1,34 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onMount, createEventDispatcher } from 'svelte'
 	import cx from 'clsx'
-	import RespliceRoundIcon from './RespliceRoundIcon.svelte'
 	// @ts-ignore
 	import Type from 'typewriter-effect/dist/core'
+	import type { Action, TypeCtx } from '../lib/convo-machine'
+	import RespliceRoundIcon from './RespliceRoundIcon.svelte'
 
-	type TypeCommand = {
-		type: 'type'
-		text: string
-	}
-	type PauseCommand = {
-		type: 'pause'
-		duration: number
-	}
-	type GoCommand = {
-		type: 'go'
-	}
-	type Commands = TypeCommand | PauseCommand | GoCommand
+	const dispatch = createEventDispatcher()
 
-	export let commands: Commands[]
-	export let ctx: 'resplice' | 'person'
+	export let actions: Action[]
+	export let ctx: TypeCtx
 	let messageEl: HTMLParagraphElement
+	let isFinished = false
 
 	onMount(() => {
 		const type = new Type(messageEl, { delay: 50 })
-		commands.forEach((command: any) => {
-			switch (command.type) {
+		actions.forEach((action: any) => {
+			switch (action.type) {
 				case 'type':
-					type.typeString(command.text)
+					type.typeString(action.text)
 					break
 				case 'pause':
-					type.pauseFor(command.duration)
-					break
-				case 'go':
-					type.start()
+					type.pauseFor(action.duration)
 					break
 			}
+		})
+		type.start()
+		type.callFunction(() => {
+			dispatch('done')
+			isFinished = true
 		})
 	})
 </script>
@@ -53,8 +46,15 @@
 	<p
 		class={cx('p-4 ring-2 ring-brand-primary w-72 rounded-xl', {
 			'rounded-tl-none': ctx === 'resplice',
-			'rounded-tr-none': ctx === 'person'
+			'rounded-tr-none': ctx === 'person',
+			'hide-cursor': isFinished
 		})}
 		bind:this={messageEl}
 	></p>
 </div>
+
+<style>
+	:global(.hide-cursor .Typewriter__cursor) {
+		display: none;
+	}
+</style>
