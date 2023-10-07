@@ -226,7 +226,13 @@ const convoMachine: ConversationMachine = {
 						{
 							type: 'type',
 							text: 'We do too! And that is why we would like to invite you to our <a href="https://app.resplice.com">launch party!</a> 🎉. Come hang out and learn more about what we are building.'
-						},
+						}
+					]
+				},
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
 						{
 							type: 'type',
 							text: 'See you there!'
