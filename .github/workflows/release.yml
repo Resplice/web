@@ -8,7 +8,7 @@ on:
 
 env:
   APP_NAME: ${{ (startsWith(github.event.release.name, 'Resplice') && 'resplice') || (startsWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
-  VERCEL_PROJECT_ID: ${{ (startsWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startsWith(github.event.release.name, 'Reauth') && REAUTH_VERCEL_PROJECT_ID) || '' }}
+  VERCEL_PROJECT_ID: ${{ (startsWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startsWith(github.event.release.name, 'Reauth') && secrets.REAUTH_VERCEL_PROJECT_ID) || '' }}
 
 jobs:
   ci:
