@@ -37,6 +37,13 @@ registerRoute(
 		cacheName: 'google-fonts'
 	})
 )
+// Cache cloudinary images
+registerRoute(
+	/^https:\/\/res\.cloudinary\.com/,
+	new StaleWhileRevalidate({
+		cacheName: 'cloudinary-images'
+	})
+)
 
 // self.addEventListener('push', onPush)
 // self.addEventListener('notificationclick', onNotificationClick)
