@@ -6,22 +6,23 @@ on:
   release:
     types: [published]
 
+env:
+  APP_NAME: ${{ (startWith(github.event.release.name, 'Resplice') && 'resplice') || (startWith(github.event.release.name, 'Reauth') && 'reauth') || '' }}
+  VERCEL_PROJECT_ID: ${{ (startWith(github.event.release.name, 'Resplice') && secrets.RESPLICE_VERCEL_PROJECT_ID) || (startWith(github.event.release.name, 'Reauth') && REAUTH_VERCEL_PROJECT_ID) || '' }}
+
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
     with:
-      # TODO: Get from tag name
-      app: reauth
+      app: $APP_NAME
 
   cd:
     needs: ci
     uses: ./.github/workflows/cd.yml
     with:
-      # TODO: Get from tag name
-      app: reauth
+      app: $APP_NAME
       environment: production
     secrets:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      # TODO: Get from tag name
-      VERCEL_PROJECT_ID: ${{ secrets.REAUTH_VERCEL_PROJECT_ID }}
+      VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
       VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
