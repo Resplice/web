@@ -26,12 +26,12 @@
 	"peerDependencies": {
 		"date-fns": "^2.30.0",
 		"date-fns-tz": "^2.0.0",
-		"libphonenumber-js": "^1.10.36"
+		"libphonenumber-js": "^1.10.47"
 	},
 	"devDependencies": {
-		"happy-dom": "^10.9.0",
-		"vite": "^4.4.9",
-		"vite-plugin-dts": "^3.5.1",
-		"vitest": "^0.32.2"
+		"happy-dom": "^12.9.0",
+		"vite": "^4.4.11",
+		"vite-plugin-dts": "^3.6.0",
+		"vitest": "^0.34.6"
 	}
 }

@@ -16,28 +16,28 @@
 		"format": "prettier --write --ignore-path=../../.prettierignore ."
 	},
 	"dependencies": {
-		"@dicebear/collection": "^6.0.4",
-		"@dicebear/core": "^6.0.4",
+		"@dicebear/collection": "^7.0.1",
+		"@dicebear/core": "^7.0.1",
 		"@resplice/components": "*",
 		"@resplice/proto": "*",
 		"@resplice/utils": "*",
 		"clsx": "^2.0.0",
-		"libphonenumber-js": "^1.10.36",
-		"sveltekit-i18n": "^2.2.2",
-		"zod": "^3.21.4"
+		"libphonenumber-js": "^1.10.47",
+		"sveltekit-i18n": "^2.4.2",
+		"zod": "^3.22.4"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.36.2",
+		"@playwright/test": "^1.38.1",
 		"@sveltejs/adapter-vercel": "^3.0.3",
-		"@sveltejs/kit": "1.20.5",
-		"autoprefixer": "^10.4.14",
+		"@sveltejs/kit": "1.25.1",
+		"autoprefixer": "^10.4.16",
 		"eslint-config-custom": "*",
-		"postcss": "^8.4.24",
-		"svelte": "^3.59.2",
-		"svelte-check": "^3.4.4",
+		"postcss": "^8.4.31",
+		"svelte": "^4.2.1",
+		"svelte-check": "^3.5.2",
 		"svelte-preprocess": "^5.0.4",
-		"tailwindcss": "^3.3.2",
+		"tailwindcss": "^3.3.3",
 		"tslib": "^2.5.3",
-		"vite": "^4.4.9"
+		"vite": "^4.4.11"
 	}
 }
