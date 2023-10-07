@@ -42,11 +42,11 @@ jobs:
         run: vercel pull --yes --environment=${{ inputs.environment }} --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
 
       - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: vercel build ${{ inputs.environment == 'production' && --prod}} --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
         id: deployment
-        run: echo "url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }})" >> $GITHUB_OUTPUT
+        run: echo "url=$(vercel deploy ${{ inputs.environment == 'production' && --prod}} --prebuilt --token=${{ secrets.VERCEL_ACCESS_TOKEN }})" >> $GITHUB_OUTPUT
 
       - name: Deployment URL
         run: vercel alias set ${{ steps.deployment.outputs.url }} $APP_DOMAIN --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
