@@ -1,4 +1,5 @@
 import { filter, map, pipe, type OperatorFunction } from 'rxjs'
+import type proto from '@resplice/proto'
 import workerCommuterFactory, { type Commuter } from '$common/workers/workerCommuter'
 import {
 	type SocketEvent,
@@ -11,8 +12,8 @@ export function onlyEvents() {
 	return pipe(
 		filter<SocketEvent>(
 			(e) => e.type === SocketEventType.RECEIVED && !e.message.error && !e.message.state
-		) as OperatorFunction<ReceivedEvent, ReceivedEvent>,
-		map((e) => e.message.event)
+		) as OperatorFunction<SocketEvent, ReceivedEvent>,
+		map((e) => e.message.event as proto.Event)
 	)
 }
 

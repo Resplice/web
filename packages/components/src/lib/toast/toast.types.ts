@@ -6,10 +6,9 @@ export enum ToastType {
 }
 
 export type Toast = {
-	id: string | number
+	// id: string | number
 	type: ToastType
 	title: string
-	detail: any
-	created: Date
+	message: string
 }
-export type ToastParams = Pick<Toast, 'type' | 'title' | 'detail'>
+export type ToastParams = Pick<Toast, 'type' | 'title' | 'message'>

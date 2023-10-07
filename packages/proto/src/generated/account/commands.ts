@@ -49,7 +49,7 @@ export const ChangeAccountName = {
   },
 
   fromJSON(object: any): ChangeAccountName {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: ChangeAccountName): unknown {
@@ -106,7 +106,7 @@ export const ChangeAccountHandle = {
   },
 
   fromJSON(object: any): ChangeAccountHandle {
-    return { handle: isSet(object.handle) ? String(object.handle) : "" };
+    return { handle: isSet(object.handle) ? globalThis.String(object.handle) : "" };
   },
 
   toJSON(message: ChangeAccountHandle): unknown {
@@ -163,7 +163,7 @@ export const ChangeAccountAvatar = {
   },
 
   fromJSON(object: any): ChangeAccountAvatar {
-    return { avatar: isSet(object.avatar) ? String(object.avatar) : "" };
+    return { avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "" };
   },
 
   toJSON(message: ChangeAccountAvatar): unknown {
@@ -187,7 +187,8 @@ export const ChangeAccountAvatar = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

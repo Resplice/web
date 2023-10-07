@@ -134,8 +134,8 @@ export const AttributeAdded = {
 
   fromJSON(object: any): AttributeAdded {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -253,8 +253,8 @@ export const AttributeVerified = {
 
   fromJSON(object: any): AttributeVerified {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      verifiedAt: isSet(object.verifiedAt) ? Number(object.verifiedAt) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
     };
   },
 
@@ -379,8 +379,8 @@ export const AttributeChanged = {
 
   fromJSON(object: any): AttributeChanged {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -487,7 +487,7 @@ export const AttributeRemoved = {
   },
 
   fromJSON(object: any): AttributeRemoved {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: AttributeRemoved): unknown {
@@ -511,7 +511,8 @@ export const AttributeRemoved = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

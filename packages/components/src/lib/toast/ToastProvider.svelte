@@ -1,45 +1,28 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte'
-	import { differenceInSeconds } from 'date-fns'
-	import toasts from '$lib/toast/toast.store'
+	import toast from '$lib/toast/toast.store'
 	import ToastView from '$lib/toast/Toast.svelte'
-	import type { Toast } from '$lib/toast/toast.types'
 
-	let toastQueue: Toast[] = []
 	let toastTimeout: NodeJS.Timeout
-	$: currentToast = toastQueue.length ? toastQueue[0] : null
 
 	$: {
-		$toasts.forEach((toast) => {
-			if (differenceInSeconds(new Date(), toast.created) < 20) {
-				toastQueue.push(toast)
-				toastQueue = toastQueue
-			}
-		})
-	}
-
-	$: {
-		if (toastQueue.length) {
-			currentToast = toastQueue.shift()
-			console.log(currentToast)
-			toastTimeout = setTimeout(() => {
-				currentToast = null
-			}, 4500)
+		if ($toast) {
+			toastTimeout = setTimeout(clear, 4500)
 		}
 	}
 
 	function clear() {
 		clearTimeout(toastTimeout)
-		currentToast = null
+		toast.set(null)
 	}
 
 	onDestroy(clear)
 </script>
 
-{#if currentToast}
-	<div class="fixed w-full top-0 left-0">
-		<ToastView toast={currentToast} on:close={clear} />
+{#if $toast}
+	<div class="fixed w-full top-0 left-0 z-50">
+		<div class="w-full max-w-xl m-auto">
+			<ToastView toast={$toast} on:close={clear} />
+		</div>
 	</div>
 {/if}
-
-<slot />

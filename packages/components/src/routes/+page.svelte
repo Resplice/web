@@ -2,7 +2,17 @@
 	import Button from '$lib/Button.svelte'
 	import UserAvatar from '$lib/UserAvatar.svelte'
 	import CredentialValue from '$lib/attribute/values/CredentialValue.svelte'
-	// import Toast from '$lib/toast/Toast.svelte'
+	import ToastProvider from '$lib/toast/ToastProvider.svelte'
+	import toast from '$lib/toast/toast.api'
+	import { onMount } from 'svelte'
+
+	onMount(() => {
+		toast.new({
+			type: toast.type.SUCCESS,
+			title: 'Hello',
+			message: 'This is a toast'
+		})
+	})
 </script>
 
 <main class="p-8 flex flex-col space-y-8">
@@ -12,5 +22,5 @@
 
 	<CredentialValue value={{ identity: 'Code', passcode: 'Pass123' }} />
 
-	<!-- <Toast /> -->
+	<ToastProvider />
 </main>

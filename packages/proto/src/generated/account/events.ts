@@ -124,13 +124,13 @@ export const AccountCreated = {
 
   fromJSON(object: any): AccountCreated {
     return {
-      uuid: isSet(object.uuid) ? String(object.uuid) : "",
-      name: isSet(object.name) ? String(object.name) : "",
-      handle: isSet(object.handle) ? String(object.handle) : "",
-      avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
-      phoneId: isSet(object.phoneId) ? Number(object.phoneId) : 0,
-      phone: isSet(object.phone) ? String(object.phone) : "",
-      phoneVerifiedAt: isSet(object.phoneVerifiedAt) ? Number(object.phoneVerifiedAt) : 0,
+      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
+      avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
+      phoneId: isSet(object.phoneId) ? globalThis.Number(object.phoneId) : 0,
+      phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
+      phoneVerifiedAt: isSet(object.phoneVerifiedAt) ? globalThis.Number(object.phoneVerifiedAt) : 0,
     };
   },
 
@@ -212,7 +212,7 @@ export const AccountNameChanged = {
   },
 
   fromJSON(object: any): AccountNameChanged {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: AccountNameChanged): unknown {
@@ -269,7 +269,7 @@ export const AccountHandleChanged = {
   },
 
   fromJSON(object: any): AccountHandleChanged {
-    return { handle: isSet(object.handle) ? String(object.handle) : "" };
+    return { handle: isSet(object.handle) ? globalThis.String(object.handle) : "" };
   },
 
   toJSON(message: AccountHandleChanged): unknown {
@@ -326,7 +326,7 @@ export const AccountAvatarChanged = {
   },
 
   fromJSON(object: any): AccountAvatarChanged {
-    return { avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "" };
+    return { avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "" };
   },
 
   toJSON(message: AccountAvatarChanged): unknown {
@@ -383,7 +383,7 @@ export const AccountDeleted = {
   },
 
   fromJSON(object: any): AccountDeleted {
-    return { deletedAt: isSet(object.deletedAt) ? Number(object.deletedAt) : 0 };
+    return { deletedAt: isSet(object.deletedAt) ? globalThis.Number(object.deletedAt) : 0 };
   },
 
   toJSON(message: AccountDeleted): unknown {
@@ -407,7 +407,8 @@ export const AccountDeleted = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

@@ -24,6 +24,6 @@
 			</button>
 		</div>
 
-		<p class="text-gray-700 px-4 py-2">{toast.detail}</p>
+		<p class="text-gray-700 px-4 py-2">{toast.message}</p>
 	</div>
 </div>
