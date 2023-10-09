@@ -6,12 +6,12 @@
 	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
-		name: 'Date & Time',
+		name: 'Open House',
 		value: {
 			year: 2023,
 			month: 11,
 			day: 16,
-			hour: 15,
+			hour: 16,
 			minute: 0,
 			timezone: 'America/Chicago'
 		},

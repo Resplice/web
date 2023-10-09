@@ -12,7 +12,7 @@ export default {
 		id: '/',
 		start_url: '.',
 		display: 'standalone',
-		scope: '/',
+		scope: '.',
 		theme_color: '#1BBC9B',
 		background_color: '#36393F',
 		icons: [

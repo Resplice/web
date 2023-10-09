@@ -4,7 +4,7 @@ export function openCalendar(dateTime: string): void {
 	console.log('Opening Calendar', dateTime)
 	// WARNING: Hardcode the open calendar action for now
 	window.open(
-		`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=20231116T210000Z%2F20231117T055900Z&location=Minneapolis%2C%20MN&text=Resplice%20Launch%20Party`
+		`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=20231116T210000Z%2F20231117T040000Z&location=Minneapolis%2C%20MN&text=Resplice%20Launch%20Party`
 	)
 }
 
