@@ -29,7 +29,7 @@
 
 <form class="flex flex-col items-center justify-between mt-4 px-2 flex-1">
 	<div class="w-full flex flex-col space-y-6 mb-4">
-		<AttributeNameField bind:name error={formErrs.name} />
+		<AttributeNameField bind:name placeholder="e.g. Home, Work, Cabin" error={formErrs.name} />
 		<TextField
 			name="address1"
 			label="Address 1"

@@ -3,6 +3,7 @@
 
 	export let name: string
 	export let error: string
+	export let placeholder = ''
 </script>
 
-<TextField name="attribute-name" label="Description" bind:value={name} {error} />
+<TextField name="attribute-name" label="Description" bind:value={name} {placeholder} {error} />
