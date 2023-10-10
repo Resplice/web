@@ -114,9 +114,11 @@ export const CreateInvite = {
   fromJSON(object: any): CreateInvite {
     return {
       type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      value: isSet(object.value) ? String(object.value) : "",
-      attributeIds: Array.isArray(object?.attributeIds) ? object.attributeIds.map((e: any) => Number(e)) : [],
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
@@ -197,8 +199,8 @@ export const AddInviteShare = {
 
   fromJSON(object: any): AddInviteShare {
     return {
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
@@ -271,8 +273,8 @@ export const RemoveInviteShare = {
 
   fromJSON(object: any): RemoveInviteShare {
     return {
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
@@ -334,7 +336,7 @@ export const DeleteInvite = {
   },
 
   fromJSON(object: any): DeleteInvite {
-    return { inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0 };
+    return { inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0 };
   },
 
   toJSON(message: DeleteInvite): unknown {
@@ -424,9 +426,11 @@ export const AcceptInvite = {
 
   fromJSON(object: any): AcceptInvite {
     return {
-      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
-      attributeIds: Array.isArray(object?.attributeIds) ? object.attributeIds.map((e: any) => Number(e)) : [],
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
@@ -503,8 +507,8 @@ export const DeclineInvite = {
 
   fromJSON(object: any): DeclineInvite {
     return {
-      accountId: isSet(object.accountId) ? Number(object.accountId) : 0,
-      inviteId: isSet(object.inviteId) ? Number(object.inviteId) : 0,
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
     };
   },
 
@@ -533,7 +537,8 @@ export const DeclineInvite = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

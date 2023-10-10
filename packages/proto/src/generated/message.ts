@@ -272,8 +272,8 @@ export const SecMessage = {
 
   fromJSON(object: any): SecMessage {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      commandId: isSet(object.commandId) ? Number(object.commandId) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      commandId: isSet(object.commandId) ? globalThis.Number(object.commandId) : 0,
       message: isSet(object.event)
         ? { $case: "event", event: bytesFromBase64(object.event) }
         : isSet(object.state)
@@ -537,7 +537,7 @@ export const Event = {
 
   fromJSON(object: any): Event {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       payload: isSet(object.authChanged)
         ? { $case: "authChanged", authChanged: AuthChanged.fromJSON(object.authChanged) }
         : isSet(object.sessionStarted)
@@ -852,7 +852,7 @@ export const State = {
 
   fromJSON(object: any): State {
     return {
-      events: Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
+      events: globalThis.Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
       pendingConnection: isSet(object.pendingConnection)
         ? PendingConnection.fromJSON(object.pendingConnection)
         : undefined,
@@ -967,8 +967,8 @@ export const Error = {
   fromJSON(object: any): Error {
     return {
       type: isSet(object.type) ? errorTypeFromJSON(object.type) : 0,
-      fields: Array.isArray(object?.fields) ? object.fields.map((e: any) => inputFieldFromJSON(e)) : [],
-      attemptsRemaining: isSet(object.attemptsRemaining) ? Number(object.attemptsRemaining) : 0,
+      fields: globalThis.Array.isArray(object?.fields) ? object.fields.map((e: any) => inputFieldFromJSON(e)) : [],
+      attemptsRemaining: isSet(object.attemptsRemaining) ? globalThis.Number(object.attemptsRemaining) : 0,
     };
   },
 
@@ -998,30 +998,11 @@ export const Error = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -1031,21 +1012,22 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

@@ -71,33 +71,33 @@
 	{/if}
 	{#if rsvp === 'yes'}
 		<div>
-			<p>We are so glad you can make it and can't wait to see you there!</p>
+			<p>We are so glad you can make it!</p>
 			<br />
-			<p>
-				Your Resplice account is your ticket. An account is needed for each adult, kids are welcome!
-			</p>
-			<br />
-			<p>The full app is launching soon and this invite will become the app.</p>
+			<ul class="list-disc list-inside">
+				<li>Your Resplice account is your ticket.</li>
+				<li>One account is needed for each adult.</li>
+				<li>Kids are welcome!</li>
+			</ul>
 			<br />
 			<p>
 				We are excited for you to be part of our journey to becoming the best sharing platform on
 				the internet!
 			</p>
+			<br />
+			<p>Stay tuned for more updates.</p>
 		</div>
 	{/if}
 	{#if rsvp === 'no'}
 		<div>
-			<p>
-				We are sorry you couldn't make it to the launch party but we thank you for showing an
-				interest in our app.
-			</p>
+			<p>Bummer. But we do understand how busy life gets.</p>
 			<br />
-			<p>The full app is launching soon and this invite will become the app.</p>
-			<br />
+			<p>Even though you are not able to make the party...</p>
 			<p>
 				We are excited for you to be part of our journey to becoming the best sharing platform on
 				the internet!
 			</p>
+			<br />
+			<p>Stay tuned for more updates.</p>
 		</div>
 	{/if}
 </div>

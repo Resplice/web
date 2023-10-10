@@ -1,5 +1,5 @@
 /**
- * Converts a Blog to base64 data URI string
+ * Converts a Blob to base64 data URI string
  * @param image - Image Blog to convert
  * @returns Base64 data URI
  */

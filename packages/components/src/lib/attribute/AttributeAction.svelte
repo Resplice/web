@@ -1,8 +1,8 @@
 <script lang="ts">
 	import cx from 'clsx'
 	import ActionIcon from '$lib/attribute/AttributeActionIcon.svelte'
-	import { attributeTypes } from '@resplice/utils'
-	import type { Attribute } from '@resplice/utils'
+	import { attributeTypes, getSocialNetworkFromUrl } from '@resplice/utils'
+	import { type Attribute, AttributeType } from '@resplice/utils'
 
 	export let itemType: 'contact' | 'user' | 'disabled'
 	export let disableAction = false
@@ -29,5 +29,12 @@
 	})}
 	on:click={onActionClick}
 >
-	<ActionIcon {attributeAction} />
+	{#if attribute.type === AttributeType.SOCIAL && attribute.value?.url}
+		<ActionIcon
+			{attributeAction}
+			iconProps={{ network: getSocialNetworkFromUrl(attribute.value.url) }}
+		/>
+	{:else}
+		<ActionIcon {attributeAction} />
+	{/if}
 </button>

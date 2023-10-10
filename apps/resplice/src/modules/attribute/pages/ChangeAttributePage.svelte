@@ -39,7 +39,7 @@
 <div class="flex flex-col w-full h-full bg-gray-100">
 	<Header title="Change Attribute" showContext on:context={() => (showAttributeContext = true)} />
 	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col overflow-auto">
-		{#if attribute}
+		{#if attribute && attributeTypeConfig}
 			<AttributeForm
 				{attribute}
 				{attributeTypeConfig}

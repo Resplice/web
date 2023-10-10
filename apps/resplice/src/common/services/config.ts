@@ -11,7 +11,7 @@ export type RespliceConfig = {
 }
 
 function getConfig(): RespliceConfig {
-	const config: RespliceConfig = {
+	const config = {
 		env: import.meta.env.DEV ? 'local' : import.meta.env.VITE_ENV,
 		appUrl: import.meta.env.VITE_APP_URL,
 		authUrl: import.meta.env.VITE_AUTH_URL,
@@ -23,7 +23,8 @@ function getConfig(): RespliceConfig {
 	if (Object.values(config).includes(undefined))
 		// TODO: Test when config throws
 		throw new Error('Config is not defined or is missing properties')
-	return config
+
+	return config as RespliceConfig
 }
 
 export default getConfig()

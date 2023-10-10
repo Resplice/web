@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	import { TextField, DateField } from '@resplice/components'
+	import AttributeNameField from '$modules/attribute/components/forms/AttributeNameField.svelte'
 	import FormButtons from '$modules/attribute/components/forms/FormButtons.svelte'
 
 	const dispatch = createEventDispatcher()
@@ -39,7 +40,7 @@
 
 <form class="flex flex-col items-center justify-between mt-4 px-2 flex-1">
 	<div class="w-full flex flex-col space-y-6">
-		<TextField name="attribute-name" label="Label" bind:value={name} error={formErrs.name} />
+		<AttributeNameField bind:name error={formErrs.name} />
 		<DateField name="date" label="Date" bind:value={dateStr} error={formErrs.date} />
 	</div>
 

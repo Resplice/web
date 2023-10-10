@@ -3,14 +3,14 @@
 	import { isRespliceSupported } from '@resplice/utils'
 	import config from '$services/config'
 	import initializeIntl from '$common/i18n'
-	import protocolFactory, { contextKey } from '$common/protocol'
+	import protocolFactory, { contextKey, type RespliceProtocol } from '$common/protocol'
 	import accountStore from '$modules/account/account.store'
-	import { AppLoading, AppError } from '@resplice/components'
+	import { AppLoading, AppError, ToastProvider } from '@resplice/components'
 	import ConnectionStatus from '$modules/_context/components/ConnectionStatus.svelte'
 	import Router from './Router.svelte'
 	import './app.css'
 
-	const protocolContext = { protocol: null }
+	const protocolContext = { protocol: {} as RespliceProtocol }
 	setContext(contextKey, protocolContext)
 
 	async function loadApp(): Promise<boolean> {
@@ -53,7 +53,7 @@
 	{#if loaded && accountLoaded}
 		<ConnectionStatus />
 		<Router />
-		<!-- <ToastProvider /> -->
+		<ToastProvider />
 	{:else}
 		<AppLoading />
 	{/if}

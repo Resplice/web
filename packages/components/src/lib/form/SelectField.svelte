@@ -1,23 +1,16 @@
 <script lang="ts">
-	import type { HTMLAttributes } from 'svelte/elements'
 	import cx from 'clsx'
 	import type { IconComponent } from '$lib/common/types'
 
 	export let name: string
 	export let label: string
+	export let options: { label: string; value: string }[]
 	export let value: string
-	export let placeholder = ''
-	export let autocomplete = 'on'
-	export let inputmode: HTMLAttributes<HTMLInputElement>['inputmode'] = 'text' as const
-	export let autofocus = false
+	export let error: string = ''
 	export let disabled = false
-	export let error = ''
 	export let Icon: IconComponent | null = null
-	let isTouched = autofocus || !!placeholder
-
-	$: {
-		if (value) isTouched = true
-	}
+	export let iconProps: Record<string, any> = {}
+	let isTouched = !!value
 
 	function resetError() {
 		if (error) error = ''
@@ -26,30 +19,27 @@
 
 <div class="w-full">
 	<div
-		class={cx('relative rounded-2xl w-full text-left h-14 flex items-center text-gray-700', {
-			'bg-white': !disabled,
-			'bg-gray-200 text-opacity-50': disabled
-		})}
+		class="relative rounded-2xl w-full text-left h-14 flex items-center"
+		class:bg-white={!disabled}
+		class:bg-gray-200={disabled}
 	>
 		{#if Icon}
-			<div class="ml-4">
-				<svelte:component this={Icon} width={32} height={32} />
+			<div class="ml-4 text-gray-700">
+				<svelte:component this={Icon} width={32} height={32} {...iconProps} />
 			</div>
 		{/if}
 		<label
 			for={name}
-			class={cx('font-semibold absolute transform', {
-				'top-1 scale-90': isTouched,
-				'top-4': !isTouched,
+			class={cx('text-gray-700 font-semibold absolute transform', {
 				'left-6': !Icon,
-				'left-16': !!Icon
+				'left-16': !!Icon,
+				'top-1 scale-90': isTouched,
+				'top-4': !isTouched
 			})}
 		>
 			{label}
 		</label>
-		<!-- svelte-ignore a11y-autofocus -->
-		<input
-			type="text"
+		<select
 			id={name}
 			class="appearance-none absolute top-0 left-0 w-full h-14 bg-transparent outline-none border-none rounded-2xl px-6 pt-5 font-semibold text-lg text-gray-900 ring-2 focus:ring-gray-800"
 			class:pl-16={!!Icon}
@@ -58,16 +48,16 @@
 			class:ring-red-600={!disabled && !!error}
 			title={name}
 			{name}
-			{placeholder}
-			{autocomplete}
-			{inputmode}
-			{autofocus}
 			{disabled}
 			bind:value
 			on:input={resetError}
 			on:focus={() => (isTouched = true)}
-			on:blur={() => (!!value || !!placeholder ? (isTouched = true) : (isTouched = false))}
-		/>
+			on:blur={() => (!!value ? (isTouched = true) : (isTouched = false))}
+		>
+			{#each options as o}
+				<option value={o.value}>{o.label}</option>
+			{/each}
+		</select>
 	</div>
 	{#if error}
 		<p class="text-sm text-red-600 h-4 my-1 mx-2">{error}</p>

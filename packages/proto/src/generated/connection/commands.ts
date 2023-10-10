@@ -95,8 +95,8 @@ export const ChangeConnectionAlias = {
 
   fromJSON(object: any): ChangeConnectionAlias {
     return {
-      connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0,
-      alias: isSet(object.alias) ? String(object.alias) : "",
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
     };
   },
 
@@ -169,8 +169,8 @@ export const ChangeConnectionDescription = {
 
   fromJSON(object: any): ChangeConnectionDescription {
     return {
-      connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0,
-      description: isSet(object.description) ? String(object.description) : "",
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
     };
   },
 
@@ -243,8 +243,8 @@ export const AddShare = {
 
   fromJSON(object: any): AddShare {
     return {
-      connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0,
-      attributeId: isSet(object.attributeId) ? Number(object.attributeId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
@@ -306,7 +306,7 @@ export const RemoveShare = {
   },
 
   fromJSON(object: any): RemoveShare {
-    return { connectionShareId: isSet(object.connectionShareId) ? Number(object.connectionShareId) : 0 };
+    return { connectionShareId: isSet(object.connectionShareId) ? globalThis.Number(object.connectionShareId) : 0 };
   },
 
   toJSON(message: RemoveShare): unknown {
@@ -363,7 +363,7 @@ export const FavorConnection = {
   },
 
   fromJSON(object: any): FavorConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: FavorConnection): unknown {
@@ -420,7 +420,7 @@ export const UnfavorConnection = {
   },
 
   fromJSON(object: any): UnfavorConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: UnfavorConnection): unknown {
@@ -477,7 +477,7 @@ export const MuteConnection = {
   },
 
   fromJSON(object: any): MuteConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: MuteConnection): unknown {
@@ -534,7 +534,7 @@ export const UnmuteConnection = {
   },
 
   fromJSON(object: any): UnmuteConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: UnmuteConnection): unknown {
@@ -591,7 +591,7 @@ export const ArchiveConnection = {
   },
 
   fromJSON(object: any): ArchiveConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ArchiveConnection): unknown {
@@ -648,7 +648,7 @@ export const UnarchiveConnection = {
   },
 
   fromJSON(object: any): UnarchiveConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: UnarchiveConnection): unknown {
@@ -705,7 +705,7 @@ export const DeleteConnection = {
   },
 
   fromJSON(object: any): DeleteConnection {
-    return { connectionId: isSet(object.connectionId) ? Number(object.connectionId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: DeleteConnection): unknown {
@@ -729,7 +729,8 @@ export const DeleteConnection = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

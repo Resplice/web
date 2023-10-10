@@ -5,7 +5,7 @@ export type Connection = {
 	name: string
 	alias: string | null
 	handle: string
-	avatarUrl: string
+	avatarUrl: string | null
 	attributes: Attribute[]
 }
 

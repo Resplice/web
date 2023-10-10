@@ -12,12 +12,12 @@
 	const dateTime: Attribute = {
 		id: 1,
 		type: AttributeType.DATE_TIME,
-		name: 'Date & Time',
+		name: 'Open House (6 hrs)',
 		value: {
 			year: 2023,
 			month: 11,
 			day: 16,
-			hour: 15,
+			hour: 16,
 			minute: 0,
 			timezone: 'America/Chicago'
 		},
@@ -26,7 +26,7 @@
 	const location: Attribute = {
 		id: 2,
 		type: AttributeType.ADDRESS,
-		name: 'Location',
+		name: 'The Burrow',
 		value: {
 			streetAddress1: '7053 10th St N',
 			streetAddress2: '',
@@ -40,7 +40,7 @@
 	const link: Attribute = {
 		id: 3,
 		type: AttributeType.LINK,
-		name: 'The Burrow',
+		name: 'Family Friendly Fun',
 		value: {
 			url: 'https://www.theburrowmn.com'
 		},

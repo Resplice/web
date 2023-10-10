@@ -3,9 +3,9 @@
 
 	async function share() {
 		await navigator.share({
-			title: 'Launch Party',
-			text: 'Join the Resplice launch party!',
-			url: 'https://party.resplice.com'
+			title: 'Resplice',
+			text: 'Changing the way you share.',
+			url: 'https://www.resplice.com'
 		})
 	}
 </script>
