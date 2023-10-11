@@ -34,9 +34,9 @@
 	const link: Attribute = {
 		id: 3,
 		type: AttributeType.LINK,
-		name: 'Family Friendly Fun',
+		name: 'Learn more about Resplice',
 		value: {
-			url: 'https://www.theburrowmn.com'
+			url: 'https://www.resplice.com'
 		},
 		sortOrder: 0
 	}
@@ -52,11 +52,6 @@
 		<AttributeItem attribute={dateTime} itemType="contact" showSecondAction={false} />
 		<AttributeItem attribute={location} itemType="contact" showSecondAction={false} />
 		<AttributeItem attribute={link} itemType="contact" showSecondAction={false} />
-
-		<p class="pt-2">
-			Want to learn more about the app?
-			<Link href="https://www.resplice.com">Check out Resplice.com</Link>
-		</p>
 	</div>
 
 	<Rsvp />

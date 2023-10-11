@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import store, { AuthStatus, INITIAL_STORE } from '$lib/store'
-	import { AttributeItem, PartyBannerIcon, Link } from '@resplice/components'
+	import { AttributeItem, PartyBannerIcon } from '@resplice/components'
 	import LoginForm from './LoginForm.svelte'
 	import { AttributeType, type Attribute } from '@resplice/utils'
 
@@ -26,13 +26,13 @@
 	const location: Attribute = {
 		id: 2,
 		type: AttributeType.ADDRESS,
-		name: 'The Burrow',
+		name: 'Location',
 		value: {
-			streetAddress1: '7053 10th St N',
+			streetAddress1: 'Somewhere fun! (RSVP for details)',
 			streetAddress2: '',
 			locality: 'Oakdale',
 			region: 'MN',
-			postalCode: '55128',
+			postalCode: '',
 			country: ''
 		},
 		sortOrder: 0
@@ -40,9 +40,9 @@
 	const link: Attribute = {
 		id: 3,
 		type: AttributeType.LINK,
-		name: 'Family Friendly Fun',
+		name: 'Learn more about Resplice',
 		value: {
-			url: 'https://www.theburrowmn.com'
+			url: 'https://www.resplice.com'
 		},
 		sortOrder: 0
 	}
@@ -62,11 +62,6 @@
 		<AttributeItem attribute={dateTime} itemType="user" disableActions />
 		<AttributeItem attribute={location} itemType="user" />
 		<AttributeItem attribute={link} itemType="user" />
-
-		<p class="pt-2">
-			Want to learn more about the app?
-			<Link href="https://www.resplice.com">Check out Resplice.com</Link>
-		</p>
 	</div>
 
 	<div class="w-full px-8 py-4 flex flex-col">
