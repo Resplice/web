@@ -40,9 +40,9 @@
 	const link: Attribute = {
 		id: 3,
 		type: AttributeType.LINK,
-		name: 'Learn more about Resplice',
+		name: 'Learn more about the party',
 		value: {
-			url: 'https://www.resplice.com'
+			url: 'https://faq.resplice.com'
 		},
 		sortOrder: 0
 	}
