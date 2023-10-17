@@ -8,7 +8,7 @@
 	import ConnectionListPage from '$modules/connection/pages/ConnectionListPage.svelte'
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 
-	$: isOnContacts = $location.includes('/home/party')
+	$: isOnConnections = $location.includes('/home/connections')
 	$: isOnProfile = $location.includes('/home/profile')
 
 	const routes = {
@@ -25,7 +25,7 @@
 		class="relative flex-none flex justify-around items-center p-2 border-t-2 border-gray-200 bg-white overflow-hidden"
 		style="padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem)"
 	>
-		<NavItem isActive={isOnContacts} href="#/home/connections">
+		<NavItem isActive={isOnConnections} href="#/home/connections">
 			<PeopleIcon width={32} height={32} />
 		</NavItem>
 		<NavActions />

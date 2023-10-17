@@ -17,7 +17,7 @@
 		"@resplice/utils": "*"
 	},
 	"devDependencies": {
-		"@sveltejs/vite-plugin-svelte": "^2.0.4",
+		"@sveltejs/vite-plugin-svelte": "^2.4.6",
 		"@tsconfig/svelte": "^5.0.2",
 		"autoprefixer": "^10.4.16",
 		"eslint-config-custom": "*",
