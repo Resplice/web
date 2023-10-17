@@ -47,12 +47,12 @@ export function applyAttributeEvent(
 			} as Attribute)
 			break
 		case 'attributeVerified':
-			aggregate.get(event.payload.attributeVerified.id).verifiedAt =
+			aggregate.get(event.payload.attributeVerified.id)!.verifiedAt =
 				event.payload.attributeVerified.verifiedAt
 			break
 		case 'attributeChanged':
-			aggregate.get(event.payload.attributeChanged.id).name = event.payload.attributeChanged.name
-			aggregate.get(event.payload.attributeChanged.id).value = mapProtoAttributeValue(
+			aggregate.get(event.payload.attributeChanged.id)!.name = event.payload.attributeChanged.name
+			aggregate.get(event.payload.attributeChanged.id)!.value = mapProtoAttributeValue(
 				event.payload.attributeChanged.value
 			)
 			break

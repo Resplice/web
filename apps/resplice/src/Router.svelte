@@ -3,6 +3,7 @@
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
 	import HomePage from '$common/pages/HomePage.svelte'
+	import SearchPage from '$modules/search/pages/SearchPage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
 	// Account Pages
@@ -38,7 +39,7 @@
 		// '/invite/qr/scan': ScanQrPage,
 		// '/invite/qr/:id': UnlockQrPage,
 		// '/profile': ProfilePage,
-		// '/search': SearchPage,
+		'/search': SearchPage,
 		'/settings': SettingsPage,
 		'*': NotFoundPage
 	}
