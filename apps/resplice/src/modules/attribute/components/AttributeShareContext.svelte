@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte'
 	import { push } from 'svelte-spa-router'
 	import { sortUserAttributes } from '$modules/attribute/attribute.helpers'
 	import {
@@ -11,6 +12,8 @@
 	} from '@resplice/components'
 	import attributeStore from '$modules/attribute/attribute.store'
 
+	const dispatch = createEventDispatcher()
+
 	export let selected: Set<number>
 	export let initializeDefault = false
 	let isEditing = false
@@ -21,7 +24,9 @@
 	$: {
 		// TODO: Find a better way to set initial shares
 		if (sortedAttributes.length && initializeDefault) {
-			selected = new Set([sortedAttributes[0].id])
+			const id = sortedAttributes[0].id
+			selected = new Set([id])
+			dispatch('toggle', id)
 		}
 	}
 
@@ -30,6 +35,7 @@
 		if (newSelected.has(id)) newSelected.delete(id)
 		else newSelected.add(id)
 		selected = newSelected
+		dispatch('toggle', id)
 	}
 </script>
 

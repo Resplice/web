@@ -11,12 +11,16 @@ import attributeProtocolFactory, {
 } from '$modules/attribute/attribute.protocol'
 import inviteProtocolFactory, { type InviteProtocol } from '$modules/invite/invite.protocol'
 import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/session.protocol'
+import connectionProtocolFactory, {
+	type ConnectionProtocol
+} from '$modules/connection/connection.protocol'
 
 export interface RespliceProtocol {
 	ctx: ContextProtocol
 	account: AccountProtocol
 	attribute: AttributeProtocol
 	invite: InviteProtocol
+	connection: ConnectionProtocol
 	session: SessionProtocol
 	rsvp: (accessKey: Uint8Array, selection: 'yes' | 'no' | 'maybe') => Promise<void>
 }
@@ -42,6 +46,11 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			commuter: socketCommuter
 		}),
 		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
+		connection: connectionProtocolFactory({
+			cache: db,
+			store: stores.connection,
+			commuter: socketCommuter
+		}),
 		session: sessionProtocolFactory({
 			fetch,
 			cache: db,

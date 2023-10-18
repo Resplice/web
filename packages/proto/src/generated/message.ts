@@ -3,6 +3,20 @@ import _m0 from "protobufjs/minimal";
 import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
 import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeVerified } from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
+import {
+  ConnectionAdded,
+  ConnectionAliasChanged,
+  ConnectionArchived,
+  ConnectionDescriptionChanged,
+  ConnectionFavored,
+  ConnectionMuted,
+  ConnectionRemoved,
+  ConnectionShareAdded,
+  ConnectionShareRemoved,
+  ConnectionUnarchived,
+  ConnectionUnfavored,
+  ConnectionUnmuted,
+} from "./connection/events";
 import { Connection, Connections, PendingConnection } from "./connection/state";
 import { InviteCreated, InviteDeleted, InviteShareAdded, InviteShareRemoved } from "./invite/events";
 
@@ -177,6 +191,18 @@ export interface Event {
     | { $case: "inviteShareAdded"; inviteShareAdded: InviteShareAdded }
     | { $case: "inviteShareRemoved"; inviteShareRemoved: InviteShareRemoved }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
+    | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
+    | { $case: "connectionAliasChanged"; connectionAliasChanged: ConnectionAliasChanged }
+    | { $case: "connectionDescriptionChanged"; connectionDescriptionChanged: ConnectionDescriptionChanged }
+    | { $case: "connectionShareAdded"; connectionShareAdded: ConnectionShareAdded }
+    | { $case: "connectionShareRemoved"; connectionShareRemoved: ConnectionShareRemoved }
+    | { $case: "connectionFavored"; connectionFavored: ConnectionFavored }
+    | { $case: "connectionUnfavored"; connectionUnfavored: ConnectionUnfavored }
+    | { $case: "connectionMuted"; connectionMuted: ConnectionMuted }
+    | { $case: "connectionUnmuted"; connectionUnmuted: ConnectionUnmuted }
+    | { $case: "connectionArchived"; connectionArchived: ConnectionArchived }
+    | { $case: "connectionUnarchived"; connectionUnarchived: ConnectionUnarchived }
+    | { $case: "connectionRemoved"; connectionRemoved: ConnectionRemoved }
     | undefined;
 }
 
@@ -379,6 +405,43 @@ export const Event = {
       case "inviteDeleted":
         InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(130).fork()).ldelim();
         break;
+      case "connectionAdded":
+        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(138).fork()).ldelim();
+        break;
+      case "connectionAliasChanged":
+        ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(146).fork()).ldelim();
+        break;
+      case "connectionDescriptionChanged":
+        ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(154).fork())
+          .ldelim();
+        break;
+      case "connectionShareAdded":
+        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(162).fork()).ldelim();
+        break;
+      case "connectionShareRemoved":
+        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(170).fork()).ldelim();
+        break;
+      case "connectionFavored":
+        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(178).fork()).ldelim();
+        break;
+      case "connectionUnfavored":
+        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(186).fork()).ldelim();
+        break;
+      case "connectionMuted":
+        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(194).fork()).ldelim();
+        break;
+      case "connectionUnmuted":
+        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(202).fork()).ldelim();
+        break;
+      case "connectionArchived":
+        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(210).fork()).ldelim();
+        break;
+      case "connectionUnarchived":
+        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(218).fork()).ldelim();
+        break;
+      case "connectionRemoved":
+        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(226).fork()).ldelim();
+        break;
     }
     return writer;
   },
@@ -526,6 +589,126 @@ export const Event = {
 
           message.payload = { $case: "inviteDeleted", inviteDeleted: InviteDeleted.decode(reader, reader.uint32()) };
           continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionAdded",
+            connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionAliasChanged",
+            connectionAliasChanged: ConnectionAliasChanged.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionDescriptionChanged",
+            connectionDescriptionChanged: ConnectionDescriptionChanged.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionShareAdded",
+            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 21:
+          if (tag !== 170) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionShareRemoved",
+            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionFavored",
+            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnfavored",
+            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionMuted",
+            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 25:
+          if (tag !== 202) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnmuted",
+            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 26:
+          if (tag !== 210) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionArchived",
+            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 27:
+          if (tag !== 218) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnarchived",
+            connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 28:
+          if (tag !== 226) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionRemoved",
+            connectionRemoved: ConnectionRemoved.decode(reader, reader.uint32()),
+          };
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -574,6 +757,48 @@ export const Event = {
         ? { $case: "inviteShareRemoved", inviteShareRemoved: InviteShareRemoved.fromJSON(object.inviteShareRemoved) }
         : isSet(object.inviteDeleted)
         ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
+        : isSet(object.connectionAdded)
+        ? { $case: "connectionAdded", connectionAdded: ConnectionAdded.fromJSON(object.connectionAdded) }
+        : isSet(object.connectionAliasChanged)
+        ? {
+          $case: "connectionAliasChanged",
+          connectionAliasChanged: ConnectionAliasChanged.fromJSON(object.connectionAliasChanged),
+        }
+        : isSet(object.connectionDescriptionChanged)
+        ? {
+          $case: "connectionDescriptionChanged",
+          connectionDescriptionChanged: ConnectionDescriptionChanged.fromJSON(object.connectionDescriptionChanged),
+        }
+        : isSet(object.connectionShareAdded)
+        ? {
+          $case: "connectionShareAdded",
+          connectionShareAdded: ConnectionShareAdded.fromJSON(object.connectionShareAdded),
+        }
+        : isSet(object.connectionShareRemoved)
+        ? {
+          $case: "connectionShareRemoved",
+          connectionShareRemoved: ConnectionShareRemoved.fromJSON(object.connectionShareRemoved),
+        }
+        : isSet(object.connectionFavored)
+        ? { $case: "connectionFavored", connectionFavored: ConnectionFavored.fromJSON(object.connectionFavored) }
+        : isSet(object.connectionUnfavored)
+        ? {
+          $case: "connectionUnfavored",
+          connectionUnfavored: ConnectionUnfavored.fromJSON(object.connectionUnfavored),
+        }
+        : isSet(object.connectionMuted)
+        ? { $case: "connectionMuted", connectionMuted: ConnectionMuted.fromJSON(object.connectionMuted) }
+        : isSet(object.connectionUnmuted)
+        ? { $case: "connectionUnmuted", connectionUnmuted: ConnectionUnmuted.fromJSON(object.connectionUnmuted) }
+        : isSet(object.connectionArchived)
+        ? { $case: "connectionArchived", connectionArchived: ConnectionArchived.fromJSON(object.connectionArchived) }
+        : isSet(object.connectionUnarchived)
+        ? {
+          $case: "connectionUnarchived",
+          connectionUnarchived: ConnectionUnarchived.fromJSON(object.connectionUnarchived),
+        }
+        : isSet(object.connectionRemoved)
+        ? { $case: "connectionRemoved", connectionRemoved: ConnectionRemoved.fromJSON(object.connectionRemoved) }
         : undefined,
     };
   },
@@ -627,6 +852,44 @@ export const Event = {
     }
     if (message.payload?.$case === "inviteDeleted") {
       obj.inviteDeleted = InviteDeleted.toJSON(message.payload.inviteDeleted);
+    }
+    if (message.payload?.$case === "connectionAdded") {
+      obj.connectionAdded = ConnectionAdded.toJSON(message.payload.connectionAdded);
+    }
+    if (message.payload?.$case === "connectionAliasChanged") {
+      obj.connectionAliasChanged = ConnectionAliasChanged.toJSON(message.payload.connectionAliasChanged);
+    }
+    if (message.payload?.$case === "connectionDescriptionChanged") {
+      obj.connectionDescriptionChanged = ConnectionDescriptionChanged.toJSON(
+        message.payload.connectionDescriptionChanged,
+      );
+    }
+    if (message.payload?.$case === "connectionShareAdded") {
+      obj.connectionShareAdded = ConnectionShareAdded.toJSON(message.payload.connectionShareAdded);
+    }
+    if (message.payload?.$case === "connectionShareRemoved") {
+      obj.connectionShareRemoved = ConnectionShareRemoved.toJSON(message.payload.connectionShareRemoved);
+    }
+    if (message.payload?.$case === "connectionFavored") {
+      obj.connectionFavored = ConnectionFavored.toJSON(message.payload.connectionFavored);
+    }
+    if (message.payload?.$case === "connectionUnfavored") {
+      obj.connectionUnfavored = ConnectionUnfavored.toJSON(message.payload.connectionUnfavored);
+    }
+    if (message.payload?.$case === "connectionMuted") {
+      obj.connectionMuted = ConnectionMuted.toJSON(message.payload.connectionMuted);
+    }
+    if (message.payload?.$case === "connectionUnmuted") {
+      obj.connectionUnmuted = ConnectionUnmuted.toJSON(message.payload.connectionUnmuted);
+    }
+    if (message.payload?.$case === "connectionArchived") {
+      obj.connectionArchived = ConnectionArchived.toJSON(message.payload.connectionArchived);
+    }
+    if (message.payload?.$case === "connectionUnarchived") {
+      obj.connectionUnarchived = ConnectionUnarchived.toJSON(message.payload.connectionUnarchived);
+    }
+    if (message.payload?.$case === "connectionRemoved") {
+      obj.connectionRemoved = ConnectionRemoved.toJSON(message.payload.connectionRemoved);
     }
     return obj;
   },
@@ -779,6 +1042,128 @@ export const Event = {
       message.payload = {
         $case: "inviteDeleted",
         inviteDeleted: InviteDeleted.fromPartial(object.payload.inviteDeleted),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAdded" &&
+      object.payload?.connectionAdded !== undefined &&
+      object.payload?.connectionAdded !== null
+    ) {
+      message.payload = {
+        $case: "connectionAdded",
+        connectionAdded: ConnectionAdded.fromPartial(object.payload.connectionAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAliasChanged" &&
+      object.payload?.connectionAliasChanged !== undefined &&
+      object.payload?.connectionAliasChanged !== null
+    ) {
+      message.payload = {
+        $case: "connectionAliasChanged",
+        connectionAliasChanged: ConnectionAliasChanged.fromPartial(object.payload.connectionAliasChanged),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionDescriptionChanged" &&
+      object.payload?.connectionDescriptionChanged !== undefined &&
+      object.payload?.connectionDescriptionChanged !== null
+    ) {
+      message.payload = {
+        $case: "connectionDescriptionChanged",
+        connectionDescriptionChanged: ConnectionDescriptionChanged.fromPartial(
+          object.payload.connectionDescriptionChanged,
+        ),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionShareAdded" &&
+      object.payload?.connectionShareAdded !== undefined &&
+      object.payload?.connectionShareAdded !== null
+    ) {
+      message.payload = {
+        $case: "connectionShareAdded",
+        connectionShareAdded: ConnectionShareAdded.fromPartial(object.payload.connectionShareAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionShareRemoved" &&
+      object.payload?.connectionShareRemoved !== undefined &&
+      object.payload?.connectionShareRemoved !== null
+    ) {
+      message.payload = {
+        $case: "connectionShareRemoved",
+        connectionShareRemoved: ConnectionShareRemoved.fromPartial(object.payload.connectionShareRemoved),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionFavored" &&
+      object.payload?.connectionFavored !== undefined &&
+      object.payload?.connectionFavored !== null
+    ) {
+      message.payload = {
+        $case: "connectionFavored",
+        connectionFavored: ConnectionFavored.fromPartial(object.payload.connectionFavored),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionUnfavored" &&
+      object.payload?.connectionUnfavored !== undefined &&
+      object.payload?.connectionUnfavored !== null
+    ) {
+      message.payload = {
+        $case: "connectionUnfavored",
+        connectionUnfavored: ConnectionUnfavored.fromPartial(object.payload.connectionUnfavored),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionMuted" &&
+      object.payload?.connectionMuted !== undefined &&
+      object.payload?.connectionMuted !== null
+    ) {
+      message.payload = {
+        $case: "connectionMuted",
+        connectionMuted: ConnectionMuted.fromPartial(object.payload.connectionMuted),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionUnmuted" &&
+      object.payload?.connectionUnmuted !== undefined &&
+      object.payload?.connectionUnmuted !== null
+    ) {
+      message.payload = {
+        $case: "connectionUnmuted",
+        connectionUnmuted: ConnectionUnmuted.fromPartial(object.payload.connectionUnmuted),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionArchived" &&
+      object.payload?.connectionArchived !== undefined &&
+      object.payload?.connectionArchived !== null
+    ) {
+      message.payload = {
+        $case: "connectionArchived",
+        connectionArchived: ConnectionArchived.fromPartial(object.payload.connectionArchived),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionUnarchived" &&
+      object.payload?.connectionUnarchived !== undefined &&
+      object.payload?.connectionUnarchived !== null
+    ) {
+      message.payload = {
+        $case: "connectionUnarchived",
+        connectionUnarchived: ConnectionUnarchived.fromPartial(object.payload.connectionUnarchived),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionRemoved" &&
+      object.payload?.connectionRemoved !== undefined &&
+      object.payload?.connectionRemoved !== null
+    ) {
+      message.payload = {
+        $case: "connectionRemoved",
+        connectionRemoved: ConnectionRemoved.fromPartial(object.payload.connectionRemoved),
       };
     }
     return message;
