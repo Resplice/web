@@ -17,6 +17,8 @@
 	import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
 	import QrInvitePage from '$modules/invite/pages/QrInvitePage.svelte'
 	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
+	// Connection Pages
+	import ConnectionDetailPage from '$modules/connection/pages/ConnectionDetailPage.svelte'
 
 	export let initialUrl = ''
 
@@ -27,7 +29,7 @@
 		'/attribute/add/:type': AddAttributePage,
 		'/attribute/:id/change': ChangeAttributePage,
 		// '/contact/pending/:id': PendingContactDetailPage,
-		// '/contact/:id/attributes': ContactAttributesPage,
+		'/connection/:id/details': ConnectionDetailPage,
 		// '/contact/:id/chat': ContactChatPage,
 		// '/contact/:id/edit': EditContactPage,
 		// '/contact/:id/shares': ContactSharesPage,

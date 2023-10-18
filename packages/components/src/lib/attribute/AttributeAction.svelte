@@ -4,7 +4,7 @@
 	import { attributeTypes, getSocialNetworkFromUrl } from '@resplice/utils'
 	import { type Attribute, AttributeType } from '@resplice/utils'
 
-	export let itemType: 'contact' | 'user' | 'disabled'
+	export let itemType: 'connection' | 'user' | 'disabled'
 	export let disableAction = false
 	export let actionIdx: number
 	export let attribute: Attribute
@@ -22,7 +22,7 @@
 <button
 	type="button"
 	class={cx('outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none', {
-		'bg-brand-primary text-brand-primary': itemType === 'contact',
+		'bg-brand-primary text-brand-primary': itemType === 'connection',
 		'bg-indigo-400 text-indigo-600': itemType === 'user',
 		'bg-gray-400 text-gray-600': itemType === 'disabled',
 		'transform transition duration-75 ease-in-out active:scale-90': !disableAction

@@ -5,7 +5,7 @@
 	import AttributeValue from '$lib/attribute/AttributeValue.svelte'
 
 	export let attribute: Attribute
-	export let itemType: 'contact' | 'user' | 'disabled'
+	export let itemType: 'connection' | 'user' | 'disabled'
 	export let showSecondAction = true
 	export let disableActions = false
 

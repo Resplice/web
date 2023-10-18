@@ -40,15 +40,17 @@
 		</div> -->
 		<!-- TODO: Virtualization -->
 		<div bind:this={virtualListEl} class="w-full relative">
+			<div class="p-4">
+				<h2 class="text-3xl text-gray-700 font-semibold px-2 my-2 capitalize">Connections</h2>
+			</div>
+
 			{#each connections as connection}
-				<div class="absolute top-0 left-0 w-full">
-					<ConnectionItem
-						{connection}
-						on:click={() => {
-							push(`/connection/${connection.id}/attributes`)
-						}}
-					/>
-				</div>
+				<ConnectionItem
+					{connection}
+					on:click={() => {
+						push(`/connection/${connection.id}/details`)
+					}}
+				/>
 			{/each}
 		</div>
 	{:else}
