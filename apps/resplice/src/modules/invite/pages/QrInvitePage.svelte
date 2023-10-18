@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import accountStore from '$modules/account/account.store'
 	import config from '$services/config'
 	import useProtocol from '$common/protocol/useProtocol'
-	import { Skeleton } from '@resplice/components'
+	import { ProgressBar, Skeleton } from '@resplice/components'
 	import QrCode from '$modules/invite/components/QrCode.svelte'
 	import Header from '$modules/account/components/Header.svelte'
 	import AttributeShareContext from '$modules/attribute/components/AttributeShareContext.svelte'
@@ -13,13 +13,48 @@
 	let url: string
 	let shares = new Set<number>()
 
-	async function fetchQr() {
+	const TIMEOUT_SECONDS = 120
+	let timer = TIMEOUT_SECONDS
+	let interval: NodeJS.Timeout | undefined
+
+	async function initQr() {
 		const qrInvite = await protocol.invite.createQr(Array.from(shares))
 		url = `${config.appUrl}/invite/qr/${qrInvite.uuid}`
 		console.log(url)
+
+		interval = setInterval(() => {
+			timer--
+		}, 1000)
 	}
 
-	onMount(fetchQr)
+	function cleanup() {
+		clearInterval(interval)
+	}
+
+	async function reset() {
+		cleanup()
+		url = ''
+		timer = TIMEOUT_SECONDS
+		await initQr()
+	}
+
+	function secondsToTime(t: number) {
+		const m = Math.floor((t % 3600) / 60)
+			.toString()
+			.padStart(2, '0')
+		const s = Math.floor(t % 60)
+			.toString()
+			.padStart(2, '0')
+
+		return `${m}:${s}`
+	}
+
+	onMount(initQr)
+	onDestroy(cleanup)
+
+	$: {
+		if (timer <= 0) reset()
+	}
 </script>
 
 <div class="flex flex-col w-full h-full bg-gray-100">
@@ -34,6 +69,12 @@
 				<Skeleton variant="rect" width="100%" height="333px" />
 			{/if}
 		</div>
+		{#if url}
+			<div class="w-full mb-8">
+				<h2 class="text-6xl w-full text-center mb-2">{secondsToTime(timer)}</h2>
+				<ProgressBar value={(timer / TIMEOUT_SECONDS) * 100} />
+			</div>
+		{/if}
 		<AttributeShareContext bind:selected={shares} initializeDefault />
 	</main>
 </div>

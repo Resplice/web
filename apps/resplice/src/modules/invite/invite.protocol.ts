@@ -53,7 +53,7 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 						uuid: 'uuid1234',
 						attributeIds: shares
 					})
-				}, 3000)
+				}, 500)
 			})
 		},
 		addShare(payload) {

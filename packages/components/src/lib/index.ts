@@ -12,6 +12,7 @@ export { default as Link } from './Link.svelte'
 export { default as LinkPreview } from './LinkPreview.svelte'
 export { default as Modal } from './Modal.svelte'
 export { default as Portal } from './Portal.svelte'
+export { default as ProgressBar } from './ProgressBar.svelte'
 export { default as Status } from './Status.svelte'
 export { default as UserAvatar } from './UserAvatar.svelte'
 

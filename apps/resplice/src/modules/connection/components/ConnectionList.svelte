@@ -1,7 +1,7 @@
 <script lang="ts">
 	// import { createVirtualizer } from '@tanstack/svelte-virtual'
 	import { push } from 'svelte-spa-router'
-	import { AddIcon, Button, ConnectionEmptyIcon, CameraIcon } from '@resplice/components'
+	import { Button, ConnectionEmptyIcon, CameraIcon, QRCodeIcon } from '@resplice/components'
 	import ConnectionItem from '$modules/connection/components/ConnectionItem.svelte'
 	import type { Connection } from '$modules/connection/connection.types'
 
@@ -63,13 +63,21 @@
 				You can invite others to Resplice even if they don't have an account!
 			</p>
 			<div class="w-full flex flex-col justify-center items-center mt-8 space-y-4">
-				<Button
+				<!-- <Button
 					color="brand-light"
 					class="flex items-center justify-center w-56"
 					on:click={() => push('/invite/bulk')}
 				>
 					<AddIcon width={24} height={24} />
 					<span class="ml-2">Invite Contacts</span>
+				</Button> -->
+				<Button
+					color="brand-light"
+					class="flex items-center justify-center w-56"
+					on:click={() => push('/invite/qr')}
+				>
+					<QRCodeIcon width={24} height={24} />
+					<span class="ml-2">Show QR Code</span>
 				</Button>
 				<Button
 					color="brand-light"
