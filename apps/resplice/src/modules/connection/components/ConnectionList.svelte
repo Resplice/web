@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import { createVirtualizer } from '@tanstack/svelte-virtual'
 	import { push } from 'svelte-spa-router'
+	import { AddIcon, Button, ConnectionEmptyIcon, CameraIcon } from '@resplice/components'
 	import ConnectionItem from '$modules/connection/components/ConnectionItem.svelte'
 	import type { Connection } from '$modules/connection/connection.types'
 
@@ -51,6 +52,32 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="p-8">You have no connections :(</p>
+		<div class="w-full h-full flex flex-col justify-center items-center">
+			<div class="rounded-full overflow-hidden w-48">
+				<ConnectionEmptyIcon width={192} height={144} />
+			</div>
+			<h3 class="px-8 text-lg font-semibold text-center mt-8">Add some connections</h3>
+			<p class="text-center px-8 py-2">
+				You can invite others to Resplice even if they don't have an account!
+			</p>
+			<div class="w-full flex flex-col justify-center items-center mt-8 space-y-4">
+				<Button
+					color="brand-light"
+					class="flex items-center justify-center w-56"
+					on:click={() => push('/invite/bulk')}
+				>
+					<AddIcon width={24} height={24} />
+					<span class="ml-2">Invite Contacts</span>
+				</Button>
+				<Button
+					color="brand-light"
+					class="flex items-center justify-center w-56"
+					on:click={() => push('/invite/qr/scan')}
+				>
+					<CameraIcon width={24} height={24} />
+					<span class="ml-2">Scan a QR Code</span>
+				</Button>
+			</div>
+		</div>
 	{/if}
 </div>

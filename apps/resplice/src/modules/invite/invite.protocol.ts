@@ -3,11 +3,12 @@ import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import type { InviteStore } from '$modules/invite/invite.store'
-import type { Invite } from '$modules/invite/invite.types'
+import type { Invite, QrInvite } from '$modules/invite/invite.types'
 import { applyInviteEvent, mapProtoInviteType } from '$modules/invite/invite.state'
 
 export interface InviteProtocol {
 	create(payload: proto.invite.CreateInvite): void
+	createQr(shares: number[]): Promise<QrInvite>
 	addShare(payload: proto.invite.AddInviteShare): void
 	removeShare(payload: proto.invite.RemoveInviteShare): void
 	delete(payload: proto.invite.DeleteInvite): void
@@ -43,13 +44,25 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				return state
 			})
 		},
+		async createQr(shares) {
+			console.log(shares)
+			// TODO: Implement
+			return new Promise((resolve) => {
+				setTimeout(() => {
+					resolve({
+						uuid: 'uuid1234',
+						attributeIds: shares
+					})
+				}, 3000)
+			})
+		},
 		addShare(payload) {
 			sendCommand(commuter, {
 				$case: 'addInviteShare',
 				addInviteShare: payload
 			})
 			store.update((state) => {
-				state.get(payload.inviteId).shares.push(payload.attributeId)
+				state.get(payload.inviteId)!.shares.push(payload.attributeId)
 				return state
 			})
 		},
@@ -59,8 +72,8 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				removeInviteShare: payload
 			})
 			store.update((state) => {
-				state.get(payload.inviteId).shares = state
-					.get(payload.inviteId)
+				state.get(payload.inviteId)!.shares = state
+					.get(payload.inviteId)!
 					.shares.filter((id) => id !== payload.attributeId)
 				return state
 			})

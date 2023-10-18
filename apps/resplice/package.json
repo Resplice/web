@@ -37,6 +37,7 @@
 		"@sveltejs/vite-plugin-svelte": "^2.4.6",
 		"@tsconfig/svelte": "^5.0.2",
 		"@types/croppie": "^2.6.2",
+		"@types/qrcode": "^1.5.2",
 		"@vite-pwa/assets-generator": "^0.0.10",
 		"autoprefixer": "^10.4.16",
 		"eslint-config-custom": "*",

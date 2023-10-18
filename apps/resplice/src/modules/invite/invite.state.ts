@@ -5,7 +5,7 @@ import type { InviteState } from '$modules/invite/invite.store'
 export type InviteAggregate = InviteState
 
 export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event): InviteAggregate {
-	switch (event.payload.$case) {
+	switch (event.payload!.$case) {
 		case 'inviteCreated':
 			// Delete placeholder
 			aggregate.delete(0)
@@ -30,5 +30,7 @@ export function mapProtoInviteType(type: proto.invite.InviteType) {
 			return InviteType.PHONE
 		case proto.invite.InviteType.DIRECT:
 			return InviteType.DIRECT
+		default:
+			throw new Error(`Unknown invite type: ${type}`)
 	}
 }

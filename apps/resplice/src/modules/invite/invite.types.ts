@@ -13,16 +13,21 @@ type BaseInvite = {
 	shares: number[]
 }
 
-type HandleInvite = BaseInvite & {
+export type HandleInvite = BaseInvite & {
 	type: InviteType.HANDLE
 }
 
-type PhoneInvite = BaseInvite & {
+export type PhoneInvite = BaseInvite & {
 	type: InviteType.PHONE
 }
 
-type DirectInvite = BaseInvite & {
+export type DirectInvite = BaseInvite & {
 	type: InviteType.DIRECT
 }
 
 export type Invite = HandleInvite | PhoneInvite | DirectInvite
+
+export type QrInvite = {
+	uuid: string
+	attributeIds: number[]
+}

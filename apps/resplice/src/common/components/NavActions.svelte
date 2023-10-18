@@ -5,8 +5,8 @@
 	import {
 		AddIcon,
 		CloseIcon,
-		// CameraIcon,
-		// QRCodeIcon,
+		CameraIcon,
+		QRCodeIcon,
 		PeopleIcon,
 		CallIcon
 		// MailIcon,
@@ -63,24 +63,6 @@
 				class="bg-white rounded-xl p-8 flex flex-col items-start space-y-4"
 				style="will-change: transform; transform: translateY({$translateY}px) scale({$scale})"
 			>
-				<!-- <button
-					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/qr/scan')}
-				>
-					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
-						<CameraIcon width={24} height={24} />
-					</div>
-					<p>Scan QR</p>
-				</button>
-				<button
-					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/qr')}
-				>
-					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
-						<QRCodeIcon width={24} height={24} />
-					</div>
-					<p>Show QR</p>
-				</button> -->
 				<button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/bulk')}
@@ -117,6 +99,24 @@
 					</div>
 					<p>Invite with Email</p>
 				</button> -->
+				<button
+					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
+					on:click={() => push('/invite/qr')}
+				>
+					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
+						<QRCodeIcon width={24} height={24} />
+					</div>
+					<p>Show QR</p>
+				</button>
+				<button
+					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
+					on:click={() => push('/invite/qr/scan')}
+				>
+					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
+						<CameraIcon width={24} height={24} />
+					</div>
+					<p>Scan QR</p>
+				</button>
 			</div>
 		</div>
 	</div>
