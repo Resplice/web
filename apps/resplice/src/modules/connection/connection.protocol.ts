@@ -5,6 +5,7 @@ import type { SocketCommuter } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 
 export interface ConnectionProtocol {
+	changeAlias(payload: proto.connection.ChangeConnectionAlias): void
 	addShare(payload: proto.connection.AddConnectionShare): void
 	removeShare(payload: proto.connection.RemoveConnectionShare): void
 }
@@ -14,8 +15,18 @@ type Dependencies = {
 	store: ConnectionStore
 	commuter: SocketCommuter
 }
-function connectionProtocolFactory({ commuter }: Dependencies): ConnectionProtocol {
+function connectionProtocolFactory({ store, commuter }: Dependencies): ConnectionProtocol {
 	return {
+		changeAlias(payload) {
+			sendCommand(commuter, {
+				$case: 'changeConnectionAlias',
+				changeConnectionAlias: payload
+			})
+			store.update((state) => {
+				state.get(payload.connectionId)!.alias = payload.alias
+				return state
+			})
+		},
 		addShare(payload) {
 			sendCommand(commuter, {
 				$case: 'addConnectionShare',

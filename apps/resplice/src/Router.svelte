@@ -19,6 +19,7 @@
 	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
 	// Connection Pages
 	import ConnectionDetailPage from '$modules/connection/pages/ConnectionDetailPage.svelte'
+	import ChangeConnectionPage from '$modules/connection/pages/ChangeConnectionPage.svelte'
 
 	export let initialUrl = ''
 
@@ -28,11 +29,11 @@
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
 		'/attribute/:id/change': ChangeAttributePage,
-		// '/contact/pending/:id': PendingContactDetailPage,
+		// '/connection/pending/:id': PendingContactDetailPage,
 		'/connection/:id/details': ConnectionDetailPage,
-		// '/contact/:id/chat': ContactChatPage,
-		// '/contact/:id/edit': EditContactPage,
-		// '/contact/:id/shares': ContactSharesPage,
+		// '/connection/:id/chat': ContactChatPage,
+		'/connection/:id/change': ChangeConnectionPage,
+		// '/connection/:id/shares': ContactSharesPage,
 		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
 		'/invite/bulk': BulkInvitePage,

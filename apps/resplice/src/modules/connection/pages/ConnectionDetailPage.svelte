@@ -31,14 +31,14 @@
 </script>
 
 {#if !!connection}
-	<div class="flex flex-col w-full h-full space-y-4 bg-gray-100">
+	<div class="flex flex-col w-full h-full bg-gray-100">
 		<Header {connection} />
 		<main
-			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto"
+			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
 		>
 			<button
 				class="w-full flex flex-col items-center justify-center space-y-2 my-8"
-				on:click={() => push(`/connection/${connection.id}/edit`)}
+				on:click={() => push(`/connection/${connection.id}/change`)}
 			>
 				<Avatar seed={`${connection.id}`} src={connection.avatarUrl} size="xl" />
 				<ConnectionName {connection} />
