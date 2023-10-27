@@ -43,7 +43,9 @@
 	})}
 >
 	{#if ctx === 'resplice'}
-		<RespliceRoundIcon width={50} height={50} />
+    <div>
+      <img src='/chad-profile.webp' width={50} height={50} />
+    </div>
 	{/if}
 
 	<p

@@ -44,7 +44,8 @@ const convoMachine: ConversationMachine = {
 		GREETING: {
 			id: 'GREETING',
 			instructions: [
-				{ type: 'system', text: 'You & Chad have joined the chat.' },
+				{ type: 'system', text: 'You have joined the chat.' },
+				{ type: 'system', text: 'chad@resplice has joined the chat.' },
 				{
 					type: 'type',
 					ctx: 'resplice',
@@ -70,14 +71,14 @@ const convoMachine: ConversationMachine = {
 					options: [
 						{
 							prompt: 'Wow, really?',
-							path: 'GREETING_2'
+							path: 'REALLY'
 						}
 					]
 				}
 			]
 		},
-		GREETING_2: {
-			id: 'GREETING_2',
+		REALLY: {
+			id: 'REALLY',
 			instructions: [
 				{
 					type: 'type',
@@ -85,15 +86,15 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'Yes, really! But before we talk details, Marcus and I want to invite you to launch party. '
+							text: 'Yep! But, before we talk details, Marcus and I want to invite you to the Resplice Launch Party.'
 						}
 					]
 				},
-				{
+        {
 					type: 'prompt',
 					options: [
 						{
-							prompt: 'A party?',
+							prompt: 'Launch party?',
 							path: 'PARTY'
 						}
 					]
@@ -109,61 +110,35 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'Yes. Each adult must RSVP for themselves so we have an accurate headcount.'
-						}
-					]
-				},
-				{
-					type: 'type',
-					ctx: 'resplice',
-					actions: [
-						{
-							type: 'type',
-							text: 'Come for the evening or just for a little while.'
+							text: 'Yeah, just click \"Let\'s Party\" below and enter your phone number for details.'
 						}
 					]
 				},
 				{
 					type: 'prompt',
 					options: [
-						{
-							prompt: 'Can I invite others?',
-							path: 'PARTY_INVITE_OTHERS'
-						}
-					]
-				}
-			]
-		},
-		PARTY_INVITE_OTHERS: {
-			id: 'PARTY_INVITE_OTHERS',
-			instructions: [
-				{
-					type: 'type',
-					ctx: 'resplice',
-					actions: [
-						{
-							type: 'type',
-							text: 'Yes, we want everyone we know and everyone you know to be there.'
-						}
-					]
-				},
-				{
-					type: 'prompt',
-					options: [
-						{
-							prompt: 'Where do I RSVP?',
-							path: 'LETS_PARTY'
+            {
+							prompt: 'Why do I have to share my phone number?',
+							path: 'PHONE'
 						},
 						{
-							prompt: 'I might not be able to make the party.',
-							path: 'LETS_PARTY_NO'
+							prompt: 'Can I invite others to the party?',
+							path: 'OTHERS'
+						},
+            {
+							prompt: 'What if I can\'t make the party?',
+							path: 'NOGO'
+						},
+            {
+							prompt: 'Can you tell me more about the app?',
+							path: 'APP'
 						}
 					]
 				}
 			]
 		},
-		LETS_PARTY: {
-			id: 'LETS_PARTY',
+    PHONE: {
+			id: 'PHONE',
 			instructions: [
 				{
 					type: 'type',
@@ -171,7 +146,81 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: "Click 'Let's Party' in the lower right! 🎉"
+							text: 'Actually, you are not sharing anything :)'
+						}
+					]
+				},
+        {
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'The system is designed to allow one account per phone number and that phone number is totally private.'
+						}
+					]
+				},
+				{
+					type: 'prompt',
+					options: [
+						{
+							prompt: 'Can I invite others to the party?',
+							path: 'OTHERS'
+						},
+            {
+							prompt: 'What if I can\'t make the party?',
+							path: 'NOGO'
+						},
+            {
+							prompt: 'Can you tell me more about the app?',
+							path: 'APP'
+						}
+					]
+				}
+			]
+		},
+		OTHERS: {
+			id: 'OTHERS',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: 'Yes, please do! Invite your friends. Invite your family.'
+						}
+					]
+				},
+				{
+					type: 'prompt',
+					options: [
+            {
+							prompt: 'Why do I have to share my phone number?',
+							path: 'PHONE'
+						},
+            {
+							prompt: 'What if I can\'t make the party?',
+							path: 'NOGO'
+						},
+            {
+							prompt: 'Can you tell me more about the app?',
+							path: 'APP'
+						}
+					]
+				}
+			]
+		},
+		NOGO: {
+			id: 'NOGO',
+			instructions: [
+				{
+					type: 'type',
+					ctx: 'resplice',
+					actions: [
+						{
+							type: 'type',
+							text: "No worries, sign-up anyway and build out your profile."
 						}
 					]
 				},
@@ -181,14 +230,31 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'See you there!'
+							text: 'You will also be able to start securely sharing very soon!'
+						}
+					]
+				},
+        {
+					type: 'prompt',
+					options: [
+            {
+							prompt: 'Why do I have to share my phone number?',
+							path: 'PHONE'
+						},
+						{
+							prompt: 'Can I invite others to the party?',
+							path: 'OTHERS'
+						},
+            {
+							prompt: 'Can you tell me more about the app?',
+							path: 'APP'
 						}
 					]
 				}
 			]
 		},
-		LETS_PARTY_NO: {
-			id: 'LETS_PARTY_NO',
+		APP: {
+			id: 'APP',
 			instructions: [
 				{
 					type: 'type',
@@ -196,7 +262,7 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'No worries, sign-up anyway and build out your profile.'
+							text: 'Absolutely, the best way to learn about the app is to RSVP, click around and visit faq.resplice.com'
 						}
 					]
 				},
@@ -206,7 +272,24 @@ const convoMachine: ConversationMachine = {
 					actions: [
 						{
 							type: 'type',
-							text: 'You will be able to share very soon!'
+							text: 'You can always ask more questions, just email or text Marcus or I'
+						}
+					]
+				},
+        {
+					type: 'prompt',
+					options: [
+            {
+							prompt: 'Why do I have to share my phone number?',
+							path: 'PHONE'
+						},
+						{
+							prompt: 'Can I invite others to the party?',
+							path: 'OTHERS'
+						},
+            {
+							prompt: 'What if I can\'t make the party?',
+							path: 'NOGO'
 						}
 					]
 				}
