@@ -90,11 +90,15 @@
 		{#each convo.__machine__.states[state].instructions as instruction, idx}
 			{#if idx <= convoState.stateInfo[state].instruction}
 				{#if instruction.type === 'system'}
-					<SystemMessage message={instruction.text} on:mount={() => onInstructionFinished(state)} />
+					<SystemMessage
+            message={instruction.text}
+            ctx={instruction.ctx}
+            on:mount={() => onInstructionFinished(state)} />
 				{:else if instruction.type === 'type'}
 					<Typer
 						actions={instruction.actions}
 						ctx={instruction.ctx}
+						pauseFor={instruction.pauseFor}
 						on:done={() => onInstructionFinished(state)}
 					/>
 				{:else if instruction.type === 'prompt'}
