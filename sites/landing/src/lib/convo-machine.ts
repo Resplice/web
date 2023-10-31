@@ -126,7 +126,7 @@ const convoMachine: ConversationMachine = {
 							path: 'YEP'
 						},
 						{
-							prompt: 'Sounds like propoganda',
+							prompt: 'Sounds like propaganda',
 							path: 'PROP'
 						}
 					]
