@@ -56,7 +56,7 @@
 
 	{#if ctx === 'resplice'}
     <div>
-      <img src='/chad-profile-alt.webp' width={50} height={50} />
+      <img src='/chad-profile-alt.webp' alt='chad@resplice.com' width={50} height={50} />
     </div>
 	{/if}
 
