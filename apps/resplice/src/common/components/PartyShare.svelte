@@ -4,7 +4,7 @@
 	async function share() {
 		await navigator.share({
 			title: 'Resplice',
-			text: 'Changing the way you share.',
+			text: 'Your Data. Your Control.',
 			url: 'https://www.resplice.com'
 		})
 	}
