@@ -48,53 +48,12 @@ type ConversationMachine = {
 	states: Record<string, State>
 }
 const convoMachine: ConversationMachine = {
-	initialState: 'HAPPY',
+	initialState: 'INTRO',
 	states: {
-    HAPPY: {
-			id: 'HAPPY',
-			instructions: [
-				{ type: 'system', ctx: 'resplice', text: 'chad@resplice has joined the chat.' },
-        {
-					type: 'type',
-					ctx: 'resplice',
-					pauseFor: 1200,
-					actions: [
-            {
-							type: 'type',
-							text: 'Happy Halloween! 🎃'
-						}
-					]
-				},
-				{
-					type: 'type',
-					ctx: 'resplice',
-					pauseFor: 600,
-					actions: [
-            {
-							type: 'type',
-							text: 'Trick or Treat?'
-						}
-					]
-				},
-				{ type: 'system', ctx: 'person', text: 'You have joined the chat.' },
-				{
-					type: 'prompt',
-					options: [
-						{
-							prompt: 'Trick',
-							path: 'TRICK'
-						},
-						{
-							prompt: 'Treat',
-							path: 'INTRO'
-						}
-					]
-				}
-			]
-		},
 		INTRO: {
 			id: 'INTRO',
 			instructions: [
+				{ type: 'system', ctx: 'resplice', text: 'chad@resplice has joined the chat.' },
         {
 					type: 'type',
 					ctx: 'resplice',
