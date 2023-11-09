@@ -3,12 +3,16 @@ import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
 import type { InviteStore } from '$modules/invite/invite.store'
-import type { Invite, QrInvite } from '$modules/invite/invite.types'
-import { applyInviteEvent, mapProtoInviteType } from '$modules/invite/invite.state'
+import type { Invite, Qr } from '$modules/invite/invite.types'
+import {
+	applyInviteEvent,
+	applyPendingConnectionEvent,
+	mapProtoInviteType
+} from '$modules/invite/invite.state'
 
 export interface InviteProtocol {
 	create(payload: proto.invite.CreateInvite): void
-	createQr(shares: number[]): Promise<QrInvite>
+	createQr(payload: proto.invite.CreateQrInvite): Promise<Qr>
 	addShare(payload: proto.invite.AddInviteShare): void
 	removeShare(payload: proto.invite.RemoveInviteShare): void
 	delete(payload: proto.invite.DeleteInvite): void
@@ -23,7 +27,8 @@ type Dependencies = {
 }
 function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtocol {
 	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
-		store.update((state) => applyInviteEvent(state, event))
+		store.invites.update((state) => applyInviteEvent(state, event))
+		store.pendingConnections.update((state) => applyPendingConnectionEvent(state, event))
 	})
 
 	return {
@@ -39,19 +44,18 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				value: payload.value,
 				shares: payload.attributeIds
 			}
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.set(placeholderInvite.id, placeholderInvite)
 				return state
 			})
 		},
-		async createQr(shares) {
-			console.log(shares)
+		async createQr(payload) {
 			// TODO: Implement
 			return new Promise((resolve) => {
 				setTimeout(() => {
 					resolve({
 						uuid: 'uuid1234',
-						attributeIds: shares
+						attributeIds: payload.attributeIds
 					})
 				}, 500)
 			})
@@ -61,7 +65,7 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				$case: 'addInviteShare',
 				addInviteShare: payload
 			})
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.get(payload.inviteId)!.shares.push(payload.attributeId)
 				return state
 			})
@@ -71,7 +75,7 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				$case: 'removeInviteShare',
 				removeInviteShare: payload
 			})
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.get(payload.inviteId)!.shares = state
 					.get(payload.inviteId)!
 					.shares.filter((id) => id !== payload.attributeId)
@@ -83,7 +87,7 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				$case: 'deleteInvite',
 				deleteInvite: payload
 			})
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.delete(payload.inviteId)
 				return state
 			})

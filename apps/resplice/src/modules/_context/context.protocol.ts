@@ -26,6 +26,8 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function contextProtocolFactory({ cache, stores, commuter }: Dependencies): ContextProtocol {
+	let openAttempts = 0
+
 	async function openSocket(session: Session) {
 		const { events } = await cache.read<proto.Event>('events')
 		const lastEventId = events.at(-1)?.id || 0
@@ -47,6 +49,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function onSocketOpen() {
+		openAttempts = 0
 		stores.context.update((state) => ({
 			socketStatus: SocketStatus.CONNECTED,
 			error: null,
@@ -110,7 +113,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function tryReconnect() {
-		if (navigator.onLine && document.hasFocus()) {
+		if (navigator.onLine && document.hasFocus() && openAttempts < 3) {
 			reopen()
 		} else {
 			stores.context.update((state) => ({
@@ -118,10 +121,12 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				socketStatus: SocketStatus.DISCONNECTED
 			}))
 			window.addEventListener('online', function handler() {
+				openAttempts = 0
 				reopen()
 				window.removeEventListener('online', handler)
 			})
 			window.addEventListener('focus', function handler() {
+				openAttempts = 0
 				reopen()
 				window.removeEventListener('focus', handler)
 			})
@@ -129,6 +134,8 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function reopen() {
+		openAttempts++
+
 		const unsubscribe = stores.session.subscribe(async (state) => {
 			if (!state.currentSession) return
 			await openSocket(state.currentSession)

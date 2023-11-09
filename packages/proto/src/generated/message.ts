@@ -7,6 +7,7 @@ import {
   ConnectionAdded,
   ConnectionAliasChanged,
   ConnectionArchived,
+  ConnectionChanged,
   ConnectionDescriptionChanged,
   ConnectionFavored,
   ConnectionMuted,
@@ -17,8 +18,16 @@ import {
   ConnectionUnfavored,
   ConnectionUnmuted,
 } from "./connection/events";
-import { Connection, Connections, PendingConnection } from "./connection/state";
-import { InviteCreated, InviteDeleted, InviteShareAdded, InviteShareRemoved } from "./invite/events";
+import {
+  InviteCreated,
+  InviteDeleted,
+  InviteShareAdded,
+  InviteShareRemoved,
+  PendingConnectionAdded,
+  PendingConnectionChanged,
+  PendingConnectionRemoved,
+  QrInviteCreated,
+} from "./invite/events";
 
 export enum ErrorType {
   INVALID_INPUT = 0,
@@ -191,7 +200,12 @@ export interface Event {
     | { $case: "inviteShareAdded"; inviteShareAdded: InviteShareAdded }
     | { $case: "inviteShareRemoved"; inviteShareRemoved: InviteShareRemoved }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
+    | { $case: "qrInviteCreated"; qrInviteCreated: QrInviteCreated }
+    | { $case: "pendingConnectionAdded"; pendingConnectionAdded: PendingConnectionAdded }
+    | { $case: "pendingConnectionChanged"; pendingConnectionChanged: PendingConnectionChanged }
+    | { $case: "pendingConnectionRemoved"; pendingConnectionRemoved: PendingConnectionRemoved }
     | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
+    | { $case: "connectionChanged"; connectionChanged: ConnectionChanged }
     | { $case: "connectionAliasChanged"; connectionAliasChanged: ConnectionAliasChanged }
     | { $case: "connectionDescriptionChanged"; connectionDescriptionChanged: ConnectionDescriptionChanged }
     | { $case: "connectionShareAdded"; connectionShareAdded: ConnectionShareAdded }
@@ -208,9 +222,6 @@ export interface Event {
 
 export interface State {
   events: Event[];
-  pendingConnection: PendingConnection | undefined;
-  connection: Connection | undefined;
-  connections: Connections | undefined;
 }
 
 export interface Error {
@@ -405,42 +416,57 @@ export const Event = {
       case "inviteDeleted":
         InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(130).fork()).ldelim();
         break;
+      case "qrInviteCreated":
+        QrInviteCreated.encode(message.payload.qrInviteCreated, writer.uint32(138).fork()).ldelim();
+        break;
+      case "pendingConnectionAdded":
+        PendingConnectionAdded.encode(message.payload.pendingConnectionAdded, writer.uint32(146).fork()).ldelim();
+        break;
+      case "pendingConnectionChanged":
+        PendingConnectionChanged.encode(message.payload.pendingConnectionChanged, writer.uint32(154).fork()).ldelim();
+        break;
+      case "pendingConnectionRemoved":
+        PendingConnectionRemoved.encode(message.payload.pendingConnectionRemoved, writer.uint32(162).fork()).ldelim();
+        break;
       case "connectionAdded":
-        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(138).fork()).ldelim();
+        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(170).fork()).ldelim();
+        break;
+      case "connectionChanged":
+        ConnectionChanged.encode(message.payload.connectionChanged, writer.uint32(178).fork()).ldelim();
         break;
       case "connectionAliasChanged":
-        ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(146).fork()).ldelim();
+        ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(186).fork()).ldelim();
         break;
       case "connectionDescriptionChanged":
-        ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(154).fork())
+        ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(194).fork())
           .ldelim();
         break;
       case "connectionShareAdded":
-        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(162).fork()).ldelim();
+        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(202).fork()).ldelim();
         break;
       case "connectionShareRemoved":
-        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(170).fork()).ldelim();
+        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(210).fork()).ldelim();
         break;
       case "connectionFavored":
-        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(178).fork()).ldelim();
+        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(218).fork()).ldelim();
         break;
       case "connectionUnfavored":
-        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(186).fork()).ldelim();
+        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(226).fork()).ldelim();
         break;
       case "connectionMuted":
-        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(194).fork()).ldelim();
+        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(234).fork()).ldelim();
         break;
       case "connectionUnmuted":
-        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(202).fork()).ldelim();
+        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(242).fork()).ldelim();
         break;
       case "connectionArchived":
-        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(210).fork()).ldelim();
+        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(250).fork()).ldelim();
         break;
       case "connectionUnarchived":
-        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(218).fork()).ldelim();
+        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(258).fork()).ldelim();
         break;
       case "connectionRemoved":
-        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(226).fork()).ldelim();
+        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(266).fork()).ldelim();
         break;
     }
     return writer;
@@ -595,8 +621,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionAdded",
-            connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
+            $case: "qrInviteCreated",
+            qrInviteCreated: QrInviteCreated.decode(reader, reader.uint32()),
           };
           continue;
         case 18:
@@ -605,8 +631,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionAliasChanged",
-            connectionAliasChanged: ConnectionAliasChanged.decode(reader, reader.uint32()),
+            $case: "pendingConnectionAdded",
+            pendingConnectionAdded: PendingConnectionAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 19:
@@ -615,8 +641,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionDescriptionChanged",
-            connectionDescriptionChanged: ConnectionDescriptionChanged.decode(reader, reader.uint32()),
+            $case: "pendingConnectionChanged",
+            pendingConnectionChanged: PendingConnectionChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 20:
@@ -625,8 +651,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareAdded",
-            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
+            $case: "pendingConnectionRemoved",
+            pendingConnectionRemoved: PendingConnectionRemoved.decode(reader, reader.uint32()),
           };
           continue;
         case 21:
@@ -635,8 +661,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareRemoved",
-            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
+            $case: "connectionAdded",
+            connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 22:
@@ -645,8 +671,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionFavored",
-            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
+            $case: "connectionChanged",
+            connectionChanged: ConnectionChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 23:
@@ -655,8 +681,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnfavored",
-            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
+            $case: "connectionAliasChanged",
+            connectionAliasChanged: ConnectionAliasChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 24:
@@ -665,8 +691,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionMuted",
-            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
+            $case: "connectionDescriptionChanged",
+            connectionDescriptionChanged: ConnectionDescriptionChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 25:
@@ -675,8 +701,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnmuted",
-            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
+            $case: "connectionShareAdded",
+            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 26:
@@ -685,8 +711,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionArchived",
-            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
+            $case: "connectionShareRemoved",
+            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
           };
           continue;
         case 27:
@@ -695,12 +721,62 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnarchived",
-            connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
+            $case: "connectionFavored",
+            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
           };
           continue;
         case 28:
           if (tag !== 226) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnfavored",
+            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 29:
+          if (tag !== 234) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionMuted",
+            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 30:
+          if (tag !== 242) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnmuted",
+            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionArchived",
+            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 32:
+          if (tag !== 258) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnarchived",
+            connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 33:
+          if (tag !== 266) {
             break;
           }
 
@@ -757,8 +833,27 @@ export const Event = {
         ? { $case: "inviteShareRemoved", inviteShareRemoved: InviteShareRemoved.fromJSON(object.inviteShareRemoved) }
         : isSet(object.inviteDeleted)
         ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
+        : isSet(object.qrInviteCreated)
+        ? { $case: "qrInviteCreated", qrInviteCreated: QrInviteCreated.fromJSON(object.qrInviteCreated) }
+        : isSet(object.pendingConnectionAdded)
+        ? {
+          $case: "pendingConnectionAdded",
+          pendingConnectionAdded: PendingConnectionAdded.fromJSON(object.pendingConnectionAdded),
+        }
+        : isSet(object.pendingConnectionChanged)
+        ? {
+          $case: "pendingConnectionChanged",
+          pendingConnectionChanged: PendingConnectionChanged.fromJSON(object.pendingConnectionChanged),
+        }
+        : isSet(object.pendingConnectionRemoved)
+        ? {
+          $case: "pendingConnectionRemoved",
+          pendingConnectionRemoved: PendingConnectionRemoved.fromJSON(object.pendingConnectionRemoved),
+        }
         : isSet(object.connectionAdded)
         ? { $case: "connectionAdded", connectionAdded: ConnectionAdded.fromJSON(object.connectionAdded) }
+        : isSet(object.connectionChanged)
+        ? { $case: "connectionChanged", connectionChanged: ConnectionChanged.fromJSON(object.connectionChanged) }
         : isSet(object.connectionAliasChanged)
         ? {
           $case: "connectionAliasChanged",
@@ -853,8 +948,23 @@ export const Event = {
     if (message.payload?.$case === "inviteDeleted") {
       obj.inviteDeleted = InviteDeleted.toJSON(message.payload.inviteDeleted);
     }
+    if (message.payload?.$case === "qrInviteCreated") {
+      obj.qrInviteCreated = QrInviteCreated.toJSON(message.payload.qrInviteCreated);
+    }
+    if (message.payload?.$case === "pendingConnectionAdded") {
+      obj.pendingConnectionAdded = PendingConnectionAdded.toJSON(message.payload.pendingConnectionAdded);
+    }
+    if (message.payload?.$case === "pendingConnectionChanged") {
+      obj.pendingConnectionChanged = PendingConnectionChanged.toJSON(message.payload.pendingConnectionChanged);
+    }
+    if (message.payload?.$case === "pendingConnectionRemoved") {
+      obj.pendingConnectionRemoved = PendingConnectionRemoved.toJSON(message.payload.pendingConnectionRemoved);
+    }
     if (message.payload?.$case === "connectionAdded") {
       obj.connectionAdded = ConnectionAdded.toJSON(message.payload.connectionAdded);
+    }
+    if (message.payload?.$case === "connectionChanged") {
+      obj.connectionChanged = ConnectionChanged.toJSON(message.payload.connectionChanged);
     }
     if (message.payload?.$case === "connectionAliasChanged") {
       obj.connectionAliasChanged = ConnectionAliasChanged.toJSON(message.payload.connectionAliasChanged);
@@ -1045,6 +1155,46 @@ export const Event = {
       };
     }
     if (
+      object.payload?.$case === "qrInviteCreated" &&
+      object.payload?.qrInviteCreated !== undefined &&
+      object.payload?.qrInviteCreated !== null
+    ) {
+      message.payload = {
+        $case: "qrInviteCreated",
+        qrInviteCreated: QrInviteCreated.fromPartial(object.payload.qrInviteCreated),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnectionAdded" &&
+      object.payload?.pendingConnectionAdded !== undefined &&
+      object.payload?.pendingConnectionAdded !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnectionAdded",
+        pendingConnectionAdded: PendingConnectionAdded.fromPartial(object.payload.pendingConnectionAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnectionChanged" &&
+      object.payload?.pendingConnectionChanged !== undefined &&
+      object.payload?.pendingConnectionChanged !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnectionChanged",
+        pendingConnectionChanged: PendingConnectionChanged.fromPartial(object.payload.pendingConnectionChanged),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnectionRemoved" &&
+      object.payload?.pendingConnectionRemoved !== undefined &&
+      object.payload?.pendingConnectionRemoved !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnectionRemoved",
+        pendingConnectionRemoved: PendingConnectionRemoved.fromPartial(object.payload.pendingConnectionRemoved),
+      };
+    }
+    if (
       object.payload?.$case === "connectionAdded" &&
       object.payload?.connectionAdded !== undefined &&
       object.payload?.connectionAdded !== null
@@ -1052,6 +1202,16 @@ export const Event = {
       message.payload = {
         $case: "connectionAdded",
         connectionAdded: ConnectionAdded.fromPartial(object.payload.connectionAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionChanged" &&
+      object.payload?.connectionChanged !== undefined &&
+      object.payload?.connectionChanged !== null
+    ) {
+      message.payload = {
+        $case: "connectionChanged",
+        connectionChanged: ConnectionChanged.fromPartial(object.payload.connectionChanged),
       };
     }
     if (
@@ -1171,22 +1331,13 @@ export const Event = {
 };
 
 function createBaseState(): State {
-  return { events: [], pendingConnection: undefined, connection: undefined, connections: undefined };
+  return { events: [] };
 }
 
 export const State = {
   encode(message: State, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.events) {
       Event.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.pendingConnection !== undefined) {
-      PendingConnection.encode(message.pendingConnection, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.connection !== undefined) {
-      Connection.encode(message.connection, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.connections !== undefined) {
-      Connections.encode(message.connections, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -1205,27 +1356,6 @@ export const State = {
 
           message.events.push(Event.decode(reader, reader.uint32()));
           continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.pendingConnection = PendingConnection.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.connection = Connection.decode(reader, reader.uint32());
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.connections = Connections.decode(reader, reader.uint32());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1236,29 +1366,13 @@ export const State = {
   },
 
   fromJSON(object: any): State {
-    return {
-      events: globalThis.Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [],
-      pendingConnection: isSet(object.pendingConnection)
-        ? PendingConnection.fromJSON(object.pendingConnection)
-        : undefined,
-      connection: isSet(object.connection) ? Connection.fromJSON(object.connection) : undefined,
-      connections: isSet(object.connections) ? Connections.fromJSON(object.connections) : undefined,
-    };
+    return { events: globalThis.Array.isArray(object?.events) ? object.events.map((e: any) => Event.fromJSON(e)) : [] };
   },
 
   toJSON(message: State): unknown {
     const obj: any = {};
     if (message.events?.length) {
       obj.events = message.events.map((e) => Event.toJSON(e));
-    }
-    if (message.pendingConnection !== undefined) {
-      obj.pendingConnection = PendingConnection.toJSON(message.pendingConnection);
-    }
-    if (message.connection !== undefined) {
-      obj.connection = Connection.toJSON(message.connection);
-    }
-    if (message.connections !== undefined) {
-      obj.connections = Connections.toJSON(message.connections);
     }
     return obj;
   },
@@ -1269,15 +1383,6 @@ export const State = {
   fromPartial<I extends Exact<DeepPartial<State>, I>>(object: I): State {
     const message = createBaseState();
     message.events = object.events?.map((e) => Event.fromPartial(e)) || [];
-    message.pendingConnection = (object.pendingConnection !== undefined && object.pendingConnection !== null)
-      ? PendingConnection.fromPartial(object.pendingConnection)
-      : undefined;
-    message.connection = (object.connection !== undefined && object.connection !== null)
-      ? Connection.fromPartial(object.connection)
-      : undefined;
-    message.connections = (object.connections !== undefined && object.connections !== null)
-      ? Connections.fromPartial(object.connections)
-      : undefined;
     return message;
   },
 };

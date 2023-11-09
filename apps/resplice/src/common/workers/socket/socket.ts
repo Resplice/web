@@ -46,7 +46,7 @@ fromEvent<MessageEvent<SocketCommand>>(self, 'message')
 	})
 
 async function handleMessage(bytes: ArrayBuffer) {
-	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys.server)
+	const message = await deserializeMessage(new Uint8Array(bytes), self.cryptoKeys!.server)
 	await cacheMessage(message)
 	self.postMessage({ type: SocketEventType.RECEIVED, message })
 }
@@ -56,8 +56,12 @@ function handleError(event: CloseEvent) {
 	self.postMessage({ type: SocketEventType.ERRORED, error: event.reason })
 }
 
-function handleClose(code: number) {
-	self.postMessage({ type: SocketEventType.CLOSED, code })
+function handleOpen() {
+	self.postMessage({ type: SocketEventType.OPENED })
+}
+
+function handleClose(event: CloseEvent) {
+	self.postMessage({ type: SocketEventType.CLOSED, code: event.code })
 }
 
 async function openSocket(cmd: OpenCommand) {
@@ -91,8 +95,11 @@ async function openSocket(cmd: OpenCommand) {
 		protocol: handshake,
 		serializer: (m) => m,
 		deserializer: (m) => m.data,
+		openObserver: {
+			next: handleOpen
+		},
 		closeObserver: {
-			next: (e) => handleClose(e.code)
+			next: handleClose
 		},
 		binaryType: 'arraybuffer'
 	})
@@ -101,23 +108,21 @@ async function openSocket(cmd: OpenCommand) {
 		error: handleError,
 		complete: teardown
 	})
-
-	self.postMessage({ type: SocketEventType.OPENED })
 }
 
 async function cacheMessage({ event, state }: ProtoMessage) {
 	if (!self.persist) return
 
-	if (event) return self.cache.upsert('events', event)
-	if (state && state.events) return self.cache.upsert('events', state.events)
+	if (event) return self.cache!.upsert('events', event)
+	if (state && state.events) return self.cache!.upsert('events', state.events)
 	// TODO: Cache other state messages here
 }
 
 async function send(cmd: SendCommand) {
 	const protoCmd = cmd.payload
-	const [id] = await self.cache.insert('commands', self.persist ? protoCmd : '')
-	const cmdBytes = await serializeCommand({ id, payload: protoCmd }, self.cryptoKeys.client)
-	self.socket$.next(cmdBytes)
+	const [id] = await self.cache!.insert('commands', self.persist ? protoCmd : '')
+	const cmdBytes = await serializeCommand({ id, payload: protoCmd }, self.cryptoKeys!.client)
+	self.socket$!.next(cmdBytes)
 }
 
 function teardown() {

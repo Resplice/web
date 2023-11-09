@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { ConnectionSummary } from '$modules/connection/connection.types'
 	import { Avatar } from '@resplice/components'
+	import type { ConnectionSummary } from '$modules/connection/connection.types'
 
 	export let connection: ConnectionSummary
 </script>

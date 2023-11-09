@@ -10,6 +10,7 @@ export const connections = new Map<number, Connection>([
 			handle: '@avery_axx',
 			avatarUrl: 'https://i.pravatar.cc/250?img=1',
 			alias: '',
+			description: '',
 			attributes: [
 				{
 					id: 1,
@@ -33,6 +34,7 @@ export const connections = new Map<number, Connection>([
 					sortOrder: 2
 				}
 			],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -46,6 +48,7 @@ export const connections = new Map<number, Connection>([
 			handle: '@bella_amm',
 			avatarUrl: 'https://i.pravatar.cc/250?img=5',
 			alias: '',
+			description: '',
 			attributes: [
 				{
 					id: 1,
@@ -59,9 +62,8 @@ export const connections = new Map<number, Connection>([
 					sortOrder: 1
 				}
 			],
-
+			sharedAttributeIds: [1],
 			isFavored: true,
-
 			isArchived: false,
 			connectedAt: 1638893210
 		}
@@ -74,7 +76,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@caleb_app',
 			avatarUrl: 'https://i.pravatar.cc/250?img=6',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: true,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -88,10 +92,10 @@ export const connections = new Map<number, Connection>([
 			handle: '@connor_att',
 			avatarUrl: 'https://i.pravatar.cc/250?img=61',
 			alias: '',
+			description: '',
 			attributes: [],
-
+			sharedAttributeIds: [1],
 			isFavored: true,
-
 			isArchived: false,
 			connectedAt: 1638893210
 		}
@@ -104,7 +108,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@emilie_aii',
 			avatarUrl: 'https://i.pravatar.cc/250?img=9',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -118,7 +124,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@gordon_auu',
 			avatarUrl: 'https://i.pravatar.cc/250?img=7',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -132,7 +140,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@grant_aoo',
 			avatarUrl: 'https://i.pravatar.cc/250?img=8',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -146,7 +156,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@haley_aff',
 			avatarUrl: 'https://i.pravatar.cc/250?img=10',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -160,7 +172,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@ian_ayy',
 			avatarUrl: 'https://i.pravatar.cc/250?img=11',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -174,7 +188,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@johan_azz',
 			avatarUrl: 'https://i.pravatar.cc/250?img=12',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -188,7 +204,9 @@ export const connections = new Map<number, Connection>([
 			handle: 'The Plumber',
 			avatarUrl: 'https://i.pravatar.cc/250?img=14',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -202,7 +220,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@justine_akk',
 			avatarUrl: 'https://i.pravatar.cc/250?img=13',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -216,7 +236,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@kamron_ass',
 			avatarUrl: 'https://i.pravatar.cc/250?img=15',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -230,7 +252,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@kolton_ann',
 			avatarUrl: 'https://i.pravatar.cc/250?img=18',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -244,7 +268,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@kristina_ahh',
 			avatarUrl: 'https://i.pravatar.cc/250?img=50',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -258,7 +284,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@leon_aww',
 			avatarUrl: 'https://i.pravatar.cc/250?img=35',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -272,7 +300,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@leyla_aee',
 			avatarUrl: 'https://i.pravatar.cc/250?img=39',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -286,7 +316,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@lilly_acc',
 			avatarUrl: 'https://i.pravatar.cc/250?img=55',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -300,7 +332,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@marc_arr',
 			avatarUrl: 'https://i.pravatar.cc/250?img=40',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -314,7 +348,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@marlee_ajj',
 			avatarUrl: 'https://i.pravatar.cc/250?img=34',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -328,7 +364,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@micaela_all',
 			avatarUrl: 'https://i.pravatar.cc/250?img=18',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -342,7 +380,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@natasha_aaa',
 			avatarUrl: 'https://i.pravatar.cc/250?img=1',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -356,7 +396,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@ryan_aqq',
 			avatarUrl: 'https://i.pravatar.cc/250?img=13',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -370,7 +412,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@tania_add',
 			avatarUrl: 'https://i.pravatar.cc/250?img=12',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -384,7 +428,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@tia_abb',
 			avatarUrl: 'https://i.pravatar.cc/250?img=28',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210
@@ -398,7 +444,9 @@ export const connections = new Map<number, Connection>([
 			handle: '@yaretzi_agg',
 			avatarUrl: 'https://i.pravatar.cc/250?img=23',
 			alias: '',
+			description: '',
 			attributes: [],
+			sharedAttributeIds: [1],
 			isFavored: false,
 			isArchived: false,
 			connectedAt: 1638893210

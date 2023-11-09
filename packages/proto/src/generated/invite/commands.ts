@@ -2,6 +2,10 @@
 import _m0 from "protobufjs/minimal";
 import { InviteType, inviteTypeFromJSON, inviteTypeToJSON } from "./types";
 
+export interface BulkInvite {
+  invites: CreateInvite[];
+}
+
 export interface CreateInvite {
   type: InviteType;
   name: string;
@@ -33,6 +37,75 @@ export interface DeclineInvite {
   accountId: number;
   inviteId: number;
 }
+
+export interface CreateQrInvite {
+  attributeIds: number[];
+}
+
+export interface OpenQrInvite {
+  uuid: string;
+}
+
+function createBaseBulkInvite(): BulkInvite {
+  return { invites: [] };
+}
+
+export const BulkInvite = {
+  encode(message: BulkInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.invites) {
+      CreateInvite.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BulkInvite {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBulkInvite();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.invites.push(CreateInvite.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BulkInvite {
+    return {
+      invites: globalThis.Array.isArray(object?.invites)
+        ? object.invites.map((e: any) => CreateInvite.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: BulkInvite): unknown {
+    const obj: any = {};
+    if (message.invites?.length) {
+      obj.invites = message.invites.map((e) => CreateInvite.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BulkInvite>, I>>(base?: I): BulkInvite {
+    return BulkInvite.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BulkInvite>, I>>(object: I): BulkInvite {
+    const message = createBaseBulkInvite();
+    message.invites = object.invites?.map((e) => CreateInvite.fromPartial(e)) || [];
+    return message;
+  },
+};
 
 function createBaseCreateInvite(): CreateInvite {
   return { type: 0, name: "", value: "", attributeIds: [] };
@@ -530,6 +603,136 @@ export const DeclineInvite = {
     const message = createBaseDeclineInvite();
     message.accountId = object.accountId ?? 0;
     message.inviteId = object.inviteId ?? 0;
+    return message;
+  },
+};
+
+function createBaseCreateQrInvite(): CreateQrInvite {
+  return { attributeIds: [] };
+}
+
+export const CreateQrInvite = {
+  encode(message: CreateQrInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    writer.uint32(10).fork();
+    for (const v of message.attributeIds) {
+      writer.uint32(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateQrInvite {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateQrInvite();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag === 8) {
+            message.attributeIds.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 10) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.attributeIds.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateQrInvite {
+    return {
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
+        : [],
+    };
+  },
+
+  toJSON(message: CreateQrInvite): unknown {
+    const obj: any = {};
+    if (message.attributeIds?.length) {
+      obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateQrInvite>, I>>(base?: I): CreateQrInvite {
+    return CreateQrInvite.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CreateQrInvite>, I>>(object: I): CreateQrInvite {
+    const message = createBaseCreateQrInvite();
+    message.attributeIds = object.attributeIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseOpenQrInvite(): OpenQrInvite {
+  return { uuid: "" };
+}
+
+export const OpenQrInvite = {
+  encode(message: OpenQrInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.uuid !== "") {
+      writer.uint32(10).string(message.uuid);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OpenQrInvite {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOpenQrInvite();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.uuid = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OpenQrInvite {
+    return { uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "" };
+  },
+
+  toJSON(message: OpenQrInvite): unknown {
+    const obj: any = {};
+    if (message.uuid !== "") {
+      obj.uuid = message.uuid;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OpenQrInvite>, I>>(base?: I): OpenQrInvite {
+    return OpenQrInvite.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<OpenQrInvite>, I>>(object: I): OpenQrInvite {
+    const message = createBaseOpenQrInvite();
+    message.uuid = object.uuid ?? "";
     return message;
   },
 };

@@ -4,13 +4,14 @@
 	import searchStores from '$modules/search/search.store'
 	import SearchService from '$modules/search/search.service'
 	import connectionStore from '$modules/connection/connection.store'
-	import inviteStore from '$modules/invite/invite.store'
+	import inviteStores from '$modules/invite/invite.store'
 	import { SearchField, Spinner, IconButton, BackIcon } from '@resplice/components'
 	import AttributeResults from '$modules/search/components/AttributeResults.svelte'
 	import ConnectionResults from '$modules/search/components/ConnectionResults.svelte'
 	import type { RespliceDocuments } from '$modules/search/search.types'
 
 	const query = searchStores.query
+	const inviteStore = inviteStores.invites
 
 	let searchService: SearchService | null = null
 	let buildingIndex: Promise<void> = Promise.resolve()

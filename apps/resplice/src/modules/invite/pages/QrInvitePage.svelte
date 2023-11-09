@@ -18,7 +18,7 @@
 	let interval: NodeJS.Timeout | undefined
 
 	async function initQr() {
-		const qrInvite = await protocol.invite.createQr(Array.from(shares))
+		const qrInvite = await protocol.invite.createQr({ attributeIds: Array.from(shares) })
 		url = `${config.appUrl}/invite/qr/${qrInvite.uuid}`
 		console.log(url)
 
@@ -62,7 +62,9 @@
 	<main
 		class="bg-white w-full max-w-xl m-auto rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto"
 	>
-		<div class="w-full flex items-center justify-center mb-8 p-4 rounded-2xl bg-brand-primary">
+		<div
+			class="w-full flex items-center justify-center mb-8 p-4 rounded-2xl bg-brand-primary overflow-hidden"
+		>
 			{#if url}
 				<QrCode data={url} scale={9} />
 			{:else}

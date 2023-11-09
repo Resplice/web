@@ -1,8 +1,10 @@
+import type { AttributeType } from '@resplice/utils'
+
 export enum InviteType {
-	HANDLE = 'HANDLE',
+	QR = 'QR',
 	PHONE = 'PHONE',
 	EMAIL = 'EMAIL',
-	DIRECT = 'DIRECT'
+	HANDLE = 'HANDLE'
 }
 
 type BaseInvite = {
@@ -21,13 +23,28 @@ export type PhoneInvite = BaseInvite & {
 	type: InviteType.PHONE
 }
 
-export type DirectInvite = BaseInvite & {
-	type: InviteType.DIRECT
+export type QrInvite = BaseInvite & {
+	type: InviteType.QR
 }
 
-export type Invite = HandleInvite | PhoneInvite | DirectInvite
+export type Invite = QrInvite | PhoneInvite | HandleInvite
 
-export type QrInvite = {
+export type Qr = {
 	uuid: string
 	attributeIds: number[]
+}
+
+export type PendingConnectionAttribute = {
+	attributeType: AttributeType
+	name: string
+}
+
+export type PendingConnection = {
+	id: number
+	name: string
+	avatarUrl: string | null
+	inviteType: InviteType
+	inviteValue: string
+	attributes: PendingConnectionAttribute[]
+	expiresAt: number
 }

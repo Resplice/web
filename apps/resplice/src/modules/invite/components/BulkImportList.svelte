@@ -52,7 +52,7 @@
 			<div class="py-2 pr-4 flex items-center">
 				<ConnectionItem
 					connection={{
-						id: contact.id,
+						id: idx,
 						name: contact.name,
 						alias: null,
 						avatarUrl: contact.avatar

@@ -27,9 +27,12 @@ import {
 import {
   AcceptInvite,
   AddInviteShare,
+  BulkInvite,
   CreateInvite,
+  CreateQrInvite,
   DeclineInvite,
   DeleteInvite,
+  OpenQrInvite,
   RemoveInviteShare,
 } from "./invite/commands";
 
@@ -55,12 +58,15 @@ export interface Command {
     | { $case: "verifyAttribute"; verifyAttribute: VerifyAttribute }
     | { $case: "changeAttribute"; changeAttribute: ChangeAttribute }
     | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
+    | { $case: "bulkInvite"; bulkInvite: BulkInvite }
     | { $case: "createInvite"; createInvite: CreateInvite }
     | { $case: "addInviteShare"; addInviteShare: AddInviteShare }
     | { $case: "removeInviteShare"; removeInviteShare: RemoveInviteShare }
     | { $case: "deleteInvite"; deleteInvite: DeleteInvite }
     | { $case: "acceptInvite"; acceptInvite: AcceptInvite }
     | { $case: "declineInvite"; declineInvite: DeclineInvite }
+    | { $case: "createQrInvite"; createQrInvite: CreateQrInvite }
+    | { $case: "openQrInvite"; openQrInvite: OpenQrInvite }
     | { $case: "changeConnectionAlias"; changeConnectionAlias: ChangeConnectionAlias }
     | { $case: "changeConnectionDescription"; changeConnectionDescription: ChangeConnectionDescription }
     | { $case: "addConnectionShare"; addConnectionShare: AddConnectionShare }
@@ -213,57 +219,66 @@ export const Command = {
       case "removeAttribute":
         RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(114).fork()).ldelim();
         break;
+      case "bulkInvite":
+        BulkInvite.encode(message.payload.bulkInvite, writer.uint32(122).fork()).ldelim();
+        break;
       case "createInvite":
-        CreateInvite.encode(message.payload.createInvite, writer.uint32(122).fork()).ldelim();
+        CreateInvite.encode(message.payload.createInvite, writer.uint32(130).fork()).ldelim();
         break;
       case "addInviteShare":
-        AddInviteShare.encode(message.payload.addInviteShare, writer.uint32(130).fork()).ldelim();
+        AddInviteShare.encode(message.payload.addInviteShare, writer.uint32(138).fork()).ldelim();
         break;
       case "removeInviteShare":
-        RemoveInviteShare.encode(message.payload.removeInviteShare, writer.uint32(138).fork()).ldelim();
+        RemoveInviteShare.encode(message.payload.removeInviteShare, writer.uint32(146).fork()).ldelim();
         break;
       case "deleteInvite":
-        DeleteInvite.encode(message.payload.deleteInvite, writer.uint32(146).fork()).ldelim();
+        DeleteInvite.encode(message.payload.deleteInvite, writer.uint32(154).fork()).ldelim();
         break;
       case "acceptInvite":
-        AcceptInvite.encode(message.payload.acceptInvite, writer.uint32(154).fork()).ldelim();
+        AcceptInvite.encode(message.payload.acceptInvite, writer.uint32(162).fork()).ldelim();
         break;
       case "declineInvite":
-        DeclineInvite.encode(message.payload.declineInvite, writer.uint32(162).fork()).ldelim();
+        DeclineInvite.encode(message.payload.declineInvite, writer.uint32(170).fork()).ldelim();
+        break;
+      case "createQrInvite":
+        CreateQrInvite.encode(message.payload.createQrInvite, writer.uint32(178).fork()).ldelim();
+        break;
+      case "openQrInvite":
+        OpenQrInvite.encode(message.payload.openQrInvite, writer.uint32(186).fork()).ldelim();
         break;
       case "changeConnectionAlias":
-        ChangeConnectionAlias.encode(message.payload.changeConnectionAlias, writer.uint32(170).fork()).ldelim();
+        ChangeConnectionAlias.encode(message.payload.changeConnectionAlias, writer.uint32(194).fork()).ldelim();
         break;
       case "changeConnectionDescription":
-        ChangeConnectionDescription.encode(message.payload.changeConnectionDescription, writer.uint32(178).fork())
+        ChangeConnectionDescription.encode(message.payload.changeConnectionDescription, writer.uint32(202).fork())
           .ldelim();
         break;
       case "addConnectionShare":
-        AddConnectionShare.encode(message.payload.addConnectionShare, writer.uint32(186).fork()).ldelim();
+        AddConnectionShare.encode(message.payload.addConnectionShare, writer.uint32(210).fork()).ldelim();
         break;
       case "removeConnectionShare":
-        RemoveConnectionShare.encode(message.payload.removeConnectionShare, writer.uint32(194).fork()).ldelim();
+        RemoveConnectionShare.encode(message.payload.removeConnectionShare, writer.uint32(218).fork()).ldelim();
         break;
       case "favorConnection":
-        FavorConnection.encode(message.payload.favorConnection, writer.uint32(202).fork()).ldelim();
+        FavorConnection.encode(message.payload.favorConnection, writer.uint32(226).fork()).ldelim();
         break;
       case "unfavorConnection":
-        UnfavorConnection.encode(message.payload.unfavorConnection, writer.uint32(210).fork()).ldelim();
+        UnfavorConnection.encode(message.payload.unfavorConnection, writer.uint32(234).fork()).ldelim();
         break;
       case "muteConnection":
-        MuteConnection.encode(message.payload.muteConnection, writer.uint32(218).fork()).ldelim();
+        MuteConnection.encode(message.payload.muteConnection, writer.uint32(242).fork()).ldelim();
         break;
       case "unmuteConnection":
-        UnmuteConnection.encode(message.payload.unmuteConnection, writer.uint32(226).fork()).ldelim();
+        UnmuteConnection.encode(message.payload.unmuteConnection, writer.uint32(250).fork()).ldelim();
         break;
       case "archiveConnection":
-        ArchiveConnection.encode(message.payload.archiveConnection, writer.uint32(234).fork()).ldelim();
+        ArchiveConnection.encode(message.payload.archiveConnection, writer.uint32(258).fork()).ldelim();
         break;
       case "unarchiveConnection":
-        UnarchiveConnection.encode(message.payload.unarchiveConnection, writer.uint32(242).fork()).ldelim();
+        UnarchiveConnection.encode(message.payload.unarchiveConnection, writer.uint32(266).fork()).ldelim();
         break;
       case "removeConnection":
-        RemoveConnection.encode(message.payload.removeConnection, writer.uint32(250).fork()).ldelim();
+        RemoveConnection.encode(message.payload.removeConnection, writer.uint32(274).fork()).ldelim();
         break;
     }
     return writer;
@@ -400,17 +415,24 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
+          message.payload = { $case: "bulkInvite", bulkInvite: BulkInvite.decode(reader, reader.uint32()) };
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.payload = { $case: "addInviteShare", addInviteShare: AddInviteShare.decode(reader, reader.uint32()) };
+          message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
           continue;
         case 17:
           if (tag !== 138) {
+            break;
+          }
+
+          message.payload = { $case: "addInviteShare", addInviteShare: AddInviteShare.decode(reader, reader.uint32()) };
+          continue;
+        case 18:
+          if (tag !== 146) {
             break;
           }
 
@@ -419,29 +441,43 @@ export const Command = {
             removeInviteShare: RemoveInviteShare.decode(reader, reader.uint32()),
           };
           continue;
-        case 18:
-          if (tag !== 146) {
-            break;
-          }
-
-          message.payload = { $case: "deleteInvite", deleteInvite: DeleteInvite.decode(reader, reader.uint32()) };
-          continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.decode(reader, reader.uint32()) };
+          message.payload = { $case: "deleteInvite", deleteInvite: DeleteInvite.decode(reader, reader.uint32()) };
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.payload = { $case: "declineInvite", declineInvite: DeclineInvite.decode(reader, reader.uint32()) };
+          message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.decode(reader, reader.uint32()) };
           continue;
         case 21:
           if (tag !== 170) {
+            break;
+          }
+
+          message.payload = { $case: "declineInvite", declineInvite: DeclineInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.payload = { $case: "createQrInvite", createQrInvite: CreateQrInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.payload = { $case: "openQrInvite", openQrInvite: OpenQrInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 24:
+          if (tag !== 194) {
             break;
           }
 
@@ -450,8 +486,8 @@ export const Command = {
             changeConnectionAlias: ChangeConnectionAlias.decode(reader, reader.uint32()),
           };
           continue;
-        case 22:
-          if (tag !== 178) {
+        case 25:
+          if (tag !== 202) {
             break;
           }
 
@@ -460,8 +496,8 @@ export const Command = {
             changeConnectionDescription: ChangeConnectionDescription.decode(reader, reader.uint32()),
           };
           continue;
-        case 23:
-          if (tag !== 186) {
+        case 26:
+          if (tag !== 210) {
             break;
           }
 
@@ -470,8 +506,8 @@ export const Command = {
             addConnectionShare: AddConnectionShare.decode(reader, reader.uint32()),
           };
           continue;
-        case 24:
-          if (tag !== 194) {
+        case 27:
+          if (tag !== 218) {
             break;
           }
 
@@ -480,8 +516,8 @@ export const Command = {
             removeConnectionShare: RemoveConnectionShare.decode(reader, reader.uint32()),
           };
           continue;
-        case 25:
-          if (tag !== 202) {
+        case 28:
+          if (tag !== 226) {
             break;
           }
 
@@ -490,8 +526,8 @@ export const Command = {
             favorConnection: FavorConnection.decode(reader, reader.uint32()),
           };
           continue;
-        case 26:
-          if (tag !== 210) {
+        case 29:
+          if (tag !== 234) {
             break;
           }
 
@@ -500,15 +536,15 @@ export const Command = {
             unfavorConnection: UnfavorConnection.decode(reader, reader.uint32()),
           };
           continue;
-        case 27:
-          if (tag !== 218) {
+        case 30:
+          if (tag !== 242) {
             break;
           }
 
           message.payload = { $case: "muteConnection", muteConnection: MuteConnection.decode(reader, reader.uint32()) };
           continue;
-        case 28:
-          if (tag !== 226) {
+        case 31:
+          if (tag !== 250) {
             break;
           }
 
@@ -517,8 +553,8 @@ export const Command = {
             unmuteConnection: UnmuteConnection.decode(reader, reader.uint32()),
           };
           continue;
-        case 29:
-          if (tag !== 234) {
+        case 32:
+          if (tag !== 258) {
             break;
           }
 
@@ -527,8 +563,8 @@ export const Command = {
             archiveConnection: ArchiveConnection.decode(reader, reader.uint32()),
           };
           continue;
-        case 30:
-          if (tag !== 242) {
+        case 33:
+          if (tag !== 266) {
             break;
           }
 
@@ -537,8 +573,8 @@ export const Command = {
             unarchiveConnection: UnarchiveConnection.decode(reader, reader.uint32()),
           };
           continue;
-        case 31:
-          if (tag !== 250) {
+        case 34:
+          if (tag !== 274) {
             break;
           }
 
@@ -592,6 +628,8 @@ export const Command = {
         ? { $case: "changeAttribute", changeAttribute: ChangeAttribute.fromJSON(object.changeAttribute) }
         : isSet(object.removeAttribute)
         ? { $case: "removeAttribute", removeAttribute: RemoveAttribute.fromJSON(object.removeAttribute) }
+        : isSet(object.bulkInvite)
+        ? { $case: "bulkInvite", bulkInvite: BulkInvite.fromJSON(object.bulkInvite) }
         : isSet(object.createInvite)
         ? { $case: "createInvite", createInvite: CreateInvite.fromJSON(object.createInvite) }
         : isSet(object.addInviteShare)
@@ -604,6 +642,10 @@ export const Command = {
         ? { $case: "acceptInvite", acceptInvite: AcceptInvite.fromJSON(object.acceptInvite) }
         : isSet(object.declineInvite)
         ? { $case: "declineInvite", declineInvite: DeclineInvite.fromJSON(object.declineInvite) }
+        : isSet(object.createQrInvite)
+        ? { $case: "createQrInvite", createQrInvite: CreateQrInvite.fromJSON(object.createQrInvite) }
+        : isSet(object.openQrInvite)
+        ? { $case: "openQrInvite", openQrInvite: OpenQrInvite.fromJSON(object.openQrInvite) }
         : isSet(object.changeConnectionAlias)
         ? {
           $case: "changeConnectionAlias",
@@ -686,6 +728,9 @@ export const Command = {
     if (message.payload?.$case === "removeAttribute") {
       obj.removeAttribute = RemoveAttribute.toJSON(message.payload.removeAttribute);
     }
+    if (message.payload?.$case === "bulkInvite") {
+      obj.bulkInvite = BulkInvite.toJSON(message.payload.bulkInvite);
+    }
     if (message.payload?.$case === "createInvite") {
       obj.createInvite = CreateInvite.toJSON(message.payload.createInvite);
     }
@@ -703,6 +748,12 @@ export const Command = {
     }
     if (message.payload?.$case === "declineInvite") {
       obj.declineInvite = DeclineInvite.toJSON(message.payload.declineInvite);
+    }
+    if (message.payload?.$case === "createQrInvite") {
+      obj.createQrInvite = CreateQrInvite.toJSON(message.payload.createQrInvite);
+    }
+    if (message.payload?.$case === "openQrInvite") {
+      obj.openQrInvite = OpenQrInvite.toJSON(message.payload.openQrInvite);
     }
     if (message.payload?.$case === "changeConnectionAlias") {
       obj.changeConnectionAlias = ChangeConnectionAlias.toJSON(message.payload.changeConnectionAlias);
@@ -871,6 +922,13 @@ export const Command = {
       };
     }
     if (
+      object.payload?.$case === "bulkInvite" &&
+      object.payload?.bulkInvite !== undefined &&
+      object.payload?.bulkInvite !== null
+    ) {
+      message.payload = { $case: "bulkInvite", bulkInvite: BulkInvite.fromPartial(object.payload.bulkInvite) };
+    }
+    if (
       object.payload?.$case === "createInvite" &&
       object.payload?.createInvite !== undefined &&
       object.payload?.createInvite !== null
@@ -920,6 +978,23 @@ export const Command = {
         $case: "declineInvite",
         declineInvite: DeclineInvite.fromPartial(object.payload.declineInvite),
       };
+    }
+    if (
+      object.payload?.$case === "createQrInvite" &&
+      object.payload?.createQrInvite !== undefined &&
+      object.payload?.createQrInvite !== null
+    ) {
+      message.payload = {
+        $case: "createQrInvite",
+        createQrInvite: CreateQrInvite.fromPartial(object.payload.createQrInvite),
+      };
+    }
+    if (
+      object.payload?.$case === "openQrInvite" &&
+      object.payload?.openQrInvite !== undefined &&
+      object.payload?.openQrInvite !== null
+    ) {
+      message.payload = { $case: "openQrInvite", openQrInvite: OpenQrInvite.fromPartial(object.payload.openQrInvite) };
     }
     if (
       object.payload?.$case === "changeConnectionAlias" &&
