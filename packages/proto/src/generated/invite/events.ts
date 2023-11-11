@@ -1,405 +1,42 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { AttributeType, attributeTypeFromJSON, attributeTypeToJSON } from "../attribute/types";
-import { InviteType, inviteTypeFromJSON, inviteTypeToJSON } from "./types";
 
-export interface InviteCreated {
-  inviteId: number;
-  name: string;
-  type: InviteType;
-  value: string;
-  attributeIds: number[];
-}
-
-export interface InviteShareAdded {
-  inviteId: number;
-  attributeId: number;
-}
-
-export interface InviteShareRemoved {
-  inviteId: number;
-  attributeId: number;
-}
-
-export interface InviteDeleted {
-  inviteId: number;
-}
-
-export interface QrInviteCreated {
+export interface QrCodeCreated {
   uuid: string;
   attributeIds: number[];
 }
 
+export interface QrCodeOpened {
+  uuid: string;
+  accountId: number;
+  name: string;
+  avatarUrl: string;
+  pendingAttributes: PendingAttribute[];
+}
+
 export interface PendingAttribute {
+  name: string;
   attributeType: AttributeType;
+}
+
+export interface InviteCreated {
+  /** Hash of value */
+  id: string;
   name: string;
+  value?: { $case: "phone"; phone: string } | { $case: "email"; email: string } | undefined;
 }
 
-export interface PendingConnectionAdded {
-  pendingConnectionId: number;
-  inviteId: number;
-  inviteType: InviteType;
-  inviteValue: string;
-  name: string;
-  avatarUrl: string;
-  pendingAttributes: PendingAttribute[];
+export interface InviteDeleted {
+  id: string;
 }
 
-export interface PendingConnectionChanged {
-  pendingConnectionId: number;
-  name: string;
-  avatarUrl: string;
-  pendingAttributes: PendingAttribute[];
-}
-
-export interface PendingConnectionRemoved {
-  pendingConnectionId: number;
-}
-
-function createBaseInviteCreated(): InviteCreated {
-  return { inviteId: 0, name: "", type: 0, value: "", attributeIds: [] };
-}
-
-export const InviteCreated = {
-  encode(message: InviteCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.inviteId !== 0) {
-      writer.uint32(8).uint32(message.inviteId);
-    }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
-    }
-    if (message.type !== 0) {
-      writer.uint32(24).int32(message.type);
-    }
-    if (message.value !== "") {
-      writer.uint32(34).string(message.value);
-    }
-    writer.uint32(42).fork();
-    for (const v of message.attributeIds) {
-      writer.uint32(v);
-    }
-    writer.ldelim();
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): InviteCreated {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseInviteCreated();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.inviteId = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.type = reader.int32() as any;
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.value = reader.string();
-          continue;
-        case 5:
-          if (tag === 40) {
-            message.attributeIds.push(reader.uint32());
-
-            continue;
-          }
-
-          if (tag === 42) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.attributeIds.push(reader.uint32());
-            }
-
-            continue;
-          }
-
-          break;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): InviteCreated {
-    return {
-      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      type: isSet(object.type) ? inviteTypeFromJSON(object.type) : 0,
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-      attributeIds: globalThis.Array.isArray(object?.attributeIds)
-        ? object.attributeIds.map((e: any) => globalThis.Number(e))
-        : [],
-    };
-  },
-
-  toJSON(message: InviteCreated): unknown {
-    const obj: any = {};
-    if (message.inviteId !== 0) {
-      obj.inviteId = Math.round(message.inviteId);
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    if (message.type !== 0) {
-      obj.type = inviteTypeToJSON(message.type);
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
-    if (message.attributeIds?.length) {
-      obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<InviteCreated>, I>>(base?: I): InviteCreated {
-    return InviteCreated.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<InviteCreated>, I>>(object: I): InviteCreated {
-    const message = createBaseInviteCreated();
-    message.inviteId = object.inviteId ?? 0;
-    message.name = object.name ?? "";
-    message.type = object.type ?? 0;
-    message.value = object.value ?? "";
-    message.attributeIds = object.attributeIds?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseInviteShareAdded(): InviteShareAdded {
-  return { inviteId: 0, attributeId: 0 };
-}
-
-export const InviteShareAdded = {
-  encode(message: InviteShareAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.inviteId !== 0) {
-      writer.uint32(8).uint32(message.inviteId);
-    }
-    if (message.attributeId !== 0) {
-      writer.uint32(16).uint32(message.attributeId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): InviteShareAdded {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseInviteShareAdded();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.inviteId = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.attributeId = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): InviteShareAdded {
-    return {
-      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
-    };
-  },
-
-  toJSON(message: InviteShareAdded): unknown {
-    const obj: any = {};
-    if (message.inviteId !== 0) {
-      obj.inviteId = Math.round(message.inviteId);
-    }
-    if (message.attributeId !== 0) {
-      obj.attributeId = Math.round(message.attributeId);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<InviteShareAdded>, I>>(base?: I): InviteShareAdded {
-    return InviteShareAdded.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<InviteShareAdded>, I>>(object: I): InviteShareAdded {
-    const message = createBaseInviteShareAdded();
-    message.inviteId = object.inviteId ?? 0;
-    message.attributeId = object.attributeId ?? 0;
-    return message;
-  },
-};
-
-function createBaseInviteShareRemoved(): InviteShareRemoved {
-  return { inviteId: 0, attributeId: 0 };
-}
-
-export const InviteShareRemoved = {
-  encode(message: InviteShareRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.inviteId !== 0) {
-      writer.uint32(8).uint32(message.inviteId);
-    }
-    if (message.attributeId !== 0) {
-      writer.uint32(16).uint32(message.attributeId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): InviteShareRemoved {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseInviteShareRemoved();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.inviteId = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.attributeId = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): InviteShareRemoved {
-    return {
-      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
-      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
-    };
-  },
-
-  toJSON(message: InviteShareRemoved): unknown {
-    const obj: any = {};
-    if (message.inviteId !== 0) {
-      obj.inviteId = Math.round(message.inviteId);
-    }
-    if (message.attributeId !== 0) {
-      obj.attributeId = Math.round(message.attributeId);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<InviteShareRemoved>, I>>(base?: I): InviteShareRemoved {
-    return InviteShareRemoved.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<InviteShareRemoved>, I>>(object: I): InviteShareRemoved {
-    const message = createBaseInviteShareRemoved();
-    message.inviteId = object.inviteId ?? 0;
-    message.attributeId = object.attributeId ?? 0;
-    return message;
-  },
-};
-
-function createBaseInviteDeleted(): InviteDeleted {
-  return { inviteId: 0 };
-}
-
-export const InviteDeleted = {
-  encode(message: InviteDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.inviteId !== 0) {
-      writer.uint32(8).uint32(message.inviteId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): InviteDeleted {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseInviteDeleted();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.inviteId = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): InviteDeleted {
-    return { inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0 };
-  },
-
-  toJSON(message: InviteDeleted): unknown {
-    const obj: any = {};
-    if (message.inviteId !== 0) {
-      obj.inviteId = Math.round(message.inviteId);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<InviteDeleted>, I>>(base?: I): InviteDeleted {
-    return InviteDeleted.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<InviteDeleted>, I>>(object: I): InviteDeleted {
-    const message = createBaseInviteDeleted();
-    message.inviteId = object.inviteId ?? 0;
-    return message;
-  },
-};
-
-function createBaseQrInviteCreated(): QrInviteCreated {
+function createBaseQrCodeCreated(): QrCodeCreated {
   return { uuid: "", attributeIds: [] };
 }
 
-export const QrInviteCreated = {
-  encode(message: QrInviteCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const QrCodeCreated = {
+  encode(message: QrCodeCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.uuid !== "") {
       writer.uint32(10).string(message.uuid);
     }
@@ -411,10 +48,10 @@ export const QrInviteCreated = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QrInviteCreated {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QrCodeCreated {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQrInviteCreated();
+    const message = createBaseQrCodeCreated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -451,7 +88,7 @@ export const QrInviteCreated = {
     return message;
   },
 
-  fromJSON(object: any): QrInviteCreated {
+  fromJSON(object: any): QrCodeCreated {
     return {
       uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
       attributeIds: globalThis.Array.isArray(object?.attributeIds)
@@ -460,7 +97,7 @@ export const QrInviteCreated = {
     };
   },
 
-  toJSON(message: QrInviteCreated): unknown {
+  toJSON(message: QrCodeCreated): unknown {
     const obj: any = {};
     if (message.uuid !== "") {
       obj.uuid = message.uuid;
@@ -471,180 +108,78 @@ export const QrInviteCreated = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<QrInviteCreated>, I>>(base?: I): QrInviteCreated {
-    return QrInviteCreated.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<QrCodeCreated>, I>>(base?: I): QrCodeCreated {
+    return QrCodeCreated.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<QrInviteCreated>, I>>(object: I): QrInviteCreated {
-    const message = createBaseQrInviteCreated();
+  fromPartial<I extends Exact<DeepPartial<QrCodeCreated>, I>>(object: I): QrCodeCreated {
+    const message = createBaseQrCodeCreated();
     message.uuid = object.uuid ?? "";
     message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
-function createBasePendingAttribute(): PendingAttribute {
-  return { attributeType: 0, name: "" };
+function createBaseQrCodeOpened(): QrCodeOpened {
+  return { uuid: "", accountId: 0, name: "", avatarUrl: "", pendingAttributes: [] };
 }
 
-export const PendingAttribute = {
-  encode(message: PendingAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.attributeType !== 0) {
-      writer.uint32(8).int32(message.attributeType);
+export const QrCodeOpened = {
+  encode(message: QrCodeOpened, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.uuid !== "") {
+      writer.uint32(10).string(message.uuid);
+    }
+    if (message.accountId !== 0) {
+      writer.uint32(16).uint32(message.accountId);
     }
     if (message.name !== "") {
-      writer.uint32(18).string(message.name);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PendingAttribute {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePendingAttribute();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.attributeType = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PendingAttribute {
-    return {
-      attributeType: isSet(object.attributeType) ? attributeTypeFromJSON(object.attributeType) : 0,
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-    };
-  },
-
-  toJSON(message: PendingAttribute): unknown {
-    const obj: any = {};
-    if (message.attributeType !== 0) {
-      obj.attributeType = attributeTypeToJSON(message.attributeType);
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PendingAttribute>, I>>(base?: I): PendingAttribute {
-    return PendingAttribute.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<PendingAttribute>, I>>(object: I): PendingAttribute {
-    const message = createBasePendingAttribute();
-    message.attributeType = object.attributeType ?? 0;
-    message.name = object.name ?? "";
-    return message;
-  },
-};
-
-function createBasePendingConnectionAdded(): PendingConnectionAdded {
-  return {
-    pendingConnectionId: 0,
-    inviteId: 0,
-    inviteType: 0,
-    inviteValue: "",
-    name: "",
-    avatarUrl: "",
-    pendingAttributes: [],
-  };
-}
-
-export const PendingConnectionAdded = {
-  encode(message: PendingConnectionAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pendingConnectionId !== 0) {
-      writer.uint32(8).uint32(message.pendingConnectionId);
-    }
-    if (message.inviteId !== 0) {
-      writer.uint32(16).uint32(message.inviteId);
-    }
-    if (message.inviteType !== 0) {
-      writer.uint32(24).int32(message.inviteType);
-    }
-    if (message.inviteValue !== "") {
-      writer.uint32(34).string(message.inviteValue);
-    }
-    if (message.name !== "") {
-      writer.uint32(42).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     if (message.avatarUrl !== "") {
-      writer.uint32(50).string(message.avatarUrl);
+      writer.uint32(34).string(message.avatarUrl);
     }
     for (const v of message.pendingAttributes) {
-      PendingAttribute.encode(v!, writer.uint32(58).fork()).ldelim();
+      PendingAttribute.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PendingConnectionAdded {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QrCodeOpened {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePendingConnectionAdded();
+    const message = createBaseQrCodeOpened();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.pendingConnectionId = reader.uint32();
+          message.uuid = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.inviteId = reader.uint32();
+          message.accountId = reader.uint32();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.inviteType = reader.int32() as any;
+          message.name = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.inviteValue = reader.string();
+          message.avatarUrl = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.avatarUrl = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
             break;
           }
 
@@ -659,12 +194,10 @@ export const PendingConnectionAdded = {
     return message;
   },
 
-  fromJSON(object: any): PendingConnectionAdded {
+  fromJSON(object: any): QrCodeOpened {
     return {
-      pendingConnectionId: isSet(object.pendingConnectionId) ? globalThis.Number(object.pendingConnectionId) : 0,
-      inviteId: isSet(object.inviteId) ? globalThis.Number(object.inviteId) : 0,
-      inviteType: isSet(object.inviteType) ? inviteTypeFromJSON(object.inviteType) : 0,
-      inviteValue: isSet(object.inviteValue) ? globalThis.String(object.inviteValue) : "",
+      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
@@ -673,19 +206,13 @@ export const PendingConnectionAdded = {
     };
   },
 
-  toJSON(message: PendingConnectionAdded): unknown {
+  toJSON(message: QrCodeOpened): unknown {
     const obj: any = {};
-    if (message.pendingConnectionId !== 0) {
-      obj.pendingConnectionId = Math.round(message.pendingConnectionId);
+    if (message.uuid !== "") {
+      obj.uuid = message.uuid;
     }
-    if (message.inviteId !== 0) {
-      obj.inviteId = Math.round(message.inviteId);
-    }
-    if (message.inviteType !== 0) {
-      obj.inviteType = inviteTypeToJSON(message.inviteType);
-    }
-    if (message.inviteValue !== "") {
-      obj.inviteValue = message.inviteValue;
+    if (message.accountId !== 0) {
+      obj.accountId = Math.round(message.accountId);
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -699,15 +226,13 @@ export const PendingConnectionAdded = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PendingConnectionAdded>, I>>(base?: I): PendingConnectionAdded {
-    return PendingConnectionAdded.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<QrCodeOpened>, I>>(base?: I): QrCodeOpened {
+    return QrCodeOpened.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PendingConnectionAdded>, I>>(object: I): PendingConnectionAdded {
-    const message = createBasePendingConnectionAdded();
-    message.pendingConnectionId = object.pendingConnectionId ?? 0;
-    message.inviteId = object.inviteId ?? 0;
-    message.inviteType = object.inviteType ?? 0;
-    message.inviteValue = object.inviteValue ?? "";
+  fromPartial<I extends Exact<DeepPartial<QrCodeOpened>, I>>(object: I): QrCodeOpened {
+    const message = createBaseQrCodeOpened();
+    message.uuid = object.uuid ?? "";
+    message.accountId = object.accountId ?? 0;
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.pendingAttributes = object.pendingAttributes?.map((e) => PendingAttribute.fromPartial(e)) || [];
@@ -715,40 +240,116 @@ export const PendingConnectionAdded = {
   },
 };
 
-function createBasePendingConnectionChanged(): PendingConnectionChanged {
-  return { pendingConnectionId: 0, name: "", avatarUrl: "", pendingAttributes: [] };
+function createBasePendingAttribute(): PendingAttribute {
+  return { name: "", attributeType: 0 };
 }
 
-export const PendingConnectionChanged = {
-  encode(message: PendingConnectionChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pendingConnectionId !== 0) {
-      writer.uint32(8).uint32(message.pendingConnectionId);
-    }
+export const PendingAttribute = {
+  encode(message: PendingAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+      writer.uint32(10).string(message.name);
     }
-    if (message.avatarUrl !== "") {
-      writer.uint32(26).string(message.avatarUrl);
-    }
-    for (const v of message.pendingAttributes) {
-      PendingAttribute.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.attributeType !== 0) {
+      writer.uint32(16).int32(message.attributeType);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PendingConnectionChanged {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PendingAttribute {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePendingConnectionChanged();
+    const message = createBasePendingAttribute();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.pendingConnectionId = reader.uint32();
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.attributeType = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PendingAttribute {
+    return {
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      attributeType: isSet(object.attributeType) ? attributeTypeFromJSON(object.attributeType) : 0,
+    };
+  },
+
+  toJSON(message: PendingAttribute): unknown {
+    const obj: any = {};
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.attributeType !== 0) {
+      obj.attributeType = attributeTypeToJSON(message.attributeType);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PendingAttribute>, I>>(base?: I): PendingAttribute {
+    return PendingAttribute.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PendingAttribute>, I>>(object: I): PendingAttribute {
+    const message = createBasePendingAttribute();
+    message.name = object.name ?? "";
+    message.attributeType = object.attributeType ?? 0;
+    return message;
+  },
+};
+
+function createBaseInviteCreated(): InviteCreated {
+  return { id: "", name: "", value: undefined };
+}
+
+export const InviteCreated = {
+  encode(message: InviteCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    switch (message.value?.$case) {
+      case "phone":
+        writer.uint32(26).string(message.value.phone);
+        break;
+      case "email":
+        writer.uint32(34).string(message.value.email);
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): InviteCreated {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseInviteCreated();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -762,14 +363,14 @@ export const PendingConnectionChanged = {
             break;
           }
 
-          message.avatarUrl = reader.string();
+          message.value = { $case: "phone", phone: reader.string() };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.pendingAttributes.push(PendingAttribute.decode(reader, reader.uint32()));
+          message.value = { $case: "email", email: reader.string() };
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -780,72 +381,77 @@ export const PendingConnectionChanged = {
     return message;
   },
 
-  fromJSON(object: any): PendingConnectionChanged {
+  fromJSON(object: any): InviteCreated {
     return {
-      pendingConnectionId: isSet(object.pendingConnectionId) ? globalThis.Number(object.pendingConnectionId) : 0,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
-      pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
-        ? object.pendingAttributes.map((e: any) => PendingAttribute.fromJSON(e))
-        : [],
+      value: isSet(object.phone)
+        ? { $case: "phone", phone: globalThis.String(object.phone) }
+        : isSet(object.email)
+        ? { $case: "email", email: globalThis.String(object.email) }
+        : undefined,
     };
   },
 
-  toJSON(message: PendingConnectionChanged): unknown {
+  toJSON(message: InviteCreated): unknown {
     const obj: any = {};
-    if (message.pendingConnectionId !== 0) {
-      obj.pendingConnectionId = Math.round(message.pendingConnectionId);
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.avatarUrl !== "") {
-      obj.avatarUrl = message.avatarUrl;
+    if (message.value?.$case === "phone") {
+      obj.phone = message.value.phone;
     }
-    if (message.pendingAttributes?.length) {
-      obj.pendingAttributes = message.pendingAttributes.map((e) => PendingAttribute.toJSON(e));
+    if (message.value?.$case === "email") {
+      obj.email = message.value.email;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PendingConnectionChanged>, I>>(base?: I): PendingConnectionChanged {
-    return PendingConnectionChanged.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<InviteCreated>, I>>(base?: I): InviteCreated {
+    return InviteCreated.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PendingConnectionChanged>, I>>(object: I): PendingConnectionChanged {
-    const message = createBasePendingConnectionChanged();
-    message.pendingConnectionId = object.pendingConnectionId ?? 0;
+  fromPartial<I extends Exact<DeepPartial<InviteCreated>, I>>(object: I): InviteCreated {
+    const message = createBaseInviteCreated();
+    message.id = object.id ?? "";
     message.name = object.name ?? "";
-    message.avatarUrl = object.avatarUrl ?? "";
-    message.pendingAttributes = object.pendingAttributes?.map((e) => PendingAttribute.fromPartial(e)) || [];
+    if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
+      message.value = { $case: "phone", phone: object.value.phone };
+    }
+    if (object.value?.$case === "email" && object.value?.email !== undefined && object.value?.email !== null) {
+      message.value = { $case: "email", email: object.value.email };
+    }
     return message;
   },
 };
 
-function createBasePendingConnectionRemoved(): PendingConnectionRemoved {
-  return { pendingConnectionId: 0 };
+function createBaseInviteDeleted(): InviteDeleted {
+  return { id: "" };
 }
 
-export const PendingConnectionRemoved = {
-  encode(message: PendingConnectionRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pendingConnectionId !== 0) {
-      writer.uint32(8).uint32(message.pendingConnectionId);
+export const InviteDeleted = {
+  encode(message: InviteDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PendingConnectionRemoved {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InviteDeleted {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePendingConnectionRemoved();
+    const message = createBaseInviteDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.pendingConnectionId = reader.uint32();
+          message.id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -856,26 +462,24 @@ export const PendingConnectionRemoved = {
     return message;
   },
 
-  fromJSON(object: any): PendingConnectionRemoved {
-    return {
-      pendingConnectionId: isSet(object.pendingConnectionId) ? globalThis.Number(object.pendingConnectionId) : 0,
-    };
+  fromJSON(object: any): InviteDeleted {
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
   },
 
-  toJSON(message: PendingConnectionRemoved): unknown {
+  toJSON(message: InviteDeleted): unknown {
     const obj: any = {};
-    if (message.pendingConnectionId !== 0) {
-      obj.pendingConnectionId = Math.round(message.pendingConnectionId);
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PendingConnectionRemoved>, I>>(base?: I): PendingConnectionRemoved {
-    return PendingConnectionRemoved.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<InviteDeleted>, I>>(base?: I): InviteDeleted {
+    return InviteDeleted.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PendingConnectionRemoved>, I>>(object: I): PendingConnectionRemoved {
-    const message = createBasePendingConnectionRemoved();
-    message.pendingConnectionId = object.pendingConnectionId ?? 0;
+  fromPartial<I extends Exact<DeepPartial<InviteDeleted>, I>>(object: I): InviteDeleted {
+    const message = createBaseInviteDeleted();
+    message.id = object.id ?? "";
     return message;
   },
 };

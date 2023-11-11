@@ -13,8 +13,11 @@ export interface AddAttribute {
     | undefined;
 }
 
-export interface VerifyAttribute {
-  id: number;
+export interface SendValueVerification {
+  attributeId: number;
+}
+
+export interface VerifyAttributeValue {
   verifyCode: number;
   value?:
     | { $case: "phone"; phone: Phone }
@@ -197,42 +200,22 @@ export const AddAttribute = {
   },
 };
 
-function createBaseVerifyAttribute(): VerifyAttribute {
-  return { id: 0, verifyCode: 0, value: undefined };
+function createBaseSendValueVerification(): SendValueVerification {
+  return { attributeId: 0 };
 }
 
-export const VerifyAttribute = {
-  encode(message: VerifyAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
-    }
-    if (message.verifyCode !== 0) {
-      writer.uint32(16).uint32(message.verifyCode);
-    }
-    switch (message.value?.$case) {
-      case "phone":
-        Phone.encode(message.value.phone, writer.uint32(26).fork()).ldelim();
-        break;
-      case "email":
-        Email.encode(message.value.email, writer.uint32(34).fork()).ldelim();
-        break;
-      case "address":
-        Address.encode(message.value.address, writer.uint32(42).fork()).ldelim();
-        break;
-      case "social":
-        Social.encode(message.value.social, writer.uint32(50).fork()).ldelim();
-        break;
-      case "credential":
-        Credential.encode(message.value.credential, writer.uint32(58).fork()).ldelim();
-        break;
+export const SendValueVerification = {
+  encode(message: SendValueVerification, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.attributeId !== 0) {
+      writer.uint32(8).uint32(message.attributeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): VerifyAttribute {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SendValueVerification {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseVerifyAttribute();
+    const message = createBaseSendValueVerification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -241,45 +224,112 @@ export const VerifyAttribute = {
             break;
           }
 
-          message.id = reader.uint32();
+          message.attributeId = reader.uint32();
           continue;
-        case 2:
-          if (tag !== 16) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SendValueVerification {
+    return { attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0 };
+  },
+
+  toJSON(message: SendValueVerification): unknown {
+    const obj: any = {};
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SendValueVerification>, I>>(base?: I): SendValueVerification {
+    return SendValueVerification.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SendValueVerification>, I>>(object: I): SendValueVerification {
+    const message = createBaseSendValueVerification();
+    message.attributeId = object.attributeId ?? 0;
+    return message;
+  },
+};
+
+function createBaseVerifyAttributeValue(): VerifyAttributeValue {
+  return { verifyCode: 0, value: undefined };
+}
+
+export const VerifyAttributeValue = {
+  encode(message: VerifyAttributeValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.verifyCode !== 0) {
+      writer.uint32(8).uint32(message.verifyCode);
+    }
+    switch (message.value?.$case) {
+      case "phone":
+        Phone.encode(message.value.phone, writer.uint32(18).fork()).ldelim();
+        break;
+      case "email":
+        Email.encode(message.value.email, writer.uint32(26).fork()).ldelim();
+        break;
+      case "address":
+        Address.encode(message.value.address, writer.uint32(34).fork()).ldelim();
+        break;
+      case "social":
+        Social.encode(message.value.social, writer.uint32(42).fork()).ldelim();
+        break;
+      case "credential":
+        Credential.encode(message.value.credential, writer.uint32(50).fork()).ldelim();
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VerifyAttributeValue {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVerifyAttributeValue();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
           message.verifyCode = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
+          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
+          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
+          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
           continue;
         case 6:
           if (tag !== 50) {
-            break;
-          }
-
-          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
-          continue;
-        case 7:
-          if (tag !== 58) {
             break;
           }
 
@@ -294,9 +344,8 @@ export const VerifyAttribute = {
     return message;
   },
 
-  fromJSON(object: any): VerifyAttribute {
+  fromJSON(object: any): VerifyAttributeValue {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       verifyCode: isSet(object.verifyCode) ? globalThis.Number(object.verifyCode) : 0,
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
@@ -312,11 +361,8 @@ export const VerifyAttribute = {
     };
   },
 
-  toJSON(message: VerifyAttribute): unknown {
+  toJSON(message: VerifyAttributeValue): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
-    }
     if (message.verifyCode !== 0) {
       obj.verifyCode = Math.round(message.verifyCode);
     }
@@ -338,12 +384,11 @@ export const VerifyAttribute = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VerifyAttribute>, I>>(base?: I): VerifyAttribute {
-    return VerifyAttribute.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<VerifyAttributeValue>, I>>(base?: I): VerifyAttributeValue {
+    return VerifyAttributeValue.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VerifyAttribute>, I>>(object: I): VerifyAttribute {
-    const message = createBaseVerifyAttribute();
-    message.id = object.id ?? 0;
+  fromPartial<I extends Exact<DeepPartial<VerifyAttributeValue>, I>>(object: I): VerifyAttributeValue {
+    const message = createBaseVerifyAttributeValue();
     message.verifyCode = object.verifyCode ?? 0;
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
-import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeVerified } from "./attribute/events";
+import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeValueVerified } from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 import {
   ConnectionAdded,
@@ -18,16 +18,7 @@ import {
   ConnectionUnfavored,
   ConnectionUnmuted,
 } from "./connection/events";
-import {
-  InviteCreated,
-  InviteDeleted,
-  InviteShareAdded,
-  InviteShareRemoved,
-  PendingConnectionAdded,
-  PendingConnectionChanged,
-  PendingConnectionRemoved,
-  QrInviteCreated,
-} from "./invite/events";
+import { InviteCreated, InviteDeleted, QrCodeCreated, QrCodeOpened } from "./invite/events";
 
 export enum ErrorType {
   INVALID_INPUT = 0,
@@ -193,17 +184,13 @@ export interface Event {
     | { $case: "accountHandleChanged"; accountHandleChanged: AccountHandleChanged }
     | { $case: "accountAvatarChanged"; accountAvatarChanged: AccountAvatarChanged }
     | { $case: "attributeAdded"; attributeAdded: AttributeAdded }
-    | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
+    | { $case: "attributeValueVerified"; attributeValueVerified: AttributeValueVerified }
     | { $case: "attributeChanged"; attributeChanged: AttributeChanged }
     | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
+    | { $case: "qrCodeCreated"; qrCodeCreated: QrCodeCreated }
+    | { $case: "qrCodeOpened"; qrCodeOpened: QrCodeOpened }
     | { $case: "inviteCreated"; inviteCreated: InviteCreated }
-    | { $case: "inviteShareAdded"; inviteShareAdded: InviteShareAdded }
-    | { $case: "inviteShareRemoved"; inviteShareRemoved: InviteShareRemoved }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
-    | { $case: "qrInviteCreated"; qrInviteCreated: QrInviteCreated }
-    | { $case: "pendingConnectionAdded"; pendingConnectionAdded: PendingConnectionAdded }
-    | { $case: "pendingConnectionChanged"; pendingConnectionChanged: PendingConnectionChanged }
-    | { $case: "pendingConnectionRemoved"; pendingConnectionRemoved: PendingConnectionRemoved }
     | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
     | { $case: "connectionChanged"; connectionChanged: ConnectionChanged }
     | { $case: "connectionAliasChanged"; connectionAliasChanged: ConnectionAliasChanged }
@@ -395,8 +382,8 @@ export const Event = {
       case "attributeAdded":
         AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(74).fork()).ldelim();
         break;
-      case "attributeVerified":
-        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(82).fork()).ldelim();
+      case "attributeValueVerified":
+        AttributeValueVerified.encode(message.payload.attributeValueVerified, writer.uint32(82).fork()).ldelim();
         break;
       case "attributeChanged":
         AttributeChanged.encode(message.payload.attributeChanged, writer.uint32(90).fork()).ldelim();
@@ -404,69 +391,57 @@ export const Event = {
       case "attributeRemoved":
         AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(98).fork()).ldelim();
         break;
+      case "qrCodeCreated":
+        QrCodeCreated.encode(message.payload.qrCodeCreated, writer.uint32(106).fork()).ldelim();
+        break;
+      case "qrCodeOpened":
+        QrCodeOpened.encode(message.payload.qrCodeOpened, writer.uint32(114).fork()).ldelim();
+        break;
       case "inviteCreated":
-        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(106).fork()).ldelim();
-        break;
-      case "inviteShareAdded":
-        InviteShareAdded.encode(message.payload.inviteShareAdded, writer.uint32(114).fork()).ldelim();
-        break;
-      case "inviteShareRemoved":
-        InviteShareRemoved.encode(message.payload.inviteShareRemoved, writer.uint32(122).fork()).ldelim();
+        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(122).fork()).ldelim();
         break;
       case "inviteDeleted":
         InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(130).fork()).ldelim();
         break;
-      case "qrInviteCreated":
-        QrInviteCreated.encode(message.payload.qrInviteCreated, writer.uint32(138).fork()).ldelim();
-        break;
-      case "pendingConnectionAdded":
-        PendingConnectionAdded.encode(message.payload.pendingConnectionAdded, writer.uint32(146).fork()).ldelim();
-        break;
-      case "pendingConnectionChanged":
-        PendingConnectionChanged.encode(message.payload.pendingConnectionChanged, writer.uint32(154).fork()).ldelim();
-        break;
-      case "pendingConnectionRemoved":
-        PendingConnectionRemoved.encode(message.payload.pendingConnectionRemoved, writer.uint32(162).fork()).ldelim();
-        break;
       case "connectionAdded":
-        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(170).fork()).ldelim();
+        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(138).fork()).ldelim();
         break;
       case "connectionChanged":
-        ConnectionChanged.encode(message.payload.connectionChanged, writer.uint32(178).fork()).ldelim();
+        ConnectionChanged.encode(message.payload.connectionChanged, writer.uint32(146).fork()).ldelim();
         break;
       case "connectionAliasChanged":
-        ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(186).fork()).ldelim();
+        ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(154).fork()).ldelim();
         break;
       case "connectionDescriptionChanged":
-        ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(194).fork())
+        ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(162).fork())
           .ldelim();
         break;
       case "connectionShareAdded":
-        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(202).fork()).ldelim();
+        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(170).fork()).ldelim();
         break;
       case "connectionShareRemoved":
-        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(210).fork()).ldelim();
+        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(178).fork()).ldelim();
         break;
       case "connectionFavored":
-        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(218).fork()).ldelim();
+        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(186).fork()).ldelim();
         break;
       case "connectionUnfavored":
-        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(226).fork()).ldelim();
+        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(194).fork()).ldelim();
         break;
       case "connectionMuted":
-        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(234).fork()).ldelim();
+        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(202).fork()).ldelim();
         break;
       case "connectionUnmuted":
-        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(242).fork()).ldelim();
+        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(210).fork()).ldelim();
         break;
       case "connectionArchived":
-        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(250).fork()).ldelim();
+        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(218).fork()).ldelim();
         break;
       case "connectionUnarchived":
-        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(258).fork()).ldelim();
+        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(226).fork()).ldelim();
         break;
       case "connectionRemoved":
-        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(266).fork()).ldelim();
+        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(234).fork()).ldelim();
         break;
     }
     return writer;
@@ -557,8 +532,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "attributeVerified",
-            attributeVerified: AttributeVerified.decode(reader, reader.uint32()),
+            $case: "attributeValueVerified",
+            attributeValueVerified: AttributeValueVerified.decode(reader, reader.uint32()),
           };
           continue;
         case 11:
@@ -586,27 +561,21 @@ export const Event = {
             break;
           }
 
-          message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
+          message.payload = { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.decode(reader, reader.uint32()) };
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.payload = {
-            $case: "inviteShareAdded",
-            inviteShareAdded: InviteShareAdded.decode(reader, reader.uint32()),
-          };
+          message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.decode(reader, reader.uint32()) };
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.payload = {
-            $case: "inviteShareRemoved",
-            inviteShareRemoved: InviteShareRemoved.decode(reader, reader.uint32()),
-          };
+          message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
           continue;
         case 16:
           if (tag !== 130) {
@@ -621,8 +590,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "qrInviteCreated",
-            qrInviteCreated: QrInviteCreated.decode(reader, reader.uint32()),
+            $case: "connectionAdded",
+            connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 18:
@@ -631,8 +600,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "pendingConnectionAdded",
-            pendingConnectionAdded: PendingConnectionAdded.decode(reader, reader.uint32()),
+            $case: "connectionChanged",
+            connectionChanged: ConnectionChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 19:
@@ -641,8 +610,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "pendingConnectionChanged",
-            pendingConnectionChanged: PendingConnectionChanged.decode(reader, reader.uint32()),
+            $case: "connectionAliasChanged",
+            connectionAliasChanged: ConnectionAliasChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 20:
@@ -651,8 +620,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "pendingConnectionRemoved",
-            pendingConnectionRemoved: PendingConnectionRemoved.decode(reader, reader.uint32()),
+            $case: "connectionDescriptionChanged",
+            connectionDescriptionChanged: ConnectionDescriptionChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 21:
@@ -661,8 +630,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionAdded",
-            connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
+            $case: "connectionShareAdded",
+            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 22:
@@ -671,8 +640,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionChanged",
-            connectionChanged: ConnectionChanged.decode(reader, reader.uint32()),
+            $case: "connectionShareRemoved",
+            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
           };
           continue;
         case 23:
@@ -681,8 +650,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionAliasChanged",
-            connectionAliasChanged: ConnectionAliasChanged.decode(reader, reader.uint32()),
+            $case: "connectionFavored",
+            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
           };
           continue;
         case 24:
@@ -691,8 +660,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionDescriptionChanged",
-            connectionDescriptionChanged: ConnectionDescriptionChanged.decode(reader, reader.uint32()),
+            $case: "connectionUnfavored",
+            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
           };
           continue;
         case 25:
@@ -701,8 +670,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareAdded",
-            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
+            $case: "connectionMuted",
+            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
           };
           continue;
         case 26:
@@ -711,8 +680,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareRemoved",
-            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
+            $case: "connectionUnmuted",
+            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
           };
           continue;
         case 27:
@@ -721,8 +690,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionFavored",
-            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
+            $case: "connectionArchived",
+            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
           };
           continue;
         case 28:
@@ -731,52 +700,12 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnfavored",
-            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 29:
-          if (tag !== 234) {
-            break;
-          }
-
-          message.payload = {
-            $case: "connectionMuted",
-            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 30:
-          if (tag !== 242) {
-            break;
-          }
-
-          message.payload = {
-            $case: "connectionUnmuted",
-            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 31:
-          if (tag !== 250) {
-            break;
-          }
-
-          message.payload = {
-            $case: "connectionArchived",
-            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 32:
-          if (tag !== 258) {
-            break;
-          }
-
-          message.payload = {
             $case: "connectionUnarchived",
             connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
           };
           continue;
-        case 33:
-          if (tag !== 266) {
+        case 29:
+          if (tag !== 234) {
             break;
           }
 
@@ -819,37 +748,23 @@ export const Event = {
         }
         : isSet(object.attributeAdded)
         ? { $case: "attributeAdded", attributeAdded: AttributeAdded.fromJSON(object.attributeAdded) }
-        : isSet(object.attributeVerified)
-        ? { $case: "attributeVerified", attributeVerified: AttributeVerified.fromJSON(object.attributeVerified) }
+        : isSet(object.attributeValueVerified)
+        ? {
+          $case: "attributeValueVerified",
+          attributeValueVerified: AttributeValueVerified.fromJSON(object.attributeValueVerified),
+        }
         : isSet(object.attributeChanged)
         ? { $case: "attributeChanged", attributeChanged: AttributeChanged.fromJSON(object.attributeChanged) }
         : isSet(object.attributeRemoved)
         ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
+        : isSet(object.qrCodeCreated)
+        ? { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.fromJSON(object.qrCodeCreated) }
+        : isSet(object.qrCodeOpened)
+        ? { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.fromJSON(object.qrCodeOpened) }
         : isSet(object.inviteCreated)
         ? { $case: "inviteCreated", inviteCreated: InviteCreated.fromJSON(object.inviteCreated) }
-        : isSet(object.inviteShareAdded)
-        ? { $case: "inviteShareAdded", inviteShareAdded: InviteShareAdded.fromJSON(object.inviteShareAdded) }
-        : isSet(object.inviteShareRemoved)
-        ? { $case: "inviteShareRemoved", inviteShareRemoved: InviteShareRemoved.fromJSON(object.inviteShareRemoved) }
         : isSet(object.inviteDeleted)
         ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
-        : isSet(object.qrInviteCreated)
-        ? { $case: "qrInviteCreated", qrInviteCreated: QrInviteCreated.fromJSON(object.qrInviteCreated) }
-        : isSet(object.pendingConnectionAdded)
-        ? {
-          $case: "pendingConnectionAdded",
-          pendingConnectionAdded: PendingConnectionAdded.fromJSON(object.pendingConnectionAdded),
-        }
-        : isSet(object.pendingConnectionChanged)
-        ? {
-          $case: "pendingConnectionChanged",
-          pendingConnectionChanged: PendingConnectionChanged.fromJSON(object.pendingConnectionChanged),
-        }
-        : isSet(object.pendingConnectionRemoved)
-        ? {
-          $case: "pendingConnectionRemoved",
-          pendingConnectionRemoved: PendingConnectionRemoved.fromJSON(object.pendingConnectionRemoved),
-        }
         : isSet(object.connectionAdded)
         ? { $case: "connectionAdded", connectionAdded: ConnectionAdded.fromJSON(object.connectionAdded) }
         : isSet(object.connectionChanged)
@@ -927,8 +842,8 @@ export const Event = {
     if (message.payload?.$case === "attributeAdded") {
       obj.attributeAdded = AttributeAdded.toJSON(message.payload.attributeAdded);
     }
-    if (message.payload?.$case === "attributeVerified") {
-      obj.attributeVerified = AttributeVerified.toJSON(message.payload.attributeVerified);
+    if (message.payload?.$case === "attributeValueVerified") {
+      obj.attributeValueVerified = AttributeValueVerified.toJSON(message.payload.attributeValueVerified);
     }
     if (message.payload?.$case === "attributeChanged") {
       obj.attributeChanged = AttributeChanged.toJSON(message.payload.attributeChanged);
@@ -936,29 +851,17 @@ export const Event = {
     if (message.payload?.$case === "attributeRemoved") {
       obj.attributeRemoved = AttributeRemoved.toJSON(message.payload.attributeRemoved);
     }
+    if (message.payload?.$case === "qrCodeCreated") {
+      obj.qrCodeCreated = QrCodeCreated.toJSON(message.payload.qrCodeCreated);
+    }
+    if (message.payload?.$case === "qrCodeOpened") {
+      obj.qrCodeOpened = QrCodeOpened.toJSON(message.payload.qrCodeOpened);
+    }
     if (message.payload?.$case === "inviteCreated") {
       obj.inviteCreated = InviteCreated.toJSON(message.payload.inviteCreated);
     }
-    if (message.payload?.$case === "inviteShareAdded") {
-      obj.inviteShareAdded = InviteShareAdded.toJSON(message.payload.inviteShareAdded);
-    }
-    if (message.payload?.$case === "inviteShareRemoved") {
-      obj.inviteShareRemoved = InviteShareRemoved.toJSON(message.payload.inviteShareRemoved);
-    }
     if (message.payload?.$case === "inviteDeleted") {
       obj.inviteDeleted = InviteDeleted.toJSON(message.payload.inviteDeleted);
-    }
-    if (message.payload?.$case === "qrInviteCreated") {
-      obj.qrInviteCreated = QrInviteCreated.toJSON(message.payload.qrInviteCreated);
-    }
-    if (message.payload?.$case === "pendingConnectionAdded") {
-      obj.pendingConnectionAdded = PendingConnectionAdded.toJSON(message.payload.pendingConnectionAdded);
-    }
-    if (message.payload?.$case === "pendingConnectionChanged") {
-      obj.pendingConnectionChanged = PendingConnectionChanged.toJSON(message.payload.pendingConnectionChanged);
-    }
-    if (message.payload?.$case === "pendingConnectionRemoved") {
-      obj.pendingConnectionRemoved = PendingConnectionRemoved.toJSON(message.payload.pendingConnectionRemoved);
     }
     if (message.payload?.$case === "connectionAdded") {
       obj.connectionAdded = ConnectionAdded.toJSON(message.payload.connectionAdded);
@@ -1085,13 +988,13 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeVerified" &&
-      object.payload?.attributeVerified !== undefined &&
-      object.payload?.attributeVerified !== null
+      object.payload?.$case === "attributeValueVerified" &&
+      object.payload?.attributeValueVerified !== undefined &&
+      object.payload?.attributeValueVerified !== null
     ) {
       message.payload = {
-        $case: "attributeVerified",
-        attributeVerified: AttributeVerified.fromPartial(object.payload.attributeVerified),
+        $case: "attributeValueVerified",
+        attributeValueVerified: AttributeValueVerified.fromPartial(object.payload.attributeValueVerified),
       };
     }
     if (
@@ -1115,6 +1018,23 @@ export const Event = {
       };
     }
     if (
+      object.payload?.$case === "qrCodeCreated" &&
+      object.payload?.qrCodeCreated !== undefined &&
+      object.payload?.qrCodeCreated !== null
+    ) {
+      message.payload = {
+        $case: "qrCodeCreated",
+        qrCodeCreated: QrCodeCreated.fromPartial(object.payload.qrCodeCreated),
+      };
+    }
+    if (
+      object.payload?.$case === "qrCodeOpened" &&
+      object.payload?.qrCodeOpened !== undefined &&
+      object.payload?.qrCodeOpened !== null
+    ) {
+      message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.fromPartial(object.payload.qrCodeOpened) };
+    }
+    if (
       object.payload?.$case === "inviteCreated" &&
       object.payload?.inviteCreated !== undefined &&
       object.payload?.inviteCreated !== null
@@ -1125,26 +1045,6 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "inviteShareAdded" &&
-      object.payload?.inviteShareAdded !== undefined &&
-      object.payload?.inviteShareAdded !== null
-    ) {
-      message.payload = {
-        $case: "inviteShareAdded",
-        inviteShareAdded: InviteShareAdded.fromPartial(object.payload.inviteShareAdded),
-      };
-    }
-    if (
-      object.payload?.$case === "inviteShareRemoved" &&
-      object.payload?.inviteShareRemoved !== undefined &&
-      object.payload?.inviteShareRemoved !== null
-    ) {
-      message.payload = {
-        $case: "inviteShareRemoved",
-        inviteShareRemoved: InviteShareRemoved.fromPartial(object.payload.inviteShareRemoved),
-      };
-    }
-    if (
       object.payload?.$case === "inviteDeleted" &&
       object.payload?.inviteDeleted !== undefined &&
       object.payload?.inviteDeleted !== null
@@ -1152,46 +1052,6 @@ export const Event = {
       message.payload = {
         $case: "inviteDeleted",
         inviteDeleted: InviteDeleted.fromPartial(object.payload.inviteDeleted),
-      };
-    }
-    if (
-      object.payload?.$case === "qrInviteCreated" &&
-      object.payload?.qrInviteCreated !== undefined &&
-      object.payload?.qrInviteCreated !== null
-    ) {
-      message.payload = {
-        $case: "qrInviteCreated",
-        qrInviteCreated: QrInviteCreated.fromPartial(object.payload.qrInviteCreated),
-      };
-    }
-    if (
-      object.payload?.$case === "pendingConnectionAdded" &&
-      object.payload?.pendingConnectionAdded !== undefined &&
-      object.payload?.pendingConnectionAdded !== null
-    ) {
-      message.payload = {
-        $case: "pendingConnectionAdded",
-        pendingConnectionAdded: PendingConnectionAdded.fromPartial(object.payload.pendingConnectionAdded),
-      };
-    }
-    if (
-      object.payload?.$case === "pendingConnectionChanged" &&
-      object.payload?.pendingConnectionChanged !== undefined &&
-      object.payload?.pendingConnectionChanged !== null
-    ) {
-      message.payload = {
-        $case: "pendingConnectionChanged",
-        pendingConnectionChanged: PendingConnectionChanged.fromPartial(object.payload.pendingConnectionChanged),
-      };
-    }
-    if (
-      object.payload?.$case === "pendingConnectionRemoved" &&
-      object.payload?.pendingConnectionRemoved !== undefined &&
-      object.payload?.pendingConnectionRemoved !== null
-    ) {
-      message.payload = {
-        $case: "pendingConnectionRemoved",
-        pendingConnectionRemoved: PendingConnectionRemoved.fromPartial(object.payload.pendingConnectionRemoved),
       };
     }
     if (

@@ -20,7 +20,7 @@ export async function sendCommandRequest(
 	{ fetch, cache }: Deps,
 	payload: proto.Command['payload']
 ) {
-	const { persisted, cryptoKeys } = await cache.getById<Session>('session', 0)
+	const { persisted, cryptoKeys } = (await cache.getById<Session>('session', 0))!
 	const [id] = await cache.insert('commands', persisted ? payload : '')
 	const command: proto.Command & { id: number } = {
 		id,

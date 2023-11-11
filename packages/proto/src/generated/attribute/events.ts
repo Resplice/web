@@ -14,11 +14,6 @@ export interface AttributeAdded {
     | undefined;
 }
 
-export interface AttributeVerified {
-  id: number;
-  verifiedAt: number;
-}
-
 export interface AttributeChanged {
   id: number;
   name: string;
@@ -33,6 +28,17 @@ export interface AttributeChanged {
 
 export interface AttributeRemoved {
   id: number;
+}
+
+export interface AttributeValueVerified {
+  verifiedAt: number;
+  value?:
+    | { $case: "phone"; phone: Phone }
+    | { $case: "email"; email: Email }
+    | { $case: "address"; address: Address }
+    | { $case: "social"; social: Social }
+    | { $case: "credential"; credential: Credential }
+    | undefined;
 }
 
 function createBaseAttributeAdded(): AttributeAdded {
@@ -202,80 +208,6 @@ export const AttributeAdded = {
     ) {
       message.value = { $case: "credential", credential: Credential.fromPartial(object.value.credential) };
     }
-    return message;
-  },
-};
-
-function createBaseAttributeVerified(): AttributeVerified {
-  return { id: 0, verifiedAt: 0 };
-}
-
-export const AttributeVerified = {
-  encode(message: AttributeVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
-    }
-    if (message.verifiedAt !== 0) {
-      writer.uint32(16).uint32(message.verifiedAt);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeVerified {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAttributeVerified();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.id = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.verifiedAt = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AttributeVerified {
-    return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
-      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
-    };
-  },
-
-  toJSON(message: AttributeVerified): unknown {
-    const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
-    }
-    if (message.verifiedAt !== 0) {
-      obj.verifiedAt = Math.round(message.verifiedAt);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AttributeVerified>, I>>(base?: I): AttributeVerified {
-    return AttributeVerified.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AttributeVerified>, I>>(object: I): AttributeVerified {
-    const message = createBaseAttributeVerified();
-    message.id = object.id ?? 0;
-    message.verifiedAt = object.verifiedAt ?? 0;
     return message;
   },
 };
@@ -504,6 +436,162 @@ export const AttributeRemoved = {
   fromPartial<I extends Exact<DeepPartial<AttributeRemoved>, I>>(object: I): AttributeRemoved {
     const message = createBaseAttributeRemoved();
     message.id = object.id ?? 0;
+    return message;
+  },
+};
+
+function createBaseAttributeValueVerified(): AttributeValueVerified {
+  return { verifiedAt: 0, value: undefined };
+}
+
+export const AttributeValueVerified = {
+  encode(message: AttributeValueVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.verifiedAt !== 0) {
+      writer.uint32(8).uint32(message.verifiedAt);
+    }
+    switch (message.value?.$case) {
+      case "phone":
+        Phone.encode(message.value.phone, writer.uint32(18).fork()).ldelim();
+        break;
+      case "email":
+        Email.encode(message.value.email, writer.uint32(26).fork()).ldelim();
+        break;
+      case "address":
+        Address.encode(message.value.address, writer.uint32(34).fork()).ldelim();
+        break;
+      case "social":
+        Social.encode(message.value.social, writer.uint32(42).fork()).ldelim();
+        break;
+      case "credential":
+        Credential.encode(message.value.credential, writer.uint32(50).fork()).ldelim();
+        break;
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeValueVerified {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAttributeValueVerified();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.verifiedAt = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.value = { $case: "credential", credential: Credential.decode(reader, reader.uint32()) };
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AttributeValueVerified {
+    return {
+      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
+      value: isSet(object.phone)
+        ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
+        : isSet(object.email)
+        ? { $case: "email", email: Email.fromJSON(object.email) }
+        : isSet(object.address)
+        ? { $case: "address", address: Address.fromJSON(object.address) }
+        : isSet(object.social)
+        ? { $case: "social", social: Social.fromJSON(object.social) }
+        : isSet(object.credential)
+        ? { $case: "credential", credential: Credential.fromJSON(object.credential) }
+        : undefined,
+    };
+  },
+
+  toJSON(message: AttributeValueVerified): unknown {
+    const obj: any = {};
+    if (message.verifiedAt !== 0) {
+      obj.verifiedAt = Math.round(message.verifiedAt);
+    }
+    if (message.value?.$case === "phone") {
+      obj.phone = Phone.toJSON(message.value.phone);
+    }
+    if (message.value?.$case === "email") {
+      obj.email = Email.toJSON(message.value.email);
+    }
+    if (message.value?.$case === "address") {
+      obj.address = Address.toJSON(message.value.address);
+    }
+    if (message.value?.$case === "social") {
+      obj.social = Social.toJSON(message.value.social);
+    }
+    if (message.value?.$case === "credential") {
+      obj.credential = Credential.toJSON(message.value.credential);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AttributeValueVerified>, I>>(base?: I): AttributeValueVerified {
+    return AttributeValueVerified.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AttributeValueVerified>, I>>(object: I): AttributeValueVerified {
+    const message = createBaseAttributeValueVerified();
+    message.verifiedAt = object.verifiedAt ?? 0;
+    if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
+      message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };
+    }
+    if (object.value?.$case === "email" && object.value?.email !== undefined && object.value?.email !== null) {
+      message.value = { $case: "email", email: Email.fromPartial(object.value.email) };
+    }
+    if (object.value?.$case === "address" && object.value?.address !== undefined && object.value?.address !== null) {
+      message.value = { $case: "address", address: Address.fromPartial(object.value.address) };
+    }
+    if (object.value?.$case === "social" && object.value?.social !== undefined && object.value?.social !== null) {
+      message.value = { $case: "social", social: Social.fromPartial(object.value.social) };
+    }
+    if (
+      object.value?.$case === "credential" &&
+      object.value?.credential !== undefined &&
+      object.value?.credential !== null
+    ) {
+      message.value = { $case: "credential", credential: Credential.fromPartial(object.value.credential) };
+    }
     return message;
   },
 };

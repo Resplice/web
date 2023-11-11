@@ -37,7 +37,7 @@ export function applyAttributeEvent(
 			aggregate.delete(0)
 			aggregate.set(event.payload.attributeAdded.id, {
 				id: event.payload.attributeAdded.id,
-				type: mapProtoAttributeType(event.payload.attributeAdded.value?.$case),
+				type: mapProtoAttributeValueType(event.payload.attributeAdded.value!.$case),
 				name: event.payload.attributeAdded.name,
 				value: mapProtoAttributeValue(event.payload.attributeAdded.value),
 				sortOrder: 0,
@@ -46,15 +46,17 @@ export function applyAttributeEvent(
 				verifyExpiry: null
 			} as Attribute)
 			break
-		case 'attributeVerified':
-			aggregate.get(event.payload.attributeVerified.id)!.verifiedAt =
-				event.payload.attributeVerified.verifiedAt
-			break
+		// TODO
+		// case 'attributeValueVerified':
+		// 	aggregate.get(event.payload.attributeValueVerified.id)!.verifiedAt =
+		// 		event.payload.attributeValueVerified.verifiedAt
+		// 	break
 		case 'attributeChanged':
-			aggregate.get(event.payload.attributeChanged.id)!.name = event.payload.attributeChanged.name
-			aggregate.get(event.payload.attributeChanged.id)!.value = mapProtoAttributeValue(
-				event.payload.attributeChanged.value
-			)
+			aggregate.set(event.payload.attributeChanged.id, {
+				...aggregate.get(event.payload.attributeChanged.id)!,
+				name: event.payload.attributeChanged.name,
+				value: mapProtoAttributeValue(event.payload.attributeChanged.value)
+			} as Attribute)
 			break
 		case 'attributeRemoved':
 			aggregate.delete(event.payload.attributeRemoved.id)
@@ -64,10 +66,28 @@ export function applyAttributeEvent(
 	return aggregate
 }
 
-export function mapProtoAttributeType(
-	type: proto.attribute.AddAttribute['value']['$case']
+export function mapProtoAttributeValueType(
+	// eslint-disable-next-line
+	type: 'phone' | 'email' | 'address' | 'social' | 'credential'
 ): AttributeType {
 	return AttributeType[type.toUpperCase() as keyof typeof AttributeType]
+}
+
+export function mapProtoAttributeType(type: proto.attribute.AttributeType): AttributeType {
+	switch (type) {
+		case proto.attribute.AttributeType.ADDRESS:
+			return AttributeType.ADDRESS
+		case proto.attribute.AttributeType.CREDENTIAL:
+			return AttributeType.CREDENTIAL
+		case proto.attribute.AttributeType.EMAIL:
+			return AttributeType.EMAIL
+		case proto.attribute.AttributeType.PHONE:
+			return AttributeType.PHONE
+		case proto.attribute.AttributeType.SOCIAL:
+			return AttributeType.SOCIAL
+		default:
+			throw new Error('Invalid Attribute Type')
+	}
 }
 
 export function mapProtoAttributeValue(

@@ -1,5 +1,4 @@
-import proto from '@resplice/proto'
-import { fetchFactory, stringToBytes } from '@resplice/utils'
+import { fetchFactory } from '@resplice/utils'
 import config from '$services/config'
 import stores from '$common/stores'
 import db from '$services/db'
@@ -22,7 +21,6 @@ export interface RespliceProtocol {
 	invite: InviteProtocol
 	connection: ConnectionProtocol
 	session: SessionProtocol
-	rsvp: (accessKey: Uint8Array, selection: 'yes' | 'no' | 'maybe') => Promise<void>
 }
 
 async function respliceProtocolFactory(): Promise<RespliceProtocol> {
@@ -45,7 +43,13 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.attribute,
 			commuter: socketCommuter
 		}),
-		invite: inviteProtocolFactory({ cache: db, store: stores.invite, commuter: socketCommuter }),
+		invite: inviteProtocolFactory({
+			fetch,
+			cache: db,
+			store: stores.invite,
+			connectionStore: stores.connection,
+			commuter: socketCommuter
+		}),
 		connection: connectionProtocolFactory({
 			cache: db,
 			store: stores.connection,
@@ -56,15 +60,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			cache: db,
 			store: stores.session,
 			commuter: socketCommuter
-		}),
-		async rsvp(accessKey, selection) {
-			const data = proto.SecCommand.encode({
-				id: 0,
-				accessKey,
-				command: stringToBytes(selection)
-			}).finish()
-			await fetch.post({ endpoint: '/rsvp', data })
-		}
+		})
 	}
 
 	socketCommuter.messages$.connect()

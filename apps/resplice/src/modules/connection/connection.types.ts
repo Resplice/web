@@ -1,6 +1,6 @@
 import type { Attribute } from '@resplice/utils'
 
-export type ConnectionAttribute = { connectionId: number } & Attribute
+export type ConnectionAttribute = Omit<Attribute, 'sortOrder'>
 
 export type Connection = {
 	id: number

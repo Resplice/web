@@ -7,7 +7,7 @@ export function applyAccountEvent(
 	aggregate: AccountAggregate,
 	event: proto.Event
 ): AccountAggregate {
-	switch (event.payload.$case) {
+	switch (event.payload!.$case) {
 		case 'accountCreated':
 			return {
 				uuid: event.payload.accountCreated.uuid,

@@ -5,9 +5,11 @@ type SearchHistoryType = 'attribute' | 'contact' | 'contactAttribute' | 'invite'
 const queryStore = writable<string>('')
 const historyStore = writable<{ type: SearchHistoryType; id: number }>()
 
-const searchStore = {
+const searchStores = {
 	query: queryStore,
 	history: historyStore
 }
 
-export default searchStore
+export type SearchStore = typeof searchStores
+
+export default searchStores

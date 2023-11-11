@@ -8,11 +8,14 @@ export enum InviteType {
 }
 
 type BaseInvite = {
-	id: number
+	id: string
 	type: InviteType
 	name: string
 	value: string
-	shares: number[]
+}
+
+export type QrInvite = BaseInvite & {
+	type: InviteType.QR
 }
 
 export type HandleInvite = BaseInvite & {
@@ -23,11 +26,11 @@ export type PhoneInvite = BaseInvite & {
 	type: InviteType.PHONE
 }
 
-export type QrInvite = BaseInvite & {
-	type: InviteType.QR
+export type EmailInvite = BaseInvite & {
+	type: InviteType.EMAIL
 }
 
-export type Invite = QrInvite | PhoneInvite | HandleInvite
+export type Invite = QrInvite | HandleInvite | PhoneInvite | EmailInvite
 
 export type Qr = {
 	uuid: string
@@ -45,6 +48,14 @@ export type PendingConnection = {
 	avatarUrl: string | null
 	inviteType: InviteType
 	inviteValue: string
-	attributes: PendingConnectionAttribute[]
+	pendingAttributes: PendingConnectionAttribute[]
 	expiresAt: number
+}
+
+export type QrPendingConnection = {
+	uuid: string
+	accountId: number
+	name: PendingConnection['name']
+	avatarUrl: PendingConnection['avatarUrl']
+	pendingAttributes: PendingConnection['pendingAttributes']
 }
