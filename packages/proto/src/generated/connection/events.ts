@@ -1,91 +1,95 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { Address, Credential, Email, Phone, Social } from "../attribute/types";
+import { Attribute } from "../attribute/state";
 
 export interface ConnectionAdded {
-  accountId: number;
+  connectionId: number;
   name: string;
-  handle: string;
   avatarUrl: string;
   alias: string;
   description: string;
-  attributes: ConnectionAttribute[];
+  attributes: Attribute[];
   sharedAttributeIds: number[];
 }
 
-export interface ConnectionAttribute {
-  id: number;
+export interface ConnectionNameChanged {
+  connectionId: number;
   name: string;
-  value?:
-    | { $case: "phone"; phone: Phone }
-    | { $case: "email"; email: Email }
-    | { $case: "address"; address: Address }
-    | { $case: "social"; social: Social }
-    | { $case: "credential"; credential: Credential }
-    | undefined;
 }
 
-export interface ConnectionChanged {
-  accountId: number;
-  name: string;
-  handle: string;
+export interface ConnectionAvatarChanged {
+  connectionId: number;
   avatarUrl: string;
-  attributes: ConnectionAttribute[];
 }
 
 export interface ConnectionAliasChanged {
-  accountId: number;
+  connectionId: number;
   alias: string;
 }
 
 export interface ConnectionDescriptionChanged {
-  accountId: number;
+  connectionId: number;
   description: string;
 }
 
+export interface ConnectionAttributeAdded {
+  connectionId: number;
+  attribute: Attribute | undefined;
+}
+
+export interface ConnectionAttributeChanged {
+  connectionId: number;
+  attribute: Attribute | undefined;
+}
+
+export interface ConnectionAttributeRemoved {
+  connectionId: number;
+  attributeId: number;
+}
+
 export interface ConnectionShareAdded {
-  accountId: number;
+  connectionId: number;
   attributeId: number;
 }
 
 export interface ConnectionShareRemoved {
-  accountId: number;
+  connectionId: number;
   attributeId: number;
 }
 
 export interface ConnectionFavored {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionUnfavored {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionMuted {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionUnmuted {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionArchived {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionUnarchived {
-  accountId: number;
+  connectionId: number;
 }
 
 export interface ConnectionRemoved {
-  accountId: number;
+  connectionId: number;
 }
 
 function createBaseConnectionAdded(): ConnectionAdded {
   return {
-    accountId: 0,
+    connectionId: 0,
     name: "",
-    handle: "",
     avatarUrl: "",
     alias: "",
     description: "",
@@ -96,28 +100,25 @@ function createBaseConnectionAdded(): ConnectionAdded {
 
 export const ConnectionAdded = {
   encode(message: ConnectionAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.handle !== "") {
-      writer.uint32(26).string(message.handle);
-    }
     if (message.avatarUrl !== "") {
-      writer.uint32(34).string(message.avatarUrl);
+      writer.uint32(26).string(message.avatarUrl);
     }
     if (message.alias !== "") {
-      writer.uint32(42).string(message.alias);
+      writer.uint32(34).string(message.alias);
     }
     if (message.description !== "") {
-      writer.uint32(50).string(message.description);
+      writer.uint32(42).string(message.description);
     }
     for (const v of message.attributes) {
-      ConnectionAttribute.encode(v!, writer.uint32(58).fork()).ldelim();
+      Attribute.encode(v!, writer.uint32(50).fork()).ldelim();
     }
-    writer.uint32(66).fork();
+    writer.uint32(58).fork();
     for (const v of message.sharedAttributeIds) {
       writer.uint32(v);
     }
@@ -137,7 +138,7 @@ export const ConnectionAdded = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -151,44 +152,37 @@ export const ConnectionAdded = {
             break;
           }
 
-          message.handle = reader.string();
+          message.avatarUrl = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.avatarUrl = reader.string();
+          message.alias = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.alias = reader.string();
+          message.description = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.description = reader.string();
+          message.attributes.push(Attribute.decode(reader, reader.uint32()));
           continue;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.attributes.push(ConnectionAttribute.decode(reader, reader.uint32()));
-          continue;
-        case 8:
-          if (tag === 64) {
+          if (tag === 56) {
             message.sharedAttributeIds.push(reader.uint32());
 
             continue;
           }
 
-          if (tag === 66) {
+          if (tag === 58) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.sharedAttributeIds.push(reader.uint32());
@@ -209,14 +203,13 @@ export const ConnectionAdded = {
 
   fromJSON(object: any): ConnectionAdded {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       attributes: globalThis.Array.isArray(object?.attributes)
-        ? object.attributes.map((e: any) => ConnectionAttribute.fromJSON(e))
+        ? object.attributes.map((e: any) => Attribute.fromJSON(e))
         : [],
       sharedAttributeIds: globalThis.Array.isArray(object?.sharedAttributeIds)
         ? object.sharedAttributeIds.map((e: any) => globalThis.Number(e))
@@ -226,14 +219,11 @@ export const ConnectionAdded = {
 
   toJSON(message: ConnectionAdded): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.name !== "") {
       obj.name = message.name;
-    }
-    if (message.handle !== "") {
-      obj.handle = message.handle;
     }
     if (message.avatarUrl !== "") {
       obj.avatarUrl = message.avatarUrl;
@@ -245,7 +235,7 @@ export const ConnectionAdded = {
       obj.description = message.description;
     }
     if (message.attributes?.length) {
-      obj.attributes = message.attributes.map((e) => ConnectionAttribute.toJSON(e));
+      obj.attributes = message.attributes.map((e) => Attribute.toJSON(e));
     }
     if (message.sharedAttributeIds?.length) {
       obj.sharedAttributeIds = message.sharedAttributeIds.map((e) => Math.round(e));
@@ -258,54 +248,36 @@ export const ConnectionAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionAdded>, I>>(object: I): ConnectionAdded {
     const message = createBaseConnectionAdded();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     message.name = object.name ?? "";
-    message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.alias = object.alias ?? "";
     message.description = object.description ?? "";
-    message.attributes = object.attributes?.map((e) => ConnectionAttribute.fromPartial(e)) || [];
+    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
     message.sharedAttributeIds = object.sharedAttributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
-function createBaseConnectionAttribute(): ConnectionAttribute {
-  return { id: 0, name: "", value: undefined };
+function createBaseConnectionNameChanged(): ConnectionNameChanged {
+  return { connectionId: 0, name: "" };
 }
 
-export const ConnectionAttribute = {
-  encode(message: ConnectionAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+export const ConnectionNameChanged = {
+  encode(message: ConnectionNameChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    switch (message.value?.$case) {
-      case "phone":
-        Phone.encode(message.value.phone, writer.uint32(26).fork()).ldelim();
-        break;
-      case "email":
-        Email.encode(message.value.email, writer.uint32(34).fork()).ldelim();
-        break;
-      case "address":
-        Address.encode(message.value.address, writer.uint32(42).fork()).ldelim();
-        break;
-      case "social":
-        Social.encode(message.value.social, writer.uint32(50).fork()).ldelim();
-        break;
-      case "credential":
-        Credential.encode(message.value.credential, writer.uint32(58).fork()).ldelim();
-        break;
-    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionAttribute {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionNameChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConnectionAttribute();
+    const message = createBaseConnectionNameChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -314,7 +286,7 @@ export const ConnectionAttribute = {
             break;
           }
 
-          message.id = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -322,41 +294,6 @@ export const ConnectionAttribute = {
           }
 
           message.name = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.value = { $case: "phone", phone: Phone.decode(reader, reader.uint32()) };
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.value = { $case: "email", email: Email.decode(reader, reader.uint32()) };
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.value = { $case: "address", address: Address.decode(reader, reader.uint32()) };
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.value = { $case: "social", social: Social.decode(reader, reader.uint32()) };
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.value = { $case: "credential", credential: Credential.decode(reader, reader.uint32()) };
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -367,108 +304,54 @@ export const ConnectionAttribute = {
     return message;
   },
 
-  fromJSON(object: any): ConnectionAttribute {
+  fromJSON(object: any): ConnectionNameChanged {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      value: isSet(object.phone)
-        ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
-        : isSet(object.email)
-        ? { $case: "email", email: Email.fromJSON(object.email) }
-        : isSet(object.address)
-        ? { $case: "address", address: Address.fromJSON(object.address) }
-        : isSet(object.social)
-        ? { $case: "social", social: Social.fromJSON(object.social) }
-        : isSet(object.credential)
-        ? { $case: "credential", credential: Credential.fromJSON(object.credential) }
-        : undefined,
     };
   },
 
-  toJSON(message: ConnectionAttribute): unknown {
+  toJSON(message: ConnectionNameChanged): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.value?.$case === "phone") {
-      obj.phone = Phone.toJSON(message.value.phone);
-    }
-    if (message.value?.$case === "email") {
-      obj.email = Email.toJSON(message.value.email);
-    }
-    if (message.value?.$case === "address") {
-      obj.address = Address.toJSON(message.value.address);
-    }
-    if (message.value?.$case === "social") {
-      obj.social = Social.toJSON(message.value.social);
-    }
-    if (message.value?.$case === "credential") {
-      obj.credential = Credential.toJSON(message.value.credential);
-    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ConnectionAttribute>, I>>(base?: I): ConnectionAttribute {
-    return ConnectionAttribute.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ConnectionNameChanged>, I>>(base?: I): ConnectionNameChanged {
+    return ConnectionNameChanged.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ConnectionAttribute>, I>>(object: I): ConnectionAttribute {
-    const message = createBaseConnectionAttribute();
-    message.id = object.id ?? 0;
+  fromPartial<I extends Exact<DeepPartial<ConnectionNameChanged>, I>>(object: I): ConnectionNameChanged {
+    const message = createBaseConnectionNameChanged();
+    message.connectionId = object.connectionId ?? 0;
     message.name = object.name ?? "";
-    if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
-      message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };
-    }
-    if (object.value?.$case === "email" && object.value?.email !== undefined && object.value?.email !== null) {
-      message.value = { $case: "email", email: Email.fromPartial(object.value.email) };
-    }
-    if (object.value?.$case === "address" && object.value?.address !== undefined && object.value?.address !== null) {
-      message.value = { $case: "address", address: Address.fromPartial(object.value.address) };
-    }
-    if (object.value?.$case === "social" && object.value?.social !== undefined && object.value?.social !== null) {
-      message.value = { $case: "social", social: Social.fromPartial(object.value.social) };
-    }
-    if (
-      object.value?.$case === "credential" &&
-      object.value?.credential !== undefined &&
-      object.value?.credential !== null
-    ) {
-      message.value = { $case: "credential", credential: Credential.fromPartial(object.value.credential) };
-    }
     return message;
   },
 };
 
-function createBaseConnectionChanged(): ConnectionChanged {
-  return { accountId: 0, name: "", handle: "", avatarUrl: "", attributes: [] };
+function createBaseConnectionAvatarChanged(): ConnectionAvatarChanged {
+  return { connectionId: 0, avatarUrl: "" };
 }
 
-export const ConnectionChanged = {
-  encode(message: ConnectionChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
-    }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
-    }
-    if (message.handle !== "") {
-      writer.uint32(26).string(message.handle);
+export const ConnectionAvatarChanged = {
+  encode(message: ConnectionAvatarChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.avatarUrl !== "") {
-      writer.uint32(34).string(message.avatarUrl);
-    }
-    for (const v of message.attributes) {
-      ConnectionAttribute.encode(v!, writer.uint32(42).fork()).ldelim();
+      writer.uint32(18).string(message.avatarUrl);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionChanged {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionAvatarChanged {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConnectionChanged();
+    const message = createBaseConnectionAvatarChanged();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -477,36 +360,15 @@ export const ConnectionChanged = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.handle = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
             break;
           }
 
           message.avatarUrl = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.attributes.push(ConnectionAttribute.decode(reader, reader.uint32()));
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -516,60 +378,43 @@ export const ConnectionChanged = {
     return message;
   },
 
-  fromJSON(object: any): ConnectionChanged {
+  fromJSON(object: any): ConnectionAvatarChanged {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
-      attributes: globalThis.Array.isArray(object?.attributes)
-        ? object.attributes.map((e: any) => ConnectionAttribute.fromJSON(e))
-        : [],
     };
   },
 
-  toJSON(message: ConnectionChanged): unknown {
+  toJSON(message: ConnectionAvatarChanged): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    if (message.handle !== "") {
-      obj.handle = message.handle;
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.avatarUrl !== "") {
       obj.avatarUrl = message.avatarUrl;
     }
-    if (message.attributes?.length) {
-      obj.attributes = message.attributes.map((e) => ConnectionAttribute.toJSON(e));
-    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ConnectionChanged>, I>>(base?: I): ConnectionChanged {
-    return ConnectionChanged.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ConnectionAvatarChanged>, I>>(base?: I): ConnectionAvatarChanged {
+    return ConnectionAvatarChanged.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ConnectionChanged>, I>>(object: I): ConnectionChanged {
-    const message = createBaseConnectionChanged();
-    message.accountId = object.accountId ?? 0;
-    message.name = object.name ?? "";
-    message.handle = object.handle ?? "";
+  fromPartial<I extends Exact<DeepPartial<ConnectionAvatarChanged>, I>>(object: I): ConnectionAvatarChanged {
+    const message = createBaseConnectionAvatarChanged();
+    message.connectionId = object.connectionId ?? 0;
     message.avatarUrl = object.avatarUrl ?? "";
-    message.attributes = object.attributes?.map((e) => ConnectionAttribute.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseConnectionAliasChanged(): ConnectionAliasChanged {
-  return { accountId: 0, alias: "" };
+  return { connectionId: 0, alias: "" };
 }
 
 export const ConnectionAliasChanged = {
   encode(message: ConnectionAliasChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.alias !== "") {
       writer.uint32(18).string(message.alias);
@@ -589,7 +434,7 @@ export const ConnectionAliasChanged = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -609,15 +454,15 @@ export const ConnectionAliasChanged = {
 
   fromJSON(object: any): ConnectionAliasChanged {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
     };
   },
 
   toJSON(message: ConnectionAliasChanged): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.alias !== "") {
       obj.alias = message.alias;
@@ -630,20 +475,20 @@ export const ConnectionAliasChanged = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionAliasChanged>, I>>(object: I): ConnectionAliasChanged {
     const message = createBaseConnectionAliasChanged();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     message.alias = object.alias ?? "";
     return message;
   },
 };
 
 function createBaseConnectionDescriptionChanged(): ConnectionDescriptionChanged {
-  return { accountId: 0, description: "" };
+  return { connectionId: 0, description: "" };
 }
 
 export const ConnectionDescriptionChanged = {
   encode(message: ConnectionDescriptionChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
@@ -663,7 +508,7 @@ export const ConnectionDescriptionChanged = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -683,15 +528,15 @@ export const ConnectionDescriptionChanged = {
 
   fromJSON(object: any): ConnectionDescriptionChanged {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       description: isSet(object.description) ? globalThis.String(object.description) : "",
     };
   },
 
   toJSON(message: ConnectionDescriptionChanged): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.description !== "") {
       obj.description = message.description;
@@ -704,20 +549,246 @@ export const ConnectionDescriptionChanged = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionDescriptionChanged>, I>>(object: I): ConnectionDescriptionChanged {
     const message = createBaseConnectionDescriptionChanged();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     message.description = object.description ?? "";
     return message;
   },
 };
 
+function createBaseConnectionAttributeAdded(): ConnectionAttributeAdded {
+  return { connectionId: 0, attribute: undefined };
+}
+
+export const ConnectionAttributeAdded = {
+  encode(message: ConnectionAttributeAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.attribute !== undefined) {
+      Attribute.encode(message.attribute, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionAttributeAdded {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseConnectionAttributeAdded();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.attribute = Attribute.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ConnectionAttributeAdded {
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      attribute: isSet(object.attribute) ? Attribute.fromJSON(object.attribute) : undefined,
+    };
+  },
+
+  toJSON(message: ConnectionAttributeAdded): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.attribute !== undefined) {
+      obj.attribute = Attribute.toJSON(message.attribute);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ConnectionAttributeAdded>, I>>(base?: I): ConnectionAttributeAdded {
+    return ConnectionAttributeAdded.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ConnectionAttributeAdded>, I>>(object: I): ConnectionAttributeAdded {
+    const message = createBaseConnectionAttributeAdded();
+    message.connectionId = object.connectionId ?? 0;
+    message.attribute = (object.attribute !== undefined && object.attribute !== null)
+      ? Attribute.fromPartial(object.attribute)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseConnectionAttributeChanged(): ConnectionAttributeChanged {
+  return { connectionId: 0, attribute: undefined };
+}
+
+export const ConnectionAttributeChanged = {
+  encode(message: ConnectionAttributeChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.attribute !== undefined) {
+      Attribute.encode(message.attribute, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionAttributeChanged {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseConnectionAttributeChanged();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.attribute = Attribute.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ConnectionAttributeChanged {
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      attribute: isSet(object.attribute) ? Attribute.fromJSON(object.attribute) : undefined,
+    };
+  },
+
+  toJSON(message: ConnectionAttributeChanged): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.attribute !== undefined) {
+      obj.attribute = Attribute.toJSON(message.attribute);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ConnectionAttributeChanged>, I>>(base?: I): ConnectionAttributeChanged {
+    return ConnectionAttributeChanged.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ConnectionAttributeChanged>, I>>(object: I): ConnectionAttributeChanged {
+    const message = createBaseConnectionAttributeChanged();
+    message.connectionId = object.connectionId ?? 0;
+    message.attribute = (object.attribute !== undefined && object.attribute !== null)
+      ? Attribute.fromPartial(object.attribute)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseConnectionAttributeRemoved(): ConnectionAttributeRemoved {
+  return { connectionId: 0, attributeId: 0 };
+}
+
+export const ConnectionAttributeRemoved = {
+  encode(message: ConnectionAttributeRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.attributeId !== 0) {
+      writer.uint32(16).uint32(message.attributeId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectionAttributeRemoved {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseConnectionAttributeRemoved();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.attributeId = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ConnectionAttributeRemoved {
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
+    };
+  },
+
+  toJSON(message: ConnectionAttributeRemoved): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ConnectionAttributeRemoved>, I>>(base?: I): ConnectionAttributeRemoved {
+    return ConnectionAttributeRemoved.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ConnectionAttributeRemoved>, I>>(object: I): ConnectionAttributeRemoved {
+    const message = createBaseConnectionAttributeRemoved();
+    message.connectionId = object.connectionId ?? 0;
+    message.attributeId = object.attributeId ?? 0;
+    return message;
+  },
+};
+
 function createBaseConnectionShareAdded(): ConnectionShareAdded {
-  return { accountId: 0, attributeId: 0 };
+  return { connectionId: 0, attributeId: 0 };
 }
 
 export const ConnectionShareAdded = {
   encode(message: ConnectionShareAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.attributeId !== 0) {
       writer.uint32(16).uint32(message.attributeId);
@@ -737,7 +808,7 @@ export const ConnectionShareAdded = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -757,15 +828,15 @@ export const ConnectionShareAdded = {
 
   fromJSON(object: any): ConnectionShareAdded {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
   toJSON(message: ConnectionShareAdded): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.attributeId !== 0) {
       obj.attributeId = Math.round(message.attributeId);
@@ -778,20 +849,20 @@ export const ConnectionShareAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionShareAdded>, I>>(object: I): ConnectionShareAdded {
     const message = createBaseConnectionShareAdded();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     message.attributeId = object.attributeId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionShareRemoved(): ConnectionShareRemoved {
-  return { accountId: 0, attributeId: 0 };
+  return { connectionId: 0, attributeId: 0 };
 }
 
 export const ConnectionShareRemoved = {
   encode(message: ConnectionShareRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     if (message.attributeId !== 0) {
       writer.uint32(16).uint32(message.attributeId);
@@ -811,7 +882,7 @@ export const ConnectionShareRemoved = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -831,15 +902,15 @@ export const ConnectionShareRemoved = {
 
   fromJSON(object: any): ConnectionShareRemoved {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
     };
   },
 
   toJSON(message: ConnectionShareRemoved): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.attributeId !== 0) {
       obj.attributeId = Math.round(message.attributeId);
@@ -852,20 +923,20 @@ export const ConnectionShareRemoved = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionShareRemoved>, I>>(object: I): ConnectionShareRemoved {
     const message = createBaseConnectionShareRemoved();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     message.attributeId = object.attributeId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionFavored(): ConnectionFavored {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionFavored = {
   encode(message: ConnectionFavored, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -882,7 +953,7 @@ export const ConnectionFavored = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -894,13 +965,13 @@ export const ConnectionFavored = {
   },
 
   fromJSON(object: any): ConnectionFavored {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionFavored): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -910,19 +981,19 @@ export const ConnectionFavored = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionFavored>, I>>(object: I): ConnectionFavored {
     const message = createBaseConnectionFavored();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionUnfavored(): ConnectionUnfavored {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionUnfavored = {
   encode(message: ConnectionUnfavored, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -939,7 +1010,7 @@ export const ConnectionUnfavored = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -951,13 +1022,13 @@ export const ConnectionUnfavored = {
   },
 
   fromJSON(object: any): ConnectionUnfavored {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionUnfavored): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -967,19 +1038,19 @@ export const ConnectionUnfavored = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionUnfavored>, I>>(object: I): ConnectionUnfavored {
     const message = createBaseConnectionUnfavored();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionMuted(): ConnectionMuted {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionMuted = {
   encode(message: ConnectionMuted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -996,7 +1067,7 @@ export const ConnectionMuted = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1008,13 +1079,13 @@ export const ConnectionMuted = {
   },
 
   fromJSON(object: any): ConnectionMuted {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionMuted): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -1024,19 +1095,19 @@ export const ConnectionMuted = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionMuted>, I>>(object: I): ConnectionMuted {
     const message = createBaseConnectionMuted();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionUnmuted(): ConnectionUnmuted {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionUnmuted = {
   encode(message: ConnectionUnmuted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -1053,7 +1124,7 @@ export const ConnectionUnmuted = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1065,13 +1136,13 @@ export const ConnectionUnmuted = {
   },
 
   fromJSON(object: any): ConnectionUnmuted {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionUnmuted): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -1081,19 +1152,19 @@ export const ConnectionUnmuted = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionUnmuted>, I>>(object: I): ConnectionUnmuted {
     const message = createBaseConnectionUnmuted();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionArchived(): ConnectionArchived {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionArchived = {
   encode(message: ConnectionArchived, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -1110,7 +1181,7 @@ export const ConnectionArchived = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1122,13 +1193,13 @@ export const ConnectionArchived = {
   },
 
   fromJSON(object: any): ConnectionArchived {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionArchived): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -1138,19 +1209,19 @@ export const ConnectionArchived = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionArchived>, I>>(object: I): ConnectionArchived {
     const message = createBaseConnectionArchived();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionUnarchived(): ConnectionUnarchived {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionUnarchived = {
   encode(message: ConnectionUnarchived, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -1167,7 +1238,7 @@ export const ConnectionUnarchived = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1179,13 +1250,13 @@ export const ConnectionUnarchived = {
   },
 
   fromJSON(object: any): ConnectionUnarchived {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionUnarchived): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -1195,19 +1266,19 @@ export const ConnectionUnarchived = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionUnarchived>, I>>(object: I): ConnectionUnarchived {
     const message = createBaseConnectionUnarchived();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
 
 function createBaseConnectionRemoved(): ConnectionRemoved {
-  return { accountId: 0 };
+  return { connectionId: 0 };
 }
 
 export const ConnectionRemoved = {
   encode(message: ConnectionRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
     return writer;
   },
@@ -1224,7 +1295,7 @@ export const ConnectionRemoved = {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1236,13 +1307,13 @@ export const ConnectionRemoved = {
   },
 
   fromJSON(object: any): ConnectionRemoved {
-    return { accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0 };
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
   },
 
   toJSON(message: ConnectionRemoved): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     return obj;
   },
@@ -1252,7 +1323,7 @@ export const ConnectionRemoved = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectionRemoved>, I>>(object: I): ConnectionRemoved {
     const message = createBaseConnectionRemoved();
-    message.accountId = object.accountId ?? 0;
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
@@ -1269,6 +1340,18 @@ type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

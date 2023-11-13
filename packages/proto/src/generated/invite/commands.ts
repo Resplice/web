@@ -6,12 +6,12 @@ export interface CreateQrCode {
 }
 
 export interface OpenQrCode {
-  uuid: string;
+  qrCode: string;
 }
 
 export interface ConnectViaQrCode {
-  uuid: string;
-  shareAttributeIds: number[];
+  qrCode: string;
+  attributeIds: number[];
 }
 
 export interface BulkInvite {
@@ -24,7 +24,8 @@ export interface CreateInvite {
 }
 
 export interface DeleteInvite {
-  id: string;
+  /** Hash of value */
+  inviteId: string;
 }
 
 function createBaseCreateQrCode(): CreateQrCode {
@@ -101,13 +102,13 @@ export const CreateQrCode = {
 };
 
 function createBaseOpenQrCode(): OpenQrCode {
-  return { uuid: "" };
+  return { qrCode: "" };
 }
 
 export const OpenQrCode = {
   encode(message: OpenQrCode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.uuid !== "") {
-      writer.uint32(10).string(message.uuid);
+    if (message.qrCode !== "") {
+      writer.uint32(10).string(message.qrCode);
     }
     return writer;
   },
@@ -124,7 +125,7 @@ export const OpenQrCode = {
             break;
           }
 
-          message.uuid = reader.string();
+          message.qrCode = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -136,13 +137,13 @@ export const OpenQrCode = {
   },
 
   fromJSON(object: any): OpenQrCode {
-    return { uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "" };
+    return { qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "" };
   },
 
   toJSON(message: OpenQrCode): unknown {
     const obj: any = {};
-    if (message.uuid !== "") {
-      obj.uuid = message.uuid;
+    if (message.qrCode !== "") {
+      obj.qrCode = message.qrCode;
     }
     return obj;
   },
@@ -152,22 +153,22 @@ export const OpenQrCode = {
   },
   fromPartial<I extends Exact<DeepPartial<OpenQrCode>, I>>(object: I): OpenQrCode {
     const message = createBaseOpenQrCode();
-    message.uuid = object.uuid ?? "";
+    message.qrCode = object.qrCode ?? "";
     return message;
   },
 };
 
 function createBaseConnectViaQrCode(): ConnectViaQrCode {
-  return { uuid: "", shareAttributeIds: [] };
+  return { qrCode: "", attributeIds: [] };
 }
 
 export const ConnectViaQrCode = {
   encode(message: ConnectViaQrCode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.uuid !== "") {
-      writer.uint32(10).string(message.uuid);
+    if (message.qrCode !== "") {
+      writer.uint32(10).string(message.qrCode);
     }
     writer.uint32(18).fork();
-    for (const v of message.shareAttributeIds) {
+    for (const v of message.attributeIds) {
       writer.uint32(v);
     }
     writer.ldelim();
@@ -186,11 +187,11 @@ export const ConnectViaQrCode = {
             break;
           }
 
-          message.uuid = reader.string();
+          message.qrCode = reader.string();
           continue;
         case 2:
           if (tag === 16) {
-            message.shareAttributeIds.push(reader.uint32());
+            message.attributeIds.push(reader.uint32());
 
             continue;
           }
@@ -198,7 +199,7 @@ export const ConnectViaQrCode = {
           if (tag === 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.shareAttributeIds.push(reader.uint32());
+              message.attributeIds.push(reader.uint32());
             }
 
             continue;
@@ -216,20 +217,20 @@ export const ConnectViaQrCode = {
 
   fromJSON(object: any): ConnectViaQrCode {
     return {
-      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
-      shareAttributeIds: globalThis.Array.isArray(object?.shareAttributeIds)
-        ? object.shareAttributeIds.map((e: any) => globalThis.Number(e))
+      qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "",
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
         : [],
     };
   },
 
   toJSON(message: ConnectViaQrCode): unknown {
     const obj: any = {};
-    if (message.uuid !== "") {
-      obj.uuid = message.uuid;
+    if (message.qrCode !== "") {
+      obj.qrCode = message.qrCode;
     }
-    if (message.shareAttributeIds?.length) {
-      obj.shareAttributeIds = message.shareAttributeIds.map((e) => Math.round(e));
+    if (message.attributeIds?.length) {
+      obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
     }
     return obj;
   },
@@ -239,8 +240,8 @@ export const ConnectViaQrCode = {
   },
   fromPartial<I extends Exact<DeepPartial<ConnectViaQrCode>, I>>(object: I): ConnectViaQrCode {
     const message = createBaseConnectViaQrCode();
-    message.uuid = object.uuid ?? "";
-    message.shareAttributeIds = object.shareAttributeIds?.map((e) => e) || [];
+    message.qrCode = object.qrCode ?? "";
+    message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
@@ -405,13 +406,13 @@ export const CreateInvite = {
 };
 
 function createBaseDeleteInvite(): DeleteInvite {
-  return { id: "" };
+  return { inviteId: "" };
 }
 
 export const DeleteInvite = {
   encode(message: DeleteInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.inviteId !== "") {
+      writer.uint32(10).string(message.inviteId);
     }
     return writer;
   },
@@ -428,7 +429,7 @@ export const DeleteInvite = {
             break;
           }
 
-          message.id = reader.string();
+          message.inviteId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -440,13 +441,13 @@ export const DeleteInvite = {
   },
 
   fromJSON(object: any): DeleteInvite {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "" };
   },
 
   toJSON(message: DeleteInvite): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     return obj;
   },
@@ -456,7 +457,7 @@ export const DeleteInvite = {
   },
   fromPartial<I extends Exact<DeepPartial<DeleteInvite>, I>>(object: I): DeleteInvite {
     const message = createBaseDeleteInvite();
-    message.id = object.id ?? "";
+    message.inviteId = object.inviteId ?? "";
     return message;
   },
 };

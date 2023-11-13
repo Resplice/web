@@ -6,8 +6,6 @@ export type ConnectionState = Map<number, Connection>
 // const connectionStore = writable<ConnectionState>(new Map())
 const connectionStore = writable<ConnectionState>(mocks)
 
-// TODO: Separate connection state store from connection account side state store
-
 export type ConnectionStore = typeof connectionStore
 
 export default connectionStore

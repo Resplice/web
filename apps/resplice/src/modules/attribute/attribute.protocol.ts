@@ -80,7 +80,7 @@ function attributeProtocolFactory({
 				removeAttribute: payload
 			})
 			store.update((state) => {
-				state.delete(payload.id)
+				state.delete(payload.attributeId)
 				return state
 			})
 		}

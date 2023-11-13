@@ -1,11 +1,10 @@
 import type { Attribute } from '@resplice/utils'
 
-export type ConnectionAttribute = Omit<Attribute, 'sortOrder'>
+export type ConnectionAttribute = Attribute
 
 export type Connection = {
 	id: number
 	name: string
-	handle: string
 	avatarUrl: string | null
 	alias: string | null
 	description: string | null

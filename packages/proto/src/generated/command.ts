@@ -1,7 +1,13 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { ChangeAccountAvatar, ChangeAccountHandle, ChangeAccountName } from "./account/commands";
-import { AddAttribute, ChangeAttribute, RemoveAttribute, VerifyAttributeValue } from "./attribute/commands";
+import { ChangeAccountAvatar, ChangeAccountName } from "./account/commands";
+import {
+  AddAttribute,
+  ChangeAttribute,
+  RemoveAttribute,
+  SendValueVerification,
+  VerifyAttributeValue,
+} from "./attribute/commands";
 import {
   AuthorizeSocket,
   CreateAccount,
@@ -42,17 +48,17 @@ export interface Command {
     | { $case: "authorizeSocket"; authorizeSocket: AuthorizeSocket }
     | { $case: "endSession"; endSession: EndSession }
     | { $case: "changeAccountName"; changeAccountName: ChangeAccountName }
-    | { $case: "changeAccountHandle"; changeAccountHandle: ChangeAccountHandle }
     | { $case: "changeAccountAvatar"; changeAccountAvatar: ChangeAccountAvatar }
     | { $case: "addAttribute"; addAttribute: AddAttribute }
-    | { $case: "verifyAttributeValue"; verifyAttributeValue: VerifyAttributeValue }
     | { $case: "changeAttribute"; changeAttribute: ChangeAttribute }
     | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
+    | { $case: "sendValueVerification"; sendValueVerification: SendValueVerification }
+    | { $case: "verifyAttributeValue"; verifyAttributeValue: VerifyAttributeValue }
     | { $case: "createQrCode"; createQrCode: CreateQrCode }
     | { $case: "openQrCode"; openQrCode: OpenQrCode }
     | { $case: "connectViaQrCode"; connectViaQrCode: ConnectViaQrCode }
-    | { $case: "createInvite"; createInvite: CreateInvite }
     | { $case: "bulkInvite"; bulkInvite: BulkInvite }
+    | { $case: "createInvite"; createInvite: CreateInvite }
     | { $case: "deleteInvite"; deleteInvite: DeleteInvite }
     | { $case: "changeConnectionAlias"; changeConnectionAlias: ChangeConnectionAlias }
     | { $case: "changeConnectionDescription"; changeConnectionDescription: ChangeConnectionDescription }
@@ -188,23 +194,23 @@ export const Command = {
       case "changeAccountName":
         ChangeAccountName.encode(message.payload.changeAccountName, writer.uint32(66).fork()).ldelim();
         break;
-      case "changeAccountHandle":
-        ChangeAccountHandle.encode(message.payload.changeAccountHandle, writer.uint32(74).fork()).ldelim();
-        break;
       case "changeAccountAvatar":
-        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(82).fork()).ldelim();
+        ChangeAccountAvatar.encode(message.payload.changeAccountAvatar, writer.uint32(74).fork()).ldelim();
         break;
       case "addAttribute":
-        AddAttribute.encode(message.payload.addAttribute, writer.uint32(90).fork()).ldelim();
-        break;
-      case "verifyAttributeValue":
-        VerifyAttributeValue.encode(message.payload.verifyAttributeValue, writer.uint32(98).fork()).ldelim();
+        AddAttribute.encode(message.payload.addAttribute, writer.uint32(82).fork()).ldelim();
         break;
       case "changeAttribute":
-        ChangeAttribute.encode(message.payload.changeAttribute, writer.uint32(106).fork()).ldelim();
+        ChangeAttribute.encode(message.payload.changeAttribute, writer.uint32(90).fork()).ldelim();
         break;
       case "removeAttribute":
-        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(114).fork()).ldelim();
+        RemoveAttribute.encode(message.payload.removeAttribute, writer.uint32(98).fork()).ldelim();
+        break;
+      case "sendValueVerification":
+        SendValueVerification.encode(message.payload.sendValueVerification, writer.uint32(106).fork()).ldelim();
+        break;
+      case "verifyAttributeValue":
+        VerifyAttributeValue.encode(message.payload.verifyAttributeValue, writer.uint32(114).fork()).ldelim();
         break;
       case "createQrCode":
         CreateQrCode.encode(message.payload.createQrCode, writer.uint32(122).fork()).ldelim();
@@ -215,11 +221,11 @@ export const Command = {
       case "connectViaQrCode":
         ConnectViaQrCode.encode(message.payload.connectViaQrCode, writer.uint32(138).fork()).ldelim();
         break;
-      case "createInvite":
-        CreateInvite.encode(message.payload.createInvite, writer.uint32(146).fork()).ldelim();
-        break;
       case "bulkInvite":
-        BulkInvite.encode(message.payload.bulkInvite, writer.uint32(154).fork()).ldelim();
+        BulkInvite.encode(message.payload.bulkInvite, writer.uint32(146).fork()).ldelim();
+        break;
+      case "createInvite":
+        CreateInvite.encode(message.payload.createInvite, writer.uint32(154).fork()).ldelim();
         break;
       case "deleteInvite":
         DeleteInvite.encode(message.payload.deleteInvite, writer.uint32(162).fork()).ldelim();
@@ -337,8 +343,8 @@ export const Command = {
           }
 
           message.payload = {
-            $case: "changeAccountHandle",
-            changeAccountHandle: ChangeAccountHandle.decode(reader, reader.uint32()),
+            $case: "changeAccountAvatar",
+            changeAccountAvatar: ChangeAccountAvatar.decode(reader, reader.uint32()),
           };
           continue;
         case 10:
@@ -346,30 +352,10 @@ export const Command = {
             break;
           }
 
-          message.payload = {
-            $case: "changeAccountAvatar",
-            changeAccountAvatar: ChangeAccountAvatar.decode(reader, reader.uint32()),
-          };
+          message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
           continue;
         case 11:
           if (tag !== 90) {
-            break;
-          }
-
-          message.payload = { $case: "addAttribute", addAttribute: AddAttribute.decode(reader, reader.uint32()) };
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.payload = {
-            $case: "verifyAttributeValue",
-            verifyAttributeValue: VerifyAttributeValue.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 13:
-          if (tag !== 106) {
             break;
           }
 
@@ -378,14 +364,34 @@ export const Command = {
             changeAttribute: ChangeAttribute.decode(reader, reader.uint32()),
           };
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
           message.payload = {
             $case: "removeAttribute",
             removeAttribute: RemoveAttribute.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.payload = {
+            $case: "sendValueVerification",
+            sendValueVerification: SendValueVerification.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.payload = {
+            $case: "verifyAttributeValue",
+            verifyAttributeValue: VerifyAttributeValue.decode(reader, reader.uint32()),
           };
           continue;
         case 15:
@@ -417,14 +423,14 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
+          message.payload = { $case: "bulkInvite", bulkInvite: BulkInvite.decode(reader, reader.uint32()) };
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.payload = { $case: "bulkInvite", bulkInvite: BulkInvite.decode(reader, reader.uint32()) };
+          message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
           continue;
         case 20:
           if (tag !== 162) {
@@ -567,11 +573,6 @@ export const Command = {
         ? { $case: "endSession", endSession: EndSession.fromJSON(object.endSession) }
         : isSet(object.changeAccountName)
         ? { $case: "changeAccountName", changeAccountName: ChangeAccountName.fromJSON(object.changeAccountName) }
-        : isSet(object.changeAccountHandle)
-        ? {
-          $case: "changeAccountHandle",
-          changeAccountHandle: ChangeAccountHandle.fromJSON(object.changeAccountHandle),
-        }
         : isSet(object.changeAccountAvatar)
         ? {
           $case: "changeAccountAvatar",
@@ -579,25 +580,30 @@ export const Command = {
         }
         : isSet(object.addAttribute)
         ? { $case: "addAttribute", addAttribute: AddAttribute.fromJSON(object.addAttribute) }
+        : isSet(object.changeAttribute)
+        ? { $case: "changeAttribute", changeAttribute: ChangeAttribute.fromJSON(object.changeAttribute) }
+        : isSet(object.removeAttribute)
+        ? { $case: "removeAttribute", removeAttribute: RemoveAttribute.fromJSON(object.removeAttribute) }
+        : isSet(object.sendValueVerification)
+        ? {
+          $case: "sendValueVerification",
+          sendValueVerification: SendValueVerification.fromJSON(object.sendValueVerification),
+        }
         : isSet(object.verifyAttributeValue)
         ? {
           $case: "verifyAttributeValue",
           verifyAttributeValue: VerifyAttributeValue.fromJSON(object.verifyAttributeValue),
         }
-        : isSet(object.changeAttribute)
-        ? { $case: "changeAttribute", changeAttribute: ChangeAttribute.fromJSON(object.changeAttribute) }
-        : isSet(object.removeAttribute)
-        ? { $case: "removeAttribute", removeAttribute: RemoveAttribute.fromJSON(object.removeAttribute) }
         : isSet(object.createQrCode)
         ? { $case: "createQrCode", createQrCode: CreateQrCode.fromJSON(object.createQrCode) }
         : isSet(object.openQrCode)
         ? { $case: "openQrCode", openQrCode: OpenQrCode.fromJSON(object.openQrCode) }
         : isSet(object.connectViaQrCode)
         ? { $case: "connectViaQrCode", connectViaQrCode: ConnectViaQrCode.fromJSON(object.connectViaQrCode) }
-        : isSet(object.createInvite)
-        ? { $case: "createInvite", createInvite: CreateInvite.fromJSON(object.createInvite) }
         : isSet(object.bulkInvite)
         ? { $case: "bulkInvite", bulkInvite: BulkInvite.fromJSON(object.bulkInvite) }
+        : isSet(object.createInvite)
+        ? { $case: "createInvite", createInvite: CreateInvite.fromJSON(object.createInvite) }
         : isSet(object.deleteInvite)
         ? { $case: "deleteInvite", deleteInvite: DeleteInvite.fromJSON(object.deleteInvite) }
         : isSet(object.changeConnectionAlias)
@@ -664,23 +670,23 @@ export const Command = {
     if (message.payload?.$case === "changeAccountName") {
       obj.changeAccountName = ChangeAccountName.toJSON(message.payload.changeAccountName);
     }
-    if (message.payload?.$case === "changeAccountHandle") {
-      obj.changeAccountHandle = ChangeAccountHandle.toJSON(message.payload.changeAccountHandle);
-    }
     if (message.payload?.$case === "changeAccountAvatar") {
       obj.changeAccountAvatar = ChangeAccountAvatar.toJSON(message.payload.changeAccountAvatar);
     }
     if (message.payload?.$case === "addAttribute") {
       obj.addAttribute = AddAttribute.toJSON(message.payload.addAttribute);
     }
-    if (message.payload?.$case === "verifyAttributeValue") {
-      obj.verifyAttributeValue = VerifyAttributeValue.toJSON(message.payload.verifyAttributeValue);
-    }
     if (message.payload?.$case === "changeAttribute") {
       obj.changeAttribute = ChangeAttribute.toJSON(message.payload.changeAttribute);
     }
     if (message.payload?.$case === "removeAttribute") {
       obj.removeAttribute = RemoveAttribute.toJSON(message.payload.removeAttribute);
+    }
+    if (message.payload?.$case === "sendValueVerification") {
+      obj.sendValueVerification = SendValueVerification.toJSON(message.payload.sendValueVerification);
+    }
+    if (message.payload?.$case === "verifyAttributeValue") {
+      obj.verifyAttributeValue = VerifyAttributeValue.toJSON(message.payload.verifyAttributeValue);
     }
     if (message.payload?.$case === "createQrCode") {
       obj.createQrCode = CreateQrCode.toJSON(message.payload.createQrCode);
@@ -691,11 +697,11 @@ export const Command = {
     if (message.payload?.$case === "connectViaQrCode") {
       obj.connectViaQrCode = ConnectViaQrCode.toJSON(message.payload.connectViaQrCode);
     }
-    if (message.payload?.$case === "createInvite") {
-      obj.createInvite = CreateInvite.toJSON(message.payload.createInvite);
-    }
     if (message.payload?.$case === "bulkInvite") {
       obj.bulkInvite = BulkInvite.toJSON(message.payload.bulkInvite);
+    }
+    if (message.payload?.$case === "createInvite") {
+      obj.createInvite = CreateInvite.toJSON(message.payload.createInvite);
     }
     if (message.payload?.$case === "deleteInvite") {
       obj.deleteInvite = DeleteInvite.toJSON(message.payload.deleteInvite);
@@ -810,16 +816,6 @@ export const Command = {
       };
     }
     if (
-      object.payload?.$case === "changeAccountHandle" &&
-      object.payload?.changeAccountHandle !== undefined &&
-      object.payload?.changeAccountHandle !== null
-    ) {
-      message.payload = {
-        $case: "changeAccountHandle",
-        changeAccountHandle: ChangeAccountHandle.fromPartial(object.payload.changeAccountHandle),
-      };
-    }
-    if (
       object.payload?.$case === "changeAccountAvatar" &&
       object.payload?.changeAccountAvatar !== undefined &&
       object.payload?.changeAccountAvatar !== null
@@ -835,16 +831,6 @@ export const Command = {
       object.payload?.addAttribute !== null
     ) {
       message.payload = { $case: "addAttribute", addAttribute: AddAttribute.fromPartial(object.payload.addAttribute) };
-    }
-    if (
-      object.payload?.$case === "verifyAttributeValue" &&
-      object.payload?.verifyAttributeValue !== undefined &&
-      object.payload?.verifyAttributeValue !== null
-    ) {
-      message.payload = {
-        $case: "verifyAttributeValue",
-        verifyAttributeValue: VerifyAttributeValue.fromPartial(object.payload.verifyAttributeValue),
-      };
     }
     if (
       object.payload?.$case === "changeAttribute" &&
@@ -864,6 +850,26 @@ export const Command = {
       message.payload = {
         $case: "removeAttribute",
         removeAttribute: RemoveAttribute.fromPartial(object.payload.removeAttribute),
+      };
+    }
+    if (
+      object.payload?.$case === "sendValueVerification" &&
+      object.payload?.sendValueVerification !== undefined &&
+      object.payload?.sendValueVerification !== null
+    ) {
+      message.payload = {
+        $case: "sendValueVerification",
+        sendValueVerification: SendValueVerification.fromPartial(object.payload.sendValueVerification),
+      };
+    }
+    if (
+      object.payload?.$case === "verifyAttributeValue" &&
+      object.payload?.verifyAttributeValue !== undefined &&
+      object.payload?.verifyAttributeValue !== null
+    ) {
+      message.payload = {
+        $case: "verifyAttributeValue",
+        verifyAttributeValue: VerifyAttributeValue.fromPartial(object.payload.verifyAttributeValue),
       };
     }
     if (
@@ -891,18 +897,18 @@ export const Command = {
       };
     }
     if (
-      object.payload?.$case === "createInvite" &&
-      object.payload?.createInvite !== undefined &&
-      object.payload?.createInvite !== null
-    ) {
-      message.payload = { $case: "createInvite", createInvite: CreateInvite.fromPartial(object.payload.createInvite) };
-    }
-    if (
       object.payload?.$case === "bulkInvite" &&
       object.payload?.bulkInvite !== undefined &&
       object.payload?.bulkInvite !== null
     ) {
       message.payload = { $case: "bulkInvite", bulkInvite: BulkInvite.fromPartial(object.payload.bulkInvite) };
+    }
+    if (
+      object.payload?.$case === "createInvite" &&
+      object.payload?.createInvite !== undefined &&
+      object.payload?.createInvite !== null
+    ) {
+      message.payload = { $case: "createInvite", createInvite: CreateInvite.fromPartial(object.payload.createInvite) };
     }
     if (
       object.payload?.$case === "deleteInvite" &&

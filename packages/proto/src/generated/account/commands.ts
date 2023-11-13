@@ -5,10 +5,6 @@ export interface ChangeAccountName {
   name: string;
 }
 
-export interface ChangeAccountHandle {
-  handle: string;
-}
-
 export interface ChangeAccountAvatar {
   avatar: string;
 }
@@ -66,63 +62,6 @@ export const ChangeAccountName = {
   fromPartial<I extends Exact<DeepPartial<ChangeAccountName>, I>>(object: I): ChangeAccountName {
     const message = createBaseChangeAccountName();
     message.name = object.name ?? "";
-    return message;
-  },
-};
-
-function createBaseChangeAccountHandle(): ChangeAccountHandle {
-  return { handle: "" };
-}
-
-export const ChangeAccountHandle = {
-  encode(message: ChangeAccountHandle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.handle !== "") {
-      writer.uint32(10).string(message.handle);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeAccountHandle {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChangeAccountHandle();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.handle = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChangeAccountHandle {
-    return { handle: isSet(object.handle) ? globalThis.String(object.handle) : "" };
-  },
-
-  toJSON(message: ChangeAccountHandle): unknown {
-    const obj: any = {};
-    if (message.handle !== "") {
-      obj.handle = message.handle;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChangeAccountHandle>, I>>(base?: I): ChangeAccountHandle {
-    return ChangeAccountHandle.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ChangeAccountHandle>, I>>(object: I): ChangeAccountHandle {
-    const message = createBaseChangeAccountHandle();
-    message.handle = object.handle ?? "";
     return message;
   },
 };

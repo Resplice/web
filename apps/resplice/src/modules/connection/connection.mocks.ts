@@ -7,14 +7,14 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 1,
 			name: 'Avery Spears',
-			handle: '@avery_axx',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=1',
 			alias: '',
 			description: '',
 			attributes: [
 				{
 					id: 1,
-					connectionId: 1,
+
 					type: AttributeType.PHONE,
 					name: 'Personal Phone',
 					value: {
@@ -25,7 +25,7 @@ export const connections = new Map<number, Connection>([
 				},
 				{
 					id: 2,
-					connectionId: 1,
+
 					type: AttributeType.EMAIL,
 					name: 'Personal Email',
 					value: {
@@ -45,14 +45,14 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 2,
 			name: 'Bella Huber',
-			handle: '@bella_amm',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=5',
 			alias: '',
 			description: '',
 			attributes: [
 				{
 					id: 1,
-					connectionId: 2,
+
 					type: AttributeType.PHONE,
 					name: 'Personal Phone',
 					value: {
@@ -73,7 +73,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 3,
 			name: 'Caleb Thompsen',
-			handle: '@caleb_app',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=6',
 			alias: '',
 			description: '',
@@ -89,7 +89,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 4,
 			name: 'Caleb Teezette',
-			handle: '@connor_att',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=61',
 			alias: '',
 			description: '',
@@ -105,7 +105,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 5,
 			name: 'Emilie Pierce',
-			handle: '@emilie_aii',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=9',
 			alias: '',
 			description: '',
@@ -121,7 +121,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 6,
 			name: 'Gordon Hobbs',
-			handle: '@gordon_auu',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=7',
 			alias: '',
 			description: '',
@@ -137,7 +137,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 7,
 			name: 'Grant Jacobson',
-			handle: '@grant_aoo',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=8',
 			alias: '',
 			description: '',
@@ -153,7 +153,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 8,
 			name: 'Haley Hutchinson',
-			handle: '@haley_aff',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=10',
 			alias: '',
 			description: '',
@@ -169,7 +169,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 9,
 			name: 'Ian Noble',
-			handle: '@ian_ayy',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=11',
 			alias: '',
 			description: '',
@@ -185,7 +185,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 10,
 			name: 'Johan Freeman',
-			handle: '@johan_azz',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=12',
 			alias: '',
 			description: '',
@@ -201,7 +201,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 11,
 			name: 'Jorge Pearson',
-			handle: 'The Plumber',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=14',
 			alias: '',
 			description: '',
@@ -217,7 +217,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 12,
 			name: 'Justine Burke',
-			handle: '@justine_akk',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=13',
 			alias: '',
 			description: '',
@@ -233,7 +233,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 13,
 			name: 'Kamron Acevedo',
-			handle: '@kamron_ass',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=15',
 			alias: '',
 			description: '',
@@ -249,7 +249,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 14,
 			name: 'Kolton Carey',
-			handle: '@kolton_ann',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=18',
 			alias: '',
 			description: '',
@@ -265,7 +265,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 15,
 			name: 'Kristina Bautista',
-			handle: '@kristina_ahh',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=50',
 			alias: '',
 			description: '',
@@ -281,7 +281,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 16,
 			name: 'Leon Wilkinson',
-			handle: '@leon_aww',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=35',
 			alias: '',
 			description: '',
@@ -297,7 +297,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 17,
 			name: 'Leyla Benson',
-			handle: '@leyla_aee',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=39',
 			alias: '',
 			description: '',
@@ -313,7 +313,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 18,
 			name: 'Lilly Rayban',
-			handle: '@lilly_acc',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=55',
 			alias: '',
 			description: '',
@@ -329,7 +329,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 19,
 			name: 'Marc Bartlett',
-			handle: '@marc_arr',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=40',
 			alias: '',
 			description: '',
@@ -345,7 +345,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 20,
 			name: 'Marlee Hansen',
-			handle: '@marlee_ajj',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=34',
 			alias: '',
 			description: '',
@@ -361,7 +361,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 21,
 			name: 'Micaela Walsh',
-			handle: '@micaela_all',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=18',
 			alias: '',
 			description: '',
@@ -377,7 +377,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 22,
 			name: 'Natasha Hess',
-			handle: '@natasha_aaa',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=1',
 			alias: '',
 			description: '',
@@ -393,7 +393,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 23,
 			name: 'Ryan Poole',
-			handle: '@ryan_aqq',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=13',
 			alias: '',
 			description: '',
@@ -409,7 +409,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 24,
 			name: 'Tania Obrien',
-			handle: '@tania_add',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=12',
 			alias: '',
 			description: '',
@@ -425,7 +425,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 25,
 			name: 'Tia Carlson',
-			handle: '@tia_abb',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=28',
 			alias: '',
 			description: '',
@@ -441,7 +441,7 @@ export const connections = new Map<number, Connection>([
 		{
 			id: 26,
 			name: 'Yaretzi Preston',
-			handle: '@yaretzi_agg',
+
 			avatarUrl: 'https://i.pravatar.cc/250?img=23',
 			alias: '',
 			description: '',

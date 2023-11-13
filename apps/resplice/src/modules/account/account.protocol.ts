@@ -8,7 +8,6 @@ import type { AccountStore } from '$modules/account/account.store'
 
 export interface AccountProtocol {
 	changeName(payload: proto.account.ChangeAccountName): void
-	changeHandle(payload: proto.account.ChangeAccountHandle): void
 	uploadAvatar(payload: Blob): Promise<void>
 	// deleteAccount(payload: proto.account.DeleteAccount): void
 }
@@ -30,13 +29,6 @@ function accountProtocolFactory({ store, commuter }: Dependencies): AccountProto
 				changeAccountName: payload
 			})
 			store.update((state) => ({ ...state, name: payload.name }))
-		},
-		changeHandle(payload) {
-			sendCommand(commuter, {
-				$case: 'changeAccountHandle',
-				changeAccountHandle: payload
-			})
-			store.update((state) => ({ ...state, handle: payload.handle }))
 		},
 		async uploadAvatar(payload) {
 			sendCommand(commuter, {

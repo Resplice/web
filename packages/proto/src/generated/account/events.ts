@@ -2,11 +2,10 @@
 import _m0 from "protobufjs/minimal";
 
 export interface AccountCreated {
-  uuid: string;
+  accountUuid: string;
   name: string;
-  handle: string;
   avatarUrl: string;
-  phoneId: number;
+  primaryAttributeId: number;
   phone: string;
   phoneVerifiedAt: number;
 }
@@ -15,38 +14,27 @@ export interface AccountNameChanged {
   name: string;
 }
 
-export interface AccountHandleChanged {
-  handle: string;
-}
-
 export interface AccountAvatarChanged {
   avatarUrl: string;
 }
 
-export interface AccountDeleted {
-  deletedAt: number;
-}
-
 function createBaseAccountCreated(): AccountCreated {
-  return { uuid: "", name: "", handle: "", avatarUrl: "", phoneId: 0, phone: "", phoneVerifiedAt: 0 };
+  return { accountUuid: "", name: "", avatarUrl: "", primaryAttributeId: 0, phone: "", phoneVerifiedAt: 0 };
 }
 
 export const AccountCreated = {
   encode(message: AccountCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.uuid !== "") {
-      writer.uint32(10).string(message.uuid);
+    if (message.accountUuid !== "") {
+      writer.uint32(10).string(message.accountUuid);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.handle !== "") {
-      writer.uint32(26).string(message.handle);
-    }
     if (message.avatarUrl !== "") {
       writer.uint32(34).string(message.avatarUrl);
     }
-    if (message.phoneId !== 0) {
-      writer.uint32(40).uint32(message.phoneId);
+    if (message.primaryAttributeId !== 0) {
+      writer.uint32(40).uint32(message.primaryAttributeId);
     }
     if (message.phone !== "") {
       writer.uint32(50).string(message.phone);
@@ -69,7 +57,7 @@ export const AccountCreated = {
             break;
           }
 
-          message.uuid = reader.string();
+          message.accountUuid = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -77,13 +65,6 @@ export const AccountCreated = {
           }
 
           message.name = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.handle = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -97,7 +78,7 @@ export const AccountCreated = {
             break;
           }
 
-          message.phoneId = reader.uint32();
+          message.primaryAttributeId = reader.uint32();
           continue;
         case 6:
           if (tag !== 50) {
@@ -124,11 +105,10 @@ export const AccountCreated = {
 
   fromJSON(object: any): AccountCreated {
     return {
-      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      accountUuid: isSet(object.accountUuid) ? globalThis.String(object.accountUuid) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
-      phoneId: isSet(object.phoneId) ? globalThis.Number(object.phoneId) : 0,
+      primaryAttributeId: isSet(object.primaryAttributeId) ? globalThis.Number(object.primaryAttributeId) : 0,
       phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
       phoneVerifiedAt: isSet(object.phoneVerifiedAt) ? globalThis.Number(object.phoneVerifiedAt) : 0,
     };
@@ -136,20 +116,17 @@ export const AccountCreated = {
 
   toJSON(message: AccountCreated): unknown {
     const obj: any = {};
-    if (message.uuid !== "") {
-      obj.uuid = message.uuid;
+    if (message.accountUuid !== "") {
+      obj.accountUuid = message.accountUuid;
     }
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.handle !== "") {
-      obj.handle = message.handle;
-    }
     if (message.avatarUrl !== "") {
       obj.avatarUrl = message.avatarUrl;
     }
-    if (message.phoneId !== 0) {
-      obj.phoneId = Math.round(message.phoneId);
+    if (message.primaryAttributeId !== 0) {
+      obj.primaryAttributeId = Math.round(message.primaryAttributeId);
     }
     if (message.phone !== "") {
       obj.phone = message.phone;
@@ -165,11 +142,10 @@ export const AccountCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<AccountCreated>, I>>(object: I): AccountCreated {
     const message = createBaseAccountCreated();
-    message.uuid = object.uuid ?? "";
+    message.accountUuid = object.accountUuid ?? "";
     message.name = object.name ?? "";
-    message.handle = object.handle ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
-    message.phoneId = object.phoneId ?? 0;
+    message.primaryAttributeId = object.primaryAttributeId ?? 0;
     message.phone = object.phone ?? "";
     message.phoneVerifiedAt = object.phoneVerifiedAt ?? 0;
     return message;
@@ -233,63 +209,6 @@ export const AccountNameChanged = {
   },
 };
 
-function createBaseAccountHandleChanged(): AccountHandleChanged {
-  return { handle: "" };
-}
-
-export const AccountHandleChanged = {
-  encode(message: AccountHandleChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.handle !== "") {
-      writer.uint32(10).string(message.handle);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AccountHandleChanged {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAccountHandleChanged();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.handle = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AccountHandleChanged {
-    return { handle: isSet(object.handle) ? globalThis.String(object.handle) : "" };
-  },
-
-  toJSON(message: AccountHandleChanged): unknown {
-    const obj: any = {};
-    if (message.handle !== "") {
-      obj.handle = message.handle;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(base?: I): AccountHandleChanged {
-    return AccountHandleChanged.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AccountHandleChanged>, I>>(object: I): AccountHandleChanged {
-    const message = createBaseAccountHandleChanged();
-    message.handle = object.handle ?? "";
-    return message;
-  },
-};
-
 function createBaseAccountAvatarChanged(): AccountAvatarChanged {
   return { avatarUrl: "" };
 }
@@ -343,63 +262,6 @@ export const AccountAvatarChanged = {
   fromPartial<I extends Exact<DeepPartial<AccountAvatarChanged>, I>>(object: I): AccountAvatarChanged {
     const message = createBaseAccountAvatarChanged();
     message.avatarUrl = object.avatarUrl ?? "";
-    return message;
-  },
-};
-
-function createBaseAccountDeleted(): AccountDeleted {
-  return { deletedAt: 0 };
-}
-
-export const AccountDeleted = {
-  encode(message: AccountDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deletedAt !== 0) {
-      writer.uint32(8).uint32(message.deletedAt);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AccountDeleted {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAccountDeleted();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.deletedAt = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AccountDeleted {
-    return { deletedAt: isSet(object.deletedAt) ? globalThis.Number(object.deletedAt) : 0 };
-  },
-
-  toJSON(message: AccountDeleted): unknown {
-    const obj: any = {};
-    if (message.deletedAt !== 0) {
-      obj.deletedAt = Math.round(message.deletedAt);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AccountDeleted>, I>>(base?: I): AccountDeleted {
-    return AccountDeleted.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AccountDeleted>, I>>(object: I): AccountDeleted {
-    const message = createBaseAccountDeleted();
-    message.deletedAt = object.deletedAt ?? 0;
     return message;
   },
 };

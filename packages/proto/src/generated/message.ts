@@ -1,16 +1,20 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { AccountAvatarChanged, AccountCreated, AccountHandleChanged, AccountNameChanged } from "./account/events";
+import { AccountAvatarChanged, AccountCreated, AccountNameChanged } from "./account/events";
 import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeValueVerified } from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 import {
   ConnectionAdded,
   ConnectionAliasChanged,
   ConnectionArchived,
-  ConnectionChanged,
+  ConnectionAttributeAdded,
+  ConnectionAttributeChanged,
+  ConnectionAttributeRemoved,
+  ConnectionAvatarChanged,
   ConnectionDescriptionChanged,
   ConnectionFavored,
   ConnectionMuted,
+  ConnectionNameChanged,
   ConnectionRemoved,
   ConnectionShareAdded,
   ConnectionShareRemoved,
@@ -71,14 +75,13 @@ export enum InputField {
   AVATAR = 2,
   CREDENTIAL = 3,
   EMAIL = 4,
-  HANDLE = 5,
-  LOCATION = 6,
-  NAME = 7,
-  PHONE = 8,
-  SOCIAL = 9,
-  URL = 10,
-  USER_AGENT = 11,
-  VERIFY_CODE = 12,
+  LOCATION = 5,
+  NAME = 6,
+  PHONE = 7,
+  SOCIAL = 8,
+  URL = 9,
+  USER_AGENT = 10,
+  VERIFY_CODE = 11,
   UNRECOGNIZED = -1,
 }
 
@@ -100,27 +103,24 @@ export function inputFieldFromJSON(object: any): InputField {
     case "EMAIL":
       return InputField.EMAIL;
     case 5:
-    case "HANDLE":
-      return InputField.HANDLE;
-    case 6:
     case "LOCATION":
       return InputField.LOCATION;
-    case 7:
+    case 6:
     case "NAME":
       return InputField.NAME;
-    case 8:
+    case 7:
     case "PHONE":
       return InputField.PHONE;
-    case 9:
+    case 8:
     case "SOCIAL":
       return InputField.SOCIAL;
-    case 10:
+    case 9:
     case "URL":
       return InputField.URL;
-    case 11:
+    case 10:
     case "USER_AGENT":
       return InputField.USER_AGENT;
-    case 12:
+    case 11:
     case "VERIFY_CODE":
       return InputField.VERIFY_CODE;
     case -1:
@@ -142,8 +142,6 @@ export function inputFieldToJSON(object: InputField): string {
       return "CREDENTIAL";
     case InputField.EMAIL:
       return "EMAIL";
-    case InputField.HANDLE:
-      return "HANDLE";
     case InputField.LOCATION:
       return "LOCATION";
     case InputField.NAME:
@@ -181,20 +179,23 @@ export interface Event {
     | { $case: "sessionEnded"; sessionEnded: SessionEnded }
     | { $case: "accountCreated"; accountCreated: AccountCreated }
     | { $case: "accountNameChanged"; accountNameChanged: AccountNameChanged }
-    | { $case: "accountHandleChanged"; accountHandleChanged: AccountHandleChanged }
     | { $case: "accountAvatarChanged"; accountAvatarChanged: AccountAvatarChanged }
     | { $case: "attributeAdded"; attributeAdded: AttributeAdded }
-    | { $case: "attributeValueVerified"; attributeValueVerified: AttributeValueVerified }
     | { $case: "attributeChanged"; attributeChanged: AttributeChanged }
     | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
+    | { $case: "attributeValueVerified"; attributeValueVerified: AttributeValueVerified }
     | { $case: "qrCodeCreated"; qrCodeCreated: QrCodeCreated }
     | { $case: "qrCodeOpened"; qrCodeOpened: QrCodeOpened }
     | { $case: "inviteCreated"; inviteCreated: InviteCreated }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
     | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
-    | { $case: "connectionChanged"; connectionChanged: ConnectionChanged }
+    | { $case: "connectionNameChanged"; connectionNameChanged: ConnectionNameChanged }
+    | { $case: "connectionAvatarChanged"; connectionAvatarChanged: ConnectionAvatarChanged }
     | { $case: "connectionAliasChanged"; connectionAliasChanged: ConnectionAliasChanged }
     | { $case: "connectionDescriptionChanged"; connectionDescriptionChanged: ConnectionDescriptionChanged }
+    | { $case: "connectionAttributeAdded"; connectionAttributeAdded: ConnectionAttributeAdded }
+    | { $case: "connectionAttributeChanged"; connectionAttributeChanged: ConnectionAttributeChanged }
+    | { $case: "connectionAttributeRemoved"; connectionAttributeRemoved: ConnectionAttributeRemoved }
     | { $case: "connectionShareAdded"; connectionShareAdded: ConnectionShareAdded }
     | { $case: "connectionShareRemoved"; connectionShareRemoved: ConnectionShareRemoved }
     | { $case: "connectionFavored"; connectionFavored: ConnectionFavored }
@@ -373,41 +374,41 @@ export const Event = {
       case "accountNameChanged":
         AccountNameChanged.encode(message.payload.accountNameChanged, writer.uint32(50).fork()).ldelim();
         break;
-      case "accountHandleChanged":
-        AccountHandleChanged.encode(message.payload.accountHandleChanged, writer.uint32(58).fork()).ldelim();
-        break;
       case "accountAvatarChanged":
-        AccountAvatarChanged.encode(message.payload.accountAvatarChanged, writer.uint32(66).fork()).ldelim();
+        AccountAvatarChanged.encode(message.payload.accountAvatarChanged, writer.uint32(58).fork()).ldelim();
         break;
       case "attributeAdded":
-        AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(74).fork()).ldelim();
-        break;
-      case "attributeValueVerified":
-        AttributeValueVerified.encode(message.payload.attributeValueVerified, writer.uint32(82).fork()).ldelim();
+        AttributeAdded.encode(message.payload.attributeAdded, writer.uint32(66).fork()).ldelim();
         break;
       case "attributeChanged":
-        AttributeChanged.encode(message.payload.attributeChanged, writer.uint32(90).fork()).ldelim();
+        AttributeChanged.encode(message.payload.attributeChanged, writer.uint32(74).fork()).ldelim();
         break;
       case "attributeRemoved":
-        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(98).fork()).ldelim();
+        AttributeRemoved.encode(message.payload.attributeRemoved, writer.uint32(82).fork()).ldelim();
+        break;
+      case "attributeValueVerified":
+        AttributeValueVerified.encode(message.payload.attributeValueVerified, writer.uint32(90).fork()).ldelim();
         break;
       case "qrCodeCreated":
-        QrCodeCreated.encode(message.payload.qrCodeCreated, writer.uint32(106).fork()).ldelim();
+        QrCodeCreated.encode(message.payload.qrCodeCreated, writer.uint32(98).fork()).ldelim();
         break;
       case "qrCodeOpened":
-        QrCodeOpened.encode(message.payload.qrCodeOpened, writer.uint32(114).fork()).ldelim();
+        QrCodeOpened.encode(message.payload.qrCodeOpened, writer.uint32(106).fork()).ldelim();
         break;
       case "inviteCreated":
-        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(122).fork()).ldelim();
+        InviteCreated.encode(message.payload.inviteCreated, writer.uint32(114).fork()).ldelim();
         break;
       case "inviteDeleted":
-        InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(130).fork()).ldelim();
+        InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(122).fork()).ldelim();
         break;
       case "connectionAdded":
-        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(138).fork()).ldelim();
+        ConnectionAdded.encode(message.payload.connectionAdded, writer.uint32(130).fork()).ldelim();
         break;
-      case "connectionChanged":
-        ConnectionChanged.encode(message.payload.connectionChanged, writer.uint32(146).fork()).ldelim();
+      case "connectionNameChanged":
+        ConnectionNameChanged.encode(message.payload.connectionNameChanged, writer.uint32(138).fork()).ldelim();
+        break;
+      case "connectionAvatarChanged":
+        ConnectionAvatarChanged.encode(message.payload.connectionAvatarChanged, writer.uint32(146).fork()).ldelim();
         break;
       case "connectionAliasChanged":
         ConnectionAliasChanged.encode(message.payload.connectionAliasChanged, writer.uint32(154).fork()).ldelim();
@@ -416,32 +417,43 @@ export const Event = {
         ConnectionDescriptionChanged.encode(message.payload.connectionDescriptionChanged, writer.uint32(162).fork())
           .ldelim();
         break;
+      case "connectionAttributeAdded":
+        ConnectionAttributeAdded.encode(message.payload.connectionAttributeAdded, writer.uint32(170).fork()).ldelim();
+        break;
+      case "connectionAttributeChanged":
+        ConnectionAttributeChanged.encode(message.payload.connectionAttributeChanged, writer.uint32(178).fork())
+          .ldelim();
+        break;
+      case "connectionAttributeRemoved":
+        ConnectionAttributeRemoved.encode(message.payload.connectionAttributeRemoved, writer.uint32(186).fork())
+          .ldelim();
+        break;
       case "connectionShareAdded":
-        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(170).fork()).ldelim();
+        ConnectionShareAdded.encode(message.payload.connectionShareAdded, writer.uint32(194).fork()).ldelim();
         break;
       case "connectionShareRemoved":
-        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(178).fork()).ldelim();
+        ConnectionShareRemoved.encode(message.payload.connectionShareRemoved, writer.uint32(202).fork()).ldelim();
         break;
       case "connectionFavored":
-        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(186).fork()).ldelim();
+        ConnectionFavored.encode(message.payload.connectionFavored, writer.uint32(210).fork()).ldelim();
         break;
       case "connectionUnfavored":
-        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(194).fork()).ldelim();
+        ConnectionUnfavored.encode(message.payload.connectionUnfavored, writer.uint32(218).fork()).ldelim();
         break;
       case "connectionMuted":
-        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(202).fork()).ldelim();
+        ConnectionMuted.encode(message.payload.connectionMuted, writer.uint32(226).fork()).ldelim();
         break;
       case "connectionUnmuted":
-        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(210).fork()).ldelim();
+        ConnectionUnmuted.encode(message.payload.connectionUnmuted, writer.uint32(234).fork()).ldelim();
         break;
       case "connectionArchived":
-        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(218).fork()).ldelim();
+        ConnectionArchived.encode(message.payload.connectionArchived, writer.uint32(242).fork()).ldelim();
         break;
       case "connectionUnarchived":
-        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(226).fork()).ldelim();
+        ConnectionUnarchived.encode(message.payload.connectionUnarchived, writer.uint32(250).fork()).ldelim();
         break;
       case "connectionRemoved":
-        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(234).fork()).ldelim();
+        ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(258).fork()).ldelim();
         break;
     }
     return writer;
@@ -505,8 +517,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "accountHandleChanged",
-            accountHandleChanged: AccountHandleChanged.decode(reader, reader.uint32()),
+            $case: "accountAvatarChanged",
+            accountAvatarChanged: AccountAvatarChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 8:
@@ -514,30 +526,10 @@ export const Event = {
             break;
           }
 
-          message.payload = {
-            $case: "accountAvatarChanged",
-            accountAvatarChanged: AccountAvatarChanged.decode(reader, reader.uint32()),
-          };
+          message.payload = { $case: "attributeAdded", attributeAdded: AttributeAdded.decode(reader, reader.uint32()) };
           continue;
         case 9:
           if (tag !== 74) {
-            break;
-          }
-
-          message.payload = { $case: "attributeAdded", attributeAdded: AttributeAdded.decode(reader, reader.uint32()) };
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.payload = {
-            $case: "attributeValueVerified",
-            attributeValueVerified: AttributeValueVerified.decode(reader, reader.uint32()),
-          };
-          continue;
-        case 11:
-          if (tag !== 90) {
             break;
           }
 
@@ -546,8 +538,8 @@ export const Event = {
             attributeChanged: AttributeChanged.decode(reader, reader.uint32()),
           };
           continue;
-        case 12:
-          if (tag !== 98) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -556,36 +548,46 @@ export const Event = {
             attributeRemoved: AttributeRemoved.decode(reader, reader.uint32()),
           };
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.payload = {
+            $case: "attributeValueVerified",
+            attributeValueVerified: AttributeValueVerified.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.payload = { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.decode(reader, reader.uint32()) };
+          continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.payload = { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.decode(reader, reader.uint32()) };
+          message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.decode(reader, reader.uint32()) };
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.decode(reader, reader.uint32()) };
+          message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
+          message.payload = { $case: "inviteDeleted", inviteDeleted: InviteDeleted.decode(reader, reader.uint32()) };
           continue;
         case 16:
           if (tag !== 130) {
-            break;
-          }
-
-          message.payload = { $case: "inviteDeleted", inviteDeleted: InviteDeleted.decode(reader, reader.uint32()) };
-          continue;
-        case 17:
-          if (tag !== 138) {
             break;
           }
 
@@ -594,14 +596,24 @@ export const Event = {
             connectionAdded: ConnectionAdded.decode(reader, reader.uint32()),
           };
           continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionNameChanged",
+            connectionNameChanged: ConnectionNameChanged.decode(reader, reader.uint32()),
+          };
+          continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
           message.payload = {
-            $case: "connectionChanged",
-            connectionChanged: ConnectionChanged.decode(reader, reader.uint32()),
+            $case: "connectionAvatarChanged",
+            connectionAvatarChanged: ConnectionAvatarChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 19:
@@ -630,8 +642,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareAdded",
-            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
+            $case: "connectionAttributeAdded",
+            connectionAttributeAdded: ConnectionAttributeAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 22:
@@ -640,8 +652,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionShareRemoved",
-            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
+            $case: "connectionAttributeChanged",
+            connectionAttributeChanged: ConnectionAttributeChanged.decode(reader, reader.uint32()),
           };
           continue;
         case 23:
@@ -650,8 +662,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionFavored",
-            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
+            $case: "connectionAttributeRemoved",
+            connectionAttributeRemoved: ConnectionAttributeRemoved.decode(reader, reader.uint32()),
           };
           continue;
         case 24:
@@ -660,8 +672,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnfavored",
-            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
+            $case: "connectionShareAdded",
+            connectionShareAdded: ConnectionShareAdded.decode(reader, reader.uint32()),
           };
           continue;
         case 25:
@@ -670,8 +682,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionMuted",
-            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
+            $case: "connectionShareRemoved",
+            connectionShareRemoved: ConnectionShareRemoved.decode(reader, reader.uint32()),
           };
           continue;
         case 26:
@@ -680,8 +692,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnmuted",
-            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
+            $case: "connectionFavored",
+            connectionFavored: ConnectionFavored.decode(reader, reader.uint32()),
           };
           continue;
         case 27:
@@ -690,8 +702,8 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionArchived",
-            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
+            $case: "connectionUnfavored",
+            connectionUnfavored: ConnectionUnfavored.decode(reader, reader.uint32()),
           };
           continue;
         case 28:
@@ -700,12 +712,42 @@ export const Event = {
           }
 
           message.payload = {
-            $case: "connectionUnarchived",
-            connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
+            $case: "connectionMuted",
+            connectionMuted: ConnectionMuted.decode(reader, reader.uint32()),
           };
           continue;
         case 29:
           if (tag !== 234) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnmuted",
+            connectionUnmuted: ConnectionUnmuted.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 30:
+          if (tag !== 242) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionArchived",
+            connectionArchived: ConnectionArchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.payload = {
+            $case: "connectionUnarchived",
+            connectionUnarchived: ConnectionUnarchived.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 32:
+          if (tag !== 258) {
             break;
           }
 
@@ -736,11 +778,6 @@ export const Event = {
         ? { $case: "accountCreated", accountCreated: AccountCreated.fromJSON(object.accountCreated) }
         : isSet(object.accountNameChanged)
         ? { $case: "accountNameChanged", accountNameChanged: AccountNameChanged.fromJSON(object.accountNameChanged) }
-        : isSet(object.accountHandleChanged)
-        ? {
-          $case: "accountHandleChanged",
-          accountHandleChanged: AccountHandleChanged.fromJSON(object.accountHandleChanged),
-        }
         : isSet(object.accountAvatarChanged)
         ? {
           $case: "accountAvatarChanged",
@@ -748,15 +785,15 @@ export const Event = {
         }
         : isSet(object.attributeAdded)
         ? { $case: "attributeAdded", attributeAdded: AttributeAdded.fromJSON(object.attributeAdded) }
+        : isSet(object.attributeChanged)
+        ? { $case: "attributeChanged", attributeChanged: AttributeChanged.fromJSON(object.attributeChanged) }
+        : isSet(object.attributeRemoved)
+        ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
         : isSet(object.attributeValueVerified)
         ? {
           $case: "attributeValueVerified",
           attributeValueVerified: AttributeValueVerified.fromJSON(object.attributeValueVerified),
         }
-        : isSet(object.attributeChanged)
-        ? { $case: "attributeChanged", attributeChanged: AttributeChanged.fromJSON(object.attributeChanged) }
-        : isSet(object.attributeRemoved)
-        ? { $case: "attributeRemoved", attributeRemoved: AttributeRemoved.fromJSON(object.attributeRemoved) }
         : isSet(object.qrCodeCreated)
         ? { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.fromJSON(object.qrCodeCreated) }
         : isSet(object.qrCodeOpened)
@@ -767,8 +804,16 @@ export const Event = {
         ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
         : isSet(object.connectionAdded)
         ? { $case: "connectionAdded", connectionAdded: ConnectionAdded.fromJSON(object.connectionAdded) }
-        : isSet(object.connectionChanged)
-        ? { $case: "connectionChanged", connectionChanged: ConnectionChanged.fromJSON(object.connectionChanged) }
+        : isSet(object.connectionNameChanged)
+        ? {
+          $case: "connectionNameChanged",
+          connectionNameChanged: ConnectionNameChanged.fromJSON(object.connectionNameChanged),
+        }
+        : isSet(object.connectionAvatarChanged)
+        ? {
+          $case: "connectionAvatarChanged",
+          connectionAvatarChanged: ConnectionAvatarChanged.fromJSON(object.connectionAvatarChanged),
+        }
         : isSet(object.connectionAliasChanged)
         ? {
           $case: "connectionAliasChanged",
@@ -778,6 +823,21 @@ export const Event = {
         ? {
           $case: "connectionDescriptionChanged",
           connectionDescriptionChanged: ConnectionDescriptionChanged.fromJSON(object.connectionDescriptionChanged),
+        }
+        : isSet(object.connectionAttributeAdded)
+        ? {
+          $case: "connectionAttributeAdded",
+          connectionAttributeAdded: ConnectionAttributeAdded.fromJSON(object.connectionAttributeAdded),
+        }
+        : isSet(object.connectionAttributeChanged)
+        ? {
+          $case: "connectionAttributeChanged",
+          connectionAttributeChanged: ConnectionAttributeChanged.fromJSON(object.connectionAttributeChanged),
+        }
+        : isSet(object.connectionAttributeRemoved)
+        ? {
+          $case: "connectionAttributeRemoved",
+          connectionAttributeRemoved: ConnectionAttributeRemoved.fromJSON(object.connectionAttributeRemoved),
         }
         : isSet(object.connectionShareAdded)
         ? {
@@ -833,23 +893,20 @@ export const Event = {
     if (message.payload?.$case === "accountNameChanged") {
       obj.accountNameChanged = AccountNameChanged.toJSON(message.payload.accountNameChanged);
     }
-    if (message.payload?.$case === "accountHandleChanged") {
-      obj.accountHandleChanged = AccountHandleChanged.toJSON(message.payload.accountHandleChanged);
-    }
     if (message.payload?.$case === "accountAvatarChanged") {
       obj.accountAvatarChanged = AccountAvatarChanged.toJSON(message.payload.accountAvatarChanged);
     }
     if (message.payload?.$case === "attributeAdded") {
       obj.attributeAdded = AttributeAdded.toJSON(message.payload.attributeAdded);
     }
-    if (message.payload?.$case === "attributeValueVerified") {
-      obj.attributeValueVerified = AttributeValueVerified.toJSON(message.payload.attributeValueVerified);
-    }
     if (message.payload?.$case === "attributeChanged") {
       obj.attributeChanged = AttributeChanged.toJSON(message.payload.attributeChanged);
     }
     if (message.payload?.$case === "attributeRemoved") {
       obj.attributeRemoved = AttributeRemoved.toJSON(message.payload.attributeRemoved);
+    }
+    if (message.payload?.$case === "attributeValueVerified") {
+      obj.attributeValueVerified = AttributeValueVerified.toJSON(message.payload.attributeValueVerified);
     }
     if (message.payload?.$case === "qrCodeCreated") {
       obj.qrCodeCreated = QrCodeCreated.toJSON(message.payload.qrCodeCreated);
@@ -866,8 +923,11 @@ export const Event = {
     if (message.payload?.$case === "connectionAdded") {
       obj.connectionAdded = ConnectionAdded.toJSON(message.payload.connectionAdded);
     }
-    if (message.payload?.$case === "connectionChanged") {
-      obj.connectionChanged = ConnectionChanged.toJSON(message.payload.connectionChanged);
+    if (message.payload?.$case === "connectionNameChanged") {
+      obj.connectionNameChanged = ConnectionNameChanged.toJSON(message.payload.connectionNameChanged);
+    }
+    if (message.payload?.$case === "connectionAvatarChanged") {
+      obj.connectionAvatarChanged = ConnectionAvatarChanged.toJSON(message.payload.connectionAvatarChanged);
     }
     if (message.payload?.$case === "connectionAliasChanged") {
       obj.connectionAliasChanged = ConnectionAliasChanged.toJSON(message.payload.connectionAliasChanged);
@@ -876,6 +936,15 @@ export const Event = {
       obj.connectionDescriptionChanged = ConnectionDescriptionChanged.toJSON(
         message.payload.connectionDescriptionChanged,
       );
+    }
+    if (message.payload?.$case === "connectionAttributeAdded") {
+      obj.connectionAttributeAdded = ConnectionAttributeAdded.toJSON(message.payload.connectionAttributeAdded);
+    }
+    if (message.payload?.$case === "connectionAttributeChanged") {
+      obj.connectionAttributeChanged = ConnectionAttributeChanged.toJSON(message.payload.connectionAttributeChanged);
+    }
+    if (message.payload?.$case === "connectionAttributeRemoved") {
+      obj.connectionAttributeRemoved = ConnectionAttributeRemoved.toJSON(message.payload.connectionAttributeRemoved);
     }
     if (message.payload?.$case === "connectionShareAdded") {
       obj.connectionShareAdded = ConnectionShareAdded.toJSON(message.payload.connectionShareAdded);
@@ -958,16 +1027,6 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "accountHandleChanged" &&
-      object.payload?.accountHandleChanged !== undefined &&
-      object.payload?.accountHandleChanged !== null
-    ) {
-      message.payload = {
-        $case: "accountHandleChanged",
-        accountHandleChanged: AccountHandleChanged.fromPartial(object.payload.accountHandleChanged),
-      };
-    }
-    if (
       object.payload?.$case === "accountAvatarChanged" &&
       object.payload?.accountAvatarChanged !== undefined &&
       object.payload?.accountAvatarChanged !== null
@@ -988,16 +1047,6 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "attributeValueVerified" &&
-      object.payload?.attributeValueVerified !== undefined &&
-      object.payload?.attributeValueVerified !== null
-    ) {
-      message.payload = {
-        $case: "attributeValueVerified",
-        attributeValueVerified: AttributeValueVerified.fromPartial(object.payload.attributeValueVerified),
-      };
-    }
-    if (
       object.payload?.$case === "attributeChanged" &&
       object.payload?.attributeChanged !== undefined &&
       object.payload?.attributeChanged !== null
@@ -1015,6 +1064,16 @@ export const Event = {
       message.payload = {
         $case: "attributeRemoved",
         attributeRemoved: AttributeRemoved.fromPartial(object.payload.attributeRemoved),
+      };
+    }
+    if (
+      object.payload?.$case === "attributeValueVerified" &&
+      object.payload?.attributeValueVerified !== undefined &&
+      object.payload?.attributeValueVerified !== null
+    ) {
+      message.payload = {
+        $case: "attributeValueVerified",
+        attributeValueVerified: AttributeValueVerified.fromPartial(object.payload.attributeValueVerified),
       };
     }
     if (
@@ -1065,13 +1124,23 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "connectionChanged" &&
-      object.payload?.connectionChanged !== undefined &&
-      object.payload?.connectionChanged !== null
+      object.payload?.$case === "connectionNameChanged" &&
+      object.payload?.connectionNameChanged !== undefined &&
+      object.payload?.connectionNameChanged !== null
     ) {
       message.payload = {
-        $case: "connectionChanged",
-        connectionChanged: ConnectionChanged.fromPartial(object.payload.connectionChanged),
+        $case: "connectionNameChanged",
+        connectionNameChanged: ConnectionNameChanged.fromPartial(object.payload.connectionNameChanged),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAvatarChanged" &&
+      object.payload?.connectionAvatarChanged !== undefined &&
+      object.payload?.connectionAvatarChanged !== null
+    ) {
+      message.payload = {
+        $case: "connectionAvatarChanged",
+        connectionAvatarChanged: ConnectionAvatarChanged.fromPartial(object.payload.connectionAvatarChanged),
       };
     }
     if (
@@ -1094,6 +1163,36 @@ export const Event = {
         connectionDescriptionChanged: ConnectionDescriptionChanged.fromPartial(
           object.payload.connectionDescriptionChanged,
         ),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAttributeAdded" &&
+      object.payload?.connectionAttributeAdded !== undefined &&
+      object.payload?.connectionAttributeAdded !== null
+    ) {
+      message.payload = {
+        $case: "connectionAttributeAdded",
+        connectionAttributeAdded: ConnectionAttributeAdded.fromPartial(object.payload.connectionAttributeAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAttributeChanged" &&
+      object.payload?.connectionAttributeChanged !== undefined &&
+      object.payload?.connectionAttributeChanged !== null
+    ) {
+      message.payload = {
+        $case: "connectionAttributeChanged",
+        connectionAttributeChanged: ConnectionAttributeChanged.fromPartial(object.payload.connectionAttributeChanged),
+      };
+    }
+    if (
+      object.payload?.$case === "connectionAttributeRemoved" &&
+      object.payload?.connectionAttributeRemoved !== undefined &&
+      object.payload?.connectionAttributeRemoved !== null
+    ) {
+      message.payload = {
+        $case: "connectionAttributeRemoved",
+        connectionAttributeRemoved: ConnectionAttributeRemoved.fromPartial(object.payload.connectionAttributeRemoved),
       };
     }
     if (

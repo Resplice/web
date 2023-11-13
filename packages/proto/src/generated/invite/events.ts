@@ -1,44 +1,44 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { AttributeType, attributeTypeFromJSON, attributeTypeToJSON } from "../attribute/types";
+import { PendingAttribute } from "../attribute/state";
 
 export interface QrCodeCreated {
-  uuid: string;
+  qrCode: string;
   attributeIds: number[];
 }
 
 export interface QrCodeOpened {
-  uuid: string;
-  accountId: number;
+  qrCode: string;
+  connectionId: number;
   name: string;
   avatarUrl: string;
   pendingAttributes: PendingAttribute[];
 }
 
-export interface PendingAttribute {
-  name: string;
-  attributeType: AttributeType;
-}
-
 export interface InviteCreated {
   /** Hash of value */
-  id: string;
+  inviteId: string;
   name: string;
   value?: { $case: "phone"; phone: string } | { $case: "email"; email: string } | undefined;
 }
 
+export interface BulkInvitesCreated {
+  invites: InviteCreated[];
+}
+
 export interface InviteDeleted {
-  id: string;
+  inviteId: string;
 }
 
 function createBaseQrCodeCreated(): QrCodeCreated {
-  return { uuid: "", attributeIds: [] };
+  return { qrCode: "", attributeIds: [] };
 }
 
 export const QrCodeCreated = {
   encode(message: QrCodeCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.uuid !== "") {
-      writer.uint32(10).string(message.uuid);
+    if (message.qrCode !== "") {
+      writer.uint32(10).string(message.qrCode);
     }
     writer.uint32(18).fork();
     for (const v of message.attributeIds) {
@@ -60,7 +60,7 @@ export const QrCodeCreated = {
             break;
           }
 
-          message.uuid = reader.string();
+          message.qrCode = reader.string();
           continue;
         case 2:
           if (tag === 16) {
@@ -90,7 +90,7 @@ export const QrCodeCreated = {
 
   fromJSON(object: any): QrCodeCreated {
     return {
-      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "",
       attributeIds: globalThis.Array.isArray(object?.attributeIds)
         ? object.attributeIds.map((e: any) => globalThis.Number(e))
         : [],
@@ -99,8 +99,8 @@ export const QrCodeCreated = {
 
   toJSON(message: QrCodeCreated): unknown {
     const obj: any = {};
-    if (message.uuid !== "") {
-      obj.uuid = message.uuid;
+    if (message.qrCode !== "") {
+      obj.qrCode = message.qrCode;
     }
     if (message.attributeIds?.length) {
       obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
@@ -113,23 +113,23 @@ export const QrCodeCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<QrCodeCreated>, I>>(object: I): QrCodeCreated {
     const message = createBaseQrCodeCreated();
-    message.uuid = object.uuid ?? "";
+    message.qrCode = object.qrCode ?? "";
     message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseQrCodeOpened(): QrCodeOpened {
-  return { uuid: "", accountId: 0, name: "", avatarUrl: "", pendingAttributes: [] };
+  return { qrCode: "", connectionId: 0, name: "", avatarUrl: "", pendingAttributes: [] };
 }
 
 export const QrCodeOpened = {
   encode(message: QrCodeOpened, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.uuid !== "") {
-      writer.uint32(10).string(message.uuid);
+    if (message.qrCode !== "") {
+      writer.uint32(10).string(message.qrCode);
     }
-    if (message.accountId !== 0) {
-      writer.uint32(16).uint32(message.accountId);
+    if (message.connectionId !== 0) {
+      writer.uint32(16).uint64(message.connectionId);
     }
     if (message.name !== "") {
       writer.uint32(26).string(message.name);
@@ -155,14 +155,14 @@ export const QrCodeOpened = {
             break;
           }
 
-          message.uuid = reader.string();
+          message.qrCode = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.accountId = reader.uint32();
+          message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -196,8 +196,8 @@ export const QrCodeOpened = {
 
   fromJSON(object: any): QrCodeOpened {
     return {
-      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "",
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
@@ -208,11 +208,11 @@ export const QrCodeOpened = {
 
   toJSON(message: QrCodeOpened): unknown {
     const obj: any = {};
-    if (message.uuid !== "") {
-      obj.uuid = message.uuid;
+    if (message.qrCode !== "") {
+      obj.qrCode = message.qrCode;
     }
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -231,8 +231,8 @@ export const QrCodeOpened = {
   },
   fromPartial<I extends Exact<DeepPartial<QrCodeOpened>, I>>(object: I): QrCodeOpened {
     const message = createBaseQrCodeOpened();
-    message.uuid = object.uuid ?? "";
-    message.accountId = object.accountId ?? 0;
+    message.qrCode = object.qrCode ?? "";
+    message.connectionId = object.connectionId ?? 0;
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.pendingAttributes = object.pendingAttributes?.map((e) => PendingAttribute.fromPartial(e)) || [];
@@ -240,88 +240,14 @@ export const QrCodeOpened = {
   },
 };
 
-function createBasePendingAttribute(): PendingAttribute {
-  return { name: "", attributeType: 0 };
-}
-
-export const PendingAttribute = {
-  encode(message: PendingAttribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.attributeType !== 0) {
-      writer.uint32(16).int32(message.attributeType);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PendingAttribute {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePendingAttribute();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.attributeType = reader.int32() as any;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PendingAttribute {
-    return {
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      attributeType: isSet(object.attributeType) ? attributeTypeFromJSON(object.attributeType) : 0,
-    };
-  },
-
-  toJSON(message: PendingAttribute): unknown {
-    const obj: any = {};
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    if (message.attributeType !== 0) {
-      obj.attributeType = attributeTypeToJSON(message.attributeType);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PendingAttribute>, I>>(base?: I): PendingAttribute {
-    return PendingAttribute.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<PendingAttribute>, I>>(object: I): PendingAttribute {
-    const message = createBasePendingAttribute();
-    message.name = object.name ?? "";
-    message.attributeType = object.attributeType ?? 0;
-    return message;
-  },
-};
-
 function createBaseInviteCreated(): InviteCreated {
-  return { id: "", name: "", value: undefined };
+  return { inviteId: "", name: "", value: undefined };
 }
 
 export const InviteCreated = {
   encode(message: InviteCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.inviteId !== "") {
+      writer.uint32(10).string(message.inviteId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -349,7 +275,7 @@ export const InviteCreated = {
             break;
           }
 
-          message.id = reader.string();
+          message.inviteId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -383,7 +309,7 @@ export const InviteCreated = {
 
   fromJSON(object: any): InviteCreated {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: globalThis.String(object.phone) }
@@ -395,8 +321,8 @@ export const InviteCreated = {
 
   toJSON(message: InviteCreated): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -415,7 +341,7 @@ export const InviteCreated = {
   },
   fromPartial<I extends Exact<DeepPartial<InviteCreated>, I>>(object: I): InviteCreated {
     const message = createBaseInviteCreated();
-    message.id = object.id ?? "";
+    message.inviteId = object.inviteId ?? "";
     message.name = object.name ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: object.value.phone };
@@ -427,14 +353,75 @@ export const InviteCreated = {
   },
 };
 
+function createBaseBulkInvitesCreated(): BulkInvitesCreated {
+  return { invites: [] };
+}
+
+export const BulkInvitesCreated = {
+  encode(message: BulkInvitesCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.invites) {
+      InviteCreated.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BulkInvitesCreated {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBulkInvitesCreated();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.invites.push(InviteCreated.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BulkInvitesCreated {
+    return {
+      invites: globalThis.Array.isArray(object?.invites)
+        ? object.invites.map((e: any) => InviteCreated.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: BulkInvitesCreated): unknown {
+    const obj: any = {};
+    if (message.invites?.length) {
+      obj.invites = message.invites.map((e) => InviteCreated.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BulkInvitesCreated>, I>>(base?: I): BulkInvitesCreated {
+    return BulkInvitesCreated.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BulkInvitesCreated>, I>>(object: I): BulkInvitesCreated {
+    const message = createBaseBulkInvitesCreated();
+    message.invites = object.invites?.map((e) => InviteCreated.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseInviteDeleted(): InviteDeleted {
-  return { id: "" };
+  return { inviteId: "" };
 }
 
 export const InviteDeleted = {
   encode(message: InviteDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.inviteId !== "") {
+      writer.uint32(10).string(message.inviteId);
     }
     return writer;
   },
@@ -451,7 +438,7 @@ export const InviteDeleted = {
             break;
           }
 
-          message.id = reader.string();
+          message.inviteId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -463,13 +450,13 @@ export const InviteDeleted = {
   },
 
   fromJSON(object: any): InviteDeleted {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "" };
   },
 
   toJSON(message: InviteDeleted): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     return obj;
   },
@@ -479,7 +466,7 @@ export const InviteDeleted = {
   },
   fromPartial<I extends Exact<DeepPartial<InviteDeleted>, I>>(object: I): InviteDeleted {
     const message = createBaseInviteDeleted();
-    message.id = object.id ?? "";
+    message.inviteId = object.inviteId ?? "";
     return message;
   },
 };
@@ -496,6 +483,18 @@ type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

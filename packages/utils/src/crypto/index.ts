@@ -68,6 +68,10 @@ export function verify(key: CryptoKey, signature: Uint8Array, data: Uint8Array) 
 	return crypto.subtle.verify('HMAC', key, signature, data)
 }
 
+export function hash(data: Uint8Array) {
+	return crypto.subtle.digest('SHA-256', data)
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/importKey#subjectpublickeyinfo_import
 function convertPemToBinary(pem: string): ArrayBuffer {
 	// fetch the part of the PEM string between header and footer
