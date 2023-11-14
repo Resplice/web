@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte'
+	import { onDestroy } from 'svelte'
 	import accountStore from '$modules/account/account.store'
 	import config from '$services/config'
 	import useProtocol from '$common/protocol/useProtocol'
@@ -17,8 +17,8 @@
 	let timer = TIMEOUT_SECONDS
 	let interval: NodeJS.Timeout | undefined
 
-	async function initQr() {
-		const qrInvite = await protocol.invite.createQr({ attributeIds: Array.from(shares) })
+	async function initQr(attributeIds: Set<number>) {
+		const qrInvite = await protocol.invite.createQr({ attributeIds: Array.from(attributeIds) })
 		url = `${config.appUrl}/invite/qr/${qrInvite.uuid}`
 		console.log(url)
 
@@ -31,11 +31,11 @@
 		clearInterval(interval)
 	}
 
-	async function reset() {
+	async function reset(attributeIds: Set<number>) {
 		cleanup()
 		url = ''
 		timer = TIMEOUT_SECONDS
-		await initQr()
+		await initQr(attributeIds)
 	}
 
 	function secondsToTime(t: number) {
@@ -49,12 +49,13 @@
 		return `${m}:${s}`
 	}
 
-	onMount(initQr)
-	onDestroy(cleanup)
-
 	$: {
-		if (timer <= 0) reset()
+		// Reset qr if timer expires or shares change
+		if (timer <= 0) reset(shares)
+		else if (shares.size > 0) reset(shares)
 	}
+
+	onDestroy(cleanup)
 </script>
 
 <div class="flex flex-col w-full h-full bg-gray-100">

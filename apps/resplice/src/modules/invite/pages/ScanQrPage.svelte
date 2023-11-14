@@ -2,30 +2,18 @@
 	import { onDestroy } from 'svelte'
 	import QR, { type QRCode } from 'jsqr'
 	import { push, pop } from 'svelte-spa-router'
-	import { Camera, CloseIcon, IconButton, Spinner } from '@resplice/components'
-	import useProtocol from '$common/protocol/useProtocol'
-
-	const protocol = useProtocol()
+	import { Camera, CloseIcon, IconButton } from '@resplice/components'
 
 	let qrCode: QRCode
 	let streamInterval: number
-	let isLoading = false
 
 	async function handleQr(qrData: string | null) {
 		if (!qrData) return
 
-		isLoading = true
 		const url = new URL(qrData)
 		console.log(url)
-		const paths = url.pathname.split('/')
-		const idx = paths.findIndex((p) => p === 'qr') + 1
-		const [id, code] = atob(paths[idx]).split('|')
-		const qrInviteId = parseInt(id, 10)
-		const accessCode = parseInt(code, 10)
 
-		const pendingContact = await protocol.invite.openQr({ qrCode })
-
-		// push(`/app/pending/contact/${pendingContact.id}`)
+		push(url.pathname)
 	}
 
 	$: handleQr(qrCode?.data)
@@ -71,14 +59,6 @@
 
 		<div class="absolute bottom-0 z-10 flex items-center justify-center w-full p-4">
 			<IconButton Icon={CloseIcon} on:click={() => pop()} />
-		</div>
-
-		<div
-			class="border-4 border-brand-primary w-3/4 h-1/2 z-10 rounded-2xl flex justify-center items-center"
-		>
-			{#if isLoading}
-				<Spinner />
-			{/if}
 		</div>
 	</main>
 </div>

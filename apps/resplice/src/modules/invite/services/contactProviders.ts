@@ -54,7 +54,7 @@ export async function fetchGoogleContacts(accessToken: string): Promise<Provider
 	const googleContacts = await response.json()
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const providerContacts: ProviderContact[] = googleContacts.connections.map((person: any) => {
+	return googleContacts.connections.map((person: any) => {
 		const id = person.resourceName
 		const name = person.names && person.names[0] ? person.names[0].displayName : 'Unknown'
 		const avatar = person.photos && person.photos[0] ? person.photos[0].url : ''
@@ -74,11 +74,10 @@ export async function fetchGoogleContacts(accessToken: string): Promise<Provider
 
 		return { id, name, avatar, attributes }
 	})
-	return providerContacts
 }
 
 export async function getNativeContacts(): Promise<ProviderContact[]> {
-	const [isContactPickerSupported] = isSupported(['contacts'])
+	const isContactPickerSupported = isSupported('contacts')
 	if (!isContactPickerSupported) return []
 
 	try {
@@ -88,12 +87,28 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 			{ multiple: true }
 		)
 		console.log(contacts)
-		return contacts.map((c, idx) => ({
-			id: idx.toString(),
-			name: c.name[0],
-			avatar: c.icon,
-			attributes: [c.email[0], c.tel[0]]
-		}))
+		return contacts.map((c, idx) => {
+			const attributes: ProviderContactAttribute[] = []
+
+			if (c.tel) {
+				c.tel.forEach((tel: string, idx: number) =>
+					attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: tel })
+				)
+			}
+
+			if (c.email) {
+				c.email.forEach((email: string, idx: number) =>
+					attributes.push({ type: 'email', name: `Email ${idx + 1}`, value: email })
+				)
+			}
+
+			return {
+				id: idx.toString(),
+				name: c.name[0],
+				avatar: c.icon,
+				attributes: attributes
+			}
+		})
 	} catch (err) {
 		// TODO: Show an alert
 		console.log(err)

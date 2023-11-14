@@ -1,8 +1,12 @@
 <script lang="ts">
 	import cx from 'clsx'
 	import ActionIcon from '$lib/attribute/AttributeActionIcon.svelte'
-	import { attributeTypes, getSocialNetworkFromUrl } from '@resplice/utils'
-	import { type Attribute, AttributeType } from '@resplice/utils'
+	import {
+		attributeTypes,
+		getSocialNetworkFromUrl,
+		AttributeType,
+		type Attribute
+	} from '@resplice/utils'
 
 	export let itemType: 'connection' | 'user' | 'disabled'
 	export let disableAction = false

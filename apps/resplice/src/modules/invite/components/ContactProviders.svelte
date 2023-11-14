@@ -1,15 +1,24 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	import { isSupported } from '@resplice/utils'
-	import { getGoogleContacts } from '$modules/invite/services/contactProviders'
+	import { getGoogleContacts, getNativeContacts } from '$modules/invite/services/contactProviders'
 	import { ButtonAlt as Button, GoogleIcon, PhonePortraitIcon } from '@resplice/components'
 	const dispatch = createEventDispatcher()
 
-	const [isContactPickerSupported] = isSupported(['contacts'])
+	const isContactPickerSupported = isSupported('contacts')
 
-	let isLoading = false
+	let isNativeLoading = false
+	let isGoogleLoading = false
+
+	async function onContactPickerClick() {
+		isNativeLoading = true
+		const contacts = await getNativeContacts()
+		console.log(contacts)
+		dispatch('import', contacts)
+	}
+
 	async function onGoogleProviderClick() {
-		isLoading = true
+		isGoogleLoading = true
 		const contacts = await getGoogleContacts()
 		console.log(contacts)
 		dispatch('import', contacts)
@@ -22,12 +31,12 @@
 
 <div class="flex flex-col my-8 space-y-4">
 	{#if isContactPickerSupported}
-		<Button>
+		<Button isLoading={isNativeLoading} on:click={onContactPickerClick}>
 			<PhonePortraitIcon width={24} height={24} />
 			<p>Import from contacts</p>
 		</Button>
 	{/if}
-	<Button {isLoading} on:click={onGoogleProviderClick}>
+	<Button isLoading={isGoogleLoading} on:click={onGoogleProviderClick}>
 		<GoogleIcon width={24} height={24} />
 		<p>Import from Google</p>
 	</Button>
@@ -39,22 +48,22 @@
 	<p>Import from Apple</p>
 </button> -->
 </div>
-<div>
+<!-- <div>
 	<p class="text-sm text-gray-600">Contact provider not shown?</p>
 	<p class="text-sm text-gray-600">
 		Invite someone via
 		<a
 			class="underline underline-offset-4 decoration-brand-primary decoration-2"
-			href="#/app/invite/create/phone"
+			href="#/invite/create/phone"
 		>
 			phone
 		</a>
-		<!-- or
+		or
 		<a
 			class="underline underline-offset-4 decoration-brand-primary decoration-2"
 			href="#/app/invite/create/email"
 		>
 			email
-		</a> -->
+		</a>
 	</p>
-</div>
+</div> -->

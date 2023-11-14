@@ -5,7 +5,7 @@
 	import useProtocol from '$common/protocol/useProtocol'
 	import Header from '$modules/connection/components/Header.svelte'
 	import ConnectionName from '$modules/connection/components/ConnectionName.svelte'
-	import ConnectionAttributes from '$modules/connection/components/ConnectionAttributes.svelte'
+	import PendingConnectionAttributes from '$modules/invite/components/PendingConnectionAttributes.svelte'
 	import AttributeShareContext from '$modules/attribute/components/AttributeShareContext.svelte'
 	import ConnectionDetailSkeleton from '$modules/connection/pages/ConnectionDetailSkeleton.svelte'
 	import type { QrConnection } from '$modules/invite/invite.types'
@@ -17,7 +17,7 @@
 	let showConnectionOnHeader = false
 	let scrollEl: HTMLDivElement
 	let qrConnectionPromise: Promise<QrConnection> = protocol.invite.openQr({ qrCode: params.uuid })
-	let attributeIds: Set<number> = new Set()
+	let isConnecting = false
 
 	onMount(() => {
 		let observer = new IntersectionObserver((entries) => {
@@ -28,15 +28,11 @@
 		return () => observer.disconnect()
 	})
 
-	function onAttributeToggle(id: number) {
-		if (selectedAttributes.has(id)) selectedAttributes.delete(id)
-		else selectedAttributes.add(id)
-	}
-
 	async function onConnect() {
+		isConnecting = true
 		const connectionId = await protocol.invite.connectViaQr({
 			qrCode: params.uuid,
-			attributeIds: [...selectedAttributes]
+			attributeIds: Array.from(selectedAttributes)
 		})
 		push(`/connection/${connectionId}/details`)
 	}
@@ -58,17 +54,13 @@
 				<ConnectionName connection={qrConnection} />
 			</div>
 			<div bind:this={scrollEl} id="scrollIntersection" class="absolute top-1/4" />
-			<!-- <ConnectionAttributes attributes={connection.attributes} /> -->
+			<PendingConnectionAttributes attributes={qrConnection.pendingAttributes} />
 			<div>
-				<Button on:click={onConnect}>Connect</Button>
+				<Button isLoading={isConnecting} on:click={onConnect}>Connect</Button>
 			</div>
 		</main>
 		<footer class="bg-white rounded-t-3xl w-full max-w-xl m-auto flex-none px-8 py-4">
-			<AttributeShareContext
-				selected={selectedAttributes}
-				initializeDefault
-				on:toggle={(e) => onAttributeToggle(e.detail)}
-			/>
+			<AttributeShareContext bind:selected={selectedAttributes} initializeDefault />
 		</footer>
 	</div>
 {:catch error}
