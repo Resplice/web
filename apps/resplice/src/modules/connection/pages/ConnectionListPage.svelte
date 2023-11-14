@@ -5,14 +5,14 @@
 	import inviteStores from '$modules/invite/invite.store'
 	import SearchHeader from '$common/components/SearchHeader.svelte'
 	import ConnectionList from '$modules/connection/components/ConnectionList.svelte'
-	import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
+	// import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
 	import InviteList from '$modules/invite/components/InviteList.svelte'
 	import type { Connection } from '$modules/connection/connection.types'
-	import type { Invite, PendingConnection } from '$modules/invite/invite.types'
+	import type { Invite } from '$modules/invite/invite.types'
 
-	const pendingConnectionStore = inviteStores.pendingConnections
+	// const pendingConnectionStore = inviteStores.pendingConnections
 	const inviteStore = inviteStores.invites
-	let pendingConnections: PendingConnection[] = Array.from($pendingConnectionStore.values())
+	// let pendingConnections: PendingConnection[] = Array.from($pendingConnectionStore.values())
 	let connections: Connection[] = Array.from($connectionStore.values())
 	let invites: Invite[] = Array.from($inviteStore.values())
 </script>
@@ -25,7 +25,7 @@
 	<SearchHeader />
 
 	<div class="w-full flex-1 flex flex-col overflow-auto bg-white rounded-t-3xl">
-		{#if !pendingConnections.length && !connections.length && !invites.length}
+		{#if !connections.length && !invites.length}
 			<div class="w-full h-full flex flex-col justify-center items-center">
 				<div class="rounded-full overflow-hidden w-48">
 					<ConnectionEmptyIcon width={192} height={144} />
@@ -54,7 +54,7 @@
 					<Button
 						color="brand-light"
 						class="flex items-center justify-center w-56"
-						on:click={() => push('/invite/qr/scan')}
+						on:click={() => push('/invite/qr-scan')}
 					>
 						<CameraIcon width={24} height={24} />
 						<span class="ml-2">Scan a QR Code</span>
@@ -62,7 +62,7 @@
 				</div>
 			</div>
 		{:else}
-			<PendingConnectionList {pendingConnections} />
+			<!-- <PendingConnectionList {pendingConnections} /> -->
 			<ConnectionList {connections} />
 			<InviteList {invites} />
 		{/if}

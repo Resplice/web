@@ -5,7 +5,7 @@ import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCo
 import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
 import type { ConnectionStore } from '$modules/connection/connection.store'
 import type { InviteStore } from '$modules/invite/invite.store'
-import type { Invite, QrPendingConnection, Qr } from '$modules/invite/invite.types'
+import type { Invite, QrConnection, Qr } from '$modules/invite/invite.types'
 import { applyConnectionEvent } from '$modules/connection/connection.state'
 import { applyInviteEvent, mapProtoCommand } from '$modules/invite/invite.state'
 import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
@@ -13,7 +13,7 @@ import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 export interface InviteProtocol {
 	create(payload: proto.invite.CreateInvite): void
 	createQr(payload: proto.invite.CreateQrCode): Promise<Qr>
-	openQr(payload: proto.invite.OpenQrCode): Promise<QrPendingConnection>
+	openQr(payload: proto.invite.OpenQrCode): Promise<QrConnection>
 	connectViaQr(payload: proto.invite.ConnectViaQrCode): Promise<number>
 	delete(payload: proto.invite.DeleteInvite): void
 }
@@ -63,7 +63,10 @@ function inviteProtocolFactory({
 			if (!message.event) throw new Error('Cannot create QR code')
 			if (message.event.payload?.$case !== 'qrCodeCreated') throw new Error('Cannot create QR code')
 
-			return message.event.payload.qrCodeCreated
+			return {
+				uuid: message.event.payload.qrCodeCreated.qrCode,
+				attributeIds: message.event.payload.qrCodeCreated.attributeIds
+			}
 		},
 		async openQr(payload) {
 			const message = await sendCommandRequest(
@@ -78,6 +81,8 @@ function inviteProtocolFactory({
 
 			return {
 				...message.event.payload.qrCodeOpened,
+				alias: null,
+				description: null,
 				pendingAttributes: message.event.payload.qrCodeOpened.pendingAttributes.map((attr) => ({
 					...attr,
 					attributeType: mapProtoAttributeType(attr.attributeType)
@@ -98,7 +103,7 @@ function inviteProtocolFactory({
 
 			connectionStore.update((state) => applyConnectionEvent(state, message.event))
 
-			return message.event.payload.connectionAdded.accountId
+			return message.event.payload.connectionAdded.connectionId
 		},
 		delete(payload) {
 			sendCommand(commuter, {
@@ -106,7 +111,7 @@ function inviteProtocolFactory({
 				deleteInvite: payload
 			})
 			store.invites.update((state) => {
-				state.delete(payload.id)
+				state.delete(payload.inviteId)
 				return state
 			})
 		}

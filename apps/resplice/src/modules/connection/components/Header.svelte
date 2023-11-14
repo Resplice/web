@@ -14,7 +14,7 @@
 
 	const protocol = useProtocol()
 
-	export let connection: Connection
+	export let connection: Pick<Connection, 'id' | 'name' | 'avatarUrl'>
 	export let showConnection = false
 	export let backPath = ''
 	let showContextMenu = false

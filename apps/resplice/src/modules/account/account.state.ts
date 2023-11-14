@@ -10,7 +10,7 @@ export function applyAccountEvent(
 	switch (event.payload!.$case) {
 		case 'accountCreated':
 			return {
-				uuid: event.payload.accountCreated.accountId,
+				uuid: event.payload.accountCreated.accountUuid,
 				name: event.payload.accountCreated.name,
 				avatarUrl: event.payload.accountCreated.avatarUrl
 			}

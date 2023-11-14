@@ -110,7 +110,7 @@
 				</button>
 				<button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/qr/scan')}
+					on:click={() => push('/invite/qr-scan')}
 				>
 					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
 						<CameraIcon width={24} height={24} />

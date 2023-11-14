@@ -23,7 +23,7 @@
 		const qrInviteId = parseInt(id, 10)
 		const accessCode = parseInt(code, 10)
 
-		// const pendingContact = await protocol.invite.openQr(qrInviteId, accessCode)
+		const pendingContact = await protocol.invite.openQr({ qrCode })
 
 		// push(`/app/pending/contact/${pendingContact.id}`)
 	}

@@ -72,8 +72,8 @@ function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies)
 			new Uint8Array(messageBytes),
 			cryptoKeys.server
 		)
-		if (error || state) return null
-		if (event.payload?.$case !== 'sessionStarted') return null
+		if (error || state) throw new Error('Error starting session')
+		if (event.payload?.$case !== 'sessionStarted') throw new Error('Error starting session')
 
 		const session: Session = {
 			id: event.payload.sessionStarted.sessionId,
@@ -90,7 +90,7 @@ function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies)
 	}
 
 	function loadSession(): Promise<Session> {
-		return cache.getById<Session>('session', 0)
+		return cache.getById<Session>('session', 0) as Promise<Session>
 	}
 
 	return {
@@ -103,7 +103,7 @@ function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies)
 				? await startSession(accessToken, persist)
 				: await loadSession()
 
-			if (currentSession) store.set({ currentSession: { id: 0, ...currentSession }, sessions: [] })
+			if (currentSession) store.set({ currentSession, sessions: [] })
 
 			return currentSession
 		},

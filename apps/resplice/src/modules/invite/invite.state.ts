@@ -10,8 +10,8 @@ export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event)
 		case 'inviteCreated':
 			// Delete placeholder
 			aggregate.delete('0')
-			aggregate.set(event.payload.inviteCreated.id, {
-				id: event.payload.inviteCreated.id,
+			aggregate.set(event.payload.inviteCreated.inviteId, {
+				id: event.payload.inviteCreated.inviteId,
 				type: mapProtoInviteType(event.payload.inviteCreated.value),
 				name: event.payload.inviteCreated.name,
 				value: mapProtoInviteValue(event.payload.inviteCreated.value)

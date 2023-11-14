@@ -46,16 +46,19 @@ export type PendingConnection = {
 	id: number
 	name: string
 	avatarUrl: string | null
+	alias: null
+	description: null
 	inviteType: InviteType
 	inviteValue: string
 	pendingAttributes: PendingConnectionAttribute[]
 	expiresAt: number
 }
 
-export type QrPendingConnection = {
-	uuid: string
-	accountId: number
+export type QrConnection = {
+	connectionId: number
 	name: PendingConnection['name']
+	alias: PendingConnection['alias']
+	description: PendingConnection['description']
 	avatarUrl: PendingConnection['avatarUrl']
 	pendingAttributes: PendingConnection['pendingAttributes']
 }
