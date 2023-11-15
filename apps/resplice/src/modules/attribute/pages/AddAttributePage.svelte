@@ -30,15 +30,6 @@
 	// let isLoading = false
 	// let verifyError = ''
 
-	// $: {
-	// 	// Finds the first unverified attribute of the type
-	// 	// This is kind of a hack, but it works for now
-	// 	// TODO: Find a better way to do this
-	// 	attributeToVerify =
-	// 		Array.from($attributeStore.values()).find((a) => a.type === attributeType && !a.verifiedAt) ||
-	// 		null
-	// }
-
 	function saveAttribute(attribute: Attribute) {
 		protocol.attribute.add({
 			name: attribute.name,
