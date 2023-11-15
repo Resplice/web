@@ -12,7 +12,7 @@ import {
 } from "./types";
 
 export interface Attribute {
-  attributeId: number;
+  id: number;
   name: string;
   valueId: string;
   value?:
@@ -36,13 +36,13 @@ export interface PendingAttribute {
 }
 
 function createBaseAttribute(): Attribute {
-  return { attributeId: 0, name: "", valueId: "", value: undefined };
+  return { id: 0, name: "", valueId: "", value: undefined };
 }
 
 export const Attribute = {
   encode(message: Attribute, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.attributeId !== 0) {
-      writer.uint32(8).uint32(message.attributeId);
+    if (message.id !== 0) {
+      writer.uint32(8).uint32(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -82,7 +82,7 @@ export const Attribute = {
             break;
           }
 
-          message.attributeId = reader.uint32();
+          message.id = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -144,7 +144,7 @@ export const Attribute = {
 
   fromJSON(object: any): Attribute {
     return {
-      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       valueId: isSet(object.valueId) ? globalThis.String(object.valueId) : "",
       value: isSet(object.phone)
@@ -163,8 +163,8 @@ export const Attribute = {
 
   toJSON(message: Attribute): unknown {
     const obj: any = {};
-    if (message.attributeId !== 0) {
-      obj.attributeId = Math.round(message.attributeId);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -195,7 +195,7 @@ export const Attribute = {
   },
   fromPartial<I extends Exact<DeepPartial<Attribute>, I>>(object: I): Attribute {
     const message = createBaseAttribute();
-    message.attributeId = object.attributeId ?? 0;
+    message.id = object.id ?? 0;
     message.name = object.name ?? "";
     message.valueId = object.valueId ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {

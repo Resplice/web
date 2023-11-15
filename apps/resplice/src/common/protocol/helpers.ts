@@ -33,7 +33,10 @@ export async function sendCommandRequest(
 	})
 	const message = await deserializeMessage(new Uint8Array(messageBytes), cryptoKeys.server)
 
-	if (message.event && persisted) await cache.upsert('events', message.event)
+	const stateEvents = ['qrInviteCreated', 'qrInviteOpened']
+
+	if (message.event && !stateEvents.includes(message.event.payload!.$case) && persisted)
+		await cache.upsert('events', message.event)
 
 	return message
 }

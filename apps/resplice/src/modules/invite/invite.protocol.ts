@@ -12,9 +12,9 @@ import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export interface InviteProtocol {
 	create(payload: proto.invite.CreateInvite): void
-	createQr(payload: proto.invite.CreateQrCode): Promise<Qr>
-	openQr(payload: proto.invite.OpenQrCode): Promise<QrConnection>
-	connectViaQr(payload: proto.invite.ConnectViaQrCode): Promise<number>
+	createQr(payload: proto.invite.CreateQrInvite): Promise<Qr>
+	openQr(payload: proto.invite.OpenQrInvite): Promise<QrConnection>
+	acceptQrInvite(payload: proto.invite.AcceptQrInvite): Promise<number>
 	delete(payload: proto.invite.DeleteInvite): void
 }
 
@@ -56,45 +56,46 @@ function inviteProtocolFactory({
 			const message = await sendCommandRequest(
 				{ fetch, cache },
 				{
-					$case: 'createQrCode',
-					createQrCode: payload
+					$case: 'createQrInvite',
+					createQrInvite: payload
 				}
 			)
 			if (!message.event) throw new Error('Cannot create QR code')
-			if (message.event.payload?.$case !== 'qrCodeCreated') throw new Error('Cannot create QR code')
+			if (message.event.payload?.$case !== 'qrInviteCreated')
+				throw new Error('Cannot create QR code')
 
 			return {
-				uuid: message.event.payload.qrCodeCreated.qrCode,
-				attributeIds: message.event.payload.qrCodeCreated.attributeIds
+				uuid: message.event.payload.qrInviteCreated.qrCode,
+				attributeIds: message.event.payload.qrInviteCreated.attributeIds
 			}
 		},
 		async openQr(payload) {
 			const message = await sendCommandRequest(
 				{ fetch, cache },
 				{
-					$case: 'openQrCode',
-					openQrCode: payload
+					$case: 'openQrInvite',
+					openQrInvite: payload
 				}
 			)
 			if (!message.event) throw new Error('Invalid QR code')
-			if (message.event.payload?.$case !== 'qrCodeOpened') throw new Error('Invalid QR code')
+			if (message.event.payload?.$case !== 'qrInviteOpened') throw new Error('Invalid QR code')
 
 			return {
-				...message.event.payload.qrCodeOpened,
+				...message.event.payload.qrInviteOpened,
 				alias: null,
 				description: null,
-				pendingAttributes: message.event.payload.qrCodeOpened.pendingAttributes.map((attr) => ({
+				pendingAttributes: message.event.payload.qrInviteOpened.pendingAttributes.map((attr) => ({
 					...attr,
 					attributeType: mapProtoAttributeType(attr.attributeType)
 				}))
 			}
 		},
-		async connectViaQr(payload) {
+		async acceptQrInvite(payload) {
 			const message = await sendCommandRequest(
 				{ fetch, cache },
 				{
-					$case: 'openQrCode',
-					openQrCode: payload
+					$case: 'acceptQrInvite',
+					acceptQrInvite: payload
 				}
 			)
 			if (!message.event) throw new Error('Cannot connect via QR code')

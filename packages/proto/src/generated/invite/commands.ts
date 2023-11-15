@@ -1,15 +1,15 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 
-export interface CreateQrCode {
+export interface CreateQrInvite {
   attributeIds: number[];
 }
 
-export interface OpenQrCode {
+export interface OpenQrInvite {
   qrCode: string;
 }
 
-export interface ConnectViaQrCode {
+export interface AcceptQrInvite {
   qrCode: string;
   attributeIds: number[];
 }
@@ -28,12 +28,12 @@ export interface DeleteInvite {
   inviteId: string;
 }
 
-function createBaseCreateQrCode(): CreateQrCode {
+function createBaseCreateQrInvite(): CreateQrInvite {
   return { attributeIds: [] };
 }
 
-export const CreateQrCode = {
-  encode(message: CreateQrCode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const CreateQrInvite = {
+  encode(message: CreateQrInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.attributeIds) {
       writer.uint32(v);
@@ -42,10 +42,10 @@ export const CreateQrCode = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateQrCode {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateQrInvite {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateQrCode();
+    const message = createBaseCreateQrInvite();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -75,7 +75,7 @@ export const CreateQrCode = {
     return message;
   },
 
-  fromJSON(object: any): CreateQrCode {
+  fromJSON(object: any): CreateQrInvite {
     return {
       attributeIds: globalThis.Array.isArray(object?.attributeIds)
         ? object.attributeIds.map((e: any) => globalThis.Number(e))
@@ -83,7 +83,7 @@ export const CreateQrCode = {
     };
   },
 
-  toJSON(message: CreateQrCode): unknown {
+  toJSON(message: CreateQrInvite): unknown {
     const obj: any = {};
     if (message.attributeIds?.length) {
       obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
@@ -91,32 +91,32 @@ export const CreateQrCode = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateQrCode>, I>>(base?: I): CreateQrCode {
-    return CreateQrCode.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<CreateQrInvite>, I>>(base?: I): CreateQrInvite {
+    return CreateQrInvite.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CreateQrCode>, I>>(object: I): CreateQrCode {
-    const message = createBaseCreateQrCode();
+  fromPartial<I extends Exact<DeepPartial<CreateQrInvite>, I>>(object: I): CreateQrInvite {
+    const message = createBaseCreateQrInvite();
     message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
-function createBaseOpenQrCode(): OpenQrCode {
+function createBaseOpenQrInvite(): OpenQrInvite {
   return { qrCode: "" };
 }
 
-export const OpenQrCode = {
-  encode(message: OpenQrCode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OpenQrInvite = {
+  encode(message: OpenQrInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.qrCode !== "") {
       writer.uint32(10).string(message.qrCode);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OpenQrCode {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OpenQrInvite {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOpenQrCode();
+    const message = createBaseOpenQrInvite();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -136,11 +136,11 @@ export const OpenQrCode = {
     return message;
   },
 
-  fromJSON(object: any): OpenQrCode {
+  fromJSON(object: any): OpenQrInvite {
     return { qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "" };
   },
 
-  toJSON(message: OpenQrCode): unknown {
+  toJSON(message: OpenQrInvite): unknown {
     const obj: any = {};
     if (message.qrCode !== "") {
       obj.qrCode = message.qrCode;
@@ -148,22 +148,22 @@ export const OpenQrCode = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OpenQrCode>, I>>(base?: I): OpenQrCode {
-    return OpenQrCode.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<OpenQrInvite>, I>>(base?: I): OpenQrInvite {
+    return OpenQrInvite.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<OpenQrCode>, I>>(object: I): OpenQrCode {
-    const message = createBaseOpenQrCode();
+  fromPartial<I extends Exact<DeepPartial<OpenQrInvite>, I>>(object: I): OpenQrInvite {
+    const message = createBaseOpenQrInvite();
     message.qrCode = object.qrCode ?? "";
     return message;
   },
 };
 
-function createBaseConnectViaQrCode(): ConnectViaQrCode {
+function createBaseAcceptQrInvite(): AcceptQrInvite {
   return { qrCode: "", attributeIds: [] };
 }
 
-export const ConnectViaQrCode = {
-  encode(message: ConnectViaQrCode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AcceptQrInvite = {
+  encode(message: AcceptQrInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.qrCode !== "") {
       writer.uint32(10).string(message.qrCode);
     }
@@ -175,10 +175,10 @@ export const ConnectViaQrCode = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ConnectViaQrCode {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AcceptQrInvite {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseConnectViaQrCode();
+    const message = createBaseAcceptQrInvite();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -215,7 +215,7 @@ export const ConnectViaQrCode = {
     return message;
   },
 
-  fromJSON(object: any): ConnectViaQrCode {
+  fromJSON(object: any): AcceptQrInvite {
     return {
       qrCode: isSet(object.qrCode) ? globalThis.String(object.qrCode) : "",
       attributeIds: globalThis.Array.isArray(object?.attributeIds)
@@ -224,7 +224,7 @@ export const ConnectViaQrCode = {
     };
   },
 
-  toJSON(message: ConnectViaQrCode): unknown {
+  toJSON(message: AcceptQrInvite): unknown {
     const obj: any = {};
     if (message.qrCode !== "") {
       obj.qrCode = message.qrCode;
@@ -235,11 +235,11 @@ export const ConnectViaQrCode = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ConnectViaQrCode>, I>>(base?: I): ConnectViaQrCode {
-    return ConnectViaQrCode.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<AcceptQrInvite>, I>>(base?: I): AcceptQrInvite {
+    return AcceptQrInvite.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ConnectViaQrCode>, I>>(object: I): ConnectViaQrCode {
-    const message = createBaseConnectViaQrCode();
+  fromPartial<I extends Exact<DeepPartial<AcceptQrInvite>, I>>(object: I): AcceptQrInvite {
+    const message = createBaseAcceptQrInvite();
     message.qrCode = object.qrCode ?? "";
     message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;

@@ -31,7 +31,7 @@
 
 	async function onConnect() {
 		isConnecting = true
-		const connectionId = await protocol.invite.connectViaQr({
+		const connectionId = await protocol.invite.acceptQrInvite({
 			qrCode: params.uuid,
 			attributeIds: Array.from(selectedAttributes)
 		})
@@ -65,6 +65,9 @@
 		</footer>
 	</Page>
 {:catch error}
-	<p>We are sorry, something went wrong.</p>
-	<p>{error.message}</p>
+	<div class="p-4">
+		<p>We are sorry, something went wrong.</p>
+		<p>{error.message}</p>
+		<Button on:click={() => push('/')}>Back To App</Button>
+	</div>
 {/await}

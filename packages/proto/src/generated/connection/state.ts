@@ -4,7 +4,7 @@ import _m0 from "protobufjs/minimal";
 import { Attribute } from "../attribute/state";
 
 export interface Connection {
-  connectionId: number;
+  id: number;
   name: string;
   avatarUrl: string;
   alias: string;
@@ -18,7 +18,7 @@ export interface Connection {
 
 function createBaseConnection(): Connection {
   return {
-    connectionId: 0,
+    id: 0,
     name: "",
     avatarUrl: "",
     alias: "",
@@ -33,8 +33,8 @@ function createBaseConnection(): Connection {
 
 export const Connection = {
   encode(message: Connection, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.connectionId !== 0) {
-      writer.uint32(8).uint64(message.connectionId);
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -80,7 +80,7 @@ export const Connection = {
             break;
           }
 
-          message.connectionId = longToNumber(reader.uint64() as Long);
+          message.id = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -166,7 +166,7 @@ export const Connection = {
 
   fromJSON(object: any): Connection {
     return {
-      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
@@ -185,8 +185,8 @@ export const Connection = {
 
   toJSON(message: Connection): unknown {
     const obj: any = {};
-    if (message.connectionId !== 0) {
-      obj.connectionId = Math.round(message.connectionId);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -223,7 +223,7 @@ export const Connection = {
   },
   fromPartial<I extends Exact<DeepPartial<Connection>, I>>(object: I): Connection {
     const message = createBaseConnection();
-    message.connectionId = object.connectionId ?? 0;
+    message.id = object.id ?? 0;
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.alias = object.alias ?? "";

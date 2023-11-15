@@ -6,7 +6,7 @@ import { Connection } from "../connection/state";
 import { Invite } from "../invite/state";
 
 export interface Account {
-  accountId: number;
+  id: number;
   accountUuid: string;
   name: string;
   avatarUrl: string;
@@ -22,7 +22,7 @@ export interface Account {
 
 function createBaseAccount(): Account {
   return {
-    accountId: 0,
+    id: 0,
     accountUuid: "",
     name: "",
     avatarUrl: "",
@@ -39,8 +39,8 @@ function createBaseAccount(): Account {
 
 export const Account = {
   encode(message: Account, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.accountId !== 0) {
-      writer.uint32(8).uint64(message.accountId);
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
     }
     if (message.accountUuid !== "") {
       writer.uint32(18).string(message.accountUuid);
@@ -90,7 +90,7 @@ export const Account = {
             break;
           }
 
-          message.accountId = longToNumber(reader.uint64() as Long);
+          message.id = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -180,7 +180,7 @@ export const Account = {
 
   fromJSON(object: any): Account {
     return {
-      accountId: isSet(object.accountId) ? globalThis.Number(object.accountId) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       accountUuid: isSet(object.accountUuid) ? globalThis.String(object.accountUuid) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
@@ -203,8 +203,8 @@ export const Account = {
 
   toJSON(message: Account): unknown {
     const obj: any = {};
-    if (message.accountId !== 0) {
-      obj.accountId = Math.round(message.accountId);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
     if (message.accountUuid !== "") {
       obj.accountUuid = message.accountUuid;
@@ -247,7 +247,7 @@ export const Account = {
   },
   fromPartial<I extends Exact<DeepPartial<Account>, I>>(object: I): Account {
     const message = createBaseAccount();
-    message.accountId = object.accountId ?? 0;
+    message.id = object.id ?? 0;
     message.accountUuid = object.accountUuid ?? "";
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";

@@ -30,7 +30,14 @@ import {
   UnfavorConnection,
   UnmuteConnection,
 } from "./connection/commands";
-import { BulkInvite, ConnectViaQrCode, CreateInvite, CreateQrCode, DeleteInvite, OpenQrCode } from "./invite/commands";
+import {
+  AcceptQrInvite,
+  BulkInvite,
+  CreateInvite,
+  CreateQrInvite,
+  DeleteInvite,
+  OpenQrInvite,
+} from "./invite/commands";
 
 export interface SecCommand {
   id: number;
@@ -54,9 +61,9 @@ export interface Command {
     | { $case: "removeAttribute"; removeAttribute: RemoveAttribute }
     | { $case: "sendValueVerification"; sendValueVerification: SendValueVerification }
     | { $case: "verifyAttributeValue"; verifyAttributeValue: VerifyAttributeValue }
-    | { $case: "createQrCode"; createQrCode: CreateQrCode }
-    | { $case: "openQrCode"; openQrCode: OpenQrCode }
-    | { $case: "connectViaQrCode"; connectViaQrCode: ConnectViaQrCode }
+    | { $case: "createQrInvite"; createQrInvite: CreateQrInvite }
+    | { $case: "openQrInvite"; openQrInvite: OpenQrInvite }
+    | { $case: "acceptQrInvite"; acceptQrInvite: AcceptQrInvite }
     | { $case: "bulkInvite"; bulkInvite: BulkInvite }
     | { $case: "createInvite"; createInvite: CreateInvite }
     | { $case: "deleteInvite"; deleteInvite: DeleteInvite }
@@ -212,14 +219,14 @@ export const Command = {
       case "verifyAttributeValue":
         VerifyAttributeValue.encode(message.payload.verifyAttributeValue, writer.uint32(114).fork()).ldelim();
         break;
-      case "createQrCode":
-        CreateQrCode.encode(message.payload.createQrCode, writer.uint32(122).fork()).ldelim();
+      case "createQrInvite":
+        CreateQrInvite.encode(message.payload.createQrInvite, writer.uint32(122).fork()).ldelim();
         break;
-      case "openQrCode":
-        OpenQrCode.encode(message.payload.openQrCode, writer.uint32(130).fork()).ldelim();
+      case "openQrInvite":
+        OpenQrInvite.encode(message.payload.openQrInvite, writer.uint32(130).fork()).ldelim();
         break;
-      case "connectViaQrCode":
-        ConnectViaQrCode.encode(message.payload.connectViaQrCode, writer.uint32(138).fork()).ldelim();
+      case "acceptQrInvite":
+        AcceptQrInvite.encode(message.payload.acceptQrInvite, writer.uint32(138).fork()).ldelim();
         break;
       case "bulkInvite":
         BulkInvite.encode(message.payload.bulkInvite, writer.uint32(146).fork()).ldelim();
@@ -399,24 +406,21 @@ export const Command = {
             break;
           }
 
-          message.payload = { $case: "createQrCode", createQrCode: CreateQrCode.decode(reader, reader.uint32()) };
+          message.payload = { $case: "createQrInvite", createQrInvite: CreateQrInvite.decode(reader, reader.uint32()) };
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.payload = { $case: "openQrCode", openQrCode: OpenQrCode.decode(reader, reader.uint32()) };
+          message.payload = { $case: "openQrInvite", openQrInvite: OpenQrInvite.decode(reader, reader.uint32()) };
           continue;
         case 17:
           if (tag !== 138) {
             break;
           }
 
-          message.payload = {
-            $case: "connectViaQrCode",
-            connectViaQrCode: ConnectViaQrCode.decode(reader, reader.uint32()),
-          };
+          message.payload = { $case: "acceptQrInvite", acceptQrInvite: AcceptQrInvite.decode(reader, reader.uint32()) };
           continue;
         case 18:
           if (tag !== 146) {
@@ -594,12 +598,12 @@ export const Command = {
           $case: "verifyAttributeValue",
           verifyAttributeValue: VerifyAttributeValue.fromJSON(object.verifyAttributeValue),
         }
-        : isSet(object.createQrCode)
-        ? { $case: "createQrCode", createQrCode: CreateQrCode.fromJSON(object.createQrCode) }
-        : isSet(object.openQrCode)
-        ? { $case: "openQrCode", openQrCode: OpenQrCode.fromJSON(object.openQrCode) }
-        : isSet(object.connectViaQrCode)
-        ? { $case: "connectViaQrCode", connectViaQrCode: ConnectViaQrCode.fromJSON(object.connectViaQrCode) }
+        : isSet(object.createQrInvite)
+        ? { $case: "createQrInvite", createQrInvite: CreateQrInvite.fromJSON(object.createQrInvite) }
+        : isSet(object.openQrInvite)
+        ? { $case: "openQrInvite", openQrInvite: OpenQrInvite.fromJSON(object.openQrInvite) }
+        : isSet(object.acceptQrInvite)
+        ? { $case: "acceptQrInvite", acceptQrInvite: AcceptQrInvite.fromJSON(object.acceptQrInvite) }
         : isSet(object.bulkInvite)
         ? { $case: "bulkInvite", bulkInvite: BulkInvite.fromJSON(object.bulkInvite) }
         : isSet(object.createInvite)
@@ -688,14 +692,14 @@ export const Command = {
     if (message.payload?.$case === "verifyAttributeValue") {
       obj.verifyAttributeValue = VerifyAttributeValue.toJSON(message.payload.verifyAttributeValue);
     }
-    if (message.payload?.$case === "createQrCode") {
-      obj.createQrCode = CreateQrCode.toJSON(message.payload.createQrCode);
+    if (message.payload?.$case === "createQrInvite") {
+      obj.createQrInvite = CreateQrInvite.toJSON(message.payload.createQrInvite);
     }
-    if (message.payload?.$case === "openQrCode") {
-      obj.openQrCode = OpenQrCode.toJSON(message.payload.openQrCode);
+    if (message.payload?.$case === "openQrInvite") {
+      obj.openQrInvite = OpenQrInvite.toJSON(message.payload.openQrInvite);
     }
-    if (message.payload?.$case === "connectViaQrCode") {
-      obj.connectViaQrCode = ConnectViaQrCode.toJSON(message.payload.connectViaQrCode);
+    if (message.payload?.$case === "acceptQrInvite") {
+      obj.acceptQrInvite = AcceptQrInvite.toJSON(message.payload.acceptQrInvite);
     }
     if (message.payload?.$case === "bulkInvite") {
       obj.bulkInvite = BulkInvite.toJSON(message.payload.bulkInvite);
@@ -873,27 +877,30 @@ export const Command = {
       };
     }
     if (
-      object.payload?.$case === "createQrCode" &&
-      object.payload?.createQrCode !== undefined &&
-      object.payload?.createQrCode !== null
-    ) {
-      message.payload = { $case: "createQrCode", createQrCode: CreateQrCode.fromPartial(object.payload.createQrCode) };
-    }
-    if (
-      object.payload?.$case === "openQrCode" &&
-      object.payload?.openQrCode !== undefined &&
-      object.payload?.openQrCode !== null
-    ) {
-      message.payload = { $case: "openQrCode", openQrCode: OpenQrCode.fromPartial(object.payload.openQrCode) };
-    }
-    if (
-      object.payload?.$case === "connectViaQrCode" &&
-      object.payload?.connectViaQrCode !== undefined &&
-      object.payload?.connectViaQrCode !== null
+      object.payload?.$case === "createQrInvite" &&
+      object.payload?.createQrInvite !== undefined &&
+      object.payload?.createQrInvite !== null
     ) {
       message.payload = {
-        $case: "connectViaQrCode",
-        connectViaQrCode: ConnectViaQrCode.fromPartial(object.payload.connectViaQrCode),
+        $case: "createQrInvite",
+        createQrInvite: CreateQrInvite.fromPartial(object.payload.createQrInvite),
+      };
+    }
+    if (
+      object.payload?.$case === "openQrInvite" &&
+      object.payload?.openQrInvite !== undefined &&
+      object.payload?.openQrInvite !== null
+    ) {
+      message.payload = { $case: "openQrInvite", openQrInvite: OpenQrInvite.fromPartial(object.payload.openQrInvite) };
+    }
+    if (
+      object.payload?.$case === "acceptQrInvite" &&
+      object.payload?.acceptQrInvite !== undefined &&
+      object.payload?.acceptQrInvite !== null
+    ) {
+      message.payload = {
+        $case: "acceptQrInvite",
+        acceptQrInvite: AcceptQrInvite.fromPartial(object.payload.acceptQrInvite),
       };
     }
     if (

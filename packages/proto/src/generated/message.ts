@@ -22,7 +22,7 @@ import {
   ConnectionUnfavored,
   ConnectionUnmuted,
 } from "./connection/events";
-import { InviteCreated, InviteDeleted, QrCodeCreated, QrCodeOpened } from "./invite/events";
+import { InviteCreated, InviteDeleted, QrInviteCreated, QrInviteOpened } from "./invite/events";
 
 export enum ErrorType {
   INVALID_INPUT = 0,
@@ -184,8 +184,8 @@ export interface Event {
     | { $case: "attributeChanged"; attributeChanged: AttributeChanged }
     | { $case: "attributeRemoved"; attributeRemoved: AttributeRemoved }
     | { $case: "attributeValueVerified"; attributeValueVerified: AttributeValueVerified }
-    | { $case: "qrCodeCreated"; qrCodeCreated: QrCodeCreated }
-    | { $case: "qrCodeOpened"; qrCodeOpened: QrCodeOpened }
+    | { $case: "qrInviteCreated"; qrInviteCreated: QrInviteCreated }
+    | { $case: "qrInviteOpened"; qrInviteOpened: QrInviteOpened }
     | { $case: "inviteCreated"; inviteCreated: InviteCreated }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
     | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
@@ -389,11 +389,11 @@ export const Event = {
       case "attributeValueVerified":
         AttributeValueVerified.encode(message.payload.attributeValueVerified, writer.uint32(90).fork()).ldelim();
         break;
-      case "qrCodeCreated":
-        QrCodeCreated.encode(message.payload.qrCodeCreated, writer.uint32(98).fork()).ldelim();
+      case "qrInviteCreated":
+        QrInviteCreated.encode(message.payload.qrInviteCreated, writer.uint32(98).fork()).ldelim();
         break;
-      case "qrCodeOpened":
-        QrCodeOpened.encode(message.payload.qrCodeOpened, writer.uint32(106).fork()).ldelim();
+      case "qrInviteOpened":
+        QrInviteOpened.encode(message.payload.qrInviteOpened, writer.uint32(106).fork()).ldelim();
         break;
       case "inviteCreated":
         InviteCreated.encode(message.payload.inviteCreated, writer.uint32(114).fork()).ldelim();
@@ -563,14 +563,17 @@ export const Event = {
             break;
           }
 
-          message.payload = { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.decode(reader, reader.uint32()) };
+          message.payload = {
+            $case: "qrInviteCreated",
+            qrInviteCreated: QrInviteCreated.decode(reader, reader.uint32()),
+          };
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.decode(reader, reader.uint32()) };
+          message.payload = { $case: "qrInviteOpened", qrInviteOpened: QrInviteOpened.decode(reader, reader.uint32()) };
           continue;
         case 14:
           if (tag !== 114) {
@@ -794,10 +797,10 @@ export const Event = {
           $case: "attributeValueVerified",
           attributeValueVerified: AttributeValueVerified.fromJSON(object.attributeValueVerified),
         }
-        : isSet(object.qrCodeCreated)
-        ? { $case: "qrCodeCreated", qrCodeCreated: QrCodeCreated.fromJSON(object.qrCodeCreated) }
-        : isSet(object.qrCodeOpened)
-        ? { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.fromJSON(object.qrCodeOpened) }
+        : isSet(object.qrInviteCreated)
+        ? { $case: "qrInviteCreated", qrInviteCreated: QrInviteCreated.fromJSON(object.qrInviteCreated) }
+        : isSet(object.qrInviteOpened)
+        ? { $case: "qrInviteOpened", qrInviteOpened: QrInviteOpened.fromJSON(object.qrInviteOpened) }
         : isSet(object.inviteCreated)
         ? { $case: "inviteCreated", inviteCreated: InviteCreated.fromJSON(object.inviteCreated) }
         : isSet(object.inviteDeleted)
@@ -908,11 +911,11 @@ export const Event = {
     if (message.payload?.$case === "attributeValueVerified") {
       obj.attributeValueVerified = AttributeValueVerified.toJSON(message.payload.attributeValueVerified);
     }
-    if (message.payload?.$case === "qrCodeCreated") {
-      obj.qrCodeCreated = QrCodeCreated.toJSON(message.payload.qrCodeCreated);
+    if (message.payload?.$case === "qrInviteCreated") {
+      obj.qrInviteCreated = QrInviteCreated.toJSON(message.payload.qrInviteCreated);
     }
-    if (message.payload?.$case === "qrCodeOpened") {
-      obj.qrCodeOpened = QrCodeOpened.toJSON(message.payload.qrCodeOpened);
+    if (message.payload?.$case === "qrInviteOpened") {
+      obj.qrInviteOpened = QrInviteOpened.toJSON(message.payload.qrInviteOpened);
     }
     if (message.payload?.$case === "inviteCreated") {
       obj.inviteCreated = InviteCreated.toJSON(message.payload.inviteCreated);
@@ -1077,21 +1080,24 @@ export const Event = {
       };
     }
     if (
-      object.payload?.$case === "qrCodeCreated" &&
-      object.payload?.qrCodeCreated !== undefined &&
-      object.payload?.qrCodeCreated !== null
+      object.payload?.$case === "qrInviteCreated" &&
+      object.payload?.qrInviteCreated !== undefined &&
+      object.payload?.qrInviteCreated !== null
     ) {
       message.payload = {
-        $case: "qrCodeCreated",
-        qrCodeCreated: QrCodeCreated.fromPartial(object.payload.qrCodeCreated),
+        $case: "qrInviteCreated",
+        qrInviteCreated: QrInviteCreated.fromPartial(object.payload.qrInviteCreated),
       };
     }
     if (
-      object.payload?.$case === "qrCodeOpened" &&
-      object.payload?.qrCodeOpened !== undefined &&
-      object.payload?.qrCodeOpened !== null
+      object.payload?.$case === "qrInviteOpened" &&
+      object.payload?.qrInviteOpened !== undefined &&
+      object.payload?.qrInviteOpened !== null
     ) {
-      message.payload = { $case: "qrCodeOpened", qrCodeOpened: QrCodeOpened.fromPartial(object.payload.qrCodeOpened) };
+      message.payload = {
+        $case: "qrInviteOpened",
+        qrInviteOpened: QrInviteOpened.fromPartial(object.payload.qrInviteOpened),
+      };
     }
     if (
       object.payload?.$case === "inviteCreated" &&

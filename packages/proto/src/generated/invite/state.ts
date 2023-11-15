@@ -3,20 +3,20 @@ import _m0 from "protobufjs/minimal";
 
 export interface Invite {
   /** Hash of value */
-  inviteId: string;
+  id: string;
   name: string;
   value?: { $case: "phone"; phone: string } | { $case: "email"; email: string } | undefined;
   attributeIds: number[];
 }
 
 function createBaseInvite(): Invite {
-  return { inviteId: "", name: "", value: undefined, attributeIds: [] };
+  return { id: "", name: "", value: undefined, attributeIds: [] };
 }
 
 export const Invite = {
   encode(message: Invite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.inviteId !== "") {
-      writer.uint32(10).string(message.inviteId);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -49,7 +49,7 @@ export const Invite = {
             break;
           }
 
-          message.inviteId = reader.string();
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -100,7 +100,7 @@ export const Invite = {
 
   fromJSON(object: any): Invite {
     return {
-      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: globalThis.String(object.phone) }
@@ -115,8 +115,8 @@ export const Invite = {
 
   toJSON(message: Invite): unknown {
     const obj: any = {};
-    if (message.inviteId !== "") {
-      obj.inviteId = message.inviteId;
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -138,7 +138,7 @@ export const Invite = {
   },
   fromPartial<I extends Exact<DeepPartial<Invite>, I>>(object: I): Invite {
     const message = createBaseInvite();
-    message.inviteId = object.inviteId ?? "";
+    message.id = object.id ?? "";
     message.name = object.name ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: object.value.phone };
