@@ -3,7 +3,6 @@
 	import QR, { type QRCode } from 'jsqr'
 	import { push, pop } from 'svelte-spa-router'
 	import { Camera, CloseIcon, IconButton } from '@resplice/components'
-	import Page from '$common/layouts/Page.svelte'
 
 	let qrCode: QRCode
 	let streamInterval: number
@@ -52,14 +51,16 @@
 	})
 </script>
 
-<Page>
-	<main
-		class="bg-zinc-800 rounded-t-3xl rounded-b-3xl flex-1 flex flex-col justify-center items-center"
-	>
-		<Camera hideControls on:stream={onVideoStream} on:close={() => push('/app/list/contacts')} />
+<main
+	class="h-full w-full bg-zinc-800 rounded-t-3xl rounded-b-3xl flex-1 flex flex-col justify-center items-center"
+>
+	<Camera hideControls on:stream={onVideoStream} />
 
-		<div class="absolute bottom-0 z-10 flex items-center justify-center w-full p-4">
-			<IconButton Icon={CloseIcon} on:click={() => pop()} />
-		</div>
-	</main>
-</Page>
+	<div class="absolute bottom-0 z-10 flex items-center justify-center w-full p-4">
+		<IconButton Icon={CloseIcon} on:click={() => pop()} />
+	</div>
+
+	<div
+		class="border-4 border-brand-primary bg-transparent w-5/6 h-1/2 z-10 rounded-2xl flex justify-center items-center"
+	/>
+</main>
