@@ -5,7 +5,7 @@
 	import TypeItem from '$modules/attribute/components/TypeItem.svelte'
 
 	// Filter types to only supported types for now
-	$: typeConfigs = Object.entries(attributeTypes).filter(([type, config]) => {
+	$: typeConfigs = Object.entries(attributeTypes).filter(([type, _config]) => {
 		return [
 			AttributeType.ADDRESS,
 			AttributeType.CREDENTIAL,

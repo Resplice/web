@@ -57,7 +57,7 @@
 					disableAction
 				/>
 				<p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
-					{attributes.get(id).name}
+					{attributes.get(id)?.name}
 				</p>
 			</div>
 		{/each}

@@ -21,7 +21,7 @@
 	function changeAttribute(attribute: Attribute) {
 		protocol.attribute.change(
 			{
-				id,
+				attributeId: id,
 				name: attribute.name,
 				value: mapAttributeValue(attribute.type, attribute.value)
 			},
@@ -31,7 +31,7 @@
 	}
 
 	function deleteAttribute() {
-		protocol.attribute.remove({ id })
+		protocol.attribute.remove({ attributeId: id })
 		pop()
 	}
 </script>
