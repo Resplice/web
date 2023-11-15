@@ -7,5 +7,5 @@
 </script>
 
 {#each results as connection (connection.id)}
-	<ConnectionItem {connection} on:click={() => push(`/app/contact/${connection.id}/attributes`)} />
+	<ConnectionItem {connection} on:click={() => push(`/connection/${connection.id}/details`)} />
 {/each}

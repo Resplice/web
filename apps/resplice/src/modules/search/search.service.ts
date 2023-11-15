@@ -9,9 +9,9 @@ class SearchService {
 	}
 	constructor(documents: RespliceDocuments) {
 		this.#engine = {
-			attributes: new search.Search('attributes'),
-			connections: new search.Search('connections'),
-			invites: new search.Search('invites')
+			attributes: new search.Search('id'),
+			connections: new search.Search('id'),
+			invites: new search.Search('value-id')
 		}
 
 		this.#engine.attributes.addIndex('name')
@@ -19,7 +19,6 @@ class SearchService {
 
 		this.#engine.connections.addIndex('name')
 		this.#engine.connections.addIndex('alias')
-		this.#engine.connections.addIndex('handle')
 
 		this.#engine.invites.addIndex('name')
 

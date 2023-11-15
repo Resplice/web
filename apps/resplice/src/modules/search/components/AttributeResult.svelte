@@ -7,8 +7,8 @@
 </script>
 
 <button class="flex items-center space-x-2 w-full px-4 py-2" on:click>
-	<Avatar seed={connection.id} src={connection.avatarUrl} />
-	<div class="flex flex-col">
+	<Avatar seed={`${connection.id}`} src={connection.avatarUrl} />
+	<div class="flex flex-col text-left">
 		{#if !!connection.alias}
 			<h4 class="font-bold text-gray-900">{connection.alias}</h4>
 			<p class="text-gray-700">{connection.name}</p>

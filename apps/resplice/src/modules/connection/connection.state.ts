@@ -23,7 +23,7 @@ export function applyConnectionEvent(
 				attributes: event.payload.connectionAdded.attributes.map(
 					(attr) =>
 						({
-							id: attr.attributeId,
+							id: attr.id,
 							type: mapProtoAttributeValueType(attr.value!.$case),
 							name: attr.name,
 							value: mapProtoAttributeValue(attr.value),
@@ -54,7 +54,7 @@ export function applyConnectionEvent(
 			break
 		case 'connectionAttributeAdded':
 			aggregate.get(event.payload.connectionAttributeAdded.connectionId)!.attributes.push({
-				id: event.payload.connectionAttributeAdded.attribute!.attributeId,
+				id: event.payload.connectionAttributeAdded.attribute!.id,
 				type: mapProtoAttributeValueType(
 					event.payload.connectionAttributeAdded.attribute!.value!.$case
 				),
@@ -106,11 +106,11 @@ function applyConnectionAttributeChangedEvent(
 ) {
 	const attributeIdx = aggregate
 		.get(event.connectionId)!
-		.attributes.findIndex((attr) => attr.id === event.attribute!.attributeId)
+		.attributes.findIndex((attr) => attr.id === event.attribute!.id)
 	if (attributeIdx === -1) return aggregate
 
 	aggregate.get(event.connectionId)!.attributes[attributeIdx] = {
-		id: event.attribute!.attributeId,
+		id: event.attribute!.id,
 		type: mapProtoAttributeValueType(event.attribute!.value!.$case),
 		name: event.attribute!.name,
 		value: mapProtoAttributeValue(event.attribute!.value),

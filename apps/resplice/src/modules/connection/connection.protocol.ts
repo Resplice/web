@@ -1,8 +1,9 @@
 import proto from '@resplice/proto'
 import type { DB } from '$services/db'
 import type { ConnectionStore } from '$modules/connection/connection.store'
-import type { SocketCommuter } from '$common/workers/socket/socketCommuter'
+import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand } from '$common/protocol/helpers'
+import { applyConnectionEvent } from '$modules/connection/connection.state'
 
 export interface ConnectionProtocol {
 	changeAlias(payload: proto.connection.ChangeConnectionAlias): void
@@ -18,6 +19,10 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function connectionProtocolFactory({ store, commuter }: Dependencies): ConnectionProtocol {
+	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
+		store.update((state) => applyConnectionEvent(state, event))
+	})
+
 	return {
 		changeAlias(payload) {
 			sendCommand(commuter, {

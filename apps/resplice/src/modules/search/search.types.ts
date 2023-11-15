@@ -2,7 +2,7 @@ import type { Connection, ConnectionAttribute } from '$modules/connection/connec
 import type { Invite } from '$modules/invite/invite.types'
 
 export type RespliceDocuments = {
-	attributes: ConnectionAttribute[]
+	attributes: (ConnectionAttribute & { connectionId: number })[]
 	connections: Omit<Connection, 'attributes'>[]
 	invites: Invite[]
 }

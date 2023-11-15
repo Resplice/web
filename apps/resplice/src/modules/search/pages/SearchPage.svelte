@@ -30,7 +30,9 @@
 	onMount(() => {
 		const connections = Array.from($connectionStore.values())
 		searchService = new SearchService({
-			attributes: connections.flatMap((connection) => connection.attributes),
+			attributes: connections.flatMap((connection) =>
+				connection.attributes.map((attr) => ({ ...attr, connectionId: connection.id }))
+			),
 			connections: connections.map(({ attributes: _, ...connection }) => connection),
 			invites: Array.from($inviteStore.values())
 		})

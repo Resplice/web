@@ -14,6 +14,11 @@ import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'
 import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
 import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
+import { applyInviteEvent, type InviteAggregate } from '$modules/invite/invite.state'
+import {
+	applyConnectionEvent,
+	type ConnectionAggregate
+} from '$modules/connection/connection.state'
 
 export interface ContextProtocol {
 	loadCache: () => Promise<void>
@@ -92,6 +97,22 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				})
 				return aggregate
 			})
+
+			stores.invite.invites.update((state) => {
+				let aggregate: InviteAggregate = state || new Map()
+				events.forEach((event) => {
+					aggregate = applyInviteEvent(aggregate, event)
+				})
+				return aggregate
+			})
+
+			stores.connection.update((state) => {
+				let aggregate: ConnectionAggregate = state || new Map()
+				events.forEach((event) => {
+					aggregate = applyConnectionEvent(aggregate, event)
+				})
+				return aggregate
+			})
 		}
 	}
 
@@ -167,14 +188,20 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 
 			let accountAggregate: AccountAggregate = {} as AccountAggregate
 			let attributeAggregate: AttributeAggregate = new Map()
+			let inviteAggregate: InviteAggregate = new Map()
+			// let connectionAggregate: ConnectionAggregate = new Map()
 
 			events.forEach((event) => {
 				accountAggregate = applyAccountEvent(accountAggregate, event)
 				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
+				inviteAggregate = applyInviteEvent(inviteAggregate, event)
+				// connectionAggregate = applyConnectionEvent(connectionAggregate, event)
 			})
 
 			stores.account.set(accountAggregate)
 			stores.attribute.set(attributeAggregate)
+			stores.invite.invites.set(inviteAggregate)
+			// stores.connection.set(connectionAggregate)
 		}
 	}
 }
