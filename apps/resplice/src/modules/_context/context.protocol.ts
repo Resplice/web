@@ -189,19 +189,19 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			let accountAggregate: AccountAggregate = {} as AccountAggregate
 			let attributeAggregate: AttributeAggregate = new Map()
 			let inviteAggregate: InviteAggregate = new Map()
-			// let connectionAggregate: ConnectionAggregate = new Map()
+			let connectionAggregate: ConnectionAggregate = new Map()
 
 			events.forEach((event) => {
 				accountAggregate = applyAccountEvent(accountAggregate, event)
 				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
 				inviteAggregate = applyInviteEvent(inviteAggregate, event)
-				// connectionAggregate = applyConnectionEvent(connectionAggregate, event)
+				connectionAggregate = applyConnectionEvent(connectionAggregate, event)
 			})
 
 			stores.account.set(accountAggregate)
 			stores.attribute.set(attributeAggregate)
 			stores.invite.invites.set(inviteAggregate)
-			// stores.connection.set(connectionAggregate)
+			stores.connection.set(connectionAggregate)
 		}
 	}
 }
