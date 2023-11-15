@@ -31,8 +31,11 @@
 					<ConnectionEmptyIcon width={192} height={144} />
 				</div>
 				<h3 class="px-8 text-lg font-semibold text-center mt-8">Add some connections</h3>
-				<p class="text-center px-8 py-2">
+				<!-- <p class="text-center px-8 py-2">
 					You can invite others to Resplice even if they don't have an account!
+				</p> -->
+				<p class="text-center px-8 py-2">
+					Open your own or scan a friend's QR code to connect and share!
 				</p>
 				<div class="w-full flex flex-col justify-center items-center mt-8 space-y-4">
 					<!-- <Button

@@ -6,7 +6,7 @@
 	export let attributes: PendingConnectionAttribute[]
 </script>
 
-<div class="flex-1 flex flex-col space-y-4 w-full p-4">
+<div class="flex-1 flex flex-col space-y-4 w-full px-6 py-2">
 	{#each attributes as attribute}
 		<div class="w-full overflow-hidden flex items-center justify-between">
 			<div

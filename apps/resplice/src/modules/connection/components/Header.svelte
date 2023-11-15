@@ -16,6 +16,7 @@
 
 	export let connection: Pick<Connection, 'id' | 'name' | 'avatarUrl'>
 	export let showConnection = false
+	export let showSettings = true
 	export let backPath = ''
 	let showContextMenu = false
 
@@ -34,7 +35,9 @@
 			</div>
 		{/if}
 	</div>
-	<IconButton Icon={EllipsisHorizontalIcon} on:click={() => (showContextMenu = true)} />
+	{#if showSettings}
+		<IconButton Icon={EllipsisHorizontalIcon} on:click={() => (showContextMenu = true)} />
+	{/if}
 </nav>
 
 {#if showContextMenu && !!connection}

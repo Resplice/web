@@ -21,7 +21,7 @@
 	async function initQr(attributeIds: Set<number>) {
 		const qrInvite = await protocol.invite.createQr({ attributeIds: Array.from(attributeIds) })
 		url = `${config.appUrl}/#/invite/qr/${qrInvite.uuid}`
-
+		console.log(url)
 		timer = TIMEOUT_SECONDS
 		interval = setInterval(() => {
 			timer--

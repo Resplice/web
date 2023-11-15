@@ -46,6 +46,7 @@
 		<Header
 			connection={{ ...qrConnection, id: qrConnection.connectionId }}
 			showConnection={showConnectionOnHeader}
+			showSettings={false}
 		/>
 		<main
 			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
@@ -56,7 +57,7 @@
 			</div>
 			<div bind:this={scrollEl} id="scrollIntersection" class="absolute top-1/4" />
 			<PendingConnectionAttributes attributes={qrConnection.pendingAttributes} />
-			<div>
+			<div class="mb-4">
 				<Button isLoading={isConnecting} on:click={onConnect}>Connect</Button>
 			</div>
 		</main>
