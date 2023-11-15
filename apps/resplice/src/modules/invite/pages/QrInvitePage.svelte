@@ -20,9 +20,9 @@
 
 	async function initQr(attributeIds: Set<number>) {
 		const qrInvite = await protocol.invite.createQr({ attributeIds: Array.from(attributeIds) })
-		url = `${config.appUrl}/invite/qr/${qrInvite.uuid}`
-		console.log(url)
+		url = `${config.appUrl}/#/invite/qr/${qrInvite.uuid}`
 
+		timer = TIMEOUT_SECONDS
 		interval = setInterval(() => {
 			timer--
 		}, 1000)
@@ -35,7 +35,6 @@
 	async function reset(attributeIds: Set<number>) {
 		cleanup()
 		url = ''
-		timer = TIMEOUT_SECONDS
 		await initQr(attributeIds)
 	}
 
@@ -51,9 +50,11 @@
 	}
 
 	$: {
-		// Reset qr if timer expires or shares change
 		if (timer <= 0) reset(shares)
-		else if (shares.size > 0) reset(shares)
+	}
+
+	$: {
+		if (shares.size > 0) reset(shares)
 	}
 
 	onDestroy(cleanup)
@@ -65,10 +66,10 @@
 		class="bg-white w-full max-w-xl m-auto rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto"
 	>
 		<div
-			class="w-full flex items-center justify-center mb-8 p-4 rounded-2xl bg-brand-primary overflow-hidden"
+			class="w-full flex-none flex items-center justify-center mb-8 p-2 rounded-2xl bg-brand-primary overflow-hidden"
 		>
 			{#if url}
-				<QrCode data={url} scale={9} />
+				<QrCode data={url} />
 			{:else}
 				<Skeleton variant="rect" width="100%" height="333px" />
 			{/if}

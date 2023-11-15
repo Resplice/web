@@ -9,7 +9,7 @@
 	import ConnectionListPage from '$modules/connection/pages/ConnectionListPage.svelte'
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 
-	const showPartyHeader = new Date().getDate() === 15
+	const showPartyHeader = [15, 16].includes(new Date().getDate())
 
 	$: isOnConnections = $location.includes('/home/connections')
 	$: isOnProfile = $location.includes('/home/profile')

@@ -6,7 +6,7 @@
 	import SearchPage from '$modules/search/pages/SearchPage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
-	import PartyPage from '$common/pages/PartyPage.svelte'
+	import PartyInvitePage from '$common/pages/PartyInvitePage.svelte'
 	// Account Pages
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
@@ -48,7 +48,7 @@
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,
-		'/party': PartyPage,
+		'/party': PartyInvitePage,
 		'*': NotFoundPage
 	}
 

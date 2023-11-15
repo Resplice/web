@@ -2,14 +2,13 @@
 	import { onMount } from 'svelte'
 	import QRCode from 'qrcode'
 
-	let canvas: HTMLCanvasElement
 	export let data: string
-	export let scale: number
+	let qrCode: string
 
 	onMount(async () => {
-		await QRCode.toCanvas(canvas, data, {
+		qrCode = await QRCode.toDataURL(data, {
 			errorCorrectionLevel: 'medium',
-			scale,
+			scale: 8,
 			color: {
 				light: '#1BBC9B'
 			}
@@ -17,4 +16,4 @@
 	})
 </script>
 
-<canvas bind:this={canvas}>Canvas not supported</canvas>
+<img class="w-full object-cover block h-auto" src={qrCode} alt="QR Code" />

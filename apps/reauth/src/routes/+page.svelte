@@ -12,6 +12,9 @@
 	$: {
 		if (browser && $store.status === AuthStatus.PENDING_VERIFY_PHONE) goto('/verify')
 	}
+
+	const day = new Date().getDate() === 15 ? 'tomorrow' : 'today'
+	const showPartyText = [15, 16].includes(new Date().getDate())
 </script>
 
 <main class="w-full min-h-full max-w-lg m-auto flex flex-col overlow-auto bg-white">
@@ -23,6 +26,13 @@
 		<p class="text-lg mt-4 px-8 py-4">
 			{$t('auth.welcome')}
 		</p>
+
+		{#if showPartyText}
+			<div class="px-8 py-4 text-lg text-center">
+				<p>Resplice launch party {day}</p>
+				<p>4PM-10PM</p>
+			</div>
+		{/if}
 	</div>
 
 	<div class="w-full flex-1 px-8 py-4 flex">
