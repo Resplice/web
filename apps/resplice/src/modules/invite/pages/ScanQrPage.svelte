@@ -3,6 +3,7 @@
 	import QR, { type QRCode } from 'jsqr'
 	import { push, pop } from 'svelte-spa-router'
 	import { Camera, CloseIcon, IconButton } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 
 	let qrCode: QRCode
 	let streamInterval: number
@@ -51,7 +52,7 @@
 	})
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<main
 		class="bg-zinc-800 rounded-t-3xl rounded-b-3xl flex-1 flex flex-col justify-center items-center"
 	>
@@ -61,4 +62,4 @@
 			<IconButton Icon={CloseIcon} on:click={() => pop()} />
 		</div>
 	</main>
-</div>
+</Page>

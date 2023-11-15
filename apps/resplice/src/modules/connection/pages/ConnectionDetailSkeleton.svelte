@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { pop } from 'svelte-spa-router'
 	import { BackIcon, EllipsisHorizontalIcon, IconButton, Skeleton } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<nav class="flex-none flex items-center justify-between p-4">
 		<IconButton Icon={BackIcon} on:click={() => pop()} />
 		<IconButton Icon={EllipsisHorizontalIcon} />
@@ -30,4 +31,4 @@
 			{/each}
 		</div>
 	</main>
-</div>
+</Page>

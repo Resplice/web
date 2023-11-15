@@ -3,6 +3,7 @@
 	import { push } from 'svelte-spa-router'
 	import { Avatar, Button } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
+	import Page from '$common/layouts/Page.svelte'
 	import Header from '$modules/connection/components/Header.svelte'
 	import ConnectionName from '$modules/connection/components/ConnectionName.svelte'
 	import PendingConnectionAttributes from '$modules/invite/components/PendingConnectionAttributes.svelte'
@@ -41,7 +42,7 @@
 {#await qrConnectionPromise}
 	<ConnectionDetailSkeleton />
 {:then qrConnection}
-	<div class="flex flex-col w-full h-full bg-gray-100">
+	<Page>
 		<Header
 			connection={{ ...qrConnection, id: qrConnection.connectionId }}
 			showConnection={showConnectionOnHeader}
@@ -62,7 +63,7 @@
 		<footer class="bg-white rounded-t-3xl w-full max-w-xl m-auto flex-none px-8 py-4">
 			<AttributeShareContext bind:selected={selectedAttributes} initializeDefault />
 		</footer>
-	</div>
+	</Page>
 {:catch error}
 	<p>We are sorry, something went wrong.</p>
 	<p>{error.message}</p>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { pop } from 'svelte-spa-router'
 	import { attributeTypes, type Attribute, AttributeType } from '@resplice/utils'
+	import { IconButton, BackIcon } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	// import attributeStore from '$modules/attribute/attribute.store'
 	import {
@@ -8,7 +9,7 @@
 		// verifiableAttributeType,
 		// applyAttributeEvent
 	} from '$modules/attribute/attribute.state'
-	import { IconButton, BackIcon } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
 	// import VerifyAttributeForm from '$modules/attribute/components/forms/VerifyAttributeForm.svelte'
 
@@ -60,7 +61,7 @@
 	// }
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<nav class="flex-none flex items-center justify-start p-4">
 		<IconButton Icon={BackIcon} on:click={() => pop()} />
 	</nav>
@@ -90,4 +91,4 @@
 			/>
 		{/if} -->
 	</main>
-</div>
+</Page>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import connectionStore from '$modules/connection/connection.store'
 	import { Avatar } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import Header from '$modules/connection/components/Header.svelte'
 	import ConnectionName from '$modules/connection/components/ConnectionName.svelte'
 	import ChangeConnectionForm from '$modules/connection/components/ChangeConnectionForm.svelte'
@@ -11,7 +12,7 @@
 </script>
 
 {#if !!connection}
-	<div class="flex flex-col w-full h-full bg-gray-100">
+	<Page>
 		<Header {connection} />
 		<main class="bg-white rounded-t-3xl flex-1 flex flex-col items-center overflow-auto space-y-4">
 			<div class="w-full flex flex-col items-center justify-center space-y-2 mt-8">
@@ -21,5 +22,5 @@
 			<h1 class="text-xl font-semibold text-gray-700 w-full px-8">Change Connection</h1>
 			<ChangeConnectionForm {connection} />
 		</main>
-	</div>
+	</Page>
 {/if}

@@ -1,12 +1,15 @@
 <script lang="ts">
 	import Router, { location, push } from 'svelte-spa-router'
 	import cx from 'clsx'
-	import accountStore from '$modules/account/account.store'
-	import NavItem from '$common/components/NavItem.svelte'
 	import { Avatar, PeopleIcon } from '@resplice/components'
+	import accountStore from '$modules/account/account.store'
+	import PartyHeader from '$common/components/PartyHeader.svelte'
+	import NavItem from '$common/components/NavItem.svelte'
 	import NavActions from '$common/components/NavActions.svelte'
 	import ConnectionListPage from '$modules/connection/pages/ConnectionListPage.svelte'
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
+
+	const showPartyHeader = new Date().getDate() === 15
 
 	$: isOnConnections = $location.includes('/home/connections')
 	$: isOnProfile = $location.includes('/home/profile')
@@ -18,6 +21,9 @@
 </script>
 
 <main class="flex flex-col w-full h-full bg-gray-100 overflow-auto">
+	{#if showPartyHeader}
+		<PartyHeader />
+	{/if}
 	<div class="flex-1 overflow-auto">
 		<Router {routes} />
 	</div>

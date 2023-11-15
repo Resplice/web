@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { push } from 'svelte-spa-router'
+	import { UserAvatar } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	import accountStore from '$modules/account/account.store'
-	import { UserAvatar } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import Header from '$modules/account/components/Header.svelte'
 	// import Handle from '$modules/account/components/Handle.svelte'
 	import AttributeList from '$modules/account/components/AttributeList.svelte'

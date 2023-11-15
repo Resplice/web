@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { push, pop } from 'svelte-spa-router'
-	import connectionStore from '$modules/connection/connection.store'
-
 	import { Avatar } from '@resplice/components'
+	import useProtocol from '$common/protocol/useProtocol'
+	import connectionStore from '$modules/connection/connection.store'
+	import Page from '$common/layouts/Page.svelte'
 	import Header from '$modules/connection/components/Header.svelte'
 	import ConnectionName from '$modules/connection/components/ConnectionName.svelte'
 	import ConnectionAttributes from '$modules/connection/components/ConnectionAttributes.svelte'
 	import AttributeShareContext from '$modules/attribute/components/AttributeShareContext.svelte'
-	import useProtocol from '$common/protocol/useProtocol'
 	// import ChatFieldLink from '$modules/chat/components/ChatFieldLink.svelte'
 
 	const protocol = useProtocol()
@@ -45,7 +45,7 @@
 </script>
 
 {#if !!connection}
-	<div class="flex flex-col w-full h-full bg-gray-100">
+	<Page>
 		<Header {connection} showConnection={showConnectionOnHeader} />
 		<main
 			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
@@ -67,5 +67,5 @@
 				on:toggle={(e) => onAttributeToggle(e.detail)}
 			/>
 		</footer>
-	</div>
+	</Page>
 {/if}

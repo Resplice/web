@@ -2,6 +2,7 @@
 	import { push } from 'svelte-spa-router'
 	import connectionStore from '$modules/connection/connection.store'
 	import { Avatar } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import Header from '$modules/connection/components/Header.svelte'
 	import ConnectionName from '$modules/connection/components/ConnectionName.svelte'
 	// import ContactShares from '$modules/contact/components/ContactShares.svelte'
@@ -12,7 +13,7 @@
 </script>
 
 {#if !!connection}
-	<div class="flex flex-col w-full h-full bg-gray-100">
+	<Page>
 		<Header {connection} />
 		<main
 			class="bg-white rounded-t-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto space-y-4"
@@ -27,5 +28,5 @@
 			<h1 class="text-xl font-semibold text-gray-700 w-full px-8">Shares</h1>
 			<!-- <ContactShares contactId={contact.id} /> -->
 		</main>
-	</div>
+	</Page>
 {/if}

@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte'
-	import accountStore from '$modules/account/account.store'
+	import { ProgressBar, Skeleton } from '@resplice/components'
 	import config from '$services/config'
 	import useProtocol from '$common/protocol/useProtocol'
-	import { ProgressBar, Skeleton } from '@resplice/components'
+	import accountStore from '$modules/account/account.store'
+	import Page from '$common/layouts/Page.svelte'
 	import QrCode from '$modules/invite/components/QrCode.svelte'
 	import Header from '$modules/account/components/Header.svelte'
 	import AttributeShareContext from '$modules/attribute/components/AttributeShareContext.svelte'
@@ -58,7 +59,7 @@
 	onDestroy(cleanup)
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<Header account={$accountStore} showBack showUser showSettings={false} />
 	<main
 		class="bg-white w-full max-w-xl m-auto rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto"
@@ -80,4 +81,4 @@
 		{/if}
 		<AttributeShareContext bind:selected={shares} initializeDefault />
 	</main>
-</div>
+</Page>

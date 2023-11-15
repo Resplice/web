@@ -9,6 +9,7 @@
 	import AttributeResults from '$modules/search/components/AttributeResults.svelte'
 	import ConnectionResults from '$modules/search/components/ConnectionResults.svelte'
 	import type { RespliceDocuments } from '$modules/search/search.types'
+	import Page from '$common/layouts/Page.svelte'
 
 	const query = searchStores.query
 	const inviteStore = inviteStores.invites
@@ -36,25 +37,27 @@
 	})
 </script>
 
-<main class="w-full h-full flex flex-col">
-	<div class="flex items-center pl-2">
-		<IconButton Icon={BackIcon} on:click={() => push('/home/connections')} />
-		<SearchField name="search" label="Search" bind:query={$query} />
-	</div>
+<Page>
+	<main class="flex-1 overflow-auto relative w-full max-w-xl m-auto rounded-t-3xl bg-white">
+		<div class="flex items-center pl-2">
+			<IconButton Icon={BackIcon} on:click={() => push('/home/connections')} />
+			<SearchField name="search" label="Search" bind:query={$query} />
+		</div>
 
-	<div class="flex-1 overflow-auto pt-8 pb-4 px-4">
-		{#await buildingIndex}
-			<Spinner />
-		{:then}
-			{#await searching}
+		<div class="flex-1 overflow-auto pt-8 pb-4 px-4">
+			{#await buildingIndex}
 				<Spinner />
-			{:then results}
-				{#if results}
-					<AttributeResults results={results.attributes} />
-					<ConnectionResults results={results.connections} />
-					<!-- <InviteResults results={results.invites} /> -->
-				{/if}
+			{:then}
+				{#await searching}
+					<Spinner />
+				{:then results}
+					{#if results}
+						<AttributeResults results={results.attributes} />
+						<ConnectionResults results={results.connections} />
+						<!-- <InviteResults results={results.invites} /> -->
+					{/if}
+				{/await}
 			{/await}
-		{/await}
-	</div>
-</main>
+		</div>
+	</main>
+</Page>

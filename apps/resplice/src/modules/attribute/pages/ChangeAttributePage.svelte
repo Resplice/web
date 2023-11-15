@@ -2,9 +2,10 @@
 	import { pop } from 'svelte-spa-router'
 	import { attributeTypes } from '@resplice/utils'
 	import useProtocol from '$common/protocol/useProtocol'
-	import Header from '$common/components/Header.svelte'
 	import attributeStore from '$modules/attribute/attribute.store'
 	import { mapAttributeValue } from '$modules/attribute/attribute.state'
+	import Page from '$common/layouts/Page.svelte'
+	import Header from '$common/components/Header.svelte'
 	import AttributeForm from '$modules/attribute/components/forms/AttributeForm.svelte'
 	import type { Attribute } from '$modules/account/account.types'
 	import { Modal, Button } from '@resplice/components'
@@ -36,7 +37,7 @@
 	}
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<Header title="Change Attribute" showContext on:context={() => (showAttributeContext = true)} />
 	<main class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col overflow-auto">
 		{#if attribute && attributeTypeConfig}
@@ -47,7 +48,7 @@
 			/>
 		{/if}
 	</main>
-</div>
+</Page>
 
 {#if showAttributeContext}
 	<Modal on:close={() => (showAttributeContext = false)}>

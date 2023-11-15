@@ -2,6 +2,7 @@
 	import { push } from 'svelte-spa-router'
 	import { t } from 'svelte-i18n'
 	import { IconButton, BackIcon } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import SettingsItem from '$modules/account/components/SettingsItem.svelte'
 	import ChangeName from '$modules/account/components/ChangeName.svelte'
 	import Logout from '$modules/account/components/Logout.svelte'
@@ -41,7 +42,7 @@
 	// }
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<nav class="flex-none flex items-center justify-start p-4">
 		<IconButton Icon={BackIcon} on:click={() => push('/home/profile')} />
 		<h1 class="ml-4 font-semibold text-xl">{$t('account.settings.title')}</h1>
@@ -107,4 +108,4 @@
 			</div>
 		</section>
 	</main>
-</div>
+</Page>
