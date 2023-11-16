@@ -25,6 +25,7 @@
 		"apps:build": "turbo run build --filter './apps/*'",
 		"apps:preview": "turbo run preview --filter './apps/*'",
 		"landing:dev": "turbo run dev --filter landing",
+		"viz:dev": "turbo run dev --filter viz",
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
