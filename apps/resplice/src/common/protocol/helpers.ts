@@ -20,7 +20,7 @@ export async function sendCommandRequest(
 	{ fetch, cache }: Deps,
 	payload: proto.Command['payload']
 ) {
-	const { persisted, cryptoKeys } = await cache.getById<Session>('session', 0)
+	const { persisted, cryptoKeys } = (await cache.getById<Session>('session', 0))!
 	const [id] = await cache.insert('commands', persisted ? payload : '')
 	const command: proto.Command & { id: number } = {
 		id,
@@ -33,7 +33,10 @@ export async function sendCommandRequest(
 	})
 	const message = await deserializeMessage(new Uint8Array(messageBytes), cryptoKeys.server)
 
-	if (message.event && persisted) await cache.upsert('events', message.event)
+	const stateEvents = ['qrInviteCreated', 'qrInviteOpened']
+
+	if (message.event && !stateEvents.includes(message.event.payload!.$case) && persisted)
+		await cache.upsert('events', message.event)
 
 	return message
 }

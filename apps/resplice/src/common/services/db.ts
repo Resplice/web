@@ -27,7 +27,7 @@ function createDatabase(newDB: IDBDatabase) {
 
 function deleteDatabase(): Promise<void> {
 	return new Promise((resolve, reject) => {
-		db.close()
+		db!.close()
 		const request = indexedDB.deleteDatabase(DB_NAME)
 		request.onsuccess = () => {
 			db = null

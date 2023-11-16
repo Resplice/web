@@ -3,10 +3,12 @@
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
 	import HomePage from '$common/pages/HomePage.svelte'
+	import SearchPage from '$modules/search/pages/SearchPage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
+	import PartyInvitePage from '$common/pages/PartyInvitePage.svelte'
 	// Account Pages
-	// import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
+	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
 	// Attribute Pages
 	import SelectAttributeTypePage from '$modules/attribute/pages/SelectAttributeTypePage.svelte'
@@ -14,6 +16,12 @@
 	import ChangeAttributePage from '$modules/attribute/pages/ChangeAttributePage.svelte'
 	// Invite Pages
 	// import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
+	import QrInvitePage from '$modules/invite/pages/QrInvitePage.svelte'
+	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
+	import QrConnectionDetailPage from '$modules/invite/pages/QrConnectionDetailPage.svelte'
+	// Connection Pages
+	import ConnectionDetailPage from '$modules/connection/pages/ConnectionDetailPage.svelte'
+	import ChangeConnectionPage from '$modules/connection/pages/ChangeConnectionPage.svelte'
 
 	export let initialUrl = ''
 
@@ -23,23 +31,24 @@
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
 		'/attribute/:id/change': ChangeAttributePage,
-		// '/contact/pending/:id': PendingContactDetailPage,
-		// '/contact/:id/attributes': ContactAttributesPage,
-		// '/contact/:id/chat': ContactChatPage,
-		// '/contact/:id/edit': EditContactPage,
-		// '/contact/:id/shares': ContactSharesPage,
+		// '/connection/pending/:id': PendingContactDetailPage,
+		'/connection/:id/details': ConnectionDetailPage,
+		// '/connection/:id/chat': ContactChatPage,
+		'/connection/:id/change': ChangeConnectionPage,
+		// '/connection/:id/shares': ContactSharesPage,
 		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
 		// '/invite/bulk': BulkInvitePage,
 		// '/invite/create/*': CreateInvitePage,
 		// '/invite/list': InviteListPage,
 		// '/invite/:id': InviteDetailPage,
-		// '/invite/qr': QrInvitePage,
-		// '/invite/qr/scan': ScanQrPage,
-		// '/invite/qr/:id': UnlockQrPage,
-		// '/profile': ProfilePage,
-		// '/search': SearchPage,
+		'/invite/qr-scan': ScanQrPage,
+		'/invite/qr': QrInvitePage,
+		'/invite/qr/:uuid': QrConnectionDetailPage,
+		'/profile': ProfilePage,
+		'/search': SearchPage,
 		'/settings': SettingsPage,
+		'/party': PartyInvitePage,
 		'*': NotFoundPage
 	}
 

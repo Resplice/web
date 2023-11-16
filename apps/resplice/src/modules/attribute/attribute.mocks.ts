@@ -8,6 +8,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 1,
 			type: AttributeType.PHONE,
 			name: 'Personal Phone',
+			valueId: '2e399e1ca72cefaee6f42db625beae646048522ba5ff4fc4ee390dd5cf0e9a6d',
 			value: {
 				number: '+16452135555',
 				smsEnabled: true
@@ -24,6 +25,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 2,
 			type: AttributeType.EMAIL,
 			name: 'Personal Email',
+			valueId: '5744bdbd4416548bb511b25c9dbb48a690cba3da0cddc6aeb19031b2791d69ac',
 			value: {
 				email: 'han@falcon.com'
 			},
@@ -39,6 +41,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 3,
 			type: AttributeType.ADDRESS,
 			name: 'Apartment',
+			valueId: 'addr',
 			value: {
 				streetAddress1: '778 Central Emporium',
 				streetAddress2: '',
@@ -59,6 +62,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 4,
 			type: AttributeType.ADDRESS,
 			name: 'Vacation Home',
+			valueId: 'addr2',
 			value: {
 				streetAddress1: '1961 S Palm Canyon Dr',
 				streetAddress2: '',
@@ -79,6 +83,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 5,
 			type: AttributeType.CREDENTIAL,
 			name: 'Holocron Passcode',
+			valueId: 'holopass',
 			value: {
 				identity: 'solo-han',
 				passcode: 'r2-d2&c3p0'
@@ -95,6 +100,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 6,
 			type: AttributeType.DATE_TIME,
 			name: 'Scoundrel Meeting',
+			valueId: 'meeting',
 			value: {
 				year: 2167,
 				month: 1,
@@ -112,6 +118,7 @@ export const attributes = new Map<number, Attribute>([
 			id: 7,
 			type: AttributeType.SOCIAL,
 			name: 'Instagram',
+			valueId: 'insta',
 			value: {
 				handle: '__han.solo__',
 				url: 'https://www.instagram.com/__han.solo__/'

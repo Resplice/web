@@ -24,9 +24,9 @@
 	"devDependencies": {
 		"@resplice/utils": "*",
 		"@rollup/plugin-typescript": "^11.1.5",
-		"ts-proto": "^1.160.0",
-		"vite": "^4.4.11",
-		"vite-plugin-dts": "^3.6.0",
+		"ts-proto": "^1.164.0",
+		"vite": "^4.5.0",
+		"vite-plugin-dts": "^3.6.3",
 		"vitest": "^0.34.6"
 	}
 }

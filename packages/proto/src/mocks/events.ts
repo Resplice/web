@@ -32,21 +32,16 @@ const authEvents = {
 
 // Account Events
 const accountCreated: proto.account.AccountCreated = {
-	uuid: 'uuid',
+	accountId: 'uuid',
 	name: 'Han Solo',
-	handle: 'han.solo.1',
 	avatarUrl: 'https://i.imgur.com/uo1ajTR.jpeg',
-	phoneId: 2,
+	primaryAttributeId: 2,
 	phone: PHONE,
 	phoneVerifiedAt: 1234567890
 }
 
 const accountNameChanged: proto.account.AccountNameChanged = {
 	name: 'H@n Sol0'
-}
-
-const accountHandleChanged: proto.account.AccountHandleChanged = {
-	handle: 'bestSmuggler42'
 }
 
 const accountAvatarChanged: proto.account.AccountAvatarChanged = {
@@ -56,14 +51,14 @@ const accountAvatarChanged: proto.account.AccountAvatarChanged = {
 const accountEvents = {
 	accountCreated,
 	accountNameChanged,
-	accountHandleChanged,
 	accountAvatarChanged
 }
 
 // Attribute Events
 const attributeAdded: proto.attribute.AttributeAdded = {
-	id: 3,
+	attributeId: 3,
 	name: 'Earth Address',
+	valueId: 'val_hash',
 	value: {
 		$case: 'address',
 		address: {
@@ -77,9 +72,14 @@ const attributeAdded: proto.attribute.AttributeAdded = {
 	}
 }
 
-const attributeChanged: proto.attribute.AttributeChanged = {
-	id: 3,
-	name: '1st Earth Address',
+const attributeNameChanged: proto.attribute.AttributeNameChanged = {
+	attributeId: 3,
+	name: '2nd Earth Address'
+}
+
+const attributeValueChanged: proto.attribute.AttributeValueChanged = {
+	attributeId: 3,
+	valueId: 'new_val_hash',
 	value: {
 		$case: 'address',
 		address: {
@@ -93,13 +93,20 @@ const attributeChanged: proto.attribute.AttributeChanged = {
 	}
 }
 
+const attributeValueVerified: proto.attribute.AttributeValueVerified = {
+	valueId: 'val_hash',
+	verifiedAt: 1234567890
+}
+
 const attributeRemoved: proto.attribute.AttributeRemoved = {
-	id: 3
+	attributeId: 3
 }
 
 const attributeEvents = {
 	attributeAdded,
-	attributeChanged,
+	attributeNameChanged,
+	attributeValueChanged,
+	attributeValueVerified,
 	attributeRemoved
 }
 

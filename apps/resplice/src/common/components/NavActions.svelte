@@ -5,10 +5,10 @@
 	import {
 		AddIcon,
 		CloseIcon,
-		// CameraIcon,
-		// QRCodeIcon,
-		PeopleIcon,
-		CallIcon
+		CameraIcon,
+		QRCodeIcon
+		// PeopleIcon,
+		// CallIcon
 		// MailIcon,
 		// PersonAddIcon
 	} from '@resplice/components'
@@ -65,31 +65,13 @@
 			>
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/qr/scan')}
-				>
-					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
-						<CameraIcon width={24} height={24} />
-					</div>
-					<p>Scan QR</p>
-				</button>
-				<button
-					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/qr')}
-				>
-					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
-						<QRCodeIcon width={24} height={24} />
-					</div>
-					<p>Show QR</p>
-				</button> -->
-				<button
-					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/bulk')}
 				>
 					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
 						<PeopleIcon width={24} height={24} />
 					</div>
 					<p>Bulk Invite</p>
-				</button>
+				</button> -->
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/handle')}
@@ -99,7 +81,7 @@
 					</div>
 					<p>Invite with Handle</p>
 				</button> -->
-				<button
+				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/phone')}
 				>
@@ -107,7 +89,7 @@
 						<CallIcon width={24} height={24} />
 					</div>
 					<p>Invite with Phone</p>
-				</button>
+				</button> -->
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/email')}
@@ -117,6 +99,24 @@
 					</div>
 					<p>Invite with Email</p>
 				</button> -->
+				<button
+					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
+					on:click={() => push('/invite/qr')}
+				>
+					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
+						<QRCodeIcon width={24} height={24} />
+					</div>
+					<p>Show QR</p>
+				</button>
+				<button
+					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
+					on:click={() => push('/invite/qr-scan')}
+				>
+					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
+						<CameraIcon width={24} height={24} />
+					</div>
+					<p>Scan QR</p>
+				</button>
 			</div>
 		</div>
 	</div>

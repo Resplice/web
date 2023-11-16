@@ -2,7 +2,7 @@
 	import { push } from 'svelte-spa-router'
 	import { attributeTypes, capitalize } from '@resplice/utils'
 	import { AttributeItem, AttributeActionIcon, EditIcon } from '@resplice/components'
-	import Verified from '$modules/attribute/components/Verified.svelte'
+	// import Verified from '$modules/attribute/components/Verified.svelte'
 	import type { Attribute } from '$modules/account/account.types'
 
 	export let attribute: Attribute
@@ -12,7 +12,7 @@
 <div class="w-full p-4">
 	<div class="space-y-4">
 		<AttributeItem {attribute} itemType="user" disableActions />
-		<Verified {attribute} />
+		<!-- <Verified {attribute} /> -->
 	</div>
 
 	<div class="flex flex-col space-y-4 mt-4">

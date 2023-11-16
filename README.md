@@ -18,6 +18,7 @@ This repo is a monorepo with NPM workspace support. Here is an outline of its st
   - `utils`: This is a library containing common utility functions for web apps and sites.
 
 - `sites/*`: This workspace contains all marketing and analytic sites.
+  - `landing`: This is the landing page for Resplice.com.
   - `stats`: This is the public analytics site for Resplice.
 
 ### Setting Up A Development Environment
@@ -28,7 +29,9 @@ This repo is a monorepo with NPM workspace support. Here is an outline of its st
 
 3. Build libraries: `npm run packages:build`
 
-4. Spin up the Vite dev server: `npm run dev:resplice`
+4. Spin up the Vite dev server for auth: `npm run reauth:dev`
+
+5. And for the actual application: `npm run resplice:dev`
 
 ## Build & Run
 

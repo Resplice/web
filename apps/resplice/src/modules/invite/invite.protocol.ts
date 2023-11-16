@@ -1,28 +1,40 @@
 import proto from '@resplice/proto'
+import type { Fetch } from '@resplice/utils'
 import type { DB } from '$services/db'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
-import { sendCommand } from '$common/protocol/helpers'
+import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
+import type { ConnectionStore } from '$modules/connection/connection.store'
 import type { InviteStore } from '$modules/invite/invite.store'
-import type { Invite } from '$modules/invite/invite.types'
-import { applyInviteEvent, mapProtoInviteType } from '$modules/invite/invite.state'
+import type { Invite, QrConnection, Qr } from '$modules/invite/invite.types'
+import { applyConnectionEvent } from '$modules/connection/connection.state'
+import { applyInviteEvent, mapProtoCommand } from '$modules/invite/invite.state'
+import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export interface InviteProtocol {
 	create(payload: proto.invite.CreateInvite): void
-	addShare(payload: proto.invite.AddInviteShare): void
-	removeShare(payload: proto.invite.RemoveInviteShare): void
+	createQr(payload: proto.invite.CreateQrInvite): Promise<Qr>
+	openQr(payload: proto.invite.OpenQrInvite): Promise<QrConnection>
+	acceptQrInvite(payload: proto.invite.AcceptQrInvite): Promise<number>
 	delete(payload: proto.invite.DeleteInvite): void
-	accept(payload: proto.invite.AcceptInvite): void
-	decline(payload: proto.invite.DeclineInvite): void
 }
 
 type Dependencies = {
+	fetch: Fetch
 	cache: DB
 	store: InviteStore
+	connectionStore: ConnectionStore
 	commuter: SocketCommuter
 }
-function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtocol {
+function inviteProtocolFactory({
+	fetch,
+	cache,
+	store,
+	connectionStore,
+	commuter
+}: Dependencies): InviteProtocol {
 	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
-		store.update((state) => applyInviteEvent(state, event))
+		store.invites.update((state) => applyInviteEvent(state, event))
+		// store.pendingConnections.update((state) => applyPendingConnectionEvent(state, event))
 	})
 
 	return {
@@ -32,59 +44,76 @@ function inviteProtocolFactory({ store, commuter }: Dependencies): InviteProtoco
 				createInvite: payload
 			})
 			const placeholderInvite: Invite = {
-				id: 0,
-				type: mapProtoInviteType(payload.type),
-				name: payload.name,
-				value: payload.value,
-				shares: payload.attributeIds
+				...mapProtoCommand(payload.name, payload.value),
+				id: '0'
 			}
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.set(placeholderInvite.id, placeholderInvite)
 				return state
 			})
 		},
-		addShare(payload) {
-			sendCommand(commuter, {
-				$case: 'addInviteShare',
-				addInviteShare: payload
-			})
-			store.update((state) => {
-				state.get(payload.inviteId).shares.push(payload.attributeId)
-				return state
-			})
+		async createQr(payload) {
+			const message = await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'createQrInvite',
+					createQrInvite: payload
+				}
+			)
+			if (!message.event) throw new Error('Cannot create QR code')
+			if (message.event.payload?.$case !== 'qrInviteCreated')
+				throw new Error('Cannot create QR code')
+
+			return {
+				uuid: message.event.payload.qrInviteCreated.qrCode,
+				attributeIds: message.event.payload.qrInviteCreated.attributeIds
+			}
 		},
-		removeShare(payload) {
-			sendCommand(commuter, {
-				$case: 'removeInviteShare',
-				removeInviteShare: payload
-			})
-			store.update((state) => {
-				state.get(payload.inviteId).shares = state
-					.get(payload.inviteId)
-					.shares.filter((id) => id !== payload.attributeId)
-				return state
-			})
+		async openQr(payload) {
+			const message = await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'openQrInvite',
+					openQrInvite: payload
+				}
+			)
+			if (!message.event) throw new Error('Invalid QR code')
+			if (message.event.payload?.$case !== 'qrInviteOpened') throw new Error('Invalid QR code')
+
+			return {
+				...message.event.payload.qrInviteOpened,
+				alias: null,
+				description: null,
+				pendingAttributes: message.event.payload.qrInviteOpened.pendingAttributes.map((attr) => ({
+					...attr,
+					attributeType: mapProtoAttributeType(attr.attributeType)
+				}))
+			}
+		},
+		async acceptQrInvite(payload) {
+			const message = await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'acceptQrInvite',
+					acceptQrInvite: payload
+				}
+			)
+			if (!message.event) throw new Error('Cannot connect via QR code')
+			if (message.event.payload?.$case !== 'connectionAdded')
+				throw new Error('Cannot connect via QR code')
+
+			connectionStore.update((state) => applyConnectionEvent(state, message.event))
+
+			return message.event.payload.connectionAdded.connectionId
 		},
 		delete(payload) {
 			sendCommand(commuter, {
 				$case: 'deleteInvite',
 				deleteInvite: payload
 			})
-			store.update((state) => {
+			store.invites.update((state) => {
 				state.delete(payload.inviteId)
 				return state
-			})
-		},
-		accept(payload) {
-			sendCommand(commuter, {
-				$case: 'acceptInvite',
-				acceptInvite: payload
-			})
-		},
-		decline(payload) {
-			sendCommand(commuter, {
-				$case: 'declineInvite',
-				declineInvite: payload
 			})
 		}
 	}

@@ -28,6 +28,24 @@ export function b64tob64u(b: string, padding = false): string {
 	return b.replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
 }
 
+/**
+ * Converts string to Base64
+ * @param s - String to encode
+ * @returns Base64 encoded data
+ */
+export function strtob64(s: string): string {
+	return btob64(new TextEncoder().encode(s))
+}
+
+/**
+ * Converts Base64 to string
+ * @param b64String - Base64 encoded data
+ * @returns Decoded string
+ */
+export function b64tostr(b64String: string): string {
+	return new TextDecoder().decode(b64tob(b64String))
+}
+
 if (import.meta.vitest) {
 	const { test, expect } = import.meta.vitest
 
@@ -43,5 +61,19 @@ if (import.meta.vitest) {
 		const base64Url = 'FiA'
 
 		expect(b64tob64u(base64)).toBe(base64Url)
+	})
+
+	test('converts string to base64', () => {
+		const string = 'Hello World'
+		const base64 = 'SGVsbG8gV29ybGQ='
+
+		expect(strtob64(string)).toBe(base64)
+	})
+
+	test('converts base64 to string', () => {
+		const base64 = 'SGVsbG8gV29ybGQ='
+		const string = 'Hello World'
+
+		expect(b64tostr(base64)).toBe(string)
 	})
 }

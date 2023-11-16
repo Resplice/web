@@ -3,8 +3,10 @@ import _m0 from "protobufjs/minimal";
 import { Address, Credential, Email, Phone, Social } from "./types";
 
 export interface AttributeAdded {
-  id: number;
+  attributeId: number;
   name: string;
+  /** Hash of value */
+  valueId: string;
   value?:
     | { $case: "phone"; phone: Phone }
     | { $case: "email"; email: Email }
@@ -14,14 +16,11 @@ export interface AttributeAdded {
     | undefined;
 }
 
-export interface AttributeVerified {
-  id: number;
-  verifiedAt: number;
-}
-
 export interface AttributeChanged {
-  id: number;
+  attributeId: number;
   name: string;
+  /** Hash of value */
+  valueId: string;
   value?:
     | { $case: "phone"; phone: Phone }
     | { $case: "email"; email: Email }
@@ -32,20 +31,35 @@ export interface AttributeChanged {
 }
 
 export interface AttributeRemoved {
-  id: number;
+  attributeId: number;
+}
+
+export interface AttributeValueVerified {
+  /** Hash of value */
+  valueId: string;
+  verifiedAt: number;
+}
+
+/** Legacy */
+export interface AttributeVerified {
+  attributeId: number;
+  verifiedAt: number;
 }
 
 function createBaseAttributeAdded(): AttributeAdded {
-  return { id: 0, name: "", value: undefined };
+  return { attributeId: 0, name: "", valueId: "", value: undefined };
 }
 
 export const AttributeAdded = {
   encode(message: AttributeAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+    if (message.attributeId !== 0) {
+      writer.uint32(8).uint32(message.attributeId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
+    }
+    if (message.valueId !== "") {
+      writer.uint32(122).string(message.valueId);
     }
     switch (message.value?.$case) {
       case "phone":
@@ -79,7 +93,7 @@ export const AttributeAdded = {
             break;
           }
 
-          message.id = reader.uint32();
+          message.attributeId = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -87,6 +101,13 @@ export const AttributeAdded = {
           }
 
           message.name = reader.string();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.valueId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -134,8 +155,9 @@ export const AttributeAdded = {
 
   fromJSON(object: any): AttributeAdded {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
+      valueId: isSet(object.valueId) ? globalThis.String(object.valueId) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -152,11 +174,14 @@ export const AttributeAdded = {
 
   toJSON(message: AttributeAdded): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
     }
     if (message.name !== "") {
       obj.name = message.name;
+    }
+    if (message.valueId !== "") {
+      obj.valueId = message.valueId;
     }
     if (message.value?.$case === "phone") {
       obj.phone = Phone.toJSON(message.value.phone);
@@ -181,8 +206,9 @@ export const AttributeAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<AttributeAdded>, I>>(object: I): AttributeAdded {
     const message = createBaseAttributeAdded();
-    message.id = object.id ?? 0;
+    message.attributeId = object.attributeId ?? 0;
     message.name = object.name ?? "";
+    message.valueId = object.valueId ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };
     }
@@ -206,91 +232,20 @@ export const AttributeAdded = {
   },
 };
 
-function createBaseAttributeVerified(): AttributeVerified {
-  return { id: 0, verifiedAt: 0 };
-}
-
-export const AttributeVerified = {
-  encode(message: AttributeVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
-    }
-    if (message.verifiedAt !== 0) {
-      writer.uint32(16).uint32(message.verifiedAt);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeVerified {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAttributeVerified();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.id = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.verifiedAt = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AttributeVerified {
-    return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
-      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
-    };
-  },
-
-  toJSON(message: AttributeVerified): unknown {
-    const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
-    }
-    if (message.verifiedAt !== 0) {
-      obj.verifiedAt = Math.round(message.verifiedAt);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AttributeVerified>, I>>(base?: I): AttributeVerified {
-    return AttributeVerified.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AttributeVerified>, I>>(object: I): AttributeVerified {
-    const message = createBaseAttributeVerified();
-    message.id = object.id ?? 0;
-    message.verifiedAt = object.verifiedAt ?? 0;
-    return message;
-  },
-};
-
 function createBaseAttributeChanged(): AttributeChanged {
-  return { id: 0, name: "", value: undefined };
+  return { attributeId: 0, name: "", valueId: "", value: undefined };
 }
 
 export const AttributeChanged = {
   encode(message: AttributeChanged, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+    if (message.attributeId !== 0) {
+      writer.uint32(8).uint32(message.attributeId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
+    }
+    if (message.valueId !== "") {
+      writer.uint32(122).string(message.valueId);
     }
     switch (message.value?.$case) {
       case "phone":
@@ -324,7 +279,7 @@ export const AttributeChanged = {
             break;
           }
 
-          message.id = reader.uint32();
+          message.attributeId = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
@@ -332,6 +287,13 @@ export const AttributeChanged = {
           }
 
           message.name = reader.string();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.valueId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -379,8 +341,9 @@ export const AttributeChanged = {
 
   fromJSON(object: any): AttributeChanged {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
+      valueId: isSet(object.valueId) ? globalThis.String(object.valueId) : "",
       value: isSet(object.phone)
         ? { $case: "phone", phone: Phone.fromJSON(object.phone) }
         : isSet(object.email)
@@ -397,11 +360,14 @@ export const AttributeChanged = {
 
   toJSON(message: AttributeChanged): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
     }
     if (message.name !== "") {
       obj.name = message.name;
+    }
+    if (message.valueId !== "") {
+      obj.valueId = message.valueId;
     }
     if (message.value?.$case === "phone") {
       obj.phone = Phone.toJSON(message.value.phone);
@@ -426,8 +392,9 @@ export const AttributeChanged = {
   },
   fromPartial<I extends Exact<DeepPartial<AttributeChanged>, I>>(object: I): AttributeChanged {
     const message = createBaseAttributeChanged();
-    message.id = object.id ?? 0;
+    message.attributeId = object.attributeId ?? 0;
     message.name = object.name ?? "";
+    message.valueId = object.valueId ?? "";
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: Phone.fromPartial(object.value.phone) };
     }
@@ -452,13 +419,13 @@ export const AttributeChanged = {
 };
 
 function createBaseAttributeRemoved(): AttributeRemoved {
-  return { id: 0 };
+  return { attributeId: 0 };
 }
 
 export const AttributeRemoved = {
   encode(message: AttributeRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).uint32(message.id);
+    if (message.attributeId !== 0) {
+      writer.uint32(8).uint32(message.attributeId);
     }
     return writer;
   },
@@ -475,7 +442,7 @@ export const AttributeRemoved = {
             break;
           }
 
-          message.id = reader.uint32();
+          message.attributeId = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -487,13 +454,13 @@ export const AttributeRemoved = {
   },
 
   fromJSON(object: any): AttributeRemoved {
-    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
+    return { attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0 };
   },
 
   toJSON(message: AttributeRemoved): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
-      obj.id = Math.round(message.id);
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
     }
     return obj;
   },
@@ -503,7 +470,155 @@ export const AttributeRemoved = {
   },
   fromPartial<I extends Exact<DeepPartial<AttributeRemoved>, I>>(object: I): AttributeRemoved {
     const message = createBaseAttributeRemoved();
-    message.id = object.id ?? 0;
+    message.attributeId = object.attributeId ?? 0;
+    return message;
+  },
+};
+
+function createBaseAttributeValueVerified(): AttributeValueVerified {
+  return { valueId: "", verifiedAt: 0 };
+}
+
+export const AttributeValueVerified = {
+  encode(message: AttributeValueVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.valueId !== "") {
+      writer.uint32(10).string(message.valueId);
+    }
+    if (message.verifiedAt !== 0) {
+      writer.uint32(16).uint32(message.verifiedAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeValueVerified {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAttributeValueVerified();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.valueId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.verifiedAt = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AttributeValueVerified {
+    return {
+      valueId: isSet(object.valueId) ? globalThis.String(object.valueId) : "",
+      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
+    };
+  },
+
+  toJSON(message: AttributeValueVerified): unknown {
+    const obj: any = {};
+    if (message.valueId !== "") {
+      obj.valueId = message.valueId;
+    }
+    if (message.verifiedAt !== 0) {
+      obj.verifiedAt = Math.round(message.verifiedAt);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AttributeValueVerified>, I>>(base?: I): AttributeValueVerified {
+    return AttributeValueVerified.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AttributeValueVerified>, I>>(object: I): AttributeValueVerified {
+    const message = createBaseAttributeValueVerified();
+    message.valueId = object.valueId ?? "";
+    message.verifiedAt = object.verifiedAt ?? 0;
+    return message;
+  },
+};
+
+function createBaseAttributeVerified(): AttributeVerified {
+  return { attributeId: 0, verifiedAt: 0 };
+}
+
+export const AttributeVerified = {
+  encode(message: AttributeVerified, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.attributeId !== 0) {
+      writer.uint32(8).uint32(message.attributeId);
+    }
+    if (message.verifiedAt !== 0) {
+      writer.uint32(16).uint32(message.verifiedAt);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AttributeVerified {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAttributeVerified();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.attributeId = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.verifiedAt = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AttributeVerified {
+    return {
+      attributeId: isSet(object.attributeId) ? globalThis.Number(object.attributeId) : 0,
+      verifiedAt: isSet(object.verifiedAt) ? globalThis.Number(object.verifiedAt) : 0,
+    };
+  },
+
+  toJSON(message: AttributeVerified): unknown {
+    const obj: any = {};
+    if (message.attributeId !== 0) {
+      obj.attributeId = Math.round(message.attributeId);
+    }
+    if (message.verifiedAt !== 0) {
+      obj.verifiedAt = Math.round(message.verifiedAt);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AttributeVerified>, I>>(base?: I): AttributeVerified {
+    return AttributeVerified.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AttributeVerified>, I>>(object: I): AttributeVerified {
+    const message = createBaseAttributeVerified();
+    message.attributeId = object.attributeId ?? 0;
+    message.verifiedAt = object.verifiedAt ?? 0;
     return message;
   },
 };

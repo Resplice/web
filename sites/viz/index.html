@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -7,17 +7,74 @@
 		<link rel="icon" href="/favicon.ico" />
 		<title>Resplice</title>
 	</head>
-	<body>
+	<body class="dark">
 		<div id="graph"></div>
-		<div class="fixed top-0 left-0 p-6 flex space-x-4 items-center">
-			<img src="./logo.png" width="48" height="48" />
-			<h1 class="font-semibold text-2xl text-gray-200">Resplice</h1>
-		</div>
-		<div class="fixed top-0 right-0 p-4">
-			<div id="node-ctx" class="bg-black rounded-lg shadow-md p-4 w-72">
-				<p class="text-gray-400 text-center">Select an account to see their details</p>
+		<nav class="fixed top-0 left-0 w-full flex items-center justify-between">
+			<div class="p-6 flex space-x-4 items-center">
+				<img src="./logo.png" width="48" height="48" />
+				<h1 class="font-semibold text-2xl text-gray-200">Resplice</h1>
 			</div>
-		</div>
+			<div class="rounded-lg overflow-hidden">
+				<iframe
+					src="https://resplice.instatus.com/embed-status/4035c9ee/dark-sm"
+					width="230"
+					height="41"
+					frameborder="0"
+					scrolling="no"
+					style="border: none"
+				>
+				</iframe>
+			</div>
+
+			<div class="p-4">
+				<!-- <div id="node-ctx" class="bg-black rounded-lg shadow-md p-4 w-72">
+					<p class="text-gray-400 text-center">Select an account to see their details</p>
+				</div> -->
+				<div class="flex bg-zinc-900 rounded-lg shadow-md p-4 space-x-4">
+					<a
+						class="w-full flex items-center space-x-2 bg-brand-primary text-zinc-800 font-semibold rounded-lg py-2 px-4 transform transition duration-75 ease-in-out shadow-md focus:ring-4 focus:ring-green-200 focus:outline-none active:shadow-none"
+						href="https://faq.resplice.com"
+					>
+						<span>FAQ</span>
+						<svg
+							height="24px"
+							width="24px"
+							xmlns="http://www.w3.org/2000/svg"
+							class="fill-current"
+							viewBox="0 0 512 512"
+						>
+							<path
+								d="M256 64C150 64 64 150 64 256s86 192 192 192 192-86 192-192S362 64 256 64zm-6 304a20 20 0 1120-20 20 20 0 01-20 20zm33.44-102C267.23 276.88 265 286.85 265 296a14 14 0 01-28 0c0-21.91 10.08-39.33 30.82-53.26C287.1 229.8 298 221.6 298 203.57c0-12.26-7-21.57-21.49-28.46-3.41-1.62-11-3.2-20.34-3.09-11.72.15-20.82 2.95-27.83 8.59C215.12 191.25 214 202.83 214 203a14 14 0 11-28-1.35c.11-2.43 1.8-24.32 24.77-42.8 11.91-9.58 27.06-14.56 45-14.78 12.7-.15 24.63 2 32.72 5.82C312.7 161.34 326 180.43 326 203.57c0 33.83-22.61 49.02-42.56 62.43z"
+							/>
+						</svg>
+					</a>
+
+					<a
+						class="w-full flex items-center space-x-2 whitespace-nowrap bg-brand-primary text-zinc-800 font-semibold rounded-lg py-2 px-4 transform transition duration-75 ease-in-out shadow-md focus:ring-4 focus:ring-green-200 focus:outline-none active:shadow-none"
+						href="https://app.resplice.com"
+					>
+						<span>Go to App</span>
+						<svg
+							height="24px"
+							width="24px"
+							xmlns="http://www.w3.org/2000/svg"
+							class="fill-current"
+							viewBox="0 0 512 512"
+						>
+							<path
+								fill="none"
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="48"
+								d="M184 112l144 144-144 144"
+							/>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</nav>
+
 		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>

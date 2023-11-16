@@ -11,6 +11,10 @@
 	}
 
 	const isLoading = loadEvents()
+
+	function getEventType(event: proto.Event) {
+		return event.payload!.$case
+	}
 </script>
 
 {#await isLoading}
@@ -21,7 +25,7 @@
 			{#each events as event}
 				<div class="shadow rounded p-4 bg-white">
 					<h2 class="text-lg font-semibold mb-4">
-						{event.payload.$case}
+						{getEventType(event)}
 					</h2>
 					<CodeBlock>
 						{JSON.stringify(event, null, 2)}

@@ -1,12 +1,18 @@
 import type { Attribute } from '@resplice/utils'
 
+export type ConnectionAttribute = Attribute
+
 export type Connection = {
-	id: string
+	id: number
 	name: string
-	alias: string | null
-	handle: string
 	avatarUrl: string | null
-	attributes: Attribute[]
+	alias: string | null
+	description: string | null
+	attributes: ConnectionAttribute[]
+	sharedAttributeIds: number[]
+	isFavored: boolean
+	isArchived: boolean
+	connectedAt: number
 }
 
-export type ConnectionSummary = Pick<Connection, 'id' | 'name' | 'alias' | 'avatarUrl'>
+export type ConnectionSummary = Pick<Connection, 'id' | 'name' | 'avatarUrl' | 'alias'>

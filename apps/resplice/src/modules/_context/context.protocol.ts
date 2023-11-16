@@ -14,6 +14,11 @@ import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'
 import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
 import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
+import { applyInviteEvent, type InviteAggregate } from '$modules/invite/invite.state'
+import {
+	applyConnectionEvent,
+	type ConnectionAggregate
+} from '$modules/connection/connection.state'
 
 export interface ContextProtocol {
 	loadCache: () => Promise<void>
@@ -26,6 +31,8 @@ type Dependencies = {
 	commuter: SocketCommuter
 }
 function contextProtocolFactory({ cache, stores, commuter }: Dependencies): ContextProtocol {
+	let openAttempts = 0
+
 	async function openSocket(session: Session) {
 		const { events } = await cache.read<proto.Event>('events')
 		const lastEventId = events.at(-1)?.id || 0
@@ -47,6 +54,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function onSocketOpen() {
+		openAttempts = 0
 		stores.context.update((state) => ({
 			socketStatus: SocketStatus.CONNECTED,
 			error: null,
@@ -71,7 +79,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			return
 		}
 
-		if (state && state.events) {
+		if (state && state.events && state.events.length) {
 			const events = state.events
 
 			stores.account.update((state) => {
@@ -86,6 +94,22 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				let aggregate: AttributeAggregate = state || new Map()
 				events.forEach((event) => {
 					aggregate = applyAttributeEvent(aggregate, event)
+				})
+				return aggregate
+			})
+
+			stores.invite.invites.update((state) => {
+				let aggregate: InviteAggregate = state || new Map()
+				events.forEach((event) => {
+					aggregate = applyInviteEvent(aggregate, event)
+				})
+				return aggregate
+			})
+
+			stores.connection.update((state) => {
+				let aggregate: ConnectionAggregate = state || new Map()
+				events.forEach((event) => {
+					aggregate = applyConnectionEvent(aggregate, event)
 				})
 				return aggregate
 			})
@@ -110,7 +134,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function tryReconnect() {
-		if (navigator.onLine && document.hasFocus()) {
+		if (navigator.onLine && document.hasFocus() && openAttempts < 3) {
 			reopen()
 		} else {
 			stores.context.update((state) => ({
@@ -118,10 +142,12 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				socketStatus: SocketStatus.DISCONNECTED
 			}))
 			window.addEventListener('online', function handler() {
+				openAttempts = 0
 				reopen()
 				window.removeEventListener('online', handler)
 			})
 			window.addEventListener('focus', function handler() {
+				openAttempts = 0
 				reopen()
 				window.removeEventListener('focus', handler)
 			})
@@ -129,6 +155,8 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 	}
 
 	function reopen() {
+		openAttempts++
+
 		const unsubscribe = stores.session.subscribe(async (state) => {
 			if (!state.currentSession) return
 			await openSocket(state.currentSession)
@@ -160,14 +188,20 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 
 			let accountAggregate: AccountAggregate = {} as AccountAggregate
 			let attributeAggregate: AttributeAggregate = new Map()
+			let inviteAggregate: InviteAggregate = new Map()
+			let connectionAggregate: ConnectionAggregate = new Map()
 
 			events.forEach((event) => {
 				accountAggregate = applyAccountEvent(accountAggregate, event)
 				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
+				inviteAggregate = applyInviteEvent(inviteAggregate, event)
+				connectionAggregate = applyConnectionEvent(connectionAggregate, event)
 			})
 
 			stores.account.set(accountAggregate)
 			stores.attribute.set(attributeAggregate)
+			stores.invite.invites.set(inviteAggregate)
+			stores.connection.set(connectionAggregate)
 		}
 	}
 }

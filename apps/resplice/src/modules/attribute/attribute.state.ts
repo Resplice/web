@@ -21,10 +21,12 @@ export function applyAttributeEvent(
 
 	switch (event.payload.$case) {
 		case 'accountCreated':
-			aggregate.set(event.payload.accountCreated.phoneId, {
-				id: event.payload.accountCreated.phoneId,
+			aggregate.set(event.payload.accountCreated.primaryAttributeId, {
+				id: event.payload.accountCreated.primaryAttributeId,
 				type: AttributeType.PHONE,
 				name: 'Primary Phone',
+				// TODO: Add valueId to proto event
+				valueId: 'primary-phone',
 				value: { number: event.payload.accountCreated.phone, smsEnabled: true },
 				sortOrder: 0,
 				groupId: null,
@@ -35,10 +37,11 @@ export function applyAttributeEvent(
 		case 'attributeAdded':
 			// Delete placeholder
 			aggregate.delete(0)
-			aggregate.set(event.payload.attributeAdded.id, {
-				id: event.payload.attributeAdded.id,
-				type: mapProtoAttributeType(event.payload.attributeAdded.value?.$case),
+			aggregate.set(event.payload.attributeAdded.attributeId, {
+				id: event.payload.attributeAdded.attributeId,
+				type: mapProtoAttributeValueType(event.payload.attributeAdded.value!.$case),
 				name: event.payload.attributeAdded.name,
+				valueId: event.payload.attributeAdded.valueId,
 				value: mapProtoAttributeValue(event.payload.attributeAdded.value),
 				sortOrder: 0,
 				groupId: null,
@@ -46,28 +49,56 @@ export function applyAttributeEvent(
 				verifyExpiry: null
 			} as Attribute)
 			break
-		case 'attributeVerified':
-			aggregate.get(event.payload.attributeVerified.id).verifiedAt =
-				event.payload.attributeVerified.verifiedAt
-			break
 		case 'attributeChanged':
-			aggregate.get(event.payload.attributeChanged.id).name = event.payload.attributeChanged.name
-			aggregate.get(event.payload.attributeChanged.id).value = mapProtoAttributeValue(
+			aggregate.get(event.payload.attributeChanged.attributeId)!.name =
+				event.payload.attributeChanged.name
+			aggregate.get(event.payload.attributeChanged.attributeId)!.value = mapProtoAttributeValue(
 				event.payload.attributeChanged.value
 			)
 			break
+		case 'attributeValueVerified':
+			applyAttributeValueVerifiedEvent(aggregate, event.payload.attributeValueVerified)
+			break
 		case 'attributeRemoved':
-			aggregate.delete(event.payload.attributeRemoved.id)
+			aggregate.delete(event.payload.attributeRemoved.attributeId)
 			break
 	}
 
 	return aggregate
 }
 
-export function mapProtoAttributeType(
-	type: proto.attribute.AddAttribute['value']['$case']
+function applyAttributeValueVerifiedEvent(
+	aggregate: AttributeAggregate,
+	event: proto.attribute.AttributeValueVerified
+) {
+	const attribute = [...aggregate.values()].find((attr) => attr.valueId === event.valueId)
+	if (!attribute) return aggregate
+
+	aggregate.get(attribute.id)!.verifiedAt = event.verifiedAt
+}
+
+export function mapProtoAttributeValueType(
+	// eslint-disable-next-line
+	type: 'phone' | 'email' | 'address' | 'social' | 'credential'
 ): AttributeType {
 	return AttributeType[type.toUpperCase() as keyof typeof AttributeType]
+}
+
+export function mapProtoAttributeType(type: proto.attribute.AttributeType): AttributeType {
+	switch (type) {
+		case proto.attribute.AttributeType.ADDRESS:
+			return AttributeType.ADDRESS
+		case proto.attribute.AttributeType.CREDENTIAL:
+			return AttributeType.CREDENTIAL
+		case proto.attribute.AttributeType.EMAIL:
+			return AttributeType.EMAIL
+		case proto.attribute.AttributeType.PHONE:
+			return AttributeType.PHONE
+		case proto.attribute.AttributeType.SOCIAL:
+			return AttributeType.SOCIAL
+		default:
+			throw new Error('Invalid Attribute Type')
+	}
 }
 
 export function mapProtoAttributeValue(

@@ -5,7 +5,7 @@ import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCo
 import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
 import {
 	applyAttributeEvent,
-	mapProtoAttributeType,
+	mapProtoAttributeValueType,
 	mapProtoAttributeValue
 } from '$modules/attribute/attribute.state'
 import type { AttributeStore } from '$modules/attribute/attribute.store'
@@ -13,7 +13,7 @@ import type { Attribute } from '$modules/account/account.types'
 
 export interface AttributeProtocol {
 	add(payload: proto.attribute.AddAttribute): void
-	verify(payload: proto.attribute.VerifyAttribute): Promise<ProtoMessage>
+	verify(payload: proto.attribute.VerifyAttributeValue): Promise<ProtoMessage>
 	change(payload: proto.attribute.ChangeAttribute, newAttribute: Attribute): void
 	remove(payload: proto.attribute.RemoveAttribute): void
 }
@@ -42,7 +42,7 @@ function attributeProtocolFactory({
 			})
 			const placeholderAttribute = {
 				id: 0,
-				type: mapProtoAttributeType(payload.value?.$case),
+				type: mapProtoAttributeValueType(payload.value!.$case),
 				name: payload.name,
 				value: mapProtoAttributeValue(payload.value),
 				sortOrder: 0,
@@ -59,8 +59,8 @@ function attributeProtocolFactory({
 			return await sendCommandRequest(
 				{ fetch, cache },
 				{
-					$case: 'verifyAttribute',
-					verifyAttribute: payload
+					$case: 'verifyAttributeValue',
+					verifyAttributeValue: payload
 				}
 			)
 		},
@@ -80,7 +80,7 @@ function attributeProtocolFactory({
 				removeAttribute: payload
 			})
 			store.update((state) => {
-				state.delete(payload.id)
+				state.delete(payload.attributeId)
 				return state
 			})
 		}

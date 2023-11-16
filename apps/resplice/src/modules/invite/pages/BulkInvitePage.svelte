@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { IconButton, BackIcon } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import ContactProviders from '$modules/invite/components/ContactProviders.svelte'
 	import BulkImportList from '$modules/invite/components/BulkImportList.svelte'
 	import type { ProviderContact } from '$modules/invite/services/contactProviders'
@@ -33,7 +34,7 @@
 	}
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<nav class="flex-none flex items-center justify-start p-4">
 		<IconButton Icon={BackIcon} on:click={() => push('/home/connections')} />
 	</nav>
@@ -53,4 +54,4 @@
 			<ContactProviders on:import={onImport} />
 		</main>
 	{/if}
-</div>
+</Page>

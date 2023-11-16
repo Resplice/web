@@ -2,10 +2,11 @@
 	import { replace, pop } from 'svelte-spa-router'
 	import { AttributeType, attributeTypes } from '@resplice/utils'
 	import { IconButton, BackIcon } from '@resplice/components'
+	import Page from '$common/layouts/Page.svelte'
 	import TypeItem from '$modules/attribute/components/TypeItem.svelte'
 
 	// Filter types to only supported types for now
-	$: typeConfigs = Object.entries(attributeTypes).filter(([type, config]) => {
+	$: typeConfigs = Object.entries(attributeTypes).filter(([type, _config]) => {
 		return [
 			AttributeType.ADDRESS,
 			AttributeType.CREDENTIAL,
@@ -16,7 +17,7 @@
 	})
 </script>
 
-<div class="flex flex-col w-full h-full bg-gray-100">
+<Page>
 	<nav class="flex-none flex items-center justify-start p-4">
 		<IconButton Icon={BackIcon} on:click={() => pop()} />
 	</nav>
@@ -33,4 +34,4 @@
 			</div>
 		</div>
 	</main>
-</div>
+</Page>

@@ -32,17 +32,12 @@ const changeAccountName: proto.account.ChangeAccountName = {
 	name: 'H@n Sol0'
 }
 
-const changeAccountHandle: proto.account.ChangeAccountHandle = {
-	handle: 'bestSmuggler42'
-}
-
 const changeAccountAvatar: proto.account.ChangeAccountAvatar = {
 	avatar: ''
 }
 
 const accountCommands = {
 	changeAccountName,
-	changeAccountHandle,
 	changeAccountAvatar
 }
 
@@ -63,7 +58,7 @@ const addAttribute: proto.attribute.AddAttribute = {
 }
 
 const changeAttribute: proto.attribute.ChangeAttribute = {
-	id: 3,
+	attributeId: 3,
 	name: '1st Earth Address',
 	value: {
 		$case: 'address',
@@ -79,7 +74,7 @@ const changeAttribute: proto.attribute.ChangeAttribute = {
 }
 
 const removeAttribute: proto.attribute.RemoveAttribute = {
-	id: 3
+	attributeId: 3
 }
 
 const attributeCommands = {

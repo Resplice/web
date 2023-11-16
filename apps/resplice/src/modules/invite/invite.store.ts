@@ -1,9 +1,17 @@
 import { writable } from 'svelte/store'
-import type { Invite } from '$modules/invite/invite.types'
+import type { Invite, PendingConnection } from '$modules/invite/invite.types'
 
-export type InviteState = Map<number, Invite>
+export type InviteState = Map<string, Invite>
 const inviteStore = writable<InviteState>(new Map())
 
-export type InviteStore = typeof inviteStore
+export type PendingConnectionState = Map<number, PendingConnection>
+const pendingConnectionStore = writable<PendingConnectionState>(new Map())
 
-export default inviteStore
+const inviteStores = {
+	invites: inviteStore,
+	pendingConnections: pendingConnectionStore
+}
+
+export type InviteStore = typeof inviteStores
+
+export default inviteStores
