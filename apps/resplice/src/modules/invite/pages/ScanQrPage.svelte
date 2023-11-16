@@ -11,9 +11,8 @@
 		if (!qrData) return
 
 		const url = new URL(qrData)
-		console.log(url)
 
-		push(url.pathname)
+		push(url.hash.replace('#', ''))
 	}
 
 	$: handleQr(qrCode?.data)
@@ -39,7 +38,6 @@
 				inversionAttempts: 'dontInvert'
 			})
 			if (code) {
-				console.log(code)
 				clearInterval(streamInterval)
 				qrCode = code
 			}

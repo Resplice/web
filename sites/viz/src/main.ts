@@ -12,9 +12,15 @@ const stats = await res.json()
 
 console.log(stats)
 
+const graphElement = document.getElementById('graph') as HTMLElement
+
+console.log(graphElement.getBoundingClientRect())
+
 // Build Graph
 const graph = ForceGraph({ controlType: 'orbit', rendererConfig: { antialias: true, alpha: true } })
-graph(document.getElementById('graph') as HTMLElement)
+graph(graphElement)
+	.width(graphElement.getBoundingClientRect().width)
+	.height(graphElement.getBoundingClientRect().height)
 	.graphData(graphData)
 	.dagMode('radialout')
 	.dagLevelDistance(75)
@@ -48,6 +54,8 @@ graph(document.getElementById('graph') as HTMLElement)
 
 // Events
 window.addEventListener('resize', () => {
-	graph.width(window.innerWidth).height(window.innerHeight)
+	graph
+		.width(graphElement.getBoundingClientRect().width)
+		.height(graphElement.getBoundingClientRect().height)
 })
 // graph.onNodeClick((node) => renderNodeContext(node as Node))
