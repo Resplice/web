@@ -66,6 +66,14 @@ export function applyConnectionEvent(
 		case 'connectionAttributeChanged':
 			applyConnectionAttributeChangedEvent(aggregate, event.payload.connectionAttributeChanged)
 			break
+		case 'connectionAttributeRemoved':
+			aggregate.get(event.payload.connectionAttributeRemoved.connectionId)!.attributes = aggregate
+				.get(event.payload.connectionAttributeRemoved.connectionId)!
+				.attributes.filter((attr) => {
+					if (event.payload!.$case !== 'connectionAttributeRemoved') return true
+					return event.payload!.connectionAttributeRemoved.attributeId !== attr.id
+				})
+			break
 		case 'connectionShareAdded':
 			aggregate
 				.get(event.payload.connectionShareAdded.connectionId)!

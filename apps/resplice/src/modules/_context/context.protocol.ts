@@ -79,7 +79,7 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			return
 		}
 
-		if (state && state.events) {
+		if (state && state.events && state.events.length) {
 			const events = state.events
 
 			stores.account.update((state) => {

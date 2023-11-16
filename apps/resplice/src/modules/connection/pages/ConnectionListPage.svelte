@@ -7,14 +7,12 @@
 	import ConnectionList from '$modules/connection/components/ConnectionList.svelte'
 	// import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
 	import InviteList from '$modules/invite/components/InviteList.svelte'
-	import type { Connection } from '$modules/connection/connection.types'
-	import type { Invite } from '$modules/invite/invite.types'
 
 	// const pendingConnectionStore = inviteStores.pendingConnections
 	const inviteStore = inviteStores.invites
 	// let pendingConnections: PendingConnection[] = Array.from($pendingConnectionStore.values())
-	let connections: Connection[] = Array.from($connectionStore.values())
-	let invites: Invite[] = Array.from($inviteStore.values())
+	$: connections = Array.from($connectionStore.values())
+	$: invites = Array.from($inviteStore.values())
 </script>
 
 <svelte:head>

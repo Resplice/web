@@ -22,6 +22,7 @@
 
 	function removeConnection() {
 		protocol.connection.remove({ connectionId: connection.id })
+		pop()
 	}
 </script>
 
