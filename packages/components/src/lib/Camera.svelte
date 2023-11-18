@@ -19,7 +19,7 @@
 		try {
 			const video = await navigator.mediaDevices.getUserMedia({
 				video: {
-					height: { ideal: window.screen.height },
+					height: { min: window.screen.height, ideal: window.screen.height },
 					width: { ideal: window.screen.width },
 					facingMode
 				},
