@@ -3,14 +3,14 @@ import ForceGraph from '3d-force-graph'
 import graphData from './sample-graph.json'
 import { type Node } from './nodeContext'
 
-const res = await fetch('https://api.resplice.com/stats')
-if (!res.ok) {
-	throw new Error('Failed to fetch stats')
-}
+// const res = await fetch('https://api.resplice.com/stats')
+// if (!res.ok) {
+// 	throw new Error('Failed to fetch stats')
+// }
 
-const stats = await res.json()
+// const stats = await res.json()
 
-console.log(stats)
+// console.log(stats)
 
 const graphElement = document.getElementById('graph') as HTMLElement
 
