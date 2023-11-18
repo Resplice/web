@@ -18,6 +18,8 @@
 	$: handleQr(qrCode?.data)
 
 	async function onVideoStream(e: CustomEvent<HTMLVideoElement>) {
+		// TODO: Look into Screen Wake Lock API
+		// https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API
 		const stream = e.detail
 		const canvasEl = document.createElement('canvas')
 		const canvas = canvasEl.getContext('2d')

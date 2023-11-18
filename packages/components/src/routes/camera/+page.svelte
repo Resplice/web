@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte'
 	import { Camera, CloseIcon, IconButton } from '$lib'
+	import { browser } from '$app/environment'
 
 	let streamInterval: number
 
@@ -30,7 +31,7 @@
 			// 	clearInterval(streamInterval)
 			// 	qrCode = code
 			// }
-		}, 2000)
+		}, 500)
 	}
 
 	onDestroy(() => {
@@ -41,7 +42,9 @@
 <main
 	class="h-full w-full bg-zinc-800 rounded-t-3xl rounded-b-3xl flex-1 flex flex-col justify-center items-center"
 >
-	<Camera hideControls on:stream={onVideoStream} />
+	{#if browser}
+		<Camera hideControls on:stream={onVideoStream} />
+	{/if}
 
 	<div class="absolute bottom-0 z-10 flex items-center justify-center w-full p-4">
 		<IconButton Icon={CloseIcon} />
