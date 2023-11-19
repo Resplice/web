@@ -50,7 +50,7 @@
 
 {#if !!connection}
 	<Page>
-		<Header {connection} showConnection={showConnectionOnHeader} backPath="/home/connections" />
+		<Header {connection} showConnection={showConnectionOnHeader} />
 		<main
 			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
 		>

@@ -19,8 +19,8 @@
 		try {
 			const video = await navigator.mediaDevices.getUserMedia({
 				video: {
-					height: { ideal: window.screen.height },
-					width: { ideal: window.screen.width },
+					height: { ideal: window.innerHeight },
+					width: { ideal: window.innerWidth },
 					facingMode
 				},
 				audio: false
@@ -31,6 +31,7 @@
 				dispatch('stream', stream)
 			}
 		} catch (err) {
+			console.error(err)
 			streamError = err as Error
 		}
 	}
@@ -68,8 +69,8 @@
 </script>
 
 <div class="fixed top-0 left-0 w-full h-full z-10 bg-gray-900" style="margin: 0; padding: 0">
-	<video bind:this={stream} playsInline autoPlay>
-		<track default kind="captions" srclang="en" />
+	<video bind:this={stream} class="w-full h-full" playsInline autoPlay>
+		<track kind="captions" />
 		Sorry, your browser doesn't support embedded videos.
 	</video>
 

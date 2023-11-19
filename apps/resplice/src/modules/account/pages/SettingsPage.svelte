@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { push } from 'svelte-spa-router'
+	import { pop } from 'svelte-spa-router'
 	import { t } from 'svelte-i18n'
 	import { IconButton, BackIcon } from '@resplice/components'
 	import Page from '$common/layouts/Page.svelte'
@@ -44,7 +44,7 @@
 
 <Page>
 	<nav class="flex-none flex items-center justify-start p-4">
-		<IconButton Icon={BackIcon} on:click={() => push('/home/profile')} />
+		<IconButton Icon={BackIcon} on:click={() => pop()} />
 		<h1 class="ml-4 font-semibold text-xl">{$t('account.settings.title')}</h1>
 	</nav>
 	<main
