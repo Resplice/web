@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte'
 	import { push } from 'svelte-spa-router'
 	import { Button, ConnectionEmptyIcon, CameraIcon, QRCodeIcon } from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
@@ -12,8 +13,22 @@
 	// const pendingConnectionStore = inviteStores.pendingConnections
 	const inviteStore = inviteStores.invites
 	// let pendingConnections: PendingConnection[] = Array.from($pendingConnectionStore.values())
+	let scrollEl: HTMLDivElement
 	$: connections = connectionsList($connectionStore)
 	$: invites = Array.from($inviteStore.values())
+
+	onMount(() => {
+		// Get scroll position
+		const scrollPosition = sessionStorage.getItem('connection-list-scroll')
+		if (scrollPosition) {
+			scrollEl.scrollTop = parseInt(scrollPosition, 10)
+			sessionStorage.removeItem('connection-list-scroll')
+		}
+
+		return () => {
+			sessionStorage.setItem('connection-list-scroll', scrollEl.scrollTop.toString())
+		}
+	})
 </script>
 
 <svelte:head>
@@ -23,7 +38,10 @@
 <div class="h-full w-full max-w-xl m-auto flex flex-col">
 	<SearchHeader />
 
-	<div class="w-full flex-1 flex flex-col overflow-auto bg-white rounded-t-3xl">
+	<div
+		bind:this={scrollEl}
+		class="w-full flex-1 flex flex-col overflow-auto bg-white rounded-t-3xl"
+	>
 		{#if !connections.length && !invites.length}
 			<div class="w-full h-full flex flex-col justify-center items-center">
 				<div class="rounded-full overflow-hidden w-48">

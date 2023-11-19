@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte'
 	import QR, { type QRCode } from 'jsqr'
-	import { push, pop } from 'svelte-spa-router'
+	import { replace, pop } from 'svelte-spa-router'
 	import { Camera, CloseIcon, IconButton } from '@resplice/components'
 
 	let qrCode: QRCode
@@ -12,7 +12,7 @@
 
 		const url = new URL(qrData)
 
-		push(url.hash.replace('#', ''))
+		replace(url.hash.replace('#', ''))
 	}
 
 	$: handleQr(qrCode?.data)
