@@ -19,8 +19,9 @@
 		try {
 			const video = await navigator.mediaDevices.getUserMedia({
 				video: {
-					height: { ideal: window.innerHeight },
-					width: { ideal: window.innerWidth },
+					height: { min: window.innerHeight },
+					width: { min: window.innerWidth },
+					aspectRatio: 1.777777778,
 					facingMode
 				},
 				audio: false
