@@ -21,16 +21,24 @@
 	{type}
 	class={cx(
 		$$props.class,
-		'relative text-lg font-semibold rounded-lg transform transition duration-75 ease-in-out shadow-md focus:ring-4 focus:ring-green-200 focus:outline-none',
+		'relative text-lg font-semibold rounded-lg transform transition duration-75 ease-in-out focus:ring-4 focus:ring-green-200 focus:outline-none',
 		{
-			'bg-brand-primary text-white': color === 'brand',
-			'bg-brand-primary text-brand-primary-dark bg-opacity-20 shadow-none': color === 'brand-light',
-			'bg-yellow-700 text-white': color === 'warning',
-			'bg-red-700 text-white': color === 'danger',
-			'bg-red-200 text-red-600 shadow-none': color === 'danger-light',
-			'bg-gray-300 text-gray-600 shadow-none': color === 'gray',
+			'bg-brand-primary text-white shadow-md': variant === 'primary' && color === 'brand',
+			'bg-brand-primary text-brand-primary-dark bg-opacity-20':
+				variant === 'primary' && color === 'brand-light',
+			'bg-yellow-700 text-white shadow-md': variant === 'primary' && color === 'warning',
+			'bg-red-700 text-white shadow-md': variant === 'primary' && color === 'danger',
+			'bg-red-200 text-red-600': variant === 'primary' && color === 'danger-light',
+			'bg-gray-300 text-gray-600': variant === 'primary' && color === 'gray',
+			'border-2': variant === 'secondary',
+			'border-brand-primary text-brand-primary':
+				variant === 'secondary' && ['brand', 'brand-light'].includes(color),
+			'border-yellow-700 text-yellow-700': variant === 'secondary' && color === 'warning',
+			'border-red-700 text-red-700':
+				variant === 'secondary' && ['danger', 'danger-light'].includes(color),
+			'border-slate-800 text-slate-800': variant === 'secondary' && color === 'gray',
 			'py-2 px-4': variant !== 'tertiary',
-			'bg-transparent text-gray-800 shadow-none px-2': variant === 'tertiary',
+			'bg-transparent text-gray-800 px-2': variant === 'tertiary',
 			'active:scale-90 active:shadow-none': !disabled && !isLoading,
 			'opacity-75': disabled || isLoading
 		}

@@ -2,6 +2,7 @@ import type { Options } from 'vite-plugin-pwa'
 
 export default {
 	strategies: 'injectManifest',
+	registerType: 'prompt',
 	srcDir: 'src/common/workers/service-worker',
 	filename: 'sw.ts',
 	useCredentials: true,
