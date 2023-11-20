@@ -11,7 +11,7 @@ import { applyInviteEvent, mapProtoCommand } from '$modules/invite/invite.state'
 import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export interface InviteProtocol {
-	create(payload: proto.invite.CreateInvite): void
+	create(payload: proto.invite.CreateInvite): Promise<Invite>
 	createQr(payload: proto.invite.CreateQrInvite): Promise<Qr>
 	openQr(payload: proto.invite.OpenQrInvite): Promise<QrConnection>
 	acceptQrInvite(payload: proto.invite.AcceptQrInvite): Promise<number>
@@ -38,19 +38,31 @@ function inviteProtocolFactory({
 	})
 
 	return {
-		create(payload) {
-			sendCommand(commuter, {
-				$case: 'createInvite',
-				createInvite: payload
-			})
-			const placeholderInvite: Invite = {
-				...mapProtoCommand(payload.name, payload.value),
-				id: '0'
+		async create(payload) {
+			const message = await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'createInvite',
+					createInvite: payload
+				}
+			)
+			if (!message.event) throw new Error('Cannot create invite')
+			if (message.event.payload?.$case !== 'inviteCreated') throw new Error('Cannot create invite')
+
+			const invite: Invite = {
+				...mapProtoCommand(
+					message.event.payload.inviteCreated.name,
+					message.event.payload.inviteCreated.value
+				),
+				id: message.event.payload.inviteCreated.inviteId
 			}
+
 			store.invites.update((state) => {
-				state.set(placeholderInvite.id, placeholderInvite)
+				state.set(invite.id, invite)
 				return state
 			})
+
+			return invite
 		},
 		async createQr(payload) {
 			const message = await sendCommandRequest(

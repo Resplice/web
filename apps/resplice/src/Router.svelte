@@ -15,6 +15,7 @@
 	import ChangeAttributePage from '$modules/attribute/pages/ChangeAttributePage.svelte'
 	// Invite Pages
 	// import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
+	import CreateInvitePage from '$modules/invite/pages/CreateInvitePage.svelte'
 	import QrInvitePage from '$modules/invite/pages/QrInvitePage.svelte'
 	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
 	import QrConnectionDetailPage from '$modules/invite/pages/QrConnectionDetailPage.svelte'
@@ -38,12 +39,11 @@
 		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
 		// '/invite/bulk': BulkInvitePage,
-		// '/invite/create/*': CreateInvitePage,
-		// '/invite/list': InviteListPage,
-		// '/invite/:id': InviteDetailPage,
+		'/invite/create/*': CreateInvitePage,
 		'/invite/qr-scan': ScanQrPage,
 		'/invite/qr': QrInvitePage,
 		'/invite/qr/:uuid': QrConnectionDetailPage,
+		// '/invite/:id': InviteDetailPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,

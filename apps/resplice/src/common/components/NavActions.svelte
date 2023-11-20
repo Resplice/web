@@ -6,10 +6,10 @@
 		AddIcon,
 		CloseIcon,
 		CameraIcon,
-		QRCodeIcon
+		QRCodeIcon,
 		// PeopleIcon,
-		// CallIcon
-		// MailIcon,
+		CallIcon,
+		MailIcon
 		// PersonAddIcon
 	} from '@resplice/components'
 
@@ -81,7 +81,7 @@
 					</div>
 					<p>Invite with Handle</p>
 				</button> -->
-				<!-- <button
+				<button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/phone')}
 				>
@@ -89,7 +89,7 @@
 						<CallIcon width={24} height={24} />
 					</div>
 					<p>Invite with Phone</p>
-				</button> -->
+				</button>
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/email')}

@@ -1,7 +1,6 @@
 import type { AttributeType } from '@resplice/utils'
 
 export enum InviteType {
-	QR = 'QR',
 	PHONE = 'PHONE',
 	EMAIL = 'EMAIL',
 	HANDLE = 'HANDLE'
@@ -12,10 +11,6 @@ type BaseInvite = {
 	type: InviteType
 	name: string
 	value: string
-}
-
-export type QrInvite = BaseInvite & {
-	type: InviteType.QR
 }
 
 export type HandleInvite = BaseInvite & {
@@ -30,7 +25,7 @@ export type EmailInvite = BaseInvite & {
 	type: InviteType.EMAIL
 }
 
-export type Invite = QrInvite | HandleInvite | PhoneInvite | EmailInvite
+export type Invite = HandleInvite | PhoneInvite | EmailInvite
 
 export type Qr = {
 	uuid: string
