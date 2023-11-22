@@ -15,8 +15,8 @@
 
 	export let params: { id: string }
 	let selectedAttributes = new Set<number>()
-	let showConnectionOnHeader = false
 	let scrollEl: HTMLDivElement
+	let showConnectionOnHeader = false
 	$: id = parseInt(params.id, 10)
 	$: connection = $connectionStore.get(id)!
 
@@ -45,14 +45,14 @@
 </script>
 
 <svelte:head>
-	<title>{connection.name}</title>
+	<title>{connection?.name}</title>
 </svelte:head>
 
 {#if !!connection}
 	<Page>
 		<Header {connection} showConnection={showConnectionOnHeader} />
 		<main
-			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
+			class="relative bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"
 		>
 			<button
 				class="w-full flex flex-col items-center justify-center space-y-2 my-8"

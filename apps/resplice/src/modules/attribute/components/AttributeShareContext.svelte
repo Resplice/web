@@ -37,6 +37,10 @@
 		selected = newSelected
 		dispatch('toggle', id)
 	}
+
+	function getAttribute(id: number) {
+		return attributes.get(id)!
+	}
 </script>
 
 <section class="w-full flex-1 flex flex-col space-y-2">
@@ -50,14 +54,9 @@
 	<div class="w-full flex-1 flex flex-nowrap space-x-4 overflow-scroll">
 		{#each [...selected] as id}
 			<div class="text-center w-12">
-				<AttributeAction
-					itemType="user"
-					attribute={attributes.get(id)}
-					actionIdx={0}
-					disableAction
-				/>
+				<AttributeAction itemType="user" attribute={getAttribute(id)} actionIdx={0} disableAction />
 				<p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
-					{attributes.get(id)?.name}
+					{getAttribute(id).name}
 				</p>
 			</div>
 		{/each}
@@ -104,7 +103,7 @@
 				</button>
 			</div>
 			<div class="w-full flex justify-center mt-4">
-				<Button class="w-64" color="gray" on:click={close}>Close</Button>
+				<Button class="w-64" variant="secondary" color="gray" on:click={close}>Close</Button>
 			</div>
 		</div>
 	</Modal>

@@ -20,11 +20,19 @@ export interface InviteCreated {
   /** Hash of value */
   inviteId: string;
   name: string;
-  value?: { $case: "phone"; phone: string } | { $case: "email"; email: string } | undefined;
+  value?: { $case: "phone"; phone: string } | undefined;
 }
 
-export interface BulkInvitesCreated {
-  invites: InviteCreated[];
+export interface PendingConnectionAdded {
+  connectionId: number;
+  inviteId: string;
+  name: string;
+  avatarUrl: string;
+  pendingAttributes: PendingAttribute[];
+}
+
+export interface PendingConnectionRemoved {
+  connectionId: number;
 }
 
 export interface InviteDeleted {
@@ -256,9 +264,6 @@ export const InviteCreated = {
       case "phone":
         writer.uint32(26).string(message.value.phone);
         break;
-      case "email":
-        writer.uint32(34).string(message.value.email);
-        break;
     }
     return writer;
   },
@@ -291,13 +296,6 @@ export const InviteCreated = {
 
           message.value = { $case: "phone", phone: reader.string() };
           continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.value = { $case: "email", email: reader.string() };
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -311,11 +309,7 @@ export const InviteCreated = {
     return {
       inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      value: isSet(object.phone)
-        ? { $case: "phone", phone: globalThis.String(object.phone) }
-        : isSet(object.email)
-        ? { $case: "email", email: globalThis.String(object.email) }
-        : undefined,
+      value: isSet(object.phone) ? { $case: "phone", phone: globalThis.String(object.phone) } : undefined,
     };
   },
 
@@ -330,9 +324,6 @@ export const InviteCreated = {
     if (message.value?.$case === "phone") {
       obj.phone = message.value.phone;
     }
-    if (message.value?.$case === "email") {
-      obj.email = message.value.email;
-    }
     return obj;
   },
 
@@ -346,38 +337,75 @@ export const InviteCreated = {
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: object.value.phone };
     }
-    if (object.value?.$case === "email" && object.value?.email !== undefined && object.value?.email !== null) {
-      message.value = { $case: "email", email: object.value.email };
-    }
     return message;
   },
 };
 
-function createBaseBulkInvitesCreated(): BulkInvitesCreated {
-  return { invites: [] };
+function createBasePendingConnectionAdded(): PendingConnectionAdded {
+  return { connectionId: 0, inviteId: "", name: "", avatarUrl: "", pendingAttributes: [] };
 }
 
-export const BulkInvitesCreated = {
-  encode(message: BulkInvitesCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.invites) {
-      InviteCreated.encode(v!, writer.uint32(10).fork()).ldelim();
+export const PendingConnectionAdded = {
+  encode(message: PendingConnectionAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      writer.uint32(18).string(message.inviteId);
+    }
+    if (message.name !== "") {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.avatarUrl !== "") {
+      writer.uint32(34).string(message.avatarUrl);
+    }
+    for (const v of message.pendingAttributes) {
+      PendingAttribute.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BulkInvitesCreated {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PendingConnectionAdded {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBulkInvitesCreated();
+    const message = createBasePendingConnectionAdded();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.invites.push(InviteCreated.decode(reader, reader.uint32()));
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.inviteId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatarUrl = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.pendingAttributes.push(PendingAttribute.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -388,28 +416,105 @@ export const BulkInvitesCreated = {
     return message;
   },
 
-  fromJSON(object: any): BulkInvitesCreated {
+  fromJSON(object: any): PendingConnectionAdded {
     return {
-      invites: globalThis.Array.isArray(object?.invites)
-        ? object.invites.map((e: any) => InviteCreated.fromJSON(e))
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
+      pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
+        ? object.pendingAttributes.map((e: any) => PendingAttribute.fromJSON(e))
         : [],
     };
   },
 
-  toJSON(message: BulkInvitesCreated): unknown {
+  toJSON(message: PendingConnectionAdded): unknown {
     const obj: any = {};
-    if (message.invites?.length) {
-      obj.invites = message.invites.map((e) => InviteCreated.toJSON(e));
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.avatarUrl !== "") {
+      obj.avatarUrl = message.avatarUrl;
+    }
+    if (message.pendingAttributes?.length) {
+      obj.pendingAttributes = message.pendingAttributes.map((e) => PendingAttribute.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<BulkInvitesCreated>, I>>(base?: I): BulkInvitesCreated {
-    return BulkInvitesCreated.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<PendingConnectionAdded>, I>>(base?: I): PendingConnectionAdded {
+    return PendingConnectionAdded.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<BulkInvitesCreated>, I>>(object: I): BulkInvitesCreated {
-    const message = createBaseBulkInvitesCreated();
-    message.invites = object.invites?.map((e) => InviteCreated.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<PendingConnectionAdded>, I>>(object: I): PendingConnectionAdded {
+    const message = createBasePendingConnectionAdded();
+    message.connectionId = object.connectionId ?? 0;
+    message.inviteId = object.inviteId ?? "";
+    message.name = object.name ?? "";
+    message.avatarUrl = object.avatarUrl ?? "";
+    message.pendingAttributes = object.pendingAttributes?.map((e) => PendingAttribute.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasePendingConnectionRemoved(): PendingConnectionRemoved {
+  return { connectionId: 0 };
+}
+
+export const PendingConnectionRemoved = {
+  encode(message: PendingConnectionRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PendingConnectionRemoved {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePendingConnectionRemoved();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PendingConnectionRemoved {
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
+  },
+
+  toJSON(message: PendingConnectionRemoved): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PendingConnectionRemoved>, I>>(base?: I): PendingConnectionRemoved {
+    return PendingConnectionRemoved.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PendingConnectionRemoved>, I>>(object: I): PendingConnectionRemoved {
+    const message = createBasePendingConnectionRemoved();
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };

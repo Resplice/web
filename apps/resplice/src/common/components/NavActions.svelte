@@ -6,11 +6,9 @@
 		AddIcon,
 		CloseIcon,
 		CameraIcon,
-		QRCodeIcon
-		// PeopleIcon,
-		// CallIcon
-		// MailIcon,
-		// PersonAddIcon
+		QRCodeIcon,
+		PeopleIcon,
+		CallIcon
 	} from '@resplice/components'
 
 	const dispatch = createEventDispatcher()
@@ -63,15 +61,15 @@
 				class="bg-white rounded-xl p-8 flex flex-col items-start space-y-4"
 				style="will-change: transform; transform: translateY({$translateY}px) scale({$scale})"
 			>
-				<!-- <button
+				<button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
-					on:click={() => push('/invite/bulk')}
+					on:click={() => push('/invite/contacts')}
 				>
 					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
 						<PeopleIcon width={24} height={24} />
 					</div>
-					<p>Bulk Invite</p>
-				</button> -->
+					<p>Import Contacts</p>
+				</button>
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/handle')}
@@ -81,7 +79,7 @@
 					</div>
 					<p>Invite with Handle</p>
 				</button> -->
-				<!-- <button
+				<button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/phone')}
 				>
@@ -89,7 +87,7 @@
 						<CallIcon width={24} height={24} />
 					</div>
 					<p>Invite with Phone</p>
-				</button> -->
+				</button>
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"
 					on:click={() => push('/invite/create/email')}

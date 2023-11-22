@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { push } from 'svelte-spa-router'
 	import { attributeTypes, capitalize } from '@resplice/utils'
-	import { AttributeItem, AttributeActionIcon, EditIcon } from '@resplice/components'
+	import { AttributeItem, AttributeActionIcon } from '@resplice/components'
 	import type { ConnectionAttribute } from '$modules/connection/connection.types'
 
 	export let attribute: ConnectionAttribute
@@ -28,18 +27,5 @@
 				<p class="ml-4">{capitalize(action.toLowerCase())}</p>
 			</button>
 		{/each}
-		{#if attribute.id !== 1}
-			<button
-				class="flex items-center transform transition duration-75 ease-in-out active:scale-95"
-				on:click={() => push(`/attribute/${attribute.id}/change`)}
-			>
-				<div
-					class="bg-brand-primary text-brand-primary outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none"
-				>
-					<EditIcon width={24} height={24} />
-				</div>
-				<p class="ml-4">Edit</p>
-			</button>
-		{/if}
 	</div>
 </div>

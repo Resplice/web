@@ -65,7 +65,6 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 
 	function onSocketMessage({ error, state }: ProtoMessage) {
 		if (error) {
-			// TODO: trigger toast
 			console.error(error)
 			toast.new({
 				type: toast.type.DANGER,

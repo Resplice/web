@@ -1,4 +1,5 @@
 import { InviteType, type Invite } from '$modules/invite/invite.types'
+import type { ProviderContact } from '$modules/invite/services/contactProviders'
 
 export const invites = new Map<string, Invite>([
 	[
@@ -7,7 +8,7 @@ export const invites = new Map<string, Invite>([
 	],
 	[
 		'value-hash-2',
-		{ id: 'value-hash-2', type: InviteType.QR, name: 'Ian Noble', value: 'qruuid234' }
+		{ id: 'value-hash-2', type: InviteType.EMAIL, name: 'Ian Noble', value: 'ian.noble@gmail.com' }
 	]
 ])
 
@@ -28,3 +29,81 @@ export const invites = new Map<string, Invite>([
 // 		}
 // 	]
 // ])
+
+export const providerContacts: ProviderContact[] = [
+	{
+		id: 'people/c7342918239664096439',
+		name: 'Marcus Virginia',
+		avatar:
+			'https://lh3.googleusercontent.com/a-/ALV-UjVejmcHFe0LxIZpWDvTmcHNoDBoFEJUTTJm1hPnTh340bM=s100',
+		attributes: [
+			{
+				type: 'phone',
+				name: 'Phone 1',
+				value: '+12185910657'
+			},
+			{
+				type: 'phone',
+				name: 'Phone 2',
+				value: '+12184286564'
+			}
+		],
+		inviteState: 'invited'
+	},
+	{
+		id: 'people/c123',
+		name: 'Awesome dudeeeee 1',
+		avatar:
+			'https://lh3.googleusercontent.com/a-/ALV-UjVejmcHFe0LxIZpWDvTmcHNoDBoFEJUTTJm1hPnTh340bM=s100',
+		attributes: [
+			{
+				type: 'phone',
+				name: 'Phone 1',
+				value: '+12185910657'
+			},
+			{
+				type: 'phone',
+				name: 'Phone 2',
+				value: '+12184286564'
+			}
+		],
+		inviteState: 'connected'
+	},
+	{
+		id: 'people/c34534523',
+		name: 'Awesome dude 2',
+		avatar:
+			'https://lh3.googleusercontent.com/a-/ALV-UjVejmcHFe0LxIZpWDvTmcHNoDBoFEJUTTJm1hPnTh340bM=s100',
+		attributes: [
+			{
+				type: 'phone',
+				name: 'Phone 1',
+				value: '+12185910657'
+			},
+			{
+				type: 'phone',
+				name: 'Phone 2',
+				value: '+12184286564'
+			}
+		]
+	},
+	{
+		id: 'people/c345234',
+		name: 'Awesome dude 3',
+		avatar:
+			'https://lh3.googleusercontent.com/a-/ALV-UjVejmcHFe0LxIZpWDvTmcHNoDBoFEJUTTJm1hPnTh340bM=s100',
+		attributes: [
+			{
+				type: 'phone',
+				name: 'Phone 1',
+				value: '+12185910657'
+			},
+			{
+				type: 'phone',
+				name: 'Phone 2',
+				value: '+12184286564'
+			}
+		],
+		inviteState: 'ignored'
+	}
+]
