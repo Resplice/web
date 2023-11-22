@@ -47,7 +47,7 @@ function inviteProtocolFactory({
 				}
 			)
 			if (!message.event) throw new Error('Cannot create invite')
-			if (['inviteCreated', 'connectionAdded'].includes(message.event.payload!.$case))
+			if (!['inviteCreated', 'connectionAdded'].includes(message.event.payload!.$case))
 				throw new Error('Cannot create invite')
 
 			if (message.event.payload!.$case === 'inviteCreated') {
