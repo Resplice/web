@@ -3,7 +3,7 @@
 	import { IconButton, BackIcon } from '@resplice/components'
 	import Page from '$common/layouts/Page.svelte'
 	import ContactProviders from '$modules/invite/components/ContactProviders.svelte'
-	import BulkImportList from '$modules/invite/components/BulkImportList.svelte'
+	import ContactImportList from '$modules/invite/components/ContactImportList.svelte'
 	import type { ProviderContact } from '$modules/invite/services/contactProviders'
 
 	let contacts: ProviderContact[] = []
@@ -21,7 +21,7 @@
 		<main class="bg-white rounded-t-3xl rounded-b-3xl flex-1 flex flex-col p-8 overflow-auto">
 			<h1 class="text-2xl font-semibold mb-4">Import Contacts</h1>
 			<p class="mb-4">Select an attribute from each contact to invite or ignore them:</p>
-			<BulkImportList {contacts} />
+			<ContactImportList {contacts} />
 		</main>
 	{:else}
 		<main class="bg-white rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto">

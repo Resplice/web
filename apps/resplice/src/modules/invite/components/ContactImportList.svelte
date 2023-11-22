@@ -1,73 +1,22 @@
 <script lang="ts">
-	import {
-		AttributeActionIcon,
-		Button,
-		CheckmarkIcon,
-		SendIcon,
-		CloseIcon,
-		toast
-	} from '@resplice/components'
-	import { AttributeAction } from '@resplice/utils'
-	import useProtocol from '$common/protocol/useProtocol'
+	import { Button, CheckmarkIcon, SendIcon, CloseIcon } from '@resplice/components'
 	import inviteStores from '$modules/invite/invite.store'
 	import {
 		connectionAttributeValuesStore,
 		type ConnectionAttributeValue
 	} from '$modules/connection/connection.store'
 	import ConnectionItem from '$modules/connection/components/ConnectionItem.svelte'
-	import type {
-		ProviderContact,
-		ProviderContactAttribute,
-		InviteState
-	} from '$modules/invite/services/contactProviders'
-	import { InviteType, type Invite } from '$modules/invite/invite.types'
+	import type { ProviderContact, InviteState } from '$modules/invite/services/contactProviders'
+	import { type Invite } from '$modules/invite/invite.types'
+	import ContactImportAttribute from '$modules/invite/components/ContactImportAttribute.svelte'
 
-	const protocol = useProtocol()
 	const inviteStore = inviteStores.invites
 
 	export let contacts: ProviderContact[]
 
-	function providerAttributeToAction(value: ProviderContactAttribute): AttributeAction {
-		switch (value.type) {
-			case 'email':
-				return AttributeAction.Email
-			case 'phone':
-				return AttributeAction.Call
-			default:
-				return AttributeAction.Copy
-		}
-	}
-
 	function setInviteState(contactIdx: number, state: InviteState) {
 		contacts[contactIdx].inviteState = state
 		contacts = [...contacts]
-	}
-
-	async function invite(contact: ProviderContact, attribute: ProviderContactAttribute) {
-		try {
-			const inviteType = InviteType[attribute.type.toUpperCase() as keyof typeof InviteType]
-			switch (inviteType) {
-				case InviteType.EMAIL:
-					await protocol.invite.create({
-						name: contact.name,
-						value: { $case: 'email', email: attribute.value }
-					})
-					break
-				case InviteType.PHONE:
-					await protocol.invite.create({
-						name: contact.name,
-						value: { $case: 'phone', phone: attribute.value }
-					})
-					break
-			}
-		} catch (err) {
-			console.error(err)
-			toast.new({
-				type: toast.type.DANGER,
-				title: 'Invite Failed',
-				message: `Your invite failed to send to ${attribute.value}. Please try again later or select a different attribute.`
-			})
-		}
 	}
 
 	function deriveInviteState(
@@ -145,26 +94,7 @@
 				<div class="flex-none flex flex-col space-y-4 p-4">
 					{#if contact.attributes.length}
 						{#each contact.attributes as attribute}
-							<div class="flex justify-between items-center w-full">
-								<div class="flex items-start flex-1 overflow-hidden">
-									<div
-										class="outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none bg-gray-400 text-gray-600"
-									>
-										<AttributeActionIcon attributeAction={providerAttributeToAction(attribute)} />
-									</div>
-									<div class="flex flex-col mx-4 flex-1 overflow-hidden no-highlight">
-										<p class="font-semibold text-gray-800 truncate h-6 capitalize">
-											{attribute.name}
-										</p>
-										<p class="truncate">{attribute.value}</p>
-									</div>
-								</div>
-								<Button
-									class="text-xs uppercase"
-									color="brand-light"
-									on:click={() => invite(contact, attribute)}>Invite</Button
-								>
-							</div>
+							<ContactImportAttribute {contact} {attribute} />
 						{/each}
 					{:else}
 						<p class="text-gray-800">No phone numbers found for {contact.name}.</p>
