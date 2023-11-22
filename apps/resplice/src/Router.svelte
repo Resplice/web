@@ -2,6 +2,7 @@
 	import Router, { replace } from 'svelte-spa-router'
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
+	import InstallPage from '$common/pages/InstallPage.svelte'
 	import HomePage from '$common/pages/HomePage.svelte'
 	import SearchPage from '$modules/search/pages/SearchPage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
@@ -28,6 +29,7 @@
 
 	const routes = {
 		'/': RootPage,
+		'/install': InstallPage,
 		'/app-events': AppEventPage,
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
