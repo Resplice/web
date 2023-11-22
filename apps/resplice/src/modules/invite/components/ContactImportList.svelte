@@ -33,6 +33,8 @@
 			invites.some((invite) => invite.value === attribute.value)
 		)
 		if (matchingInvite) return 'invited'
+
+		return contact.inviteState
 	}
 
 	$: {

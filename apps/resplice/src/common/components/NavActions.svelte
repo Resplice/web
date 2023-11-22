@@ -68,7 +68,7 @@
 					<div class="p-2 rounded-lg bg-brand-primary text-brand-primary bg-opacity-20">
 						<PeopleIcon width={24} height={24} />
 					</div>
-					<p>Invite Contacts</p>
+					<p>Import Contacts</p>
 				</button>
 				<!-- <button
 					class="flex items-center space-x-2 focus:ring-4 focus:ring-green-200 focus:outline-none rounded-lg w-full"

@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { push } from 'svelte-spa-router'
-	import { Button, ConnectionEmptyIcon, CameraIcon, QRCodeIcon } from '@resplice/components'
+	import {
+		Button,
+		ConnectionEmptyIcon,
+		CameraIcon,
+		QRCodeIcon,
+		AddIcon
+	} from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
 	import inviteStores from '$modules/invite/invite.store'
 	import { connectionsList } from '$modules/connection/connection.helpers'
@@ -48,21 +54,24 @@
 					<ConnectionEmptyIcon width={192} height={144} />
 				</div>
 				<h3 class="px-8 text-lg font-semibold text-center mt-8">Add some connections</h3>
-				<!-- <p class="text-center px-8 py-2">
-					You can invite others to Resplice even if they don't have an account!
-				</p> -->
-				<p class="text-center px-8 py-2">
-					Open your own or scan a friend's QR code to connect and share!
-				</p>
+				<div class="w-full flex flex-col justify-center items-center space-y-4">
+					<p class="text-center px-8 py-2">
+						You can invite others to Resplice even if they don't have an account!
+					</p>
+					<Button
+						color="brand-light"
+						class="flex items-center justify-center w-56"
+						on:click={() => push('/invite/bulk')}
+					>
+						<AddIcon width={24} height={24} />
+						<span class="ml-2">Import Contacts</span>
+					</Button>
+				</div>
+
 				<div class="w-full flex flex-col justify-center items-center mt-8 space-y-4">
-					<!-- <Button
-					color="brand-light"
-					class="flex items-center justify-center w-56"
-					on:click={() => push('/invite/bulk')}
-				>
-					<AddIcon width={24} height={24} />
-					<span class="ml-2">Import Contacts</span>
-				</Button> -->
+					<p class="text-center px-8 py-2">
+						Open your own or scan a friend's QR code to connect and share!
+					</p>
 					<Button
 						color="brand-light"
 						class="flex items-center justify-center w-56"

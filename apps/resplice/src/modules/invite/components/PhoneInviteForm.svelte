@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { pop } from 'svelte-spa-router'
 	import { isValidPhoneNumber, parsePhoneNumber, type CountryCode } from 'libphonenumber-js'
 	import { Button, TextField, PhoneField, PeopleIcon, toast } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
@@ -32,12 +33,13 @@
 				message: `Your invite has been sent to ${number}`
 			})
 
-			name = ''
-			phone = {
-				value: '',
-				countryCode: 'US' as CountryCode
-			}
-			formErrs = {}
+			pop()
+			// name = ''
+			// phone = {
+			// 	value: '',
+			// 	countryCode: 'US' as CountryCode
+			// }
+			// formErrs = {}
 		} catch (err) {
 			console.error(err)
 			toast.new({
