@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { pop } from 'svelte-spa-router'
+	import { pop, replace } from 'svelte-spa-router'
 	import { BackIcon, Button, EllipsisHorizontalIcon, IconButton, Modal } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	import type { Invite } from '$modules/invite/invite.types'
@@ -11,7 +11,7 @@
 
 	function deleteInvite() {
 		protocol.invite.delete({ inviteId: invite.id })
-		pop()
+		replace('/home/connections')
 	}
 </script>
 
