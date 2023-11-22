@@ -7,7 +7,7 @@ export const invites = new Map<string, Invite>([
 	],
 	[
 		'value-hash-2',
-		{ id: 'value-hash-2', type: InviteType.QR, name: 'Ian Noble', value: 'qruuid234' }
+		{ id: 'value-hash-2', type: InviteType.EMAIL, name: 'Ian Noble', value: 'ian.noble@gmail.com' }
 	]
 ])
 
