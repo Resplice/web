@@ -6,7 +6,7 @@
 		ConnectionEmptyIcon,
 		CameraIcon,
 		QRCodeIcon,
-		AddIcon
+		PersonAddIcon
 	} from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
 	import inviteStores from '$modules/invite/invite.store'
@@ -61,10 +61,10 @@
 					<Button
 						color="brand-light"
 						class="flex items-center justify-center w-56"
-						on:click={() => push('/invite/bulk')}
+						on:click={() => push('/invite/create/phone')}
 					>
-						<AddIcon width={24} height={24} />
-						<span class="ml-2">Import Contacts</span>
+						<PersonAddIcon width={24} height={24} />
+						<span class="ml-2">Invite with phone</span>
 					</Button>
 				</div>
 
