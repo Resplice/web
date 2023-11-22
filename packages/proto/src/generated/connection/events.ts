@@ -5,6 +5,7 @@ import { Attribute } from "../attribute/state";
 
 export interface ConnectionAdded {
   connectionId: number;
+  inviteId: string;
   name: string;
   avatarUrl: string;
   alias: string;
@@ -89,6 +90,7 @@ export interface ConnectionRemoved {
 function createBaseConnectionAdded(): ConnectionAdded {
   return {
     connectionId: 0,
+    inviteId: "",
     name: "",
     avatarUrl: "",
     alias: "",
@@ -102,6 +104,9 @@ export const ConnectionAdded = {
   encode(message: ConnectionAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.connectionId !== 0) {
       writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      writer.uint32(66).string(message.inviteId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -139,6 +144,13 @@ export const ConnectionAdded = {
           }
 
           message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.inviteId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -204,6 +216,7 @@ export const ConnectionAdded = {
   fromJSON(object: any): ConnectionAdded {
     return {
       connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       alias: isSet(object.alias) ? globalThis.String(object.alias) : "",
@@ -221,6 +234,9 @@ export const ConnectionAdded = {
     const obj: any = {};
     if (message.connectionId !== 0) {
       obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -249,6 +265,7 @@ export const ConnectionAdded = {
   fromPartial<I extends Exact<DeepPartial<ConnectionAdded>, I>>(object: I): ConnectionAdded {
     const message = createBaseConnectionAdded();
     message.connectionId = object.connectionId ?? 0;
+    message.inviteId = object.inviteId ?? "";
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.alias = object.alias ?? "";

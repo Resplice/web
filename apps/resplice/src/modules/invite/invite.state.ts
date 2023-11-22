@@ -17,6 +17,12 @@ export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event)
 				value: mapProtoInviteValue(event.payload.inviteCreated.value)
 			})
 			break
+		case 'inviteDeleted':
+			aggregate.delete(event.payload.inviteDeleted.inviteId)
+			break
+		case 'connectionAdded':
+			aggregate.delete(event.payload.connectionAdded.inviteId)
+			break
 	}
 
 	return aggregate
@@ -50,8 +56,8 @@ export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event)
 
 function mapProtoInviteType(value: proto.invite.InviteCreated['value']): InviteType {
 	switch (value?.$case) {
-		case 'email':
-			return InviteType.EMAIL
+		// case 'email':
+		// 	return InviteType.EMAIL
 		case 'phone':
 			return InviteType.PHONE
 		default:
@@ -61,8 +67,8 @@ function mapProtoInviteType(value: proto.invite.InviteCreated['value']): InviteT
 
 function mapProtoInviteValue(value: proto.invite.InviteCreated['value']): string {
 	switch (value?.$case) {
-		case 'email':
-			return value.email
+		// case 'email':
+		// 	return value.email
 		case 'phone':
 			return value.phone
 		default:
@@ -72,13 +78,13 @@ function mapProtoInviteValue(value: proto.invite.InviteCreated['value']): string
 
 export function mapProtoCommand(name: string, value: proto.invite.InviteCreated['value']): Invite {
 	switch (value?.$case) {
-		case 'email':
-			return {
-				id: strtob64(value.email),
-				type: InviteType.EMAIL,
-				name,
-				value: value.email
-			}
+		// case 'email':
+		// 	return {
+		// 		id: strtob64(value.email),
+		// 		type: InviteType.EMAIL,
+		// 		name,
+		// 		value: value.email
+		// 	}
 		case 'phone':
 			return {
 				id: strtob64(value.phone),

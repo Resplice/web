@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export interface CreateQrInvite {
@@ -20,7 +21,17 @@ export interface BulkInvite {
 
 export interface CreateInvite {
   name: string;
-  value?: { $case: "phone"; phone: string } | { $case: "email"; email: string } | undefined;
+  value?: { $case: "phone"; phone: string } | undefined;
+}
+
+export interface AcceptInvite {
+  connectionId: number;
+  inviteId: string;
+  attributeIds: number[];
+}
+
+export interface DeclineInvite {
+  connectionId: number;
 }
 
 export interface DeleteInvite {
@@ -320,9 +331,6 @@ export const CreateInvite = {
       case "phone":
         writer.uint32(18).string(message.value.phone);
         break;
-      case "email":
-        writer.uint32(26).string(message.value.email);
-        break;
     }
     return writer;
   },
@@ -348,13 +356,6 @@ export const CreateInvite = {
 
           message.value = { $case: "phone", phone: reader.string() };
           continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.value = { $case: "email", email: reader.string() };
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -367,11 +368,7 @@ export const CreateInvite = {
   fromJSON(object: any): CreateInvite {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      value: isSet(object.phone)
-        ? { $case: "phone", phone: globalThis.String(object.phone) }
-        : isSet(object.email)
-        ? { $case: "email", email: globalThis.String(object.email) }
-        : undefined,
+      value: isSet(object.phone) ? { $case: "phone", phone: globalThis.String(object.phone) } : undefined,
     };
   },
 
@@ -382,9 +379,6 @@ export const CreateInvite = {
     }
     if (message.value?.$case === "phone") {
       obj.phone = message.value.phone;
-    }
-    if (message.value?.$case === "email") {
-      obj.email = message.value.email;
     }
     return obj;
   },
@@ -398,9 +392,166 @@ export const CreateInvite = {
     if (object.value?.$case === "phone" && object.value?.phone !== undefined && object.value?.phone !== null) {
       message.value = { $case: "phone", phone: object.value.phone };
     }
-    if (object.value?.$case === "email" && object.value?.email !== undefined && object.value?.email !== null) {
-      message.value = { $case: "email", email: object.value.email };
+    return message;
+  },
+};
+
+function createBaseAcceptInvite(): AcceptInvite {
+  return { connectionId: 0, inviteId: "", attributeIds: [] };
+}
+
+export const AcceptInvite = {
+  encode(message: AcceptInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
     }
+    if (message.inviteId !== "") {
+      writer.uint32(18).string(message.inviteId);
+    }
+    writer.uint32(26).fork();
+    for (const v of message.attributeIds) {
+      writer.uint32(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AcceptInvite {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAcceptInvite();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.inviteId = reader.string();
+          continue;
+        case 3:
+          if (tag === 24) {
+            message.attributeIds.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 26) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.attributeIds.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AcceptInvite {
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+      attributeIds: globalThis.Array.isArray(object?.attributeIds)
+        ? object.attributeIds.map((e: any) => globalThis.Number(e))
+        : [],
+    };
+  },
+
+  toJSON(message: AcceptInvite): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
+    }
+    if (message.attributeIds?.length) {
+      obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AcceptInvite>, I>>(base?: I): AcceptInvite {
+    return AcceptInvite.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AcceptInvite>, I>>(object: I): AcceptInvite {
+    const message = createBaseAcceptInvite();
+    message.connectionId = object.connectionId ?? 0;
+    message.inviteId = object.inviteId ?? "";
+    message.attributeIds = object.attributeIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseDeclineInvite(): DeclineInvite {
+  return { connectionId: 0 };
+}
+
+export const DeclineInvite = {
+  encode(message: DeclineInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.connectionId !== 0) {
+      writer.uint32(8).uint64(message.connectionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeclineInvite {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeclineInvite();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.connectionId = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeclineInvite {
+    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
+  },
+
+  toJSON(message: DeclineInvite): unknown {
+    const obj: any = {};
+    if (message.connectionId !== 0) {
+      obj.connectionId = Math.round(message.connectionId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeclineInvite>, I>>(base?: I): DeclineInvite {
+    return DeclineInvite.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeclineInvite>, I>>(object: I): DeclineInvite {
+    const message = createBaseDeclineInvite();
+    message.connectionId = object.connectionId ?? 0;
     return message;
   },
 };
@@ -474,6 +625,18 @@ type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
