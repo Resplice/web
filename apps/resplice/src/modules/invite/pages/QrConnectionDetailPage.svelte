@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { push } from 'svelte-spa-router'
+	import { push, replace } from 'svelte-spa-router'
 	import { Avatar, Button } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	import Page from '$common/layouts/Page.svelte'
@@ -35,7 +35,7 @@
 			qrCode: params.uuid,
 			attributeIds: Array.from(selectedAttributes)
 		})
-		push(`/connection/${connectionId}/details`)
+		replace(`/connection/${connectionId}/details`)
 	}
 </script>
 

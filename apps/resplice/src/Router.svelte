@@ -2,11 +2,11 @@
 	import Router, { replace } from 'svelte-spa-router'
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
+	import InstallPage from '$common/pages/InstallPage.svelte'
 	import HomePage from '$common/pages/HomePage.svelte'
 	import SearchPage from '$modules/search/pages/SearchPage.svelte'
 	import AppEventPage from '$modules/_context/pages/AppEventPage.svelte'
 	import NotFoundPage from '$common/pages/NotFoundPage.svelte'
-	import PartyInvitePage from '$common/pages/PartyInvitePage.svelte'
 	// Account Pages
 	import ProfilePage from '$modules/account/pages/ProfilePage.svelte'
 	import SettingsPage from '$modules/account/pages/SettingsPage.svelte'
@@ -15,7 +15,9 @@
 	import AddAttributePage from '$modules/attribute/pages/AddAttributePage.svelte'
 	import ChangeAttributePage from '$modules/attribute/pages/ChangeAttributePage.svelte'
 	// Invite Pages
-	// import BulkInvitePage from '$modules/invite/pages/BulkInvitePage.svelte'
+	import InviteContactsPage from '$modules/invite/pages/InviteContactsPage.svelte'
+	import CreateInvitePage from '$modules/invite/pages/CreateInvitePage.svelte'
+	import InviteDetailPage from '$modules/invite/pages/InviteDetailPage.svelte'
 	import QrInvitePage from '$modules/invite/pages/QrInvitePage.svelte'
 	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
 	import QrConnectionDetailPage from '$modules/invite/pages/QrConnectionDetailPage.svelte'
@@ -27,6 +29,7 @@
 
 	const routes = {
 		'/': RootPage,
+		'/install': InstallPage,
 		'/app-events': AppEventPage,
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
@@ -38,17 +41,15 @@
 		// '/connection/:id/shares': ContactSharesPage,
 		'/home/*': HomePage,
 		// '/invite': SelectInviteMethodPage,
-		// '/invite/bulk': BulkInvitePage,
-		// '/invite/create/*': CreateInvitePage,
-		// '/invite/list': InviteListPage,
-		// '/invite/:id': InviteDetailPage,
+		'/invite/contacts': InviteContactsPage,
+		'/invite/create/*': CreateInvitePage,
 		'/invite/qr-scan': ScanQrPage,
 		'/invite/qr': QrInvitePage,
 		'/invite/qr/:uuid': QrConnectionDetailPage,
+		'/invite/:value-id/details': InviteDetailPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,
-		'/party': PartyInvitePage,
 		'*': NotFoundPage
 	}
 

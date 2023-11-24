@@ -2,6 +2,7 @@ import type { Options } from 'vite-plugin-pwa'
 
 export default {
 	strategies: 'injectManifest',
+	registerType: 'prompt',
 	srcDir: 'src/common/workers/service-worker',
 	filename: 'sw.ts',
 	useCredentials: true,
@@ -51,21 +52,21 @@ export default {
 				name: 'Show QR Code',
 				short_name: 'Show QR Code',
 				description: 'Show your QR code to start sharing with someone',
-				url: '/invite/qr',
+				url: '#/invite/qr',
 				icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
 			},
 			{
 				name: 'Scan QR Code',
 				short_name: 'Scan QR Code',
 				description: 'Scan someones QR code to start sharing with them',
-				url: '/invite/qr-scan',
+				url: '#/invite/qr-scan',
 				icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }]
 			}
 		],
 		protocol_handlers: [
 			{
 				protocol: 'web+resplice',
-				url: '/invite/{handle}?handle=%s'
+				url: '#/invite/{handle}?handle=%s'
 			}
 		],
 		screenshots: [],

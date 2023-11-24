@@ -20,7 +20,6 @@
 	async function onGoogleProviderClick() {
 		isGoogleLoading = true
 		const contacts = await getGoogleContacts()
-		console.log(contacts)
 		dispatch('import', contacts)
 	}
 </script>
@@ -48,7 +47,7 @@
 	<p>Import from Apple</p>
 </button> -->
 </div>
-<!-- <div>
+<div>
 	<p class="text-sm text-gray-600">Contact provider not shown?</p>
 	<p class="text-sm text-gray-600">
 		Invite someone via
@@ -58,12 +57,23 @@
 		>
 			phone
 		</a>
-		or
+		<!-- or
 		<a
 			class="underline underline-offset-4 decoration-brand-primary decoration-2"
 			href="#/app/invite/create/email"
 		>
 			email
-		</a>
+		</a> -->
 	</p>
-</div> -->
+	<br />
+	<p class="text-sm text-gray-600">
+		On iOS? Follow
+		<a
+			class="underline underline-offset-4 decoration-brand-primary decoration-2"
+			href="https://marcusv.me/blog/native-contact-picker-safari/"
+		>
+			these instructions
+		</a>
+		to import native contacts in Safari.
+	</p>
+</div>

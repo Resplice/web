@@ -1,6 +1,8 @@
 import { isSupported } from '@resplice/utils'
 import config from '$services/config'
 
+export type InviteState = 'invited' | 'connected' | 'ignored'
+
 export type ProviderContactAttribute = {
 	type: 'phone' | 'email'
 	name: string
@@ -11,7 +13,7 @@ export type ProviderContact = {
 	name: string
 	avatar: string
 	attributes: ProviderContactAttribute[]
-	inviteState?: 'invited' | 'ignored'
+	inviteState?: InviteState
 }
 
 type GoogleToken = {
@@ -43,7 +45,7 @@ export function getGoogleContacts() {
 
 export async function fetchGoogleContacts(accessToken: string): Promise<ProviderContact[]> {
 	const response = await fetch(
-		'https://people.googleapis.com/v1/people/me/connections?personFields=names,photos,phoneNumbers,emailAddresses&sortOrder=LAST_NAME_ASCENDING',
+		'https://people.googleapis.com/v1/people/me/connections?personFields=names,photos,phoneNumbers&sortOrder=LAST_NAME_ASCENDING',
 		{
 			headers: {
 				Authorization: `Bearer ${accessToken}`
@@ -82,10 +84,9 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const contacts: any[] = await (navigator as any).contacts.select(
-			['name', 'email', 'tel', 'icon'],
-			{ multiple: true }
-		)
+		const contacts: any[] = await (navigator as any).contacts.select(['name', 'tel', 'icon'], {
+			multiple: true
+		})
 		console.log(contacts)
 		return contacts.map((c, idx) => {
 			const attributes: ProviderContactAttribute[] = []

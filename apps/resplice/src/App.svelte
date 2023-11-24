@@ -6,6 +6,7 @@
 	import protocolFactory, { contextKey, type RespliceProtocol } from '$common/protocol'
 	import accountStore from '$modules/account/account.store'
 	import { AppLoading, AppError, ToastProvider } from '@resplice/components'
+	import ReloadPrompt from '$common/components/ReloadPrompt.svelte'
 	import ConnectionStatus from '$modules/_context/components/ConnectionStatus.svelte'
 	import Router from './Router.svelte'
 	import './app.css'
@@ -15,6 +16,8 @@
 
 	async function loadApp(): Promise<boolean> {
 		if (!isRespliceSupported()) throw new Error('Resplice is not supported on this device.')
+
+		if (window.location.hash === '#/install') return true
 
 		try {
 			const protocol = await protocolFactory()
@@ -44,16 +47,17 @@
 	const loading = loadApp()
 
 	// Can do additional store checks here
-	$: accountLoaded = !!$accountStore
+	$: storesLoaded = window.location.hash === '#/install' ? true : !!$accountStore
 </script>
 
 {#await loading}
 	<AppLoading />
 {:then loaded}
-	{#if loaded && accountLoaded}
+	{#if loaded && storesLoaded}
 		<ConnectionStatus />
 		<Router />
 		<ToastProvider />
+		<ReloadPrompt />
 	{:else}
 		<AppLoading />
 	{/if}

@@ -1,7 +1,13 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { AccountAvatarChanged, AccountCreated, AccountNameChanged } from "./account/events";
-import { AttributeAdded, AttributeChanged, AttributeRemoved, AttributeValueVerified } from "./attribute/events";
+import {
+  AttributeAdded,
+  AttributeChanged,
+  AttributeRemoved,
+  AttributeValueVerified,
+  AttributeVerified,
+} from "./attribute/events";
 import { AuthChanged, SessionEnded, SessionStarted } from "./auth/events";
 import {
   ConnectionAdded,
@@ -205,6 +211,7 @@ export interface Event {
     | { $case: "connectionArchived"; connectionArchived: ConnectionArchived }
     | { $case: "connectionUnarchived"; connectionUnarchived: ConnectionUnarchived }
     | { $case: "connectionRemoved"; connectionRemoved: ConnectionRemoved }
+    | { $case: "attributeVerified"; attributeVerified: AttributeVerified }
     | undefined;
 }
 
@@ -454,6 +461,9 @@ export const Event = {
         break;
       case "connectionRemoved":
         ConnectionRemoved.encode(message.payload.connectionRemoved, writer.uint32(258).fork()).ldelim();
+        break;
+      case "attributeVerified":
+        AttributeVerified.encode(message.payload.attributeVerified, writer.uint32(794).fork()).ldelim();
         break;
     }
     return writer;
@@ -759,6 +769,16 @@ export const Event = {
             connectionRemoved: ConnectionRemoved.decode(reader, reader.uint32()),
           };
           continue;
+        case 99:
+          if (tag !== 794) {
+            break;
+          }
+
+          message.payload = {
+            $case: "attributeVerified",
+            attributeVerified: AttributeVerified.decode(reader, reader.uint32()),
+          };
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -872,6 +892,8 @@ export const Event = {
         }
         : isSet(object.connectionRemoved)
         ? { $case: "connectionRemoved", connectionRemoved: ConnectionRemoved.fromJSON(object.connectionRemoved) }
+        : isSet(object.attributeVerified)
+        ? { $case: "attributeVerified", attributeVerified: AttributeVerified.fromJSON(object.attributeVerified) }
         : undefined,
     };
   },
@@ -975,6 +997,9 @@ export const Event = {
     }
     if (message.payload?.$case === "connectionRemoved") {
       obj.connectionRemoved = ConnectionRemoved.toJSON(message.payload.connectionRemoved);
+    }
+    if (message.payload?.$case === "attributeVerified") {
+      obj.attributeVerified = AttributeVerified.toJSON(message.payload.attributeVerified);
     }
     return obj;
   },
@@ -1289,6 +1314,16 @@ export const Event = {
       message.payload = {
         $case: "connectionRemoved",
         connectionRemoved: ConnectionRemoved.fromPartial(object.payload.connectionRemoved),
+      };
+    }
+    if (
+      object.payload?.$case === "attributeVerified" &&
+      object.payload?.attributeVerified !== undefined &&
+      object.payload?.attributeVerified !== null
+    ) {
+      message.payload = {
+        $case: "attributeVerified",
+        attributeVerified: AttributeVerified.fromPartial(object.payload.attributeVerified),
       };
     }
     return message;

@@ -1,34 +1,21 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte'
-	import QR, { type QRCode } from 'jsqr'
-	import { replace, pop } from 'svelte-spa-router'
-	import { Camera, CloseIcon, IconButton } from '@resplice/components'
+	import { Camera, CloseIcon, IconButton } from '$lib'
+	import { browser } from '$app/environment'
 
-	let qrCode: QRCode
 	let streamInterval: number
 
-	async function handleQr(qrData: string | null) {
-		if (!qrData) return
-
-		const url = new URL(qrData)
-
-		replace(url.hash.replace('#', ''))
-	}
-
-	$: handleQr(qrCode?.data)
-
 	async function onVideoStream(e: CustomEvent<HTMLVideoElement>) {
-		// TODO: Look into Screen Wake Lock API
-		// https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API
 		const stream = e.detail
 		const canvasEl = document.createElement('canvas')
 		const canvas = canvasEl.getContext('2d')
 
 		// Maybe use requestAnimationFrame here instead of interval
 		streamInterval = window.setInterval(async () => {
-			if (qrCode) return
+			// if (qrCode) return
 			if (stream.readyState !== stream.HAVE_ENOUGH_DATA) return
 			const { videoWidth: width, videoHeight: height } = stream
+			console.log(stream)
 			canvasEl.height = height
 			canvasEl.width = width
 			if (!canvas) return
@@ -36,13 +23,14 @@
 			canvas.drawImage(stream, 0, 0, width, height)
 			// Might need to make these dimensions smaller for performance
 			const imageData = canvas.getImageData(0, 0, width, height)
-			const code = QR(imageData.data, imageData.width, imageData.height, {
-				inversionAttempts: 'dontInvert'
-			})
-			if (code) {
-				clearInterval(streamInterval)
-				qrCode = code
-			}
+			console.log(imageData)
+			// const code = QR(imageData.data, imageData.width, imageData.height, {
+			// 	inversionAttempts: 'dontInvert'
+			// })
+			// if (code) {
+			// 	clearInterval(streamInterval)
+			// 	qrCode = code
+			// }
 		}, 500)
 	}
 
@@ -54,10 +42,12 @@
 <main
 	class="h-full w-full bg-zinc-800 rounded-t-3xl rounded-b-3xl flex-1 flex flex-col justify-center items-center"
 >
-	<Camera hideControls on:stream={onVideoStream} />
+	{#if browser}
+		<Camera hideControls on:stream={onVideoStream} />
+	{/if}
 
 	<div class="absolute bottom-0 z-10 flex items-center justify-center w-full p-4">
-		<IconButton Icon={CloseIcon} on:click={() => pop()} />
+		<IconButton Icon={CloseIcon} />
 	</div>
 
 	<div

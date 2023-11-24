@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
-	import { pop, push } from 'svelte-spa-router'
+	import { pop, push, replace } from 'svelte-spa-router'
 	import {
 		Avatar,
 		BackIcon,
@@ -22,7 +22,7 @@
 
 	function removeConnection() {
 		protocol.connection.remove({ connectionId: connection.id })
-		pop()
+		replace('/home/connections')
 	}
 </script>
 

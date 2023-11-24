@@ -5,13 +5,13 @@ import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCo
 import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
 import type { ConnectionStore } from '$modules/connection/connection.store'
 import type { InviteStore } from '$modules/invite/invite.store'
-import type { Invite, QrConnection, Qr } from '$modules/invite/invite.types'
+import type { QrConnection, Qr } from '$modules/invite/invite.types'
 import { applyConnectionEvent } from '$modules/connection/connection.state'
-import { applyInviteEvent, mapProtoCommand } from '$modules/invite/invite.state'
+import { applyInviteEvent } from '$modules/invite/invite.state'
 import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export interface InviteProtocol {
-	create(payload: proto.invite.CreateInvite): void
+	create(payload: proto.invite.CreateInvite): Promise<void>
 	createQr(payload: proto.invite.CreateQrInvite): Promise<Qr>
 	openQr(payload: proto.invite.OpenQrInvite): Promise<QrConnection>
 	acceptQrInvite(payload: proto.invite.AcceptQrInvite): Promise<number>
@@ -38,19 +38,28 @@ function inviteProtocolFactory({
 	})
 
 	return {
-		create(payload) {
-			sendCommand(commuter, {
-				$case: 'createInvite',
-				createInvite: payload
-			})
-			const placeholderInvite: Invite = {
-				...mapProtoCommand(payload.name, payload.value),
-				id: '0'
+		async create(payload) {
+			const message = await sendCommandRequest(
+				{ fetch, cache },
+				{
+					$case: 'createInvite',
+					createInvite: payload
+				}
+			)
+			if (!message.event) throw new Error('Cannot create invite')
+			if (!['inviteCreated', 'connectionAdded'].includes(message.event.payload!.$case))
+				throw new Error('Cannot create invite')
+
+			if (message.event.payload!.$case === 'inviteCreated') {
+				store.invites.update((state) => applyInviteEvent(state, message.event))
+				return
 			}
-			store.invites.update((state) => {
-				state.set(placeholderInvite.id, placeholderInvite)
-				return state
-			})
+
+			if (message.event.payload!.$case === 'connectionAdded') {
+				connectionStore.update((state) => applyConnectionEvent(state, message.event))
+				store.invites.update((state) => applyInviteEvent(state, message.event))
+				return
+			}
 		},
 		async createQr(payload) {
 			const message = await sendCommandRequest(
