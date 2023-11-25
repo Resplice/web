@@ -4,6 +4,11 @@
 	import type { Invite } from '$modules/invite/invite.types'
 
 	export let invites: Invite[]
+
+	function inviteDetailUrl(invite: Invite) {
+		const inviteIdURI = encodeURIComponent(invite.id)
+		return `/invite/${inviteIdURI}/details`
+	}
 </script>
 
 {#if invites.length}
@@ -17,7 +22,7 @@
 			<InviteItem
 				{invite}
 				on:click={() => {
-					push(`/invite/${invite.id}/details`)
+					push(inviteDetailUrl(invite))
 				}}
 			/>
 		{/each}

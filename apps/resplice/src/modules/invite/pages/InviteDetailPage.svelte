@@ -8,9 +8,9 @@
 
 	const inviteStore = inviteStores.invites
 
-	export let params: { 'value-id': string }
-	$: valueId = params['value-id']
-	$: invite = $inviteStore.get(valueId)
+	export let params: { 'invite-id': string }
+	$: inviteId = decodeURIComponent(params['invite-id'])
+	$: invite = $inviteStore.get(inviteId)
 
 	$: {
 		if (!invite) pop()

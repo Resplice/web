@@ -46,7 +46,7 @@
 		'/invite/qr-scan': ScanQrPage,
 		'/invite/qr': QrInvitePage,
 		'/invite/qr/:uuid': QrConnectionDetailPage,
-		'/invite/:value-id/details': InviteDetailPage,
+		'/invite/:invite-id/details': InviteDetailPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,

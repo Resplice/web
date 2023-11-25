@@ -20,9 +20,9 @@
 	}
 </script>
 
-<div class="w-full h-full">
+<div class="w-full">
 	<div
-		class="relative rounded-2xl w-full text-left h-full max-h-72 flex items-center"
+		class="relative rounded-2xl w-full text-left min-h-[12rem] h-full max-h-72 flex items-center"
 		class:bg-white={!disabled}
 		class:bg-gray-200={disabled}
 	>

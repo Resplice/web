@@ -12,7 +12,7 @@
 	<div class="flex-1 flex flex-col overflow-hidden">
 		{#if !!connection.alias}
 			<h4 class="w-full font-semibold text-gray-900 text-left truncate">{connection.alias}</h4>
-			<p class="w-full text-gray-700">{connection.name}</p>
+			<p class="w-full text-gray-700 text-left truncate">{connection.name}</p>
 		{:else}
 			<h4 class="w-full font-bold text-gray-900 text-left truncate">{connection.name}</h4>
 		{/if}
