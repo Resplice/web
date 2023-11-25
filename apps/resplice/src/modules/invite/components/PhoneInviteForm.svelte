@@ -12,6 +12,7 @@
 		countryCode: 'US' as CountryCode
 	}
 	let formErrs: Record<string, string> = {}
+	let isLoading = false
 
 	async function onInvite(_e: Event) {
 		formErrs = {}
@@ -26,6 +27,7 @@
 
 		const { number } = parsePhoneNumber(phone.value, phone.countryCode)
 		try {
+			isLoading = true
 			await protocol.invite.create({ name, value: { $case: 'phone', phone: number } })
 			toast.new({
 				type: toast.type.SUCCESS,
@@ -41,6 +43,7 @@
 			// }
 			// formErrs = {}
 		} catch (err) {
+			isLoading = false
 			console.error(err)
 			toast.new({
 				type: toast.type.DANGER,
@@ -66,5 +69,5 @@
 		<PhoneField name="phone" label="Enter Phone" bind:phone error={formErrs.phone} />
 	</div>
 
-	<Button class="w-48" type="submit">Send</Button>
+	<Button class="w-48" type="submit" {isLoading}>Send</Button>
 </form>
