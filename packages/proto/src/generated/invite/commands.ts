@@ -27,11 +27,11 @@ export interface CreateInvite {
 export interface AcceptInvite {
   connectionId: number;
   inviteId: string;
-  attributeIds: number[];
 }
 
 export interface DeclineInvite {
   connectionId: number;
+  inviteId: string;
 }
 
 export interface DeleteInvite {
@@ -397,7 +397,7 @@ export const CreateInvite = {
 };
 
 function createBaseAcceptInvite(): AcceptInvite {
-  return { connectionId: 0, inviteId: "", attributeIds: [] };
+  return { connectionId: 0, inviteId: "" };
 }
 
 export const AcceptInvite = {
@@ -408,11 +408,6 @@ export const AcceptInvite = {
     if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    writer.uint32(26).fork();
-    for (const v of message.attributeIds) {
-      writer.uint32(v);
-    }
-    writer.ldelim();
     return writer;
   },
 
@@ -437,23 +432,6 @@ export const AcceptInvite = {
 
           message.inviteId = reader.string();
           continue;
-        case 3:
-          if (tag === 24) {
-            message.attributeIds.push(reader.uint32());
-
-            continue;
-          }
-
-          if (tag === 26) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.attributeIds.push(reader.uint32());
-            }
-
-            continue;
-          }
-
-          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -467,9 +445,6 @@ export const AcceptInvite = {
     return {
       connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
-      attributeIds: globalThis.Array.isArray(object?.attributeIds)
-        ? object.attributeIds.map((e: any) => globalThis.Number(e))
-        : [],
     };
   },
 
@@ -481,9 +456,6 @@ export const AcceptInvite = {
     if (message.inviteId !== "") {
       obj.inviteId = message.inviteId;
     }
-    if (message.attributeIds?.length) {
-      obj.attributeIds = message.attributeIds.map((e) => Math.round(e));
-    }
     return obj;
   },
 
@@ -494,19 +466,21 @@ export const AcceptInvite = {
     const message = createBaseAcceptInvite();
     message.connectionId = object.connectionId ?? 0;
     message.inviteId = object.inviteId ?? "";
-    message.attributeIds = object.attributeIds?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseDeclineInvite(): DeclineInvite {
-  return { connectionId: 0 };
+  return { connectionId: 0, inviteId: "" };
 }
 
 export const DeclineInvite = {
   encode(message: DeclineInvite, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.connectionId !== 0) {
       writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      writer.uint32(18).string(message.inviteId);
     }
     return writer;
   },
@@ -525,6 +499,13 @@ export const DeclineInvite = {
 
           message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.inviteId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -535,13 +516,19 @@ export const DeclineInvite = {
   },
 
   fromJSON(object: any): DeclineInvite {
-    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+    };
   },
 
   toJSON(message: DeclineInvite): unknown {
     const obj: any = {};
     if (message.connectionId !== 0) {
       obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     return obj;
   },
@@ -552,6 +539,7 @@ export const DeclineInvite = {
   fromPartial<I extends Exact<DeepPartial<DeclineInvite>, I>>(object: I): DeclineInvite {
     const message = createBaseDeclineInvite();
     message.connectionId = object.connectionId ?? 0;
+    message.inviteId = object.inviteId ?? "";
     return message;
   },
 };

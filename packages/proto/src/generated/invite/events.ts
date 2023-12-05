@@ -26,6 +26,7 @@ export interface InviteCreated {
 export interface PendingConnectionAdded {
   connectionId: number;
   inviteId: string;
+  inviteValue?: { $case: "phone"; phone: string } | undefined;
   name: string;
   avatarUrl: string;
   pendingAttributes: PendingAttribute[];
@@ -33,6 +34,7 @@ export interface PendingConnectionAdded {
 
 export interface PendingConnectionRemoved {
   connectionId: number;
+  inviteId: string;
 }
 
 export interface InviteDeleted {
@@ -342,7 +344,7 @@ export const InviteCreated = {
 };
 
 function createBasePendingConnectionAdded(): PendingConnectionAdded {
-  return { connectionId: 0, inviteId: "", name: "", avatarUrl: "", pendingAttributes: [] };
+  return { connectionId: 0, inviteId: "", inviteValue: undefined, name: "", avatarUrl: "", pendingAttributes: [] };
 }
 
 export const PendingConnectionAdded = {
@@ -353,14 +355,19 @@ export const PendingConnectionAdded = {
     if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
+    switch (message.inviteValue?.$case) {
+      case "phone":
+        writer.uint32(26).string(message.inviteValue.phone);
+        break;
+    }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(50).string(message.name);
     }
     if (message.avatarUrl !== "") {
-      writer.uint32(34).string(message.avatarUrl);
+      writer.uint32(58).string(message.avatarUrl);
     }
     for (const v of message.pendingAttributes) {
-      PendingAttribute.encode(v!, writer.uint32(42).fork()).ldelim();
+      PendingAttribute.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -391,17 +398,24 @@ export const PendingConnectionAdded = {
             break;
           }
 
+          message.inviteValue = { $case: "phone", phone: reader.string() };
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.name = reader.string();
           continue;
-        case 4:
-          if (tag !== 34) {
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
           message.avatarUrl = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -420,6 +434,7 @@ export const PendingConnectionAdded = {
     return {
       connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
       inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+      inviteValue: isSet(object.phone) ? { $case: "phone", phone: globalThis.String(object.phone) } : undefined,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       avatarUrl: isSet(object.avatarUrl) ? globalThis.String(object.avatarUrl) : "",
       pendingAttributes: globalThis.Array.isArray(object?.pendingAttributes)
@@ -435,6 +450,9 @@ export const PendingConnectionAdded = {
     }
     if (message.inviteId !== "") {
       obj.inviteId = message.inviteId;
+    }
+    if (message.inviteValue?.$case === "phone") {
+      obj.phone = message.inviteValue.phone;
     }
     if (message.name !== "") {
       obj.name = message.name;
@@ -455,6 +473,13 @@ export const PendingConnectionAdded = {
     const message = createBasePendingConnectionAdded();
     message.connectionId = object.connectionId ?? 0;
     message.inviteId = object.inviteId ?? "";
+    if (
+      object.inviteValue?.$case === "phone" &&
+      object.inviteValue?.phone !== undefined &&
+      object.inviteValue?.phone !== null
+    ) {
+      message.inviteValue = { $case: "phone", phone: object.inviteValue.phone };
+    }
     message.name = object.name ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.pendingAttributes = object.pendingAttributes?.map((e) => PendingAttribute.fromPartial(e)) || [];
@@ -463,13 +488,16 @@ export const PendingConnectionAdded = {
 };
 
 function createBasePendingConnectionRemoved(): PendingConnectionRemoved {
-  return { connectionId: 0 };
+  return { connectionId: 0, inviteId: "" };
 }
 
 export const PendingConnectionRemoved = {
   encode(message: PendingConnectionRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.connectionId !== 0) {
       writer.uint32(8).uint64(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      writer.uint32(18).string(message.inviteId);
     }
     return writer;
   },
@@ -488,6 +516,13 @@ export const PendingConnectionRemoved = {
 
           message.connectionId = longToNumber(reader.uint64() as Long);
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.inviteId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -498,13 +533,19 @@ export const PendingConnectionRemoved = {
   },
 
   fromJSON(object: any): PendingConnectionRemoved {
-    return { connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0 };
+    return {
+      connectionId: isSet(object.connectionId) ? globalThis.Number(object.connectionId) : 0,
+      inviteId: isSet(object.inviteId) ? globalThis.String(object.inviteId) : "",
+    };
   },
 
   toJSON(message: PendingConnectionRemoved): unknown {
     const obj: any = {};
     if (message.connectionId !== 0) {
       obj.connectionId = Math.round(message.connectionId);
+    }
+    if (message.inviteId !== "") {
+      obj.inviteId = message.inviteId;
     }
     return obj;
   },
@@ -515,6 +556,7 @@ export const PendingConnectionRemoved = {
   fromPartial<I extends Exact<DeepPartial<PendingConnectionRemoved>, I>>(object: I): PendingConnectionRemoved {
     const message = createBasePendingConnectionRemoved();
     message.connectionId = object.connectionId ?? 0;
+    message.inviteId = object.inviteId ?? "";
     return message;
   },
 };

@@ -31,10 +31,12 @@ import {
   UnmuteConnection,
 } from "./connection/commands";
 import {
+  AcceptInvite,
   AcceptQrInvite,
   BulkInvite,
   CreateInvite,
   CreateQrInvite,
+  DeclineInvite,
   DeleteInvite,
   OpenQrInvite,
 } from "./invite/commands";
@@ -66,6 +68,8 @@ export interface Command {
     | { $case: "acceptQrInvite"; acceptQrInvite: AcceptQrInvite }
     | { $case: "bulkInvite"; bulkInvite: BulkInvite }
     | { $case: "createInvite"; createInvite: CreateInvite }
+    | { $case: "acceptInvite"; acceptInvite: AcceptInvite }
+    | { $case: "declineInvite"; declineInvite: DeclineInvite }
     | { $case: "deleteInvite"; deleteInvite: DeleteInvite }
     | { $case: "changeConnectionAlias"; changeConnectionAlias: ChangeConnectionAlias }
     | { $case: "changeConnectionDescription"; changeConnectionDescription: ChangeConnectionDescription }
@@ -233,6 +237,12 @@ export const Command = {
         break;
       case "createInvite":
         CreateInvite.encode(message.payload.createInvite, writer.uint32(154).fork()).ldelim();
+        break;
+      case "acceptInvite":
+        AcceptInvite.encode(message.payload.acceptInvite, writer.uint32(258).fork()).ldelim();
+        break;
+      case "declineInvite":
+        DeclineInvite.encode(message.payload.declineInvite, writer.uint32(266).fork()).ldelim();
         break;
       case "deleteInvite":
         DeleteInvite.encode(message.payload.deleteInvite, writer.uint32(162).fork()).ldelim();
@@ -436,6 +446,20 @@ export const Command = {
 
           message.payload = { $case: "createInvite", createInvite: CreateInvite.decode(reader, reader.uint32()) };
           continue;
+        case 32:
+          if (tag !== 258) {
+            break;
+          }
+
+          message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.decode(reader, reader.uint32()) };
+          continue;
+        case 33:
+          if (tag !== 266) {
+            break;
+          }
+
+          message.payload = { $case: "declineInvite", declineInvite: DeclineInvite.decode(reader, reader.uint32()) };
+          continue;
         case 20:
           if (tag !== 162) {
             break;
@@ -608,6 +632,10 @@ export const Command = {
         ? { $case: "bulkInvite", bulkInvite: BulkInvite.fromJSON(object.bulkInvite) }
         : isSet(object.createInvite)
         ? { $case: "createInvite", createInvite: CreateInvite.fromJSON(object.createInvite) }
+        : isSet(object.acceptInvite)
+        ? { $case: "acceptInvite", acceptInvite: AcceptInvite.fromJSON(object.acceptInvite) }
+        : isSet(object.declineInvite)
+        ? { $case: "declineInvite", declineInvite: DeclineInvite.fromJSON(object.declineInvite) }
         : isSet(object.deleteInvite)
         ? { $case: "deleteInvite", deleteInvite: DeleteInvite.fromJSON(object.deleteInvite) }
         : isSet(object.changeConnectionAlias)
@@ -706,6 +734,12 @@ export const Command = {
     }
     if (message.payload?.$case === "createInvite") {
       obj.createInvite = CreateInvite.toJSON(message.payload.createInvite);
+    }
+    if (message.payload?.$case === "acceptInvite") {
+      obj.acceptInvite = AcceptInvite.toJSON(message.payload.acceptInvite);
+    }
+    if (message.payload?.$case === "declineInvite") {
+      obj.declineInvite = DeclineInvite.toJSON(message.payload.declineInvite);
     }
     if (message.payload?.$case === "deleteInvite") {
       obj.deleteInvite = DeleteInvite.toJSON(message.payload.deleteInvite);
@@ -916,6 +950,23 @@ export const Command = {
       object.payload?.createInvite !== null
     ) {
       message.payload = { $case: "createInvite", createInvite: CreateInvite.fromPartial(object.payload.createInvite) };
+    }
+    if (
+      object.payload?.$case === "acceptInvite" &&
+      object.payload?.acceptInvite !== undefined &&
+      object.payload?.acceptInvite !== null
+    ) {
+      message.payload = { $case: "acceptInvite", acceptInvite: AcceptInvite.fromPartial(object.payload.acceptInvite) };
+    }
+    if (
+      object.payload?.$case === "declineInvite" &&
+      object.payload?.declineInvite !== undefined &&
+      object.payload?.declineInvite !== null
+    ) {
+      message.payload = {
+        $case: "declineInvite",
+        declineInvite: DeclineInvite.fromPartial(object.payload.declineInvite),
+      };
     }
     if (
       object.payload?.$case === "deleteInvite" &&

@@ -26,7 +26,9 @@
 	{:else}
 		<main class="bg-white rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto">
 			<h1 class="text-2xl font-semibold mb-4">Import Contacts</h1>
-			<p>Choose where you would like to import contacts from:</p>
+			<p>Import contacts to invite them to connect with you on Resplice.</p>
+			<br />
+			<p>Where you would like to import contacts from?</p>
 			<ContactProviders on:import={onImport} />
 		</main>
 	{/if}

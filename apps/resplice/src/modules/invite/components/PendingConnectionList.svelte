@@ -1,9 +1,15 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import PendingConnectionItem from '$modules/invite/components/PendingConnectionItem.svelte'
+	import { pendingConnectionKey } from '$modules/invite/invite.state'
 	import type { PendingConnection } from '$modules/invite/invite.types'
 
 	export let pendingConnections: PendingConnection[] = []
+
+	function pendingConnDetailUrl(conn: PendingConnection) {
+		const pendingIdUrl = encodeURIComponent(pendingConnectionKey(conn))
+		return `/invite/pending/${pendingIdUrl}/details`
+	}
 </script>
 
 {#if pendingConnections.length}
@@ -16,7 +22,7 @@
 			<PendingConnectionItem
 				{pendingConnection}
 				on:click={() => {
-					push(`/pending-connection/${pendingConnection.id}/details`)
+					push(pendingConnDetailUrl(pendingConnection))
 				}}
 			/>
 		{/each}

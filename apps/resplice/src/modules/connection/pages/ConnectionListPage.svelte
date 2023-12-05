@@ -13,15 +13,16 @@
 	import { connectionsList } from '$modules/connection/connection.helpers'
 	import SearchHeader from '$common/components/SearchHeader.svelte'
 	import ConnectionList from '$modules/connection/components/ConnectionList.svelte'
-	// import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
+	import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
 	import InviteList from '$modules/invite/components/InviteList.svelte'
 
-	// const pendingConnectionStore = inviteStores.pendingConnections
-	const inviteStore = inviteStores.invites
-	// let pendingConnections: PendingConnection[] = Array.from($pendingConnectionStore.values())
 	let scrollEl: HTMLDivElement
+
+	const inviteStore = inviteStores.invites
+	const pendingConnectionStore = inviteStores.pendingConnections
 	$: connections = connectionsList($connectionStore)
 	$: invites = Array.from($inviteStore.values())
+	$: pendingConnections = Array.from($pendingConnectionStore.values())
 
 	onMount(() => {
 		// Get scroll position
@@ -91,7 +92,7 @@
 				</div>
 			</div>
 		{:else}
-			<!-- <PendingConnectionList {pendingConnections} /> -->
+			<PendingConnectionList {pendingConnections} />
 			<ConnectionList {connections} />
 			<InviteList {invites} />
 		{/if}

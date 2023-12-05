@@ -28,7 +28,14 @@ import {
   ConnectionUnfavored,
   ConnectionUnmuted,
 } from "./connection/events";
-import { InviteCreated, InviteDeleted, QrInviteCreated, QrInviteOpened } from "./invite/events";
+import {
+  InviteCreated,
+  InviteDeleted,
+  PendingConnectionAdded,
+  PendingConnectionRemoved,
+  QrInviteCreated,
+  QrInviteOpened,
+} from "./invite/events";
 
 export enum ErrorType {
   INVALID_INPUT = 0,
@@ -88,6 +95,7 @@ export enum InputField {
   URL = 9,
   USER_AGENT = 10,
   VERIFY_CODE = 11,
+  TITLE = 12,
   UNRECOGNIZED = -1,
 }
 
@@ -129,6 +137,9 @@ export function inputFieldFromJSON(object: any): InputField {
     case 11:
     case "VERIFY_CODE":
       return InputField.VERIFY_CODE;
+    case 12:
+    case "TITLE":
+      return InputField.TITLE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -162,6 +173,8 @@ export function inputFieldToJSON(object: InputField): string {
       return "USER_AGENT";
     case InputField.VERIFY_CODE:
       return "VERIFY_CODE";
+    case InputField.TITLE:
+      return "TITLE";
     case InputField.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -193,6 +206,8 @@ export interface Event {
     | { $case: "qrInviteCreated"; qrInviteCreated: QrInviteCreated }
     | { $case: "qrInviteOpened"; qrInviteOpened: QrInviteOpened }
     | { $case: "inviteCreated"; inviteCreated: InviteCreated }
+    | { $case: "pendingConnectionAdded"; pendingConnectionAdded: PendingConnectionAdded }
+    | { $case: "pendingConnectionRemoved"; pendingConnectionRemoved: PendingConnectionRemoved }
     | { $case: "inviteDeleted"; inviteDeleted: InviteDeleted }
     | { $case: "connectionAdded"; connectionAdded: ConnectionAdded }
     | { $case: "connectionNameChanged"; connectionNameChanged: ConnectionNameChanged }
@@ -405,6 +420,12 @@ export const Event = {
       case "inviteCreated":
         InviteCreated.encode(message.payload.inviteCreated, writer.uint32(114).fork()).ldelim();
         break;
+      case "pendingConnectionAdded":
+        PendingConnectionAdded.encode(message.payload.pendingConnectionAdded, writer.uint32(266).fork()).ldelim();
+        break;
+      case "pendingConnectionRemoved":
+        PendingConnectionRemoved.encode(message.payload.pendingConnectionRemoved, writer.uint32(274).fork()).ldelim();
+        break;
       case "inviteDeleted":
         InviteDeleted.encode(message.payload.inviteDeleted, writer.uint32(122).fork()).ldelim();
         break;
@@ -591,6 +612,26 @@ export const Event = {
           }
 
           message.payload = { $case: "inviteCreated", inviteCreated: InviteCreated.decode(reader, reader.uint32()) };
+          continue;
+        case 33:
+          if (tag !== 266) {
+            break;
+          }
+
+          message.payload = {
+            $case: "pendingConnectionAdded",
+            pendingConnectionAdded: PendingConnectionAdded.decode(reader, reader.uint32()),
+          };
+          continue;
+        case 34:
+          if (tag !== 274) {
+            break;
+          }
+
+          message.payload = {
+            $case: "pendingConnectionRemoved",
+            pendingConnectionRemoved: PendingConnectionRemoved.decode(reader, reader.uint32()),
+          };
           continue;
         case 15:
           if (tag !== 122) {
@@ -823,6 +864,16 @@ export const Event = {
         ? { $case: "qrInviteOpened", qrInviteOpened: QrInviteOpened.fromJSON(object.qrInviteOpened) }
         : isSet(object.inviteCreated)
         ? { $case: "inviteCreated", inviteCreated: InviteCreated.fromJSON(object.inviteCreated) }
+        : isSet(object.pendingConnectionAdded)
+        ? {
+          $case: "pendingConnectionAdded",
+          pendingConnectionAdded: PendingConnectionAdded.fromJSON(object.pendingConnectionAdded),
+        }
+        : isSet(object.pendingConnectionRemoved)
+        ? {
+          $case: "pendingConnectionRemoved",
+          pendingConnectionRemoved: PendingConnectionRemoved.fromJSON(object.pendingConnectionRemoved),
+        }
         : isSet(object.inviteDeleted)
         ? { $case: "inviteDeleted", inviteDeleted: InviteDeleted.fromJSON(object.inviteDeleted) }
         : isSet(object.connectionAdded)
@@ -941,6 +992,12 @@ export const Event = {
     }
     if (message.payload?.$case === "inviteCreated") {
       obj.inviteCreated = InviteCreated.toJSON(message.payload.inviteCreated);
+    }
+    if (message.payload?.$case === "pendingConnectionAdded") {
+      obj.pendingConnectionAdded = PendingConnectionAdded.toJSON(message.payload.pendingConnectionAdded);
+    }
+    if (message.payload?.$case === "pendingConnectionRemoved") {
+      obj.pendingConnectionRemoved = PendingConnectionRemoved.toJSON(message.payload.pendingConnectionRemoved);
     }
     if (message.payload?.$case === "inviteDeleted") {
       obj.inviteDeleted = InviteDeleted.toJSON(message.payload.inviteDeleted);
@@ -1132,6 +1189,26 @@ export const Event = {
       message.payload = {
         $case: "inviteCreated",
         inviteCreated: InviteCreated.fromPartial(object.payload.inviteCreated),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnectionAdded" &&
+      object.payload?.pendingConnectionAdded !== undefined &&
+      object.payload?.pendingConnectionAdded !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnectionAdded",
+        pendingConnectionAdded: PendingConnectionAdded.fromPartial(object.payload.pendingConnectionAdded),
+      };
+    }
+    if (
+      object.payload?.$case === "pendingConnectionRemoved" &&
+      object.payload?.pendingConnectionRemoved !== undefined &&
+      object.payload?.pendingConnectionRemoved !== null
+    ) {
+      message.payload = {
+        $case: "pendingConnectionRemoved",
+        pendingConnectionRemoved: PendingConnectionRemoved.fromPartial(object.payload.pendingConnectionRemoved),
       };
     }
     if (
