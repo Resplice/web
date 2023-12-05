@@ -7,11 +7,7 @@ import type { ConnectionStore } from '$modules/connection/connection.store'
 import type { InviteStore } from '$modules/invite/invite.store'
 import type { QrConnection, Qr } from '$modules/invite/invite.types'
 import { applyConnectionEvent } from '$modules/connection/connection.state'
-import {
-	applyInviteEvent,
-	applyPendingConnectionEvent,
-	pendingConnectionKey
-} from '$modules/invite/invite.state'
+import { applyInviteEvent, applyPendingConnectionEvent } from '$modules/invite/invite.state'
 import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export interface InviteProtocol {
@@ -148,7 +144,7 @@ function inviteProtocolFactory({
 				declineInvite: payload
 			})
 			store.pendingConnections.update((state) => {
-				state.delete(pendingConnectionKey(payload))
+				state.delete(payload.connectionId)
 				return state
 			})
 		},

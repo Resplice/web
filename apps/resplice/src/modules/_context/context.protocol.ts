@@ -14,7 +14,12 @@ import type { Stores } from '$common/stores'
 import type { Session } from '$modules/session/session.types'
 import { applyAccountEvent, type AccountAggregate } from '$modules/account/account.state'
 import { applyAttributeEvent, type AttributeAggregate } from '$modules/attribute/attribute.state'
-import { applyInviteEvent, type InviteAggregate } from '$modules/invite/invite.state'
+import {
+	applyInviteEvent,
+	applyPendingConnectionEvent,
+	type InviteAggregate,
+	type PendingConnectionAggregate
+} from '$modules/invite/invite.state'
 import {
 	applyConnectionEvent,
 	type ConnectionAggregate
@@ -105,6 +110,14 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 				return aggregate
 			})
 
+			stores.invite.pendingConnections.update((state) => {
+				let aggregate: PendingConnectionAggregate = state || new Map()
+				events.forEach((event) => {
+					aggregate = applyPendingConnectionEvent(aggregate, event)
+				})
+				return aggregate
+			})
+
 			stores.connection.update((state) => {
 				let aggregate: ConnectionAggregate = state || new Map()
 				events.forEach((event) => {
@@ -188,18 +201,21 @@ function contextProtocolFactory({ cache, stores, commuter }: Dependencies): Cont
 			let accountAggregate: AccountAggregate = {} as AccountAggregate
 			let attributeAggregate: AttributeAggregate = new Map()
 			let inviteAggregate: InviteAggregate = new Map()
+			let pendingConnectionAggregate: PendingConnectionAggregate = new Map()
 			let connectionAggregate: ConnectionAggregate = new Map()
 
 			events.forEach((event) => {
 				accountAggregate = applyAccountEvent(accountAggregate, event)
 				attributeAggregate = applyAttributeEvent(attributeAggregate, event)
 				inviteAggregate = applyInviteEvent(inviteAggregate, event)
+				pendingConnectionAggregate = applyPendingConnectionEvent(pendingConnectionAggregate, event)
 				connectionAggregate = applyConnectionEvent(connectionAggregate, event)
 			})
 
 			stores.account.set(accountAggregate)
 			stores.attribute.set(attributeAggregate)
 			stores.invite.invites.set(inviteAggregate)
+			stores.invite.pendingConnections.set(pendingConnectionAggregate)
 			stores.connection.set(connectionAggregate)
 		}
 	}

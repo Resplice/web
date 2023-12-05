@@ -37,7 +37,7 @@ export function applyPendingConnectionEvent(
 ): PendingConnectionAggregate {
 	switch (event.payload!.$case) {
 		case 'pendingConnectionAdded':
-			aggregate.set(pendingConnectionKey(event.payload.pendingConnectionAdded), {
+			aggregate.set(event.payload.pendingConnectionAdded.connectionId, {
 				connectionId: event.payload.pendingConnectionAdded.connectionId,
 				inviteId: event.payload.pendingConnectionAdded.inviteId,
 				inviteType: mapProtoInviteType(event.payload.pendingConnectionAdded.inviteValue),
@@ -53,22 +53,14 @@ export function applyPendingConnectionEvent(
 			})
 			break
 		case 'pendingConnectionRemoved':
-			aggregate.delete(pendingConnectionKey(event.payload.pendingConnectionRemoved))
+			aggregate.delete(event.payload.pendingConnectionRemoved.connectionId)
 			break
 		case 'connectionAdded':
-			aggregate.delete(pendingConnectionKey(event.payload.connectionAdded))
+			aggregate.delete(event.payload.connectionAdded.connectionId)
 			break
 	}
 
 	return aggregate
-}
-
-type PendingConnectionKey = {
-	connectionId: number
-	inviteId: string
-}
-export function pendingConnectionKey({ connectionId, inviteId }: PendingConnectionKey) {
-	return `${connectionId}-${inviteId}`
 }
 
 function mapProtoInviteType(value: proto.invite.InviteCreated['value']): InviteType {

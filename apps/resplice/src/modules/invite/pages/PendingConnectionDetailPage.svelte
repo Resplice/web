@@ -9,7 +9,7 @@
 	const pendingConnectionStore = inviteStores.pendingConnections
 
 	export let params: { id: string }
-	$: pendingConnection = $pendingConnectionStore.get(decodeURIComponent(params['id']))
+	$: pendingConnection = $pendingConnectionStore.get(parseInt(params.id, 10))
 
 	$: {
 		if (!pendingConnection) pop()

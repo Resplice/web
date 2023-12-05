@@ -6,7 +6,7 @@
 		ConnectionEmptyIcon,
 		CameraIcon,
 		QRCodeIcon,
-		PersonAddIcon
+		PeopleIcon
 	} from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
 	import inviteStores from '$modules/invite/invite.store'
@@ -49,7 +49,7 @@
 		bind:this={scrollEl}
 		class="w-full flex-1 flex flex-col overflow-auto bg-white rounded-t-3xl"
 	>
-		{#if !connections.length && !invites.length}
+		{#if !connections.length && !invites.length && !pendingConnections.length}
 			<div class="w-full h-full flex flex-col justify-center items-center">
 				<div class="rounded-full overflow-hidden w-48">
 					<ConnectionEmptyIcon width={192} height={144} />
@@ -62,10 +62,10 @@
 					<Button
 						color="brand-light"
 						class="flex items-center justify-center w-56"
-						on:click={() => push('/invite/create/phone')}
+						on:click={() => push('/invite/contacts')}
 					>
-						<PersonAddIcon width={24} height={24} />
-						<span class="ml-2">Invite with phone</span>
+						<PeopleIcon width={24} height={24} />
+						<span class="ml-2">Import Contacts</span>
 					</Button>
 				</div>
 
