@@ -3,14 +3,13 @@
 	import { Avatar } from '@resplice/components'
 	import inviteStores from '$modules/invite/invite.store'
 	import Page from '$common/layouts/Page.svelte'
-	import Header from '$modules/invite/components/Header.svelte'
+	import Header from '$modules/invite/components/InviteHeader.svelte'
 	import InviteAttribute from '$modules/invite/components/InviteAttribute.svelte'
 
 	const inviteStore = inviteStores.invites
 
 	export let params: { 'invite-id': string }
-	$: inviteId = decodeURIComponent(params['invite-id'])
-	$: invite = $inviteStore.get(inviteId)
+	$: invite = $inviteStore.get(decodeURIComponent(params['invite-id']))
 
 	$: {
 		if (!invite) pop()

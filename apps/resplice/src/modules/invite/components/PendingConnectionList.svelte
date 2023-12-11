@@ -9,14 +9,14 @@
 {#if pendingConnections.length}
 	<div class="w-full relative">
 		<div class="p-4">
-			<h2 class="text-3xl text-yellow-600 font-semibold px-2 my-2 capitalize">Pending</h2>
+			<h2 class="text-3xl text-gray-700 font-semibold px-2 my-2 capitalize">Pending</h2>
 		</div>
 
 		{#each pendingConnections as pendingConnection}
 			<PendingConnectionItem
 				{pendingConnection}
 				on:click={() => {
-					push(`/pending-connection/${pendingConnection.id}/details`)
+					push(`/invite/pending/${pendingConnection.connectionId}/details`)
 				}}
 			/>
 		{/each}

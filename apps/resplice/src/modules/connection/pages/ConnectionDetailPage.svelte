@@ -17,8 +17,7 @@
 	let selectedAttributes = new Set<number>()
 	let scrollEl: HTMLDivElement
 	let showConnectionOnHeader = false
-	$: id = parseInt(params.id, 10)
-	$: connection = $connectionStore.get(id)!
+	$: connection = $connectionStore.get(parseInt(params.id, 10))!
 
 	$: {
 		if (!connection) {

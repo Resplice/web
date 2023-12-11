@@ -43,35 +43,41 @@
 	}
 </script>
 
-<section class="w-full flex-1 flex flex-col space-y-2">
+<button class="w-full flex-1 flex flex-col space-y-2" on:click={() => (isEditing = true)}>
 	<div class="w-full flex justify-between items-center mb-2">
 		<h2 class="font-semibold text-xl">Sharing</h2>
-		<Button class="text-sm uppercase" color="brand-light" on:click={() => (isEditing = true)}>
-			Edit
-		</Button>
+		<Button class="text-sm uppercase" color="brand-light">Change</Button>
 	</div>
 
 	<div class="w-full flex-1 flex flex-nowrap space-x-4 overflow-scroll">
-		{#each [...selected] as id}
-			<div class="text-center w-12">
-				<AttributeAction itemType="user" attribute={getAttribute(id)} actionIdx={0} disableAction />
-				<p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
-					{getAttribute(id).name}
-				</p>
+		{#if selected.size}
+			{#each [...selected] as id}
+				<div class="text-center w-12">
+					<AttributeAction
+						itemType="user"
+						attribute={getAttribute(id)}
+						actionIdx={0}
+						disableAction
+					/>
+					<p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
+						{getAttribute(id).name}
+					</p>
+				</div>
+			{/each}
+		{:else}
+			<div class="text-center">
+				<button
+					type="button"
+					class="outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none bg-brand-primary text-brand-primary-dark"
+					on:click={() => (isEditing = true)}
+				>
+					<AddIcon height={24} width={24} />
+				</button>
+				<p>Share</p>
 			</div>
-		{/each}
-		<div class="text-center">
-			<button
-				type="button"
-				class="outline-none border-none p-3 bg-opacity-20 rounded-lg focus:outline-none bg-brand-primary text-brand-primary-dark"
-				on:click={() => (isEditing = true)}
-			>
-				<AddIcon height={24} width={24} />
-			</button>
-			<p>Add</p>
-		</div>
+		{/if}
 	</div>
-</section>
+</button>
 
 {#if isEditing}
 	<Modal let:close on:close={() => (isEditing = false)} initialY={56}>

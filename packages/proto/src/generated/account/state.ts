@@ -3,7 +3,7 @@ import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { Attribute, ValueVerification } from "../attribute/state";
 import { Connection } from "../connection/state";
-import { Invite } from "../invite/state";
+import { Invite, PendingConnection } from "../invite/state";
 
 export interface Account {
   id: number;
@@ -13,6 +13,7 @@ export interface Account {
   attributes: Attribute[];
   valueVerifications: ValueVerification[];
   invites: Invite[];
+  pendingConnections: PendingConnection[];
   connections: Connection[];
   primaryAttributeId: number;
   lastEventId: number;
@@ -29,6 +30,7 @@ function createBaseAccount(): Account {
     attributes: [],
     valueVerifications: [],
     invites: [],
+    pendingConnections: [],
     connections: [],
     primaryAttributeId: 0,
     lastEventId: 0,
@@ -59,6 +61,9 @@ export const Account = {
     }
     for (const v of message.invites) {
       Invite.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    for (const v of message.pendingConnections) {
+      PendingConnection.encode(v!, writer.uint32(130).fork()).ldelim();
     }
     for (const v of message.connections) {
       Connection.encode(v!, writer.uint32(66).fork()).ldelim();
@@ -134,6 +139,13 @@ export const Account = {
 
           message.invites.push(Invite.decode(reader, reader.uint32()));
           continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.pendingConnections.push(PendingConnection.decode(reader, reader.uint32()));
+          continue;
         case 8:
           if (tag !== 66) {
             break;
@@ -191,6 +203,9 @@ export const Account = {
         ? object.valueVerifications.map((e: any) => ValueVerification.fromJSON(e))
         : [],
       invites: globalThis.Array.isArray(object?.invites) ? object.invites.map((e: any) => Invite.fromJSON(e)) : [],
+      pendingConnections: globalThis.Array.isArray(object?.pendingConnections)
+        ? object.pendingConnections.map((e: any) => PendingConnection.fromJSON(e))
+        : [],
       connections: globalThis.Array.isArray(object?.connections)
         ? object.connections.map((e: any) => Connection.fromJSON(e))
         : [],
@@ -224,6 +239,9 @@ export const Account = {
     if (message.invites?.length) {
       obj.invites = message.invites.map((e) => Invite.toJSON(e));
     }
+    if (message.pendingConnections?.length) {
+      obj.pendingConnections = message.pendingConnections.map((e) => PendingConnection.toJSON(e));
+    }
     if (message.connections?.length) {
       obj.connections = message.connections.map((e) => Connection.toJSON(e));
     }
@@ -254,6 +272,7 @@ export const Account = {
     message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
     message.valueVerifications = object.valueVerifications?.map((e) => ValueVerification.fromPartial(e)) || [];
     message.invites = object.invites?.map((e) => Invite.fromPartial(e)) || [];
+    message.pendingConnections = object.pendingConnections?.map((e) => PendingConnection.fromPartial(e)) || [];
     message.connections = object.connections?.map((e) => Connection.fromPartial(e)) || [];
     message.primaryAttributeId = object.primaryAttributeId ?? 0;
     message.lastEventId = object.lastEventId ?? 0;

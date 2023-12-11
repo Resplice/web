@@ -66,7 +66,7 @@
 		class="bg-white w-full max-w-xl m-auto rounded-t-3xl flex-1 flex flex-col p-8 overflow-auto"
 	>
 		<div
-			class="w-full flex-none flex items-center justify-center mb-8 p-2 rounded-2xl bg-brand-primary overflow-hidden"
+			class="w-full flex-none flex items-center justify-center mb-8 p-2 rounded-2xl bg-brand-primary bg-opacity-20 overflow-hidden"
 		>
 			{#if url}
 				<QrCode data={url} />

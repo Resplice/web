@@ -37,15 +37,15 @@ export type PendingConnectionAttribute = {
 }
 
 export type PendingConnection = {
-	id: number
+	connectionId: number
+	inviteId: string
+	inviteType: InviteType
+	inviteValue: string
 	name: string
 	avatarUrl: string | null
 	alias: null
 	description: null
-	inviteType: InviteType
-	inviteValue: string
 	pendingAttributes: PendingConnectionAttribute[]
-	expiresAt: number
 }
 
 export type QrConnection = {

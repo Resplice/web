@@ -1,7 +1,8 @@
 import proto from '@resplice/proto'
-import { InviteType, type Invite } from '$modules/invite/invite.types'
-import type { InviteState } from '$modules/invite/invite.store'
 import { strtob64 } from '@resplice/utils'
+import { InviteType, type Invite } from '$modules/invite/invite.types'
+import type { InviteState, PendingConnectionState } from '$modules/invite/invite.store'
+import { mapProtoAttributeType } from '$modules/attribute/attribute.state'
 
 export type InviteAggregate = InviteState
 
@@ -28,31 +29,39 @@ export function applyInviteEvent(aggregate: InviteAggregate, event: proto.Event)
 	return aggregate
 }
 
-// export type PendingConnectionAggregate = PendingConnectionState
+export type PendingConnectionAggregate = PendingConnectionState
 
-// export function applyPendingConnectionEvent(
-// 	aggregate: PendingConnectionAggregate,
-// 	event: proto.Event
-// ): PendingConnectionAggregate {
-// 	switch (event.payload!.$case) {
-// 		case 'pendingConnectionAdded':
-// 			aggregate.set(event.payload.pendingConnectionAdded.pendingConnectionId, {
-// 				id: event.payload.pendingConnectionAdded.pendingConnectionId,
-// 				inviteType: mapProtoInviteType(event.payload.pendingConnectionAdded.inviteType),
-// 				inviteValue: event.payload.pendingConnectionAdded.inviteValue,
-// 				name: event.payload.pendingConnectionAdded.name,
-// 				avatarUrl: event.payload.pendingConnectionAdded.avatarUrl,
-// 				attributes: event.payload.pendingConnectionAdded.pendingAttributes.map((attr) => ({
-// 					attributeType: mapProtoAttributeValueType(attr.attributeType),
-// 					name: attr.name
-// 				})),
-// 				expiresAt: event.payload.pendingConnectionAdded.expiresAt
-// 			})
-// 			break
-// 	}
+export function applyPendingConnectionEvent(
+	aggregate: PendingConnectionAggregate,
+	event: proto.Event
+): PendingConnectionAggregate {
+	switch (event.payload!.$case) {
+		case 'pendingConnectionAdded':
+			aggregate.set(event.payload.pendingConnectionAdded.connectionId, {
+				connectionId: event.payload.pendingConnectionAdded.connectionId,
+				inviteId: event.payload.pendingConnectionAdded.inviteId,
+				inviteType: mapProtoInviteType(event.payload.pendingConnectionAdded.inviteValue),
+				inviteValue: mapProtoInviteValue(event.payload.pendingConnectionAdded.inviteValue),
+				name: event.payload.pendingConnectionAdded.name,
+				avatarUrl: event.payload.pendingConnectionAdded.avatarUrl,
+				alias: null,
+				description: null,
+				pendingAttributes: event.payload.pendingConnectionAdded.pendingAttributes.map((attr) => ({
+					attributeType: mapProtoAttributeType(attr.attributeType),
+					name: attr.name
+				}))
+			})
+			break
+		case 'pendingConnectionRemoved':
+			aggregate.delete(event.payload.pendingConnectionRemoved.connectionId)
+			break
+		case 'connectionAdded':
+			aggregate.delete(event.payload.connectionAdded.connectionId)
+			break
+	}
 
-// 	return aggregate
-// }
+	return aggregate
+}
 
 function mapProtoInviteType(value: proto.invite.InviteCreated['value']): InviteType {
 	switch (value?.$case) {

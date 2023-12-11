@@ -131,9 +131,19 @@
 				<p class="mt-4 text-red-600">{systemError}</p>
 			{/if}
 		</div>
+		<p class="text-xs text-gray-400 mt-4 w-full">
+			By continuing, you agree to Resplice's
+			<a
+				class="underline text-brand-primary"
+				href="https://resplice.notion.site/Resplice-T-C-f86ee1053bd94e4ead8df5ab1f9555ab"
+			>
+				Terms of Service
+			</a>
+			and opt-in to receiving verification codes via sms from Resplice.
+		</p>
 		<!-- We have to include this text according to google :( -->
 		<!-- https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed -->
-		<p class="text-xs text-gray-400 mt-4 w-full">
+		<p class="text-xs text-gray-400 mt-2 w-full">
 			This site is protected by reCAPTCHA and the Google
 			<a class="underline text-brand-primary" href="https://policies.google.com/privacy">
 				Privacy Policy

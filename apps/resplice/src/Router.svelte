@@ -21,6 +21,7 @@
 	import QrInvitePage from '$modules/invite/pages/QrInvitePage.svelte'
 	import ScanQrPage from '$modules/invite/pages/ScanQrPage.svelte'
 	import QrConnectionDetailPage from '$modules/invite/pages/QrConnectionDetailPage.svelte'
+	import PendingConnectionDetailPage from '$modules/invite/pages/PendingConnectionDetailPage.svelte'
 	// Connection Pages
 	import ConnectionDetailPage from '$modules/connection/pages/ConnectionDetailPage.svelte'
 	import ChangeConnectionPage from '$modules/connection/pages/ChangeConnectionPage.svelte'
@@ -34,18 +35,15 @@
 		'/attribute/add': SelectAttributeTypePage,
 		'/attribute/add/:type': AddAttributePage,
 		'/attribute/:id/change': ChangeAttributePage,
-		// '/connection/pending/:id': PendingContactDetailPage,
 		'/connection/:id/details': ConnectionDetailPage,
-		// '/connection/:id/chat': ContactChatPage,
 		'/connection/:id/change': ChangeConnectionPage,
-		// '/connection/:id/shares': ContactSharesPage,
 		'/home/*': HomePage,
-		// '/invite': SelectInviteMethodPage,
 		'/invite/contacts': InviteContactsPage,
 		'/invite/create/*': CreateInvitePage,
 		'/invite/qr-scan': ScanQrPage,
 		'/invite/qr': QrInvitePage,
 		'/invite/qr/:uuid': QrConnectionDetailPage,
+		'/invite/pending/:id/details': PendingConnectionDetailPage,
 		'/invite/:invite-id/details': InviteDetailPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
