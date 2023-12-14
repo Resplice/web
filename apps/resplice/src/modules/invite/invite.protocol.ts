@@ -36,7 +36,7 @@ function inviteProtocolFactory({
 }: Dependencies): InviteProtocol {
 	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
 		store.invites.update((state) => applyInviteEvent(state, event))
-		// store.pendingConnections.update((state) => applyPendingConnectionEvent(state, event))
+		store.pendingConnections.update((state) => applyPendingConnectionEvent(state, event))
 	})
 
 	return {
