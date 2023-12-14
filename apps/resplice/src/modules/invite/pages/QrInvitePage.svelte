@@ -69,7 +69,7 @@
 			class="w-full flex-none flex items-center justify-center mb-8 p-2 rounded-2xl bg-brand-primary bg-opacity-20 overflow-hidden"
 		>
 			{#if url}
-				<QrCode data={url} />
+				<QrCode data={url} color="#d9f2eb" />
 			{:else}
 				<Skeleton variant="rect" width="100%" height="333px" />
 			{/if}
