@@ -24,6 +24,7 @@
 		"croppie": "^2.6.5",
 		"date-fns": "^2.30.0",
 		"date-fns-tz": "^2.0.0",
+		"html5-qrcode": "^2.3.8",
 		"js-search": "^2.0.1",
 		"jsqr": "^1.4.0",
 		"libphonenumber-js": "^1.10.49",

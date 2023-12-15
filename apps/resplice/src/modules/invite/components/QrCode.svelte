@@ -3,14 +3,16 @@
 	import QRCode from 'qrcode'
 
 	export let data: string
+	export let color: string
 	let qrCode: string
 
 	onMount(async () => {
 		qrCode = await QRCode.toDataURL(data, {
+			type: 'image/webp',
 			errorCorrectionLevel: 'medium',
 			scale: 8,
 			color: {
-				light: '#1BBC9B'
+				light: color
 			}
 		})
 	})
