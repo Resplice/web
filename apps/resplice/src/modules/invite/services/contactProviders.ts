@@ -91,6 +91,7 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 
 	return contacts.map((c, idx) => {
 		const attributes: ProviderContactAttribute[] = []
+		let avatar = ''
 
 		if (c.tel) {
 			c.tel.forEach((tel: string, idx: number) => {
@@ -105,10 +106,12 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 			)
 		}
 
+		if (c.icon && c.icon[0] instanceof Blob) avatar = URL.createObjectURL(c.icon[0])
+
 		return {
 			id: idx.toString(),
 			name: c.name[0],
-			avatar: c.icon ? c.icon[0] || '' : '',
+			avatar,
 			attributes: attributes
 		}
 	})
