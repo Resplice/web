@@ -94,8 +94,8 @@
 			</div>
 			{#if !contact.inviteState}
 				<div class="flex-none flex flex-col space-y-4 p-4">
-					{#if contact.attributes.length}
-						{#each contact.attributes as attribute}
+					{#if contact.attributes.filter((a) => a.type === 'phone').length}
+						{#each contact.attributes.filter((a) => a.type === 'phone') as attribute}
 							<ContactImportAttribute {contact} {attribute} />
 						{/each}
 					{:else}

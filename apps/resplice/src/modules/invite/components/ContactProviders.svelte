@@ -2,25 +2,47 @@
 	import { createEventDispatcher } from 'svelte'
 	import { isSupported } from '@resplice/utils'
 	import { getGoogleContacts, getNativeContacts } from '$modules/invite/services/contactProviders'
-	import { ButtonAlt as Button, GoogleIcon, PhonePortraitIcon } from '@resplice/components'
-	const dispatch = createEventDispatcher()
+	import { ButtonAlt as Button, GoogleIcon, PhonePortraitIcon, toast } from '@resplice/components'
 
+	const dispatch = createEventDispatcher()
 	const isContactPickerSupported = isSupported('contacts')
 
 	let isNativeLoading = false
 	let isGoogleLoading = false
 
 	async function onContactPickerClick() {
-		isNativeLoading = true
-		const contacts = await getNativeContacts()
-		console.log(contacts)
-		dispatch('import', contacts)
+		try {
+			isNativeLoading = true
+			const contacts = await getNativeContacts()
+			console.log(contacts)
+			dispatch('import', contacts)
+			isNativeLoading = false
+		} catch (e) {
+			isNativeLoading = false
+			toast.new({
+				type: toast.type.WARNING,
+				title: 'Import Error',
+				message: 'Could not import contacts from your device. Please try again.'
+			})
+			console.error(e)
+		}
 	}
 
 	async function onGoogleProviderClick() {
-		isGoogleLoading = true
-		const contacts = await getGoogleContacts()
-		dispatch('import', contacts)
+		try {
+			isGoogleLoading = true
+			const contacts = await getGoogleContacts()
+			dispatch('import', contacts)
+			isGoogleLoading = false
+		} catch (e) {
+			isGoogleLoading = false
+			toast.new({
+				type: toast.type.WARNING,
+				title: 'Import Error',
+				message: 'Could not import contacts from Google. Please try again.'
+			})
+			console.error(e)
+		}
 	}
 </script>
 
