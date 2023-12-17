@@ -1,3 +1,4 @@
+import { parsePhoneNumber } from 'libphonenumber-js'
 import { isSupported } from '@resplice/utils'
 import config from '$services/config'
 
@@ -22,7 +23,7 @@ type GoogleToken = {
 	scope: string
 	token_type: string
 }
-export function getGoogleContacts() {
+export function getGoogleContacts(): Promise<ProviderContact[]> {
 	return new Promise((resolve, reject) => {
 		async function onGoogleToken(token: GoogleToken) {
 			const contacts = await fetchGoogleContacts(token.access_token)
@@ -37,7 +38,8 @@ export function getGoogleContacts() {
 			client_id: config.googleOAuthClientId,
 			scope: 'https://www.googleapis.com/auth/contacts.readonly',
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			callback: onGoogleToken
+			callback: onGoogleToken,
+			error_callback: () => reject()
 		})
 		client.requestAccessToken()
 	})
@@ -80,41 +82,36 @@ export async function fetchGoogleContacts(accessToken: string): Promise<Provider
 
 export async function getNativeContacts(): Promise<ProviderContact[]> {
 	const isContactPickerSupported = isSupported('contacts')
-	if (!isContactPickerSupported) return []
+	if (!isContactPickerSupported) throw new Error('Contact picker not supported')
 
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const contacts: any[] = await (navigator as any).contacts.select(['name', 'tel', 'icon'], {
-			multiple: true
-		})
-		console.log(contacts)
-		return contacts.map((c, idx) => {
-			const attributes: ProviderContactAttribute[] = []
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const contacts: any[] = await (navigator as any).contacts.select(['name', 'tel', 'icon'], {
+		multiple: true
+	})
 
-			if (c.tel) {
-				c.tel.forEach((tel: string, idx: number) =>
-					attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: tel })
-				)
-			}
+	return contacts.map((c, idx) => {
+		const attributes: ProviderContactAttribute[] = []
 
-			if (c.email) {
-				c.email.forEach((email: string, idx: number) =>
-					attributes.push({ type: 'email', name: `Email ${idx + 1}`, value: email })
-				)
-			}
+		if (c.tel) {
+			c.tel.forEach((tel: string, idx: number) => {
+				const phone = parsePhoneNumber(tel, 'US')
+				if (phone) attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: phone.number })
+			})
+		}
 
-			return {
-				id: idx.toString(),
-				name: c.name[0],
-				avatar: c.icon,
-				attributes: attributes
-			}
-		})
-	} catch (err) {
-		// TODO: Show an alert
-		console.log(err)
-		return []
-	}
+		if (c.email) {
+			c.email.forEach((email: string, idx: number) =>
+				attributes.push({ type: 'email', name: `Email ${idx + 1}`, value: email })
+			)
+		}
+
+		return {
+			id: idx.toString(),
+			name: c.name[0],
+			avatar: c.icon ? c.icon[0] || '' : '',
+			attributes: attributes
+		}
+	})
 }
 
 export async function getContactsFromCsv(csv: Blob): Promise<ProviderContact[]> {

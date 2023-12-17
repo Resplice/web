@@ -6,8 +6,7 @@
 		ConnectionEmptyIcon,
 		CameraIcon,
 		QRCodeIcon,
-		// PeopleIcon,
-		PersonAddIcon
+		PeopleIcon
 	} from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
 	import inviteStores from '$modules/invite/invite.store'
@@ -60,21 +59,13 @@
 					<p class="text-center px-8 py-2">
 						You can invite others to Resplice even if they don't have an account!
 					</p>
-					<!-- <Button
+					<Button
 						color="brand-light"
 						class="flex items-center justify-center w-56"
 						on:click={() => push('/invite/contacts')}
 					>
 						<PeopleIcon width={24} height={24} />
 						<span class="ml-2">Import Contacts</span>
-					</Button> -->
-					<Button
-						color="brand-light"
-						class="flex items-center justify-center w-56"
-						on:click={() => push('/invite/create/phone')}
-					>
-						<PersonAddIcon width={24} height={24} />
-						<span class="ml-2">Invite via Phone</span>
 					</Button>
 				</div>
 

@@ -30,12 +30,6 @@
 			isInviting = true
 			const inviteType = InviteType[attribute.type.toUpperCase() as keyof typeof InviteType]
 			switch (inviteType) {
-				case InviteType.EMAIL:
-					await protocol.invite.create({
-						name: contact.name,
-						value: { $case: 'email', email: attribute.value }
-					})
-					break
 				case InviteType.PHONE:
 					await protocol.invite.create({
 						name: contact.name,
