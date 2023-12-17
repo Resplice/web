@@ -65,9 +65,10 @@ export async function fetchGoogleContacts(accessToken: string): Promise<Provider
 		const attributes: ProviderContactAttribute[] = []
 		if (person.phoneNumbers) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			person.phoneNumbers.forEach((phone: any, idx: number) =>
-				attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: phone.canonicalForm })
-			)
+			person.phoneNumbers.forEach((number: any, idx: number) => {
+				const phone = parsePhoneNumber(number.value, 'US')
+				if (phone) attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: phone.number })
+			})
 		}
 		if (person.emailAddresses) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
