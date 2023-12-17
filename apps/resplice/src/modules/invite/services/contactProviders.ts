@@ -108,7 +108,7 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 		return {
 			id: idx.toString(),
 			name: c.name[0],
-			avatar: c.icon ? c.icon[0] || '' : '',
+			avatar: c.icon ? URL.createObjectURL(c.icon[0]) || '' : '',
 			attributes: attributes
 		}
 	})
