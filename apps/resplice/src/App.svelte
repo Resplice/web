@@ -2,8 +2,12 @@
 	import { setContext } from 'svelte'
 	import { isRespliceSupported } from '@resplice/utils'
 	import config from '$services/config'
+	import { telemetryFactory, contextKey as telemetryContextKey } from '$services/telemetry'
+	import protocolFactory, {
+		contextKey as protocolContextKey,
+		type RespliceProtocol
+	} from '$common/protocol'
 	import initializeIntl from '$common/i18n'
-	import protocolFactory, { contextKey, type RespliceProtocol } from '$common/protocol'
 	import accountStore from '$modules/account/account.store'
 	import { AppLoading, AppError, ToastProvider } from '@resplice/components'
 	import ReloadPrompt from '$common/components/ReloadPrompt.svelte'
@@ -11,8 +15,11 @@
 	import Router from './Router.svelte'
 	import './app.css'
 
+	const telemetryContext = { telemetry: telemetryFactory() }
+	setContext(telemetryContextKey, telemetryContext)
+
 	const protocolContext = { protocol: {} as RespliceProtocol }
-	setContext(contextKey, protocolContext)
+	setContext(protocolContextKey, protocolContext)
 
 	async function loadApp(): Promise<boolean> {
 		if (!isRespliceSupported()) throw new Error('Resplice is not supported on this device.')
@@ -48,6 +55,15 @@
 
 	// Can do additional store checks here
 	$: storesLoaded = window.location.hash === '#/install' ? true : !!$accountStore
+
+	$: {
+		if (!!$accountStore) {
+			telemetryContext.telemetry.identify($accountStore.uuid, {
+				name: $accountStore.name,
+				env: config.env
+			})
+		}
+	}
 </script>
 
 {#await loading}

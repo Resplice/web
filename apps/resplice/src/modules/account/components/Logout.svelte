@@ -1,8 +1,10 @@
 <script lang="ts">
+	import useTelemetry from '$services/telemetry'
 	import useProtocol from '$common/protocol/useProtocol'
 	import SettingsItem from '$modules/account/components/SettingsItem.svelte'
 	import { Button, Modal } from '@resplice/components'
 
+	const telemetry = useTelemetry()
 	const protocol = useProtocol()
 
 	let showLogoutConfirmation = false
@@ -10,6 +12,7 @@
 
 	async function logout() {
 		isLoading = true
+		telemetry.reset()
 		await protocol.session.logout()
 	}
 </script>

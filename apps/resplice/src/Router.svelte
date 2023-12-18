@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Router, { replace } from 'svelte-spa-router'
+	import Router, { replace, type RouteLoadedEvent } from 'svelte-spa-router'
+	import useTelemetry from '$services/telemetry'
 	// Meta Pages
 	import RootPage from '$common/pages/RootPage.svelte'
 	import InstallPage from '$common/pages/InstallPage.svelte'
@@ -26,7 +27,13 @@
 	import ConnectionDetailPage from '$modules/connection/pages/ConnectionDetailPage.svelte'
 	import ChangeConnectionPage from '$modules/connection/pages/ChangeConnectionPage.svelte'
 
+	const telemetry = useTelemetry()
+
 	export let initialUrl = ''
+
+	function onRouteLoaded(_event: RouteLoadedEvent) {
+		telemetry.capture('$pageview')
+	}
 
 	const routes = {
 		'/': RootPage,
@@ -54,4 +61,4 @@
 	if (initialUrl) replace(initialUrl)
 </script>
 
-<Router {routes} />
+<Router {routes} on:routeLoaded={onRouteLoaded} />
