@@ -9,6 +9,7 @@
 	import type { ProviderContact, InviteState } from '$modules/invite/services/contactProviders'
 	import { type Invite } from '$modules/invite/invite.types'
 	import ContactImportAttribute from '$modules/invite/components/ContactImportAttribute.svelte'
+	import { sortRecordsByName } from '$common/utils'
 
 	const inviteStore = inviteStores.invites
 
@@ -39,7 +40,7 @@
 
 	$: {
 		const connectionAttributeValues = $connectionAttributeValuesStore
-		const invites = [...$inviteStore.values()]
+		const invites = Array.from($inviteStore.values())
 
 		contacts = contacts.map((contact) => ({
 			...contact,
@@ -49,7 +50,7 @@
 </script>
 
 {#if contacts.length}
-	{#each contacts as contact, idx}
+	{#each sortRecordsByName(contacts) as contact, idx}
 		<div class="flex flex-col bg-white rounded-lg shadow-lg mb-4 divide-y-2">
 			<div class="w-full py-2 pr-4 flex items-center">
 				<div class="flex-1 overflow-hidden">
