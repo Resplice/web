@@ -1,16 +1,16 @@
 import { getContext } from 'svelte'
-import PostHog from 'posthog-js-lite'
+import posthog from 'posthog-js'
 import config from '$services/config'
 
 export type Telemetry = {
-	__posthog: PostHog
+	__posthog: typeof posthog
 	capture: (eventName: string, properties?: Record<string, any>) => void
 	identify: (userId: string, properties?: Record<string, any>) => void
 	reset: () => void
 }
 
 const mockTelemetry: Telemetry = {
-	__posthog: {} as PostHog,
+	__posthog: {} as typeof posthog,
 	capture(eventName, properties) {
 		console.info(`Mock Telemetry: capture ${eventName}`, properties)
 	},
@@ -25,9 +25,10 @@ const mockTelemetry: Telemetry = {
 export function telemetryFactory(): Telemetry {
 	// if (config.env === 'local') return mockTelemetry
 
-	const posthog = new PostHog(config.productTelemetryApiKey, {
+	posthog.init(config.productTelemetryApiKey, {
 		persistence: 'localStorage',
-		autocapture: true
+		autocapture: true,
+		cross_subdomain_cookie: false
 	})
 
 	return {
