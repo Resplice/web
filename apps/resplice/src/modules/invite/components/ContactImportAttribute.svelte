@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { AttributeActionIcon, Button, toast } from '@resplice/components'
+	import { parsePhoneNumber } from 'libphonenumber-js'
 	import { AttributeAction } from '@resplice/utils'
+	import { AttributeActionIcon, Button, toast } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	import type {
 		ProviderContact,
@@ -14,14 +15,23 @@
 	export let attribute: ProviderContactAttribute
 	let isInviting = false
 
-	function providerAttributeToAction(value: ProviderContactAttribute): AttributeAction {
-		switch (value.type) {
+	function providerAttributeToAction(attribute: ProviderContactAttribute): AttributeAction {
+		switch (attribute.type) {
 			case 'email':
 				return AttributeAction.Email
 			case 'phone':
 				return AttributeAction.Call
 			default:
 				return AttributeAction.Copy
+		}
+	}
+
+	function providerAttributeValue(attribute: ProviderContactAttribute): string {
+		switch (attribute.type) {
+			case 'phone':
+				return parsePhoneNumber(attribute.value, 'US').formatNational()
+			default:
+				return attribute.value
 		}
 	}
 
@@ -60,7 +70,7 @@
 			<p class="font-semibold text-gray-800 truncate h-6 capitalize">
 				{attribute.name}
 			</p>
-			<p class="truncate">{attribute.value}</p>
+			<p class="truncate">{providerAttributeValue(attribute)}</p>
 		</div>
 	</div>
 	<Button

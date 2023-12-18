@@ -10,7 +10,7 @@
 	} from '@resplice/components'
 	import connectionStore from '$modules/connection/connection.store'
 	import inviteStores from '$modules/invite/invite.store'
-	import { connectionsList } from '$modules/connection/connection.helpers'
+	import { sortRecordsByName } from '$common/utils'
 	import SearchHeader from '$common/components/SearchHeader.svelte'
 	import ConnectionList from '$modules/connection/components/ConnectionList.svelte'
 	import PendingConnectionList from '$modules/invite/components/PendingConnectionList.svelte'
@@ -20,9 +20,9 @@
 
 	const inviteStore = inviteStores.invites
 	const pendingConnectionStore = inviteStores.pendingConnections
-	$: connections = connectionsList($connectionStore)
-	$: invites = Array.from($inviteStore.values())
-	$: pendingConnections = Array.from($pendingConnectionStore.values())
+	$: connections = sortRecordsByName(Array.from($connectionStore.values()))
+	$: invites = sortRecordsByName(Array.from($inviteStore.values()))
+	$: pendingConnections = sortRecordsByName(Array.from($pendingConnectionStore.values()))
 
 	onMount(() => {
 		// Get scroll position
