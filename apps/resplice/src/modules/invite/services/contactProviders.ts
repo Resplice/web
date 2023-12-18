@@ -1,5 +1,5 @@
 import { parsePhoneNumber } from 'libphonenumber-js'
-import { isSupported } from '@resplice/utils'
+import { isSupported, intersection } from '@resplice/utils'
 import config from '$services/config'
 
 export type InviteState = 'invited' | 'connected' | 'ignored'
@@ -85,8 +85,13 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 	const isContactPickerSupported = isSupported('contacts')
 	if (!isContactPickerSupported) throw new Error('Contact picker not supported')
 
+	const properties = intersection(
+		['name', 'tel', 'icon'],
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(navigator as any).contacts.getProperties()
+	)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const contacts: any[] = await (navigator as any).contacts.select(['name', 'tel', 'icon'], {
+	const contacts: any[] = await (navigator as any).contacts.select(properties, {
 		multiple: true
 	})
 
