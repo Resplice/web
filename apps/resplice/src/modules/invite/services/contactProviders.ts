@@ -88,7 +88,7 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 	const properties = intersection(
 		['name', 'tel', 'icon'],
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		(navigator as any).contacts.getProperties()
+		await (navigator as any).contacts.getProperties()
 	)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const contacts: any[] = await (navigator as any).contacts.select(properties, {
