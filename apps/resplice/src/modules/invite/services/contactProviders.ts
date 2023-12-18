@@ -1,5 +1,5 @@
 import { parsePhoneNumber } from 'libphonenumber-js'
-import { isSupported } from '@resplice/utils'
+import { isSupported, intersection } from '@resplice/utils'
 import config from '$services/config'
 
 export type InviteState = 'invited' | 'connected' | 'ignored'
@@ -65,9 +65,10 @@ export async function fetchGoogleContacts(accessToken: string): Promise<Provider
 		const attributes: ProviderContactAttribute[] = []
 		if (person.phoneNumbers) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			person.phoneNumbers.forEach((phone: any, idx: number) =>
-				attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: phone.canonicalForm })
-			)
+			person.phoneNumbers.forEach((number: any, idx: number) => {
+				const phone = parsePhoneNumber(number.value, 'US')
+				if (phone) attributes.push({ type: 'phone', name: `Phone ${idx + 1}`, value: phone.number })
+			})
 		}
 		if (person.emailAddresses) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,8 +85,13 @@ export async function getNativeContacts(): Promise<ProviderContact[]> {
 	const isContactPickerSupported = isSupported('contacts')
 	if (!isContactPickerSupported) throw new Error('Contact picker not supported')
 
+	const properties = intersection(
+		['name', 'tel', 'icon'],
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(navigator as any).contacts.getProperties()
+	)
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const contacts: any[] = await (navigator as any).contacts.select(['name', 'tel', 'icon'], {
+	const contacts: any[] = await (navigator as any).contacts.select(properties, {
 		multiple: true
 	})
 
