@@ -23,7 +23,7 @@ const mockTelemetry: Telemetry = {
 }
 
 export function telemetryFactory(): Telemetry {
-	// if (config.env === 'local') return mockTelemetry
+	if (config.env === 'local') return mockTelemetry
 
 	posthog.init(config.productTelemetryApiKey, {
 		persistence: 'localStorage',
