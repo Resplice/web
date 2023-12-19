@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { pop } from 'svelte-spa-router'
 	import { t } from 'svelte-i18n'
-	import { IconButton, BackIcon } from '@resplice/components'
 	import Page from '$common/layouts/Page.svelte'
+	import Header from '$common/components/Header.svelte'
 	import SettingsItem from '$modules/account/components/SettingsItem.svelte'
 	import ChangeName from '$modules/account/components/ChangeName.svelte'
 	import Logout from '$modules/account/components/Logout.svelte'
@@ -43,10 +42,7 @@
 </script>
 
 <Page>
-	<nav class="flex-none flex items-center justify-start p-4">
-		<IconButton Icon={BackIcon} on:click={() => pop()} />
-		<h1 class="ml-4 font-semibold text-xl">{$t('account.settings.title')}</h1>
-	</nav>
+	<Header title={$t('account.settings.title')} />
 	<main
 		class="bg-white rounded-t-3xl flex-1 w-full max-w-xl m-auto flex flex-col p-8 overflow-auto space-y-8"
 	>

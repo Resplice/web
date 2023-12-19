@@ -12,8 +12,10 @@
 	class:flex-reverse={float === 'right'}
 >
 	<button
-		class="h-7 w-7 rounded bg-gray-200 cursor-pointer outline-none no-highlight focus:ring-2 focus:ring-gray-600"
+		type="button"
+		class="h-7 w-7 rounded cursor-pointer outline-none no-highlight focus:ring-2 focus:ring-gray-600"
 		class:bg-brand-primary={isChecked}
+		class:bg-gray-200={!isChecked}
 		on:click={() => checkbox.click()}
 	/>
 	<label class="cursor-pointer text-gray-900 font-semibold" for={name}>

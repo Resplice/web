@@ -13,7 +13,7 @@
 </script>
 
 {#if !!connection}
-	<Page>
+	<Page title={connection.name}>
 		<Header {connection} />
 		<main
 			class="bg-white rounded-t-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto space-y-4"

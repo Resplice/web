@@ -43,12 +43,8 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{connection?.name}</title>
-</svelte:head>
-
 {#if !!connection}
-	<Page>
+	<Page title={connection.name}>
 		<Header {connection} showConnection={showConnectionOnHeader} />
 		<main
 			class="relative bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"

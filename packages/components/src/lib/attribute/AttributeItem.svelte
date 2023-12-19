@@ -26,6 +26,7 @@
 <div class="w-full flex items-center justify-between">
 	<AttributeAction {itemType} {attribute} actionIdx={0} disableAction={disableActions} />
 	<button
+		type="button"
 		class="flex flex-col items-start justify-start text-left mx-4 flex-1 no-highlight"
 		on:click={onAttributeClick}
 		on:keypress={onAttributeClick}

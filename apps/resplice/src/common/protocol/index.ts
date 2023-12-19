@@ -13,6 +13,7 @@ import sessionProtocolFactory, { type SessionProtocol } from '$modules/session/s
 import connectionProtocolFactory, {
 	type ConnectionProtocol
 } from '$modules/connection/connection.protocol'
+import momentProtocolFactory, { type MomentProtocol } from '$modules/moment/moment.protocol'
 
 export interface RespliceProtocol {
 	ctx: ContextProtocol
@@ -20,6 +21,7 @@ export interface RespliceProtocol {
 	attribute: AttributeProtocol
 	invite: InviteProtocol
 	connection: ConnectionProtocol
+	moment: MomentProtocol
 	session: SessionProtocol
 }
 
@@ -55,6 +57,7 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			store: stores.connection,
 			commuter: socketCommuter
 		}),
+		moment: momentProtocolFactory({ cache: db, store: stores.moment, commuter: socketCommuter }),
 		session: sessionProtocolFactory({
 			fetch,
 			cache: db,

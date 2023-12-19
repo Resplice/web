@@ -4,8 +4,8 @@ import config from '$services/config'
 
 export type Telemetry = {
 	__posthog: typeof posthog
-	capture: (eventName: string, properties?: Record<string, any>) => void
-	identify: (userId: string, properties?: Record<string, any>) => void
+	capture: (eventName: string, properties?: Record<string, unknown>) => void
+	identify: (userId: string, properties?: Record<string, unknown>) => void
 	reset: () => void
 }
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte'
 	import ProgressBar from '$lib/ProgressBar.svelte'
+	import DateTimeField from '$lib/form/DateTimeField.svelte'
 	import Toast from '$lib/toast/Toast.svelte'
 	import { ToastType } from '$lib/toast/toast.types'
 </script>
@@ -12,4 +13,6 @@
 	<ProgressBar value={65} />
 
 	<Toast toast={{ type: ToastType.SUCCESS, title: 'New Connection', message: 'Some info' }} />
+
+	<DateTimeField name="datetime-test" label="Enter Datetime" value="" />
 </main>

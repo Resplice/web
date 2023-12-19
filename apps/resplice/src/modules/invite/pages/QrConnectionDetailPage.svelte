@@ -42,7 +42,7 @@
 {#await qrConnectionPromise}
 	<ConnectionDetailSkeleton />
 {:then qrConnection}
-	<Page>
+	<Page title={qrConnection.name}>
 		<Header
 			connection={{ ...qrConnection, id: qrConnection.connectionId }}
 			showConnection={showConnectionOnHeader}

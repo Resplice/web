@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { push } from 'svelte-spa-router'
 	import { UserAvatar } from '@resplice/components'
 	import useProtocol from '$common/protocol/useProtocol'
 	import accountStore from '$modules/account/account.store'
 	import Header from '$modules/account/components/Header.svelte'
 	// import Handle from '$modules/account/components/Handle.svelte'
 	import AttributeList from '$modules/account/components/AttributeList.svelte'
+	import Page from '$common/layouts/Page.svelte'
 
 	const protocol = useProtocol()
 
@@ -29,12 +29,8 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{account.name}</title>
-</svelte:head>
-
-<div class="flex flex-col w-full h-full bg-gray-100">
-	<Header {account} showUser={showUserOnHeader} on:back={() => push('/home/connections')} />
+<Page title={account.name}>
+	<Header {account} showBack showUser={showUserOnHeader} />
 	<main class="flex-1 overflow-auto relative w-full max-w-xl m-auto py-4 rounded-t-3xl bg-white">
 		<UserAvatar
 			uuid={account.uuid}
@@ -50,4 +46,4 @@
 		<div bind:this={scrollEl} id="scrollIntersection" class="absolute top-1/4" />
 		<AttributeList />
 	</main>
-</div>
+</Page>

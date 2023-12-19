@@ -3,30 +3,27 @@ import _m0 from "protobufjs/minimal";
 import { Address, Credential, Email, Phone, Social } from "../attribute/types";
 
 export interface CreateMoment {
-  title: string;
+  name: string;
   description: string;
   start: number;
+  /** Seconds */
   duration: number;
-}
-
-export interface DeleteMoment {
-  momentId: number;
+  timezone: string;
+  location: Address | undefined;
 }
 
 export interface ChangeMomentInfo {
   momentId: number;
-  title: string;
+  name: string;
   description: string;
 }
 
-export interface ChangeMomentStart {
+export interface ChangeMomentTime {
   momentId: number;
   start: number;
-}
-
-export interface ChangeMomentDuration {
-  momentId: number;
+  /** Seconds */
   duration: number;
+  timezone: string;
 }
 
 export interface JoinMoment {
@@ -54,14 +51,18 @@ export interface RemoveMomentAttribute {
   attributeId: number;
 }
 
+export interface DeleteMoment {
+  momentId: number;
+}
+
 function createBaseCreateMoment(): CreateMoment {
-  return { title: "", description: "", start: 0, duration: 0 };
+  return { name: "", description: "", start: 0, duration: 0, timezone: "", location: undefined };
 }
 
 export const CreateMoment = {
   encode(message: CreateMoment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
     }
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
@@ -71,6 +72,12 @@ export const CreateMoment = {
     }
     if (message.duration !== 0) {
       writer.uint32(32).uint32(message.duration);
+    }
+    if (message.timezone !== "") {
+      writer.uint32(42).string(message.timezone);
+    }
+    if (message.location !== undefined) {
+      Address.encode(message.location, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -87,7 +94,7 @@ export const CreateMoment = {
             break;
           }
 
-          message.title = reader.string();
+          message.name = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -110,6 +117,20 @@ export const CreateMoment = {
 
           message.duration = reader.uint32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.timezone = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.location = Address.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -121,17 +142,19 @@ export const CreateMoment = {
 
   fromJSON(object: any): CreateMoment {
     return {
-      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       start: isSet(object.start) ? globalThis.Number(object.start) : 0,
       duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
+      location: isSet(object.location) ? Address.fromJSON(object.location) : undefined,
     };
   },
 
   toJSON(message: CreateMoment): unknown {
     const obj: any = {};
-    if (message.title !== "") {
-      obj.title = message.title;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.description !== "") {
       obj.description = message.description;
@@ -142,6 +165,12 @@ export const CreateMoment = {
     if (message.duration !== 0) {
       obj.duration = Math.round(message.duration);
     }
+    if (message.timezone !== "") {
+      obj.timezone = message.timezone;
+    }
+    if (message.location !== undefined) {
+      obj.location = Address.toJSON(message.location);
+    }
     return obj;
   },
 
@@ -150,73 +179,20 @@ export const CreateMoment = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateMoment>, I>>(object: I): CreateMoment {
     const message = createBaseCreateMoment();
-    message.title = object.title ?? "";
+    message.name = object.name ?? "";
     message.description = object.description ?? "";
     message.start = object.start ?? 0;
     message.duration = object.duration ?? 0;
-    return message;
-  },
-};
-
-function createBaseDeleteMoment(): DeleteMoment {
-  return { momentId: 0 };
-}
-
-export const DeleteMoment = {
-  encode(message: DeleteMoment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.momentId !== 0) {
-      writer.uint32(8).uint32(message.momentId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteMoment {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteMoment();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.momentId = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): DeleteMoment {
-    return { momentId: isSet(object.momentId) ? globalThis.Number(object.momentId) : 0 };
-  },
-
-  toJSON(message: DeleteMoment): unknown {
-    const obj: any = {};
-    if (message.momentId !== 0) {
-      obj.momentId = Math.round(message.momentId);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<DeleteMoment>, I>>(base?: I): DeleteMoment {
-    return DeleteMoment.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<DeleteMoment>, I>>(object: I): DeleteMoment {
-    const message = createBaseDeleteMoment();
-    message.momentId = object.momentId ?? 0;
+    message.timezone = object.timezone ?? "";
+    message.location = (object.location !== undefined && object.location !== null)
+      ? Address.fromPartial(object.location)
+      : undefined;
     return message;
   },
 };
 
 function createBaseChangeMomentInfo(): ChangeMomentInfo {
-  return { momentId: 0, title: "", description: "" };
+  return { momentId: 0, name: "", description: "" };
 }
 
 export const ChangeMomentInfo = {
@@ -224,8 +200,8 @@ export const ChangeMomentInfo = {
     if (message.momentId !== 0) {
       writer.uint32(8).uint32(message.momentId);
     }
-    if (message.title !== "") {
-      writer.uint32(18).string(message.title);
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
     }
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
@@ -252,7 +228,7 @@ export const ChangeMomentInfo = {
             break;
           }
 
-          message.title = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -273,7 +249,7 @@ export const ChangeMomentInfo = {
   fromJSON(object: any): ChangeMomentInfo {
     return {
       momentId: isSet(object.momentId) ? globalThis.Number(object.momentId) : 0,
-      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
     };
   },
@@ -283,8 +259,8 @@ export const ChangeMomentInfo = {
     if (message.momentId !== 0) {
       obj.momentId = Math.round(message.momentId);
     }
-    if (message.title !== "") {
-      obj.title = message.title;
+    if (message.name !== "") {
+      obj.name = message.name;
     }
     if (message.description !== "") {
       obj.description = message.description;
@@ -298,31 +274,37 @@ export const ChangeMomentInfo = {
   fromPartial<I extends Exact<DeepPartial<ChangeMomentInfo>, I>>(object: I): ChangeMomentInfo {
     const message = createBaseChangeMomentInfo();
     message.momentId = object.momentId ?? 0;
-    message.title = object.title ?? "";
+    message.name = object.name ?? "";
     message.description = object.description ?? "";
     return message;
   },
 };
 
-function createBaseChangeMomentStart(): ChangeMomentStart {
-  return { momentId: 0, start: 0 };
+function createBaseChangeMomentTime(): ChangeMomentTime {
+  return { momentId: 0, start: 0, duration: 0, timezone: "" };
 }
 
-export const ChangeMomentStart = {
-  encode(message: ChangeMomentStart, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ChangeMomentTime = {
+  encode(message: ChangeMomentTime, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.momentId !== 0) {
       writer.uint32(8).uint32(message.momentId);
     }
     if (message.start !== 0) {
       writer.uint32(21).sfixed32(message.start);
     }
+    if (message.duration !== 0) {
+      writer.uint32(24).uint32(message.duration);
+    }
+    if (message.timezone !== "") {
+      writer.uint32(34).string(message.timezone);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeMomentStart {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeMomentTime {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChangeMomentStart();
+    const message = createBaseChangeMomentTime();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -340,6 +322,20 @@ export const ChangeMomentStart = {
 
           message.start = reader.sfixed32();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.duration = reader.uint32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.timezone = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -349,14 +345,16 @@ export const ChangeMomentStart = {
     return message;
   },
 
-  fromJSON(object: any): ChangeMomentStart {
+  fromJSON(object: any): ChangeMomentTime {
     return {
       momentId: isSet(object.momentId) ? globalThis.Number(object.momentId) : 0,
       start: isSet(object.start) ? globalThis.Number(object.start) : 0,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
     };
   },
 
-  toJSON(message: ChangeMomentStart): unknown {
+  toJSON(message: ChangeMomentTime): unknown {
     const obj: any = {};
     if (message.momentId !== 0) {
       obj.momentId = Math.round(message.momentId);
@@ -364,90 +362,24 @@ export const ChangeMomentStart = {
     if (message.start !== 0) {
       obj.start = Math.round(message.start);
     }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChangeMomentStart>, I>>(base?: I): ChangeMomentStart {
-    return ChangeMomentStart.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ChangeMomentStart>, I>>(object: I): ChangeMomentStart {
-    const message = createBaseChangeMomentStart();
-    message.momentId = object.momentId ?? 0;
-    message.start = object.start ?? 0;
-    return message;
-  },
-};
-
-function createBaseChangeMomentDuration(): ChangeMomentDuration {
-  return { momentId: 0, duration: 0 };
-}
-
-export const ChangeMomentDuration = {
-  encode(message: ChangeMomentDuration, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.momentId !== 0) {
-      writer.uint32(8).uint32(message.momentId);
-    }
-    if (message.duration !== 0) {
-      writer.uint32(16).uint32(message.duration);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeMomentDuration {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChangeMomentDuration();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.momentId = reader.uint32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.duration = reader.uint32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChangeMomentDuration {
-    return {
-      momentId: isSet(object.momentId) ? globalThis.Number(object.momentId) : 0,
-      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
-    };
-  },
-
-  toJSON(message: ChangeMomentDuration): unknown {
-    const obj: any = {};
-    if (message.momentId !== 0) {
-      obj.momentId = Math.round(message.momentId);
-    }
     if (message.duration !== 0) {
       obj.duration = Math.round(message.duration);
     }
+    if (message.timezone !== "") {
+      obj.timezone = message.timezone;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChangeMomentDuration>, I>>(base?: I): ChangeMomentDuration {
-    return ChangeMomentDuration.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<ChangeMomentTime>, I>>(base?: I): ChangeMomentTime {
+    return ChangeMomentTime.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChangeMomentDuration>, I>>(object: I): ChangeMomentDuration {
-    const message = createBaseChangeMomentDuration();
+  fromPartial<I extends Exact<DeepPartial<ChangeMomentTime>, I>>(object: I): ChangeMomentTime {
+    const message = createBaseChangeMomentTime();
     message.momentId = object.momentId ?? 0;
+    message.start = object.start ?? 0;
     message.duration = object.duration ?? 0;
+    message.timezone = object.timezone ?? "";
     return message;
   },
 };
@@ -807,6 +739,63 @@ export const RemoveMomentAttribute = {
     const message = createBaseRemoveMomentAttribute();
     message.momentId = object.momentId ?? 0;
     message.attributeId = object.attributeId ?? 0;
+    return message;
+  },
+};
+
+function createBaseDeleteMoment(): DeleteMoment {
+  return { momentId: 0 };
+}
+
+export const DeleteMoment = {
+  encode(message: DeleteMoment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.momentId !== 0) {
+      writer.uint32(8).uint32(message.momentId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteMoment {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteMoment();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.momentId = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteMoment {
+    return { momentId: isSet(object.momentId) ? globalThis.Number(object.momentId) : 0 };
+  },
+
+  toJSON(message: DeleteMoment): unknown {
+    const obj: any = {};
+    if (message.momentId !== 0) {
+      obj.momentId = Math.round(message.momentId);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteMoment>, I>>(base?: I): DeleteMoment {
+    return DeleteMoment.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteMoment>, I>>(object: I): DeleteMoment {
+    const message = createBaseDeleteMoment();
+    message.momentId = object.momentId ?? 0;
     return message;
   },
 };

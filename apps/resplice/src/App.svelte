@@ -59,7 +59,6 @@
 	$: {
 		if (!!$accountStore) {
 			telemetryContext.telemetry.identify($accountStore.uuid, {
-				name: $accountStore.name,
 				env: config.env
 			})
 		}

@@ -3,6 +3,7 @@ import account from '$modules/account/account.store'
 import attribute from '$modules/attribute/attribute.store'
 import invite from '$modules/invite/invite.store'
 import connection from '$modules/connection/connection.store'
+import moment from '$modules/moment/moment.store'
 import session from '$modules/session/session.store'
 
 const stores = {
@@ -11,6 +12,7 @@ const stores = {
 	attribute,
 	invite,
 	connection,
+	moment,
 	session
 }
 

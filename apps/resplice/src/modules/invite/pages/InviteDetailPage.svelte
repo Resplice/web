@@ -21,7 +21,7 @@
 </svelte:head>
 
 {#if !!invite}
-	<Page>
+	<Page title={invite.name}>
 		<Header {invite} />
 		<main
 			class="bg-white rounded-t-3xl rounded-b-3xl w-full max-w-xl m-auto flex-1 flex flex-col items-center overflow-auto mb-4"

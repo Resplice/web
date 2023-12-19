@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
-	// import accountStore from '$modules/account/account.store'
-	import { SearchIcon } from '@resplice/components'
+	import accountStore from '$modules/account/account.store'
+	import { Avatar, SearchIcon } from '@resplice/components'
 </script>
 
 <div class="flex-none flex justify-between w-full p-4 items-center space-x-4">
@@ -14,10 +14,10 @@
 		</div>
 		<p class="text-gray-500 font-semibold">Search</p>
 	</button>
-	<!-- <Avatar
+	<Avatar
 		size="md"
 		seed={$accountStore.uuid}
 		src={$accountStore.avatarUrl}
 		on:click={() => push('/profile')}
-	/> -->
+	/>
 </div>
