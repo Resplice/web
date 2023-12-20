@@ -15,8 +15,10 @@
 			<p class="text-slate-600 text-xs tracking-wide uppercase">{format(day, 'EE')}</p>
 			<p class="text-slate-800">{format(day, 'dd')}</p>
 		</time>
-		{#each moments as moment}
-			<AgendaItem {moment} />
-		{/each}
+		<div class="flex-1 flex flex-col space-y-2">
+			{#each moments as moment}
+				<AgendaItem {moment} />
+			{/each}
+		</div>
 	</div>
 {/if}

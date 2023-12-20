@@ -34,7 +34,7 @@
 		if (!validate()) return
 
 		const duration =
-			(new Date(momentEndDatetime).getTime() - new Date(momentStartDatetime).getTime()) / 1000
+			(new Date(momentEndDatetime).getTime() - new Date(momentStartDatetime).getTime()) / 60000
 
 		protocol.moment.create({
 			name: momentName,

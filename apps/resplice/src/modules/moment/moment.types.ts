@@ -4,7 +4,7 @@ export type Moment = {
 	name: string
 	description: string
 	startDatetime: Date
-	duration: number // Seconds
+	duration: number // Minutes
 	timezone: string
 	location: AddressValue
 }
