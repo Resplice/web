@@ -27,7 +27,7 @@
 		if (window.location.hash === '#/install') return true
 
 		try {
-			const protocol = await protocolFactory()
+			const protocol = await protocolFactory(telemetryContext.telemetry)
 			protocolContext.protocol = protocol
 
 			const session = await protocol.session.load()
@@ -57,9 +57,8 @@
 	$: storesLoaded = window.location.hash === '#/install' ? true : !!$accountStore
 
 	$: {
-		if (!!$accountStore) {
+		if (!!$accountStore && !telemetryContext.telemetry.isIdentified()) {
 			telemetryContext.telemetry.identify($accountStore.uuid, {
-				name: $accountStore.name,
 				env: config.env
 			})
 		}

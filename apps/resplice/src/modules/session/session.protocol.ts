@@ -9,6 +9,7 @@ import {
 } from '@resplice/utils'
 import config from '$services/config'
 import type { DB } from '$services/db'
+import type { Telemetry } from '$services/telemetry'
 import { sendCommand } from '$common/protocol/helpers'
 import type { SocketCommuter } from '$common/workers/socket/socketCommuter'
 import type { Session } from '$modules/session/session.types'
@@ -24,8 +25,15 @@ type Dependencies = {
 	cache: DB
 	store: SessionStore
 	commuter: SocketCommuter
+	telemetry: Telemetry
 }
-function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies): SessionProtocol {
+function sessionProtocolFactory({
+	fetch,
+	cache,
+	store,
+	commuter,
+	telemetry
+}: Dependencies): SessionProtocol {
 	async function startSession(accessToken: string, persist: boolean): Promise<Session> {
 		const [ipAddress, publicKeyEncoded, clientAesKey, serverAesKey] = await Promise.all([
 			fetch.get<string>({ endpoint: '/ip-address', content: 'text' }),
@@ -104,6 +112,10 @@ function sessionProtocolFactory({ fetch, cache, store, commuter }: Dependencies)
 				: await loadSession()
 
 			if (currentSession) store.set({ currentSession, sessions: [] })
+
+			if (accessToken) {
+				telemetry.capture('session-started', { persisted: currentSession.persisted })
+			}
 
 			return currentSession
 		},

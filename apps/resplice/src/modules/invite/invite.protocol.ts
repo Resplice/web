@@ -1,6 +1,7 @@
 import proto from '@resplice/proto'
 import type { Fetch } from '@resplice/utils'
 import type { DB } from '$services/db'
+import type { Telemetry } from '$services/telemetry'
 import { type SocketCommuter, onlyEvents } from '$common/workers/socket/socketCommuter'
 import { sendCommand, sendCommandRequest } from '$common/protocol/helpers'
 import type { ConnectionStore } from '$modules/connection/connection.store'
@@ -26,13 +27,15 @@ type Dependencies = {
 	store: InviteStore
 	connectionStore: ConnectionStore
 	commuter: SocketCommuter
+	telemetry: Telemetry
 }
 function inviteProtocolFactory({
 	fetch,
 	cache,
 	store,
 	connectionStore,
-	commuter
+	commuter,
+	telemetry
 }: Dependencies): InviteProtocol {
 	commuter.messages$.pipe(onlyEvents()).subscribe((event) => {
 		store.invites.update((state) => applyInviteEvent(state, event))
@@ -67,6 +70,8 @@ function inviteProtocolFactory({
 			)
 			if (!message.event) throw new Error('Invalid QR code')
 			if (message.event.payload?.$case !== 'qrInviteOpened') throw new Error('Invalid QR code')
+
+			telemetry.capture('qr_invite_opened')
 
 			return {
 				...message.event.payload.qrInviteOpened,

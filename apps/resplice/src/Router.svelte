@@ -31,7 +31,9 @@
 
 	export let initialUrl = ''
 
-	function onRouteLoaded(_event: RouteLoadedEvent) {
+	function onRouteLoaded({ detail }: RouteLoadedEvent) {
+		if (detail.querystring.includes('resplice-access-token')) return
+
 		telemetry.capture('$pageview')
 	}
 
