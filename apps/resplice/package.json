@@ -19,6 +19,7 @@
 		"@resplice/components": "*",
 		"@resplice/proto": "*",
 		"@resplice/utils": "*",
+		"@tanstack/svelte-virtual": "^3.0.1",
 		"@types/js-search": "^1.4.3",
 		"clsx": "^2.0.0",
 		"croppie": "^2.6.5",
