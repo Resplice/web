@@ -1,25 +1,22 @@
 {
 	"name": "@resplice/landing",
-	"type": "module",
 	"version": "0.0.0",
+	"type": "module",
+	"author": "marcus@resplice.com",
+	"license": "UNLICENSED",
+	"private": true,
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro build",
+		"build": "astro check && astro build",
 		"preview": "astro preview",
-		"deploy": "vercel build --prod && vercel deploy --prebuilt --prod",
 		"astro": "astro"
 	},
 	"dependencies": {
-		"clsx": "^2.0.0",
-		"svelte": "^4.2.3",
-		"typewriter-effect": "^2.21.0"
+		"clsx": "^2.0.0"
 	},
 	"devDependencies": {
-		"@astrojs/svelte": "^4.0.3",
-		"@astrojs/tailwind": "^5.0.1",
-		"astro": "^3.2.3",
-		"tailwindcss": "^3.3.3",
-		"vercel": "^32.4.1"
+		"astro": "^4.0.7",
+		"svelte": "^4.2.3"
 	}
 }
