@@ -6,6 +6,7 @@ export type Telemetry = {
 	__posthog: typeof posthog
 	capture: (eventName: string, properties?: Record<string, unknown>) => void
 	identify: (userId: string, properties?: Record<string, unknown>) => void
+	isIdentified: () => boolean
 	reset: () => void
 }
 
@@ -17,6 +18,10 @@ const mockTelemetry: Telemetry = {
 	identify(userId, properties) {
 		console.info(`Mock Telemetry: identify ${userId}`, properties)
 	},
+	isIdentified() {
+		console.info('Mock Telemetry: isIdentified')
+		return false
+	},
 	reset() {
 		console.info('Mock Telemetry: reset')
 	}
@@ -27,9 +32,11 @@ export function telemetryFactory(): Telemetry {
 
 	posthog.init(config.productTelemetryApiKey, {
 		persistence: 'localStorage',
-		autocapture: true,
+		autocapture: false,
 		cross_subdomain_cookie: false
 	})
+
+	let identifiedUserId: string = ''
 
 	return {
 		__posthog: posthog,
@@ -37,7 +44,11 @@ export function telemetryFactory(): Telemetry {
 			posthog.capture(eventName, properties)
 		},
 		identify(userId, properties) {
+			identifiedUserId = userId
 			posthog.identify(userId, properties)
+		},
+		isIdentified() {
+			return !!identifiedUserId
 		},
 		reset() {
 			posthog.reset()

@@ -1,7 +1,8 @@
 import { fetchFactory } from '@resplice/utils'
 import config from '$services/config'
-import stores from '$common/stores'
 import db from '$services/db'
+import type { Telemetry } from '$services/telemetry'
+import stores from '$common/stores'
 import startSocketCommuter from '$common/workers/socket/socketCommuter'
 import contextProtocolFactory, { type ContextProtocol } from '$modules/_context/context.protocol'
 import accountProtocolFactory, { type AccountProtocol } from '$modules/account/account.protocol'
@@ -25,11 +26,9 @@ export interface RespliceProtocol {
 	session: SessionProtocol
 }
 
-async function respliceProtocolFactory(): Promise<RespliceProtocol> {
+async function respliceProtocolFactory(telemetry: Telemetry): Promise<RespliceProtocol> {
 	const fetch = fetchFactory(config.respliceApiUrl)
-
 	await db.open()
-
 	const socketCommuter = startSocketCommuter()
 
 	const protocol: RespliceProtocol = {
@@ -50,7 +49,8 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			cache: db,
 			store: stores.invite,
 			connectionStore: stores.connection,
-			commuter: socketCommuter
+			commuter: socketCommuter,
+			telemetry
 		}),
 		connection: connectionProtocolFactory({
 			cache: db,
@@ -62,7 +62,8 @@ async function respliceProtocolFactory(): Promise<RespliceProtocol> {
 			fetch,
 			cache: db,
 			store: stores.session,
-			commuter: socketCommuter
+			commuter: socketCommuter,
+			telemetry
 		})
 	}
 
