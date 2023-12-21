@@ -29,6 +29,7 @@
 	// Moment Pages
 	import CreateMomentPage from '$modules/moment/pages/CreateMomentPage.svelte'
 	import MomentDetailPage from '$modules/moment/pages/MomentDetailPage.svelte'
+	import MomentMembersListPage from '$modules/moment/pages/MomentMembersListPage.svelte'
 
 	const telemetry = useTelemetry()
 
@@ -59,6 +60,7 @@
 		'/invite/:invite-id/details': InviteDetailPage,
 		'/moment/create': CreateMomentPage,
 		'/moment/:id': MomentDetailPage,
+		'/moment/:id/members': MomentMembersListPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,

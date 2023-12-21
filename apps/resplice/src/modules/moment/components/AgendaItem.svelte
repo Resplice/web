@@ -14,7 +14,7 @@
 </script>
 
 <button
-	class="w-full overflow-hidden bg-brand-primary bg-opacity-20 rounded-md p-4 border-slate-600"
+	class="w-full overflow-hidden bg-brand-primary bg-opacity-20 rounded-md p-4 border-slate-600 text-left"
 	on:click={() => push(`/moment/${moment.id}`)}
 >
 	<p class="font-semibold text-brand-primary-dark">{moment.name}</p>

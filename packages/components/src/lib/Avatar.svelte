@@ -18,7 +18,11 @@
 	$: pixelSize = sizeMap[size]
 </script>
 
-<button class="bg-gray-100 rounded-full w-max overflow-clip" on:click>
+<button
+	type="button"
+	class="bg-gray-100 rounded-full w-max overflow-clip ring-2 ring-white"
+	on:click
+>
 	{#if src}
 		<img
 			class="rounded-full object-cover"

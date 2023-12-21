@@ -1,4 +1,4 @@
-import { getOperatingSystem } from '$utils/navigator/getOperatingSystem'
+import { getNavigatorOperatingSystem } from '$utils/navigator/getOperatingSystem'
 
 export function openCalendar(dateTime: string): void {
 	console.log('Opening Calendar', dateTime)
@@ -53,7 +53,7 @@ export function locate(params: locateParams, navigate = false) {
 }
 
 export function openSms(phone: string, text = ''): void {
-	const OS = getOperatingSystem()
+	const OS = getNavigatorOperatingSystem()
 	if (OS === 'iOS') {
 		window.open(`sms:${phone}&body=${text}`)
 	} else {

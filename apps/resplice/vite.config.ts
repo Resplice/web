@@ -9,6 +9,7 @@ export default defineConfig({
 	plugins: [svelte(), splitVendorChunkPlugin(), VitePWA(pwaConfig)],
 	resolve: {
 		alias: {
+			$assets: resolve('./src/assets'),
 			$modules: resolve('./src/modules'),
 			$services: resolve('./src/common/services'),
 			$common: resolve('./src/common')

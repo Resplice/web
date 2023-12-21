@@ -27,7 +27,9 @@
 
 <div class="px-4 py-2">
 	<p class="text-xs uppercase text-slate-600 pl-8">{formattedWeek()}</p>
-	{#each days as day}
-		<AgendaDay {day} moments={getMomentsOnDay(day)} />
-	{/each}
+	<div class="w-full space-y-2">
+		{#each days as day}
+			<AgendaDay {day} moments={getMomentsOnDay(day)} />
+		{/each}
+	</div>
 </div>
