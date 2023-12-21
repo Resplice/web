@@ -4,6 +4,7 @@ export const moments: MomentState = new Map([
 	[
 		1,
 		{
+			id: 1,
 			name: 'Christmas Party',
 			description: "Don't forget to bring a gift for the white elephant exchange!",
 			startDatetime: new Date('2023-12-25T18:00:00'),
@@ -22,6 +23,7 @@ export const moments: MomentState = new Map([
 	[
 		2,
 		{
+			id: 2,
 			name: 'New Years Party',
 			description: 'Free drinks!',
 			startDatetime: new Date('2023-12-31T18:00:00'),
@@ -40,6 +42,7 @@ export const moments: MomentState = new Map([
 	[
 		3,
 		{
+			id: 3,
 			name: 'Tech Meetup',
 			description: 'Bring your laptop!',
 			startDatetime: new Date('2024-01-12T16:00:00'),
@@ -58,6 +61,7 @@ export const moments: MomentState = new Map([
 	[
 		4,
 		{
+			id: 4,
 			name: 'Game Night',
 			description: 'Options are Catan, Monopoly, and Risk',
 			startDatetime: new Date('2024-01-12T18:00:00'),
@@ -76,6 +80,7 @@ export const moments: MomentState = new Map([
 	[
 		5,
 		{
+			id: 5,
 			name: 'Dinner with Parents',
 			description: 'I have heard this place is good',
 			startDatetime: new Date('2024-01-13T16:00:00'),

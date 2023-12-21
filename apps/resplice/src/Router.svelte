@@ -28,6 +28,7 @@
 	import ChangeConnectionPage from '$modules/connection/pages/ChangeConnectionPage.svelte'
 	// Moment Pages
 	import CreateMomentPage from '$modules/moment/pages/CreateMomentPage.svelte'
+	import MomentDetailPage from '$modules/moment/pages/MomentDetailPage.svelte'
 
 	const telemetry = useTelemetry()
 
@@ -57,6 +58,7 @@
 		'/invite/pending/:id/details': PendingConnectionDetailPage,
 		'/invite/:invite-id/details': InviteDetailPage,
 		'/moment/create': CreateMomentPage,
+		'/moment/:id': MomentDetailPage,
 		'/profile': ProfilePage,
 		'/search': SearchPage,
 		'/settings': SettingsPage,

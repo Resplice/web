@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { add, eachWeekOfInterval, sub } from 'date-fns'
+	import { onMount } from 'svelte'
+	import { add, eachWeekOfInterval, sub, isSameWeek } from 'date-fns'
 	import { createVirtualizer } from '@tanstack/svelte-virtual'
 	import AgendaWeek from '$modules/moment/components/AgendaWeek.svelte'
 
 	const now = new Date()
-	const start = sub(now, { months: 2 })
+	const start = sub(now, { months: 6 })
 	const end = add(now, { months: 6 })
 	// const start = sub(now, { years: 10 })
 	// const end = add(now, { years: 10 })
 
 	const weeks = eachWeekOfInterval({ start, end })
+	const nowWeekIndex = weeks.findIndex((week) => isSameWeek(week, new Date()))
 
 	let virtualListEl: HTMLDivElement
 	let agendaWeekEls: HTMLDivElement[] = []
@@ -25,6 +27,13 @@
 	$: {
 		if (agendaWeekEls.length) agendaWeekEls.forEach((el) => $virtualizer.measureElement(el))
 	}
+
+	onMount(() => {
+		// Somehow wrapping this in a setTimeout fixes the initial scroll issue
+		setTimeout(() => {
+			$virtualizer.scrollToIndex(nowWeekIndex, { align: 'start' })
+		}, 0)
+	})
 </script>
 
 <svelte:head>
