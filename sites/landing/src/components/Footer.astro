@@ -1,0 +1,55 @@
+---
+import SocialIcon from '@components/SocialIcon.svelte'
+import { socials } from '@content/_data'
+
+const links = [
+	{
+		label: 'Company',
+		href: '/about'
+	},
+	{
+		label: 'Product',
+		href: '/'
+	},
+	{
+		label: 'Changelog',
+		href: '/changelog'
+	},
+	{
+		label: 'FAQ',
+		href: '/faq'
+	},
+	{
+		label: 'Press',
+		href: '/press'
+	}
+]
+---
+
+<footer class="bg-white">
+	<div class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
+		<nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+			{
+				links.map((link) => (
+					<div class="pb-6">
+						<a href={link.href} class="text-sm leading-6 text-gray-600 hover:text-gray-900">
+							{link.label}
+						</a>
+					</div>
+				))
+			}
+		</nav>
+		<div class="mt-10 flex justify-center space-x-10">
+			{
+				socials.map((social) => (
+					<a href={social.url} class="text-gray-400 hover:text-gray-500">
+						<SocialIcon icon={social.name} />
+					</a>
+				))
+			}
+		</div>
+		<p class="mt-10 text-center text-xs leading-5 text-gray-500">
+			&copy; {new Date().getFullYear()} Resplice. All rights reserved.
+		</p>
+	</div>
+</footer>

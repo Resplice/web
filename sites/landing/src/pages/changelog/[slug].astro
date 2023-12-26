@@ -1,0 +1,21 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content'
+import Layout from '@layouts/Layout.astro'
+
+export async function getStaticPaths() {
+	const changelogEntries = await getCollection('changelog')
+	return changelogEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry }
+	}))
+}
+
+type Props = {
+	entry: CollectionEntry<'changelog'>
+}
+
+const { Content } = await Astro.props.entry.render()
+console.log(Content)
+---
+
+<Layout title="Resplice Changelog">Changelog</Layout>

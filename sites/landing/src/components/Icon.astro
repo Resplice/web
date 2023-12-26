@@ -1,0 +1,12 @@
+---
+import { Icon as AstroIcon } from 'astro-icon/components'
+
+type Props = {
+	icon: string
+	class?: string
+}
+
+const { icon, class: className } = Astro.props
+---
+
+<AstroIcon name={icon} class={className} />
