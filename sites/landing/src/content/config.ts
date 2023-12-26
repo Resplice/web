@@ -7,6 +7,14 @@ const changelogCollection = defineCollection({
 	})
 })
 
+const legalCollection = defineCollection({
+	type: 'content',
+	schema: z.object({
+		title: z.string()
+	})
+})
+
 export const collections = {
-	changelog: changelogCollection
+	changelog: changelogCollection,
+	legal: legalCollection
 }
