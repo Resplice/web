@@ -10,6 +10,7 @@
 		"start": "astro dev",
 		"build": "astro check && astro build",
 		"preview": "astro preview",
+		"deploy": "vercel build --prod && vercel deploy --prebuilt --prod",
 		"astro": "astro"
 	},
 	"dependencies": {
