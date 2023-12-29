@@ -1,0 +1,28 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content'
+import Layout from '@layouts/Layout.astro'
+import Markdown from '@components/Markdown.astro'
+
+export async function getStaticPaths() {
+	const legalEntries = await getCollection('legal')
+	return legalEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry }
+	}))
+}
+
+type Props = {
+	entry: CollectionEntry<'changelog'>
+}
+
+const { Content } = await Astro.props.entry.render()
+---
+
+<Layout title="Resplice Legal">
+	<div class="bg-white mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:gap-x-10 lg:px-8 lg:py-40">
+		<Markdown>
+			<!-- <div slot="header">Header</div> -->
+			<Content slot="content" />
+		</Markdown>
+	</div>
+</Layout>

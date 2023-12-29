@@ -1,8 +1,12 @@
 import colors from 'tailwindcss/colors'
+import typography from '@tailwindcss/typography'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: ['./src/**/*.{astro,html,md,mdx,svelte}'],
+	content: [
+		'./src/**/*.{astro,html,md,mdx,svelte}',
+		'../../node_modules/@resplice/components/**/*.{html,svelte}'
+	],
 	darkMode: 'class',
 	theme: {
 		extend: {
@@ -13,5 +17,5 @@ export default {
 			}
 		}
 	},
-	plugins: []
+	plugins: [typography]
 }
