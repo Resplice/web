@@ -28,30 +28,30 @@
 		}
 	}
 
-	// async function onGoogleProviderClick() {
-	// 	try {
-	// 		isGoogleLoading = true
-	// 		const contacts = await getGoogleContacts()
-	// 		dispatch('import', contacts)
-	// 		isGoogleLoading = false
-	// 	} catch (e) {
-	// 		isGoogleLoading = false
-	// 		toast.new({
-	// 			type: toast.type.WARNING,
-	// 			title: 'Import Error',
-	// 			message: 'Could not import contacts from Google. Please try again.'
-	// 		})
-	// 		console.error(e)
-	// 	}
-	// }
 	async function onGoogleProviderClick() {
-		toast.new({
-			type: toast.type.SUCCESS,
-			title: 'Coming Soon',
-			message:
-				'We are currently working on this feature but it will be coming soon! Please check back later.'
-		})
+		try {
+			isGoogleLoading = true
+			const contacts = await getGoogleContacts()
+			dispatch('import', contacts)
+			isGoogleLoading = false
+		} catch (e) {
+			isGoogleLoading = false
+			toast.new({
+				type: toast.type.WARNING,
+				title: 'Import Error',
+				message: 'Could not import contacts from Google. Please try again.'
+			})
+			console.error(e)
+		}
 	}
+	// async function onGoogleProviderClick() {
+	// 	toast.new({
+	// 		type: toast.type.SUCCESS,
+	// 		title: 'Coming Soon',
+	// 		message:
+	// 			'We are currently working on this feature but it will be coming soon! Please check back later.'
+	// 	})
+	// }
 </script>
 
 <svelte:head>

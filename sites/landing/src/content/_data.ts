@@ -1,3 +1,6 @@
+import aboutMarcus from '@assets/images/about-marcus.jpg'
+import aboutChad from '@assets/images/about-chad.jpg'
+
 export type Feature = {
 	title: string
 	description: string
@@ -120,22 +123,20 @@ export const faqs: FAQ[] = [
 export type Person = {
 	name: string
 	role: string
-	image: string
+	image: typeof aboutMarcus
 	bio: string
 }
 export const people: Person[] = [
 	{
 		name: 'Marcus Virginia',
 		role: 'Co-Founder',
-		image:
-			'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80',
+		image: aboutMarcus,
 		bio: 'Marcus has also spent his entire career (over 5 years) building web applications and data systems for a few companies. Data interoperability between customers has always been an issue for companies and is costing them millions to intake, verify its correctness, and clean for internal usage and insights.'
 	},
 	{
 		name: 'Chad Capra',
 		role: 'Co-Founder',
-		image:
-			'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80',
+		image: aboutChad,
 		bio: "Chad has spent the majority of his career (over 20 years) building web applications for various companies. At every company, there was a struggle to ensure we had people's up-to-date information. We used custom and off-the-shelf CRMs. No matter what we used, there was bad data."
 	}
 ]

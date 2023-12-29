@@ -16,6 +16,8 @@
 		"clsx": "^2.0.0"
 	},
 	"devDependencies": {
+		"@astrojs/check": "^0.3.4",
+		"@astrojs/sitemap": "^3.0.4",
 		"@astrojs/svelte": "^5.0.2",
 		"@astrojs/tailwind": "^5.0.4",
 		"@tailwindcss/typography": "^0.5.10",
