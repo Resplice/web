@@ -12,7 +12,7 @@ We may collect certain personal information, such as your name, email address, a
 
 ## Data Sharing and Disclosure
 
-We may share your personal information with trusted third-party service providers who assist us in delivering our services or conducting business operations. We do not sell or rent your personal information to third parties.
+We may share your personal information with trusted third-party service providers who assist us in delivering our services or conducting business operations. We do not sell or rent your personal information to third parties. Resplice's use and transfer of information received from Google APIs to any other app will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes), including the Limited Use requirements.
 
 ## Data Retention
 
